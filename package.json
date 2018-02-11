@@ -31,21 +31,21 @@
       "command": "gulp --gulpfile ./gulp/gulpfile.dev.js --cwd ./",
       "env": {
         "NODE_ENV": "development",
-        "DEBUG": "draft:*",
+        "DEBUG": "com:*",
         "PORT": "8888"
       }
     },
     "compile-dev": {
       "command": "gulp --gulpfile ./gulp/gulpfile.dev.compile.js --cwd ./",
       "env": {
-        "DEBUG": "draft:*",
+        "DEBUG": "com:*",
         "NODE_ENV": "development"
       }
     },
     "compile-prod": {
       "command": "gulp --gulpfile ./gulp/gulpfile.prod.compile.js --cwd ./",
       "env": {
-        "DEBUG": "draft:*",
+        "DEBUG": "com:*",
         "NODE_ENV": "production"
       }
     }

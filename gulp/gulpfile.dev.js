@@ -1,4 +1,4 @@
-const debug = require('debug')('draft:dev-compile');
+const debug = require('debug')('com:dev-compile');
 const gulp = require('gulp');
 const runSequence = require('run-sequence');
 const tasks = require('./tasks');
