@@ -25,6 +25,7 @@ export class DraftEditor extends React.Component<IDraftEditorProps, IDraftEditor
         return (
             <div
                 contentEditable={!readOnly}
+                suppressContentEditableWarning
             >
                 Hello!
             </div>

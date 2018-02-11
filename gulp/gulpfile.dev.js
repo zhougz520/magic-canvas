@@ -11,7 +11,6 @@ const runDevServer = () => {
     const compileConfig = {
         entry: {
             vendor: [
-                'babel-polyfill',
                 'react',
                 'react-dom'
             ],
