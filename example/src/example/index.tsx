@@ -1,39 +1,41 @@
 import * as React from 'react';
-import { DraftPublic } from '../../../src';
-import styled from 'styled-components';
+import { Demo } from '../../../src/component/BaseComponent/Demo';
+import { CanvasDemo } from './CanvasDemo';
+// import styled from 'styled-components';
 
-const { Editor } = DraftPublic;
-
-export default class Example extends React.PureComponent<any, any> {
+export default class Example extends CanvasDemo<any, any> {
     constructor(props: any) {
         super(props);
     }
 
-    render() {
-        interface ICustProps { type: string; }
-        const CustOl = styled<ICustProps, 'ol'>('ol')`
-            list-style-type: ${
-                (p: ICustProps) => {
-                    switch (p.type) {
-                        case 'ol':
-                            return 'lower-roman';
-                        default:
-                            return 'upper-roman';
-                    }
-                }
-            };
-        `;
+    selectionChangin = (newState: boolean, keyStatus: any): boolean => {
+        alert(newState);
 
+        return true;
+    }
+
+    test = () => {
+        const caicai = this.getRef('caicai');
+
+        if (null !== caicai) {
+            console.log(caicai!.getSize());
+            console.log(caicai!.getPostion());
+        } else {
+            console.warn('nimei');
+        }
+    }
+
+    render() {
         return (
-            <div className="RichEditor-root">
-                <Editor />
-                <CustOl type="de">
-                    <li>123</li>
-                </CustOl>
-                <CustOl type="ol">
-                    <li>123</li>
-                </CustOl>
-            </div>
+            <React.Fragment>
+                <Demo
+                    // tslint:disable-next-line:jsx-no-string-ref
+                    ref="caicai"
+                    demoProp="cainima"
+                    selectionChanging={this.selectionChangin}
+                />
+                <button onClick={this.test}>調用啊</button>
+            </React.Fragment>
         );
     }
 }

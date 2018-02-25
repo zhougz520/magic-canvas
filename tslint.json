@@ -47,7 +47,7 @@
         "object-literal-sort-keys": false,
         "no-conditional-assignment": false,
         "variable-name": false,
-        "no-console": false,
+        "no-console": true,
         "no-unused-expression": false,
         "prefer-for-of": false
     },
