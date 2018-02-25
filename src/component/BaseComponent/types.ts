@@ -1,5 +1,5 @@
 /**
- * TODO: 注释
+ * TODO：注释
  */
 export interface ISize {
     width: number;
