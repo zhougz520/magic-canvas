@@ -1,17 +1,8 @@
-import {
-    ISize,
-    IPostion
-} from './types';
-import { IComponent } from './IComponent';
-import { IBaseProps } from './IBaseProps';
-import { IBaseState } from './IBaseState';
-import { BaseComponent } from './BaseComponent';
+export { IComponent } from './IComponent';
+export { IBaseProps } from './IBaseProps';
+export { IBaseState } from './IBaseState';
 
-export {
-    ISize,
-    IPostion,
-    IComponent,
-    IBaseProps,
-    IBaseState,
-    BaseComponent
-};
+export { BaseComponent } from './BaseComponent';
+export { BaseState } from './model/BaseState';
+export { SizeState } from './model/SizeState';
+export { PostionState } from './model/PostionState';

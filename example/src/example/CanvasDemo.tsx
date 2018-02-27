@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IComponent } from '../../../src';
-// import styled from 'styled-components';
 
 export class CanvasDemo<P = {}, S = {}> extends React.PureComponent<P, S> {
     getRef = (key: string): IComponent | null => {

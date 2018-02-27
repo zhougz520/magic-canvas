@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Demo } from '../../../src/component/BaseComponent/Demo';
+import { Demo } from '../../../src/component/BaseComponent/demo/Demo';
 import { CanvasDemo } from './CanvasDemo';
-// import styled from 'styled-components';
 
+/* tslint:disable:no-console */
+/* tslint:disable:jsx-no-string-ref */
 export default class Example extends CanvasDemo<any, any> {
     constructor(props: any) {
         super(props);
@@ -18,8 +19,7 @@ export default class Example extends CanvasDemo<any, any> {
         const caicai = this.getRef('caicai');
 
         if (null !== caicai) {
-            console.log(caicai!.getSize());
-            console.log(caicai!.getPostion());
+            console.log(caicai!.getBaseState());
         } else {
             console.warn('nimei');
         }
@@ -29,12 +29,13 @@ export default class Example extends CanvasDemo<any, any> {
         return (
             <React.Fragment>
                 <Demo
-                    // tslint:disable-next-line:jsx-no-string-ref
                     ref="caicai"
                     demoProp="cainima"
+                    w={10}
+                    h={20}
                     selectionChanging={this.selectionChangin}
                 />
-                <button onClick={this.test}>調用啊</button>
+                <button onClick={this.test}>调用</button>
             </React.Fragment>
         );
     }
