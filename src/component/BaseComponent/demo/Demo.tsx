@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState } from '../index';
+import { BaseComponent, BaseState, IBaseProps, IBaseState } from '../index';
 
 export interface IDemoProps extends IBaseProps {
     demoProp: string;
@@ -17,19 +17,24 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
     public render() {
         const { demoProp } = this.props;
 
+        const richChildNode = this.getRichChildNode();
+
         return (
             <div>
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
+                    onClick={this.click}
                 >
-                    {demoProp}
+                    {demoProp + '.'} - {richChildNode}
                 </div>
-                <button onClick={this.click}>DemoClick</button>
+                <button onClick={this.click}>DemoClick(console)</button>
             </div>
         );
     }
 
     private click = () => {
-        this.testChanging();
+        const baseState: BaseState = this.getBaseState();
+        // tslint:disable-next-line:no-console
+        console.log(baseState);
     }
 }

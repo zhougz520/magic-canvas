@@ -1,17 +1,30 @@
-import { BaseState } from './model/BaseState';
-import { SizeState } from './model/SizeState';
-import { PostionState } from './model/PostionState';
+import { ISize, IPostion } from './model/types';
 
 /**
- * TODO：注释
+ * BaseComponent提供的方法接口
  */
 export interface IComponent {
-    getBaseState: () => BaseState;
-    setBaseState: (baseState: BaseState) => void;
+    /**
+     * 获取、设置size属性
+     */
+    getSize: () => ISize;
+    setSize: (size: ISize) => void;
 
-    getSizeState: () => SizeState;
-    setSizeState: (sizeState: SizeState) => void;
+    /**
+     * 获取、设置postion属性
+     */
+    getPostion: () => IPostion;
+    setPostion: (postion: IPostion) => void;
 
-    getPostionState: () => PostionState;
-    setPostionState: (postionState: PostionState) => void;
+    /**
+     * 获取、设置isSelected
+     */
+    getIsSelected: () => boolean;
+    setIsSelected: (isSelected: boolean) => void;
+
+    /**
+     * 获取、设置richChildNode
+     */
+    getRichChildNode: () => any;
+    setRichChildNode: (richChildNode: any) => void;
 }

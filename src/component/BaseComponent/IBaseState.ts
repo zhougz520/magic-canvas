@@ -1,7 +1,7 @@
 import { BaseState } from './model/BaseState';
 
 /**
- * TODO：注释
+ * 构建BaseComponent的state
  */
 export interface IBaseState {
     baseState: BaseState;
