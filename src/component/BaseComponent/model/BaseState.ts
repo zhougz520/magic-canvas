@@ -1,26 +1,24 @@
 import { Record } from 'immutable';
-import { SizeState } from './SizeState';
-import { PostionState } from './PostionState';
+import { ContentState } from './ContentState';
+
+import { Stack } from 'immutable';
 
 /**
  * BaseState的属性
  */
 interface IBaseState {
-    // 是否选中：是（true）|否（false）
-    isSelected: boolean;
-    // 组件大小：width|height
-    sizeState: SizeState | null;
-    // 组件位置：left|right|top|bottom
-    postionState: PostionState | null;
-    // 组件中带格式的富文本内容
-    richChildNode: any;
+    // 当前内容：ContentState类型的对象
+    currentContent: ContentState | null;
+    // 重做：ContentState类型的堆栈
+    redoStack: Stack<ContentState>;
+    // 撤销：ContentState类型的堆栈
+    undoStack: Stack<ContentState>;
 }
 
 const defaultRecord: IBaseState = {
-    isSelected: false,
-    sizeState: null,
-    postionState: null,
-    richChildNode: null
+    currentContent: null,
+    redoStack: Stack(),
+    undoStack: Stack()
 };
 
 export const BaseStateRecord: Record.Class = Record(defaultRecord);
@@ -34,21 +32,20 @@ export class BaseState extends BaseStateRecord {
      * 初始化空的BaseState
      */
     static createEmpty(): BaseState {
-        return BaseState.createWithSizeAndPostion(
-            SizeState.createEmpty(),
-            PostionState.createEmpty()
+        return BaseState.createWithContent(
+            ContentState.createEmpty()
         );
     }
 
     /**
-     * 通过大小和位置初始化BaseState
-     * @param newSizeState 大小状态:SizeState.create({ width: 10, height: 10 })
-     * @param newPostionState 位置状态:PostionState.create({ left: 0, right: 0, top: 0, bottom: 0 })
+     * 通过内容初始化BaseState
+     * @param contentState 内容对象:ContentState.create(contentState: IContentState)
      */
-    static createWithSizeAndPostion(newSizeState: SizeState, newPostionState: PostionState): BaseState {
+    static createWithContent(contentState: ContentState): BaseState {
         const recordConfig = {
-            sizeState: newSizeState,
-            postionState: newPostionState
+            currentContent: contentState,
+            undoStack: Stack(),
+            redoStack: Stack()
         };
 
         return BaseState.create(recordConfig);
@@ -56,7 +53,7 @@ export class BaseState extends BaseStateRecord {
 
     /**
      * 通过传入对象初始化BaseState
-     * @param config IBaseState中属性的集合对象（eg：{sizeState: null, richChildNode: null}）
+     * @param config IBaseState中属性的集合对象（eg：{currentContent: null, undoStack: null, redoStack: null}）
      */
     static create(config: any): BaseState {
         return new BaseState(config);
@@ -72,19 +69,15 @@ export class BaseState extends BaseStateRecord {
         return new BaseState(map);
     }
 
-    getIsSelected(): boolean {
-        return this.get('isSelected');
+    getCurrentContent(): ContentState {
+        return this.get('currentContent');
     }
 
-    getSizeState(): SizeState {
-        return this.get('sizeState');
+    getUndoStack(): Stack<ContentState> {
+        return this.get('undoStack');
     }
 
-    getPostionState(): PostionState {
-        return this.get('postionState');
-    }
-
-    getRichChildNode(): any {
-        return this.get('richChildNode');
+    getRedoStack(): Stack<ContentState> {
+        return this.get('redoStack');
     }
 }

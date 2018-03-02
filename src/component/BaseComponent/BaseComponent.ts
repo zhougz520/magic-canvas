@@ -5,6 +5,7 @@ import { IBaseProps } from './IBaseProps';
 import { IBaseState } from './IBaseState';
 
 import { BaseState } from './model/BaseState';
+import { ContentState } from './model/ContentState';
 import { SizeState } from './model/SizeState';
 import { PostionState } from './model/PostionState';
 import { ISize, IPostion } from './model/types';
@@ -14,11 +15,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     constructor(props: P, context?: any) {
         super(props, context);
 
+        const contentState: ContentState = ContentState.create({
+            isSelected: false,
+            sizeState: SizeState.create({ width: props.w, height: props.h }),
+            postionState: PostionState.create({ left: props.l, right: props.r, top: props.t, bottom: props.b }),
+            richChildNode: null
+        });
         this.state = {
-            baseState: BaseState.createWithSizeAndPostion(
-                SizeState.create({ width: props.w, height: props.h }),
-                PostionState.create({ left: props.l, right: props.r, top: props.t, bottom: props.b })
-            )
+            baseState: BaseState.createWithContent(contentState)
         } as Readonly<S>;
     }
 
@@ -77,7 +81,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     public getIsSelected = (): boolean => {
         const baseState: BaseState = this.getBaseState();
 
-        return baseState.getIsSelected();
+        return baseState.getCurrentContent().getIsSelected();
     }
 
     /**
@@ -86,7 +90,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public setIsSelected = (isSelected: boolean): void => {
         const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState = BaseState.set(oldBaseState, { isSelected });
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            isSelected
+        }) as ContentState;
+        const newBaseState = BaseState.set(oldBaseState, {
+            currentContent: newContent
+        });
 
         this.setBaseState(newBaseState);
     }
@@ -98,7 +107,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     public getRichChildNode = (): any => {
         const baseState: BaseState = this.getBaseState();
 
-        return baseState.getRichChildNode();
+        return baseState.getCurrentContent().getRichChildNode();
     }
 
     /**
@@ -107,7 +116,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public setRichChildNode = (richChildNode: any): void => {
         const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState = BaseState.set(oldBaseState, { richChildNode });
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            richChildNode
+        }) as ContentState;
+        const newBaseState = BaseState.set(oldBaseState, {
+            currentContent: newContent
+        });
 
         this.setBaseState(newBaseState);
     }
@@ -136,7 +150,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected getSizeState = (): SizeState => {
         const baseState: BaseState = this.getBaseState();
-        const sizeState: SizeState = baseState.getSizeState();
+        const sizeState: SizeState = baseState.getCurrentContent().getSizeState();
 
         return sizeState;
     }
@@ -147,7 +161,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected setSizeState = (newSizeState: SizeState): void => {
         const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState: BaseState = BaseState.set(oldBaseState, { sizeState: newSizeState });
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            sizeState: newSizeState
+        }) as ContentState;
+        const newBaseState: BaseState = BaseState.set(oldBaseState, {
+            currentContent: newContent
+        });
 
         this.setState({
             baseState: newBaseState
@@ -159,7 +178,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected getPostionState = (): PostionState => {
         const baseState: BaseState = this.getBaseState();
-        const postionState: PostionState = baseState.getPostionState();
+        const postionState: PostionState = baseState.getCurrentContent().getPostionState();
 
         return postionState;
     }
@@ -170,7 +189,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected setPostionState = (newPostionState: PostionState): void => {
         const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState: BaseState = BaseState.set(oldBaseState, { postionState: newPostionState });
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            postionState: newPostionState
+        }) as ContentState;
+        const newBaseState: BaseState = BaseState.set(oldBaseState, {
+            currentContent: newContent
+        });
 
         this.setState({
             baseState: newBaseState
