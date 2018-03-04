@@ -95,6 +95,26 @@ export default class Example extends CanvasDemo<any, any> {
         }
     }
 
+    setUndo = () => {
+        const demoComponent = this.getRef('DemoComponent');
+
+        if (null !== demoComponent) {
+            demoComponent.undo();
+        } else {
+            console.log('nima');
+        }
+    }
+
+    setRedo = () => {
+        const demoComponent = this.getRef('DemoComponent');
+
+        if (null !== demoComponent) {
+            demoComponent.redo();
+        } else {
+            console.log('nima');
+        }
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -142,6 +162,15 @@ export default class Example extends CanvasDemo<any, any> {
                 <ol>
                     <li>
                         <button onClick={this.setText}>设置文本</button>
+                    </li>
+                </ol>
+                <ol>
+                    撤销、重做（看最上面按钮console.log()出来的baseState的值）
+                    <li>
+                        <button onClick={this.setUndo}>撤销</button>
+                    </li>
+                    <li>
+                        <button onClick={this.setRedo}>重做</button>
                     </li>
                 </ol>
                 获取到的值：

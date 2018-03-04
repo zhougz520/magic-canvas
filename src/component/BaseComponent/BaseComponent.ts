@@ -93,9 +93,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             isSelected
         }) as ContentState;
-        const newBaseState = BaseState.set(oldBaseState, {
-            currentContent: newContent
-        });
+        const newBaseState = BaseState.push(oldBaseState, newContent);
 
         this.setBaseState(newBaseState);
     }
@@ -119,9 +117,27 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             richChildNode
         }) as ContentState;
-        const newBaseState = BaseState.set(oldBaseState, {
-            currentContent: newContent
-        });
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setBaseState(newBaseState);
+    }
+
+    /**
+     * 重做
+     */
+    public redo = (): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newBaseState: BaseState = BaseState.redo(oldBaseState);
+
+        this.setBaseState(newBaseState);
+    }
+
+    /**
+     * 撤销
+     */
+    public undo = (): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newBaseState: BaseState = BaseState.undo(oldBaseState);
 
         this.setBaseState(newBaseState);
     }
@@ -164,9 +180,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             sizeState: newSizeState
         }) as ContentState;
-        const newBaseState: BaseState = BaseState.set(oldBaseState, {
-            currentContent: newContent
-        });
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
 
         this.setState({
             baseState: newBaseState
@@ -192,9 +206,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             postionState: newPostionState
         }) as ContentState;
-        const newBaseState: BaseState = BaseState.set(oldBaseState, {
-            currentContent: newContent
-        });
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
 
         this.setState({
             baseState: newBaseState

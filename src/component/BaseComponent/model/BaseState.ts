@@ -59,6 +59,11 @@ export class BaseState extends BaseStateRecord {
         return new BaseState(config);
     }
 
+    /**
+     * 给BaseState设置内容
+     * @param baseState this.state.baseState
+     * @param put BaseState属性的集合
+     */
     static set(baseState: BaseState, put: any): BaseState {
         const map: any = baseState.withMutations(
             (state: any) => {
@@ -67,6 +72,73 @@ export class BaseState extends BaseStateRecord {
         );
 
         return new BaseState(map);
+    }
+
+    /**
+     * 设置重做、撤销栈
+     * @param baseState this.state.baseState
+     * @param contentState 当前设置的新内容State,newContentState
+     */
+    static push(baseState: BaseState, contentState: ContentState): BaseState {
+        if (baseState.getCurrentContent() === contentState) {
+            return baseState;
+        }
+
+        const currentContent: ContentState = baseState.getCurrentContent();
+        let undoStack: Stack<ContentState> = baseState.getUndoStack();
+        const newContent: ContentState = contentState;
+
+        if (newContent !== currentContent) {
+            undoStack = undoStack.push(currentContent);
+        }
+
+        const editorStateChanges: any = {
+            currentContent: newContent,
+            undoStack,
+            redoStack: Stack()
+        };
+
+        return BaseState.set(baseState, editorStateChanges);
+    }
+
+    /**
+     * 撤销
+     * @param baseState 当前baseState
+     */
+    static undo(baseState: BaseState): BaseState {
+        const undoStack: Stack<ContentState> = baseState.getUndoStack();
+        const newCurrentContent: ContentState = undoStack.peek();
+        if (!newCurrentContent) {
+          return baseState;
+        }
+
+        const currentContent: ContentState = baseState.getCurrentContent();
+
+        return BaseState.set(baseState, {
+            currentContent: newCurrentContent,
+            undoStack: undoStack.shift(),
+            redoStack: baseState.getRedoStack().push(currentContent)
+        });
+    }
+
+    /**
+     * 重做
+     * @param baseState 当前baseState
+     */
+    static redo(baseState: BaseState): BaseState {
+        const redoStack: Stack<ContentState> = baseState.getRedoStack();
+        const newCurrentContent: ContentState = redoStack.peek();
+        if (!newCurrentContent) {
+          return baseState;
+        }
+
+        const currentContent: ContentState = baseState.getCurrentContent();
+
+        return BaseState.set(baseState, {
+            currentContent: newCurrentContent,
+            undoStack: baseState.getUndoStack().push(currentContent),
+            redoStack: redoStack.shift()
+        });
     }
 
     getCurrentContent(): ContentState {

@@ -27,4 +27,10 @@ export interface IComponent {
      */
     getRichChildNode: () => any;
     setRichChildNode: (richChildNode: any) => void;
+
+    /**
+     * 重做、撤销
+     */
+    redo: () => void;
+    undo: () => void;
 }
