@@ -9,5 +9,7 @@ export interface IBaseProps {
 
     selectionChanging?: (cid: string, e: any) => void;
 
+    repairSelected?: () => void;
+
     data: any;
 }

@@ -37,6 +37,7 @@ interface IDragDiv {
 let globalVar = {
     ctrlPress: false,  // 是否按下ctrl键
     mouseDown: false,  // 鼠标是否按下
+    dargingStart: false, // 是否开始拖拽
     pointStart: {    // 鼠标按下时的位置
         x: 0, y: 0,
         setValue(args: IPointerArgs) {
@@ -114,8 +115,8 @@ const keyFun: IKeyFun = {
     left: {
         press() {
             keyFun.clearTimer();
-            CanvasCommand.move('x', -1);
-            keyFun.timer = setInterval(() => { CanvasCommand.move('x', -1); }, 100);
+            CanvasCommand.moveComponent('x', -1);
+            keyFun.timer = setInterval(() => { CanvasCommand.moveComponent('x', -1); }, 100);
         },
         release() {
             keyFun.clearTimer();
@@ -124,8 +125,8 @@ const keyFun: IKeyFun = {
     up: {
         press() {
             keyFun.clearTimer();
-            CanvasCommand.move('y', -1);
-            keyFun.timer = setInterval(() => { CanvasCommand.move('y', -1); }, 100);
+            CanvasCommand.moveComponent('y', -1);
+            keyFun.timer = setInterval(() => { CanvasCommand.moveComponent('y', -1); }, 100);
         },
         release() {
             keyFun.clearTimer();
@@ -134,8 +135,8 @@ const keyFun: IKeyFun = {
     right: {
         press() {
             keyFun.clearTimer();
-            CanvasCommand.move('x', 1);
-            keyFun.timer = setInterval(() => { CanvasCommand.move('x', 1); }, 100);
+            CanvasCommand.moveComponent('x', 1);
+            keyFun.timer = setInterval(() => { CanvasCommand.moveComponent('x', 1); }, 100);
         },
         release() {
             keyFun.clearTimer();
@@ -144,8 +145,8 @@ const keyFun: IKeyFun = {
     down: {
         press() {
             keyFun.clearTimer();
-            CanvasCommand.move('y', 1);
-            keyFun.timer = setInterval(() => { CanvasCommand.move('y', 1); }, 100);
+            CanvasCommand.moveComponent('y', 1);
+            keyFun.timer = setInterval(() => { CanvasCommand.moveComponent('y', 1); }, 100);
         },
         release() {
             keyFun.clearTimer();
@@ -179,6 +180,10 @@ export const CanvasCommand: ICanvasCommand = {
         return globalVar.ctrlPress;
     },
 
+    isMouseDown() {
+        return globalVar.mouseDown;
+    },
+
     // 返回鼠标按下时的初始位置
     getPointerStart() {
         return globalVar.pointStart;
@@ -186,7 +191,17 @@ export const CanvasCommand: ICanvasCommand = {
 
     // 是否开始拖拽
     isDargingStart() {
-        return globalVar.mouseDown;
+        return globalVar.dargingStart;
+    },
+
+    // 开始拖拽
+    setDragingStart() {
+        if (globalVar.mouseDown) globalVar.dargingStart = true;
+    },
+
+    // 结束拖拽
+    setDragingEnd() {
+        if (!globalVar.mouseDown) globalVar.dargingStart = false;
     },
 
     // 返回鼠标拖拽类型
@@ -207,6 +222,7 @@ export const CanvasCommand: ICanvasCommand = {
     // canvas上的鼠标点击事件
     canvasMouseUp(e: any) {
         globalVar.mouseDown = false;
+        globalVar.dargingStart = false;
         globalVar.dragType = 'none';
     },
 
@@ -222,6 +238,7 @@ export const CanvasCommand: ICanvasCommand = {
     // 组件传递而来的鼠标点击事件
     componentMouseUp(e: any) {
         globalVar.mouseDown = false;
+        globalVar.dargingStart = false;
         globalVar.dragType = 'none';
     },
 
@@ -233,101 +250,51 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.currentAnchor = anchorPoint;
     },
 
-    // 组件伸展
-    stretchComponen(axis: string, distance: number) {
-        // this.state.selectedCids.map((cid) => {
-        //     if (cid) {
-        //         const component = this.getRef(cid);
-        //         if (component !== null) {
-        //             const position = component.getPosition();
-        //             component.setPosition({
-        //                 left: axis === 'y' ? position.left : position.left + distance,
-        //                 right: position.right,
-        //                 top: axis === 'x' ? position.top : position.top + distance,
-        //                 bottom: position.bottom
-        //             });
-        //             this.drawSelected(this.state.selectedCids);
-        //         }
+    // // 键盘移动组件
+    // moveComponent(axis: string, distance: number) {
 
-        //     }
-        // });
+    // },
+
+    // 组件伸展
+    stretchComponent(left: number, top: number, width: number, height: number) {
+        const component = globalVar.currentComponentData.component;
+        const position = globalVar.currentComponentData.position;
+        const size = globalVar.currentComponentData.size;
+        if (component !== null && position !== null && size !== null) {
+            component.setPosition({
+                left: position.left + left,
+                right: position.right,
+                top: position.top + top,
+                bottom: position.bottom
+            });
+            component.setSize({
+                width: size.width + width,
+                height: size.height + height
+            });
+        }
     },
 
     //  组件上锚点拖动事件
     componentAnchorMove(offset: { x: number, y: number }) {
-        const component = globalVar.currentComponentData.component;
-        const position = globalVar.currentComponentData.position;
-        const size = globalVar.currentComponentData.size;
-
-        // 根据不同的锚点，用不同的方式修改组件状态
-        if (component !== null && position !== null && size !== null) {
-            if (globalVar.currentAnchor) {
-                switch (globalVar.currentAnchor.key) {
-                    case 'ul': {    // 左上锚点，修改position
-                        component.setPosition({
-                            left: position.left + offset.x,
-                            right: position.right,
-                            top: position.top + offset.y,
-                            bottom: position.bottom
-                        });
-                        component.setSize({
-                            width: size.width - offset.x,
-                            height: size.height - offset.y
-                        });
-
-                        return;
-                    }
-                    case 'ml': {     // 左中锚点，修改position(left)
-                        component.setPosition({
-                            left: position.left + offset.x,
-                            right: position.right,
-                            top: position.top,
-                            bottom: position.bottom
-                        });
-                        component.setSize({
-                            width: size.width - offset.x,
-                            height: size.height
-                        });
-
-                        return;
-                    }
-                    case 'bl': {    // 坐下锚点
-                        component.setPosition({
-                            left: position.left + offset.x,
-                            right: position.right,
-                            top: position.top + offset.y,
-                            bottom: position.bottom
-                        });
-                        component.setSize({
-                            width: size.width - offset.x,
-                            height: size.height + offset.y
-                        });
-                    }
-                    case 'um': {    // 上中锚点
-                        component.setPosition({
-                            left: position.left,
-                            right: position.right,
-                            top: position.top + offset.y,
-                            bottom: position.bottom
-                        });
-                        component.setSize({
-                            width: size.width,
-                            height: size.height - offset.y
-                        });
-                    }
-                    case 'ur': {    // 由上锚点
-                        component.setPosition({
-                            left: position.left + offset.x,
-                            right: position.right,
-                            top: position.top + offset.y,
-                            bottom: position.bottom
-                        });
-                        component.setSize({
-                            width: size.width + offset.y,
-                            height: size.height + offset.y
-                        });
-                    }
-                }
+        if (!globalVar.dargingStart) return;
+        if (globalVar.currentAnchor) {
+            switch (globalVar.currentAnchor.key) {
+                // 左上锚点，修改position
+                case 'ul': return this.stretchComponent(offset.x, offset.y, -offset.x, -offset.y);
+                // 左中锚点，修改position(left)
+                case 'ml': return this.stretchComponent(offset.x, 0, -offset.x, 0);
+                // 左下锚点
+                case 'bl': return this.stretchComponent(offset.x, 0, -offset.x, offset.y);
+                // 上中锚点
+                case 'um': return this.stretchComponent(0, offset.y, 0, -offset.y);
+                // 右上锚点
+                case 'ur': return this.stretchComponent(0, offset.y, offset.x, -offset.y);
+                // 右中锚点
+                case 'mr': return this.stretchComponent(0, 0, offset.x, 0);
+                // 右下锚点
+                case 'br': return this.stretchComponent(0, 0, offset.x, offset.y);
+                // 下中锚点
+                case 'bm': return this.stretchComponent(0, 0, 0, offset.y);
             }
         }
     },
@@ -358,6 +325,7 @@ export const CanvasCommand: ICanvasCommand = {
 
     // 在body中移动组件的移动框
     moveDocumentDiv(offset: { x: number, y: number }) {
+        if (!globalVar.dargingStart) return;
         globalVar.dragDivList.map((item: IDragDiv | undefined) => {
             if (item !== undefined) {
                 const pos = item.component.getPosition();

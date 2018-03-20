@@ -46,6 +46,13 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
         this.setState({ frameMap });
     }
 
+    // 绘制拖拽中的选中框
+    showDragingFrame = (cid: string) => {
+        let frameMap = this.state.frameMap;
+        if (frameMap.has(cid)) frameMap = frameMap.remove(cid);
+        this.setState({ frameMap });
+    }
+
     // 绘制拉选框
     drawChoiceBox = (data: { pointX: number, pointY: number, offset: any }) => {
         const pos = this.props.componentPosition;

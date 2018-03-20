@@ -195,6 +195,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return sizeState;
     }
 
+    // render后的回调函数
+    protected renderCallback = () => {
+        // 通知画布重绘组件的选中框
+        if (this.props.repairSelected) this.props.repairSelected();
+    }
+
     /**
      * 设置组件的sizeState
      * @param newSizeState 构建好的新的sizeState
@@ -208,7 +214,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        });
+        }, this.renderCallback);
     }
 
     /**
@@ -234,7 +240,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        });
+        }, this.renderCallback);
     }
 
     /**
