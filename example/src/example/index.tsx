@@ -41,12 +41,12 @@ export default class Example extends CanvasDemo<any, any> {
         }
     }
 
-    getPostion = () => {
+    getPosition = () => {
         const demoComponent = this.getRef('DemoComponent');
 
         let myLableText: any = '';
         if (null !== demoComponent) {
-            myLableText = JSON.stringify(demoComponent.getPostion());
+            myLableText = JSON.stringify(demoComponent.getPosition());
         } else {
             myLableText = 'nima';
         }
@@ -54,11 +54,11 @@ export default class Example extends CanvasDemo<any, any> {
         (document.getElementById('myLable') as HTMLElement).innerText = myLableText;
     }
 
-    setPostion = () => {
+    setPosition = () => {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setPostion({left: 11, right: 22, top: 33, bottom: 44});
+            demoComponent.setPosition({left: 11, right: 22, top: 33, bottom: 44});
         } else {
             console.log('nima');
         }
@@ -149,12 +149,12 @@ export default class Example extends CanvasDemo<any, any> {
                     </li>
                 </ol>
                 <ol>
-                    Postion:
+                    Position:
                     <li>
-                        <button onClick={this.getPostion}>获取postion</button>
+                        <button onClick={this.getPosition}>获取Position</button>
                     </li>
                     <li>
-                        <button onClick={this.setPostion}>设置postion</button>
+                        <button onClick={this.setPosition}>设置Position</button>
                     </li>
                 </ol>
                 <ol>

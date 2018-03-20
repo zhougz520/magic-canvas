@@ -255,27 +255,4 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         CanvasCommand.clearDocumentDiv();
     }
 
-    /**
-     * 设置选中组件移动
-     * @param axis 移动方向
-     * @param distance 移动距离
-     */
-    moveSelectedComponent = (axis: string, distance: number) => {
-        this.state.selectedCids.map((cid) => {
-            if (cid) {
-                const component = this.getRef(cid);
-                if (component !== null) {
-                    const position = component.getPostion();
-                    component.setPostion({
-                        left: axis === 'y' ? position.left : position.left + distance,
-                        right: position.right,
-                        top: axis === 'x' ? position.top : position.top + distance,
-                        bottom: position.bottom
-                    });
-                    this.drawSelected(this.state.selectedCids);
-                }
-
-            }
-        });
-    }
 }

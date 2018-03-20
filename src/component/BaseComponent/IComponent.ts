@@ -1,4 +1,4 @@
-import { ISize, IPostion } from './index';
+import { ISize, IPosition } from './index';
 import * as Anchor from '../util/AnchorPoint';
 
 /**
@@ -14,8 +14,8 @@ export interface IComponent {
     /**
      * 获取、设置postion属性
      */
-    getPostion: () => IPostion;
-    setPostion: (postion: IPostion) => void;
+    getPosition: () => IPosition;
+    setPosition: (postion: IPosition) => void;
 
     /**
      * 获取、设置isSelected

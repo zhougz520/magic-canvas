@@ -7,8 +7,8 @@ import { IBaseState } from './IBaseState';
 import { BaseState } from './model/BaseState';
 import { ContentState } from './model/ContentState';
 import { SizeState } from './model/SizeState';
-import { PostionState } from './model/PostionState';
-import { ISize, IPostion } from './index';
+import { PositionState } from './model/PositionState';
+import { ISize, IPosition } from './index';
 import * as Anchor from '../util/AnchorPoint';
 
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
@@ -20,7 +20,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             isSelected: false,
             sizeState: SizeState.create({ width: props.data.w, height: props.data.h }),
             // tslint:disable-next-line:max-line-length
-            postionState: PostionState.create({ left: props.data.l, right: props.data.r, top: props.data.t, bottom: props.data.b }),
+            positionState: PositionState.create({ left: props.data.l, right: props.data.r, top: props.data.t, bottom: props.data.b }),
             richChildNode: null
         });
         this.state = {
@@ -52,28 +52,28 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件postion
-     * 返回：IPostion类型的对象{left: 10, right: 10, top: 10, bottom: 10}
+     * 获取组件Position
+     * 返回：IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public getPostion = (): IPostion => {
-        const postionState: PostionState = this.getPostionState();
+    public getPosition = (): IPosition => {
+        const positionState: PositionState = this.getPositionState();
 
         return {
-            left: postionState.getLeft(),
-            right: postionState.getRight(),
-            top: postionState.getTop(),
-            bottom: postionState.getBottom()
+            left: positionState.getLeft(),
+            right: positionState.getRight(),
+            top: positionState.getTop(),
+            bottom: positionState.getBottom()
         };
     }
 
     /**
-     * 设置组件postion
-     * @param postion IPostion类型的对象{left: 10, right: 10, top: 10, bottom: 10}
+     * 设置组件Position
+     * @param Position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public setPostion = (postion: IPostion): void => {
-        const newPostionState: PostionState = PostionState.create(postion);
+    public setPosition = (Position: IPosition): void => {
+        const newPositionState: PositionState = PositionState.create(Position);
 
-        this.setPostionState(newPostionState);
+        this.setPositionState(newPositionState);
     }
 
     /**
@@ -150,12 +150,20 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     public getPointerAnchor = (currentX: number, currentY: number): Anchor.IAnchor | null => {
         // 计算当前点击事件的触发位置
         // const pointer = {x: e.pageX, y: e.pageY};
-        const postionState = this.getPostionState();
+        const positionState = this.getPositionState();
         const sizeState = this.getSizeState();
         const anchorList = Anchor.countAnchorPoint(
-            postionState.getLeft(), postionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
+            positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
         return Anchor.findAnchorPoint(currentX, currentY, anchorList);
+    }
+
+    /**
+     * 修改组件的大小
+     */
+    public stretchComponent = (position: IPosition, size: ISize) => {
+        this.setPosition(position);
+        this.setSize(size);
     }
 
     /**
@@ -204,23 +212,23 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件的postionState
+     * 获取组件的PositionState
      */
-    protected getPostionState = (): PostionState => {
+    protected getPositionState = (): PositionState => {
         const baseState: BaseState = this.getBaseState();
-        const postionState: PostionState = baseState.getCurrentContent().getPostionState();
+        const positionState: PositionState = baseState.getCurrentContent().getPositionState();
 
-        return postionState;
+        return positionState;
     }
 
     /**
-     * 设置组件的postionState
-     * @param newPostionState 构建好的新的postionState
+     * 设置组件的PositionState
+     * @param newPositionState 构建好的新的PositionState
      */
-    protected setPostionState = (newPostionState: PostionState): void => {
+    protected setPositionState = (newPositionState: PositionState): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            postionState: newPostionState
+            PositionState: newPositionState
         }) as ContentState;
         const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
 

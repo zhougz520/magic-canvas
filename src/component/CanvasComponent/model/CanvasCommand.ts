@@ -1,6 +1,6 @@
 import * as keycode from 'keycode';
 import { IPointerArgs, IKeyArgs, IKeyFun, ICanvasCommand } from './types';
-import { IComponent, IPostion, ISize } from '../../BaseComponent';
+import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
 
@@ -53,11 +53,11 @@ let globalVar = {
     },
     currentComponentData: {      // 当前触发组件的数据
         component: null as IComponent | null,
-        position: null as IPostion | null,  // 此处的position和size对象为不可修改对象，可以用作缓存
+        position: null as IPosition | null,  // 此处的position和size对象为不可修改对象，可以用作缓存
         size: null as ISize | null,
         setValue(component: IComponent) {
             this.component = component;
-            this.position = component.getPostion();
+            this.position = component.getPosition();
             this.size = component.getSize();
         }
     },
@@ -233,6 +233,26 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.currentAnchor = anchorPoint;
     },
 
+    // 组件伸展
+    stretchComponen(axis: string, distance: number) {
+        // this.state.selectedCids.map((cid) => {
+        //     if (cid) {
+        //         const component = this.getRef(cid);
+        //         if (component !== null) {
+        //             const position = component.getPosition();
+        //             component.setPosition({
+        //                 left: axis === 'y' ? position.left : position.left + distance,
+        //                 right: position.right,
+        //                 top: axis === 'x' ? position.top : position.top + distance,
+        //                 bottom: position.bottom
+        //             });
+        //             this.drawSelected(this.state.selectedCids);
+        //         }
+
+        //     }
+        // });
+    },
+
     //  组件上锚点拖动事件
     componentAnchorMove(offset: { x: number, y: number }) {
         const component = globalVar.currentComponentData.component;
@@ -244,7 +264,7 @@ export const CanvasCommand: ICanvasCommand = {
             if (globalVar.currentAnchor) {
                 switch (globalVar.currentAnchor.key) {
                     case 'ul': {    // 左上锚点，修改position
-                        component.setPostion({
+                        component.setPosition({
                             left: position.left + offset.x,
                             right: position.right,
                             top: position.top + offset.y,
@@ -258,7 +278,7 @@ export const CanvasCommand: ICanvasCommand = {
                         return;
                     }
                     case 'ml': {     // 左中锚点，修改position(left)
-                        component.setPostion({
+                        component.setPosition({
                             left: position.left + offset.x,
                             right: position.right,
                             top: position.top,
@@ -272,7 +292,7 @@ export const CanvasCommand: ICanvasCommand = {
                         return;
                     }
                     case 'bl': {    // 坐下锚点
-                        component.setPostion({
+                        component.setPosition({
                             left: position.left + offset.x,
                             right: position.right,
                             top: position.top + offset.y,
@@ -284,7 +304,7 @@ export const CanvasCommand: ICanvasCommand = {
                         });
                     }
                     case 'um': {    // 上中锚点
-                        component.setPostion({
+                        component.setPosition({
                             left: position.left,
                             right: position.right,
                             top: position.top + offset.y,
@@ -296,7 +316,7 @@ export const CanvasCommand: ICanvasCommand = {
                         });
                     }
                     case 'ur': {    // 由上锚点
-                        component.setPostion({
+                        component.setPosition({
                             left: position.left + offset.x,
                             right: position.right,
                             top: position.top + offset.y,
@@ -322,8 +342,8 @@ export const CanvasCommand: ICanvasCommand = {
         if (!globalVar.dragDivList.has(cid)) {
             const documentDiv = document.createElement('div');
             documentDiv.style.position = 'absolute';
-            documentDiv.style.top = `${component.getPostion().top + offsetY}px`;
-            documentDiv.style.left = `${component.getPostion().left + offsetX}px`;
+            documentDiv.style.top = `${component.getPosition().top + offsetY}px`;
+            documentDiv.style.left = `${component.getPosition().left + offsetX}px`;
             documentDiv.style.width = `${component.getSize().width}px`;
             documentDiv.style.height = `${component.getSize().height}px`;
             documentDiv.style.border = '1px solid #108ee9';
@@ -340,7 +360,7 @@ export const CanvasCommand: ICanvasCommand = {
     moveDocumentDiv(offset: { x: number, y: number }) {
         globalVar.dragDivList.map((item: IDragDiv | undefined) => {
             if (item !== undefined) {
-                const pos = item.component.getPostion();
+                const pos = item.component.getPosition();
                 const div = item.documentDiv;
                 div.style.display = 'block';
                 item.hasChange = true;
@@ -356,8 +376,8 @@ export const CanvasCommand: ICanvasCommand = {
             if (value !== undefined) {
                 const div = value.documentDiv;
                 if (div.style.left && div.style.top && value.hasChange) {
-                    const pos = value.component.getPostion();
-                    value.component.setPostion({
+                    const pos = value.component.getPosition();
+                    value.component.setPosition({
                         left: parseInt(div.style.left, 10) - globalVar.componentOffset.x,
                         right: pos.right,
                         top: parseInt(div.style.top, 10) - globalVar.componentOffset.y,

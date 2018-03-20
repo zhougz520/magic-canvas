@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Anchor from '../util/AnchorPoint';
 
 /**
  * 构建BaseComponent的Props

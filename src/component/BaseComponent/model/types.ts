@@ -1,8 +1,8 @@
 import { ISize } from './SizeState';
-import { IPostion } from './PostionState';
+import { IPosition } from './PositionState';
 
 export interface IBaseData {
     cid: string;
     size: ISize;
-    position: IPostion;
+    position: IPosition;
 }

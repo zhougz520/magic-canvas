@@ -23,7 +23,7 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
             <div
                 onMouseDown={this.onMouseDown.bind(this, demoProp)}
                 onMouseUp={this.onMouseUp.bind(this, demoProp)}
-                style={BaseStyle(this.getPostionState(), this.getSizeState())}
+                style={BaseStyle(this.getPositionState(), this.getSizeState())}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}

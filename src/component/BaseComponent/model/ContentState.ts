@@ -1,7 +1,7 @@
 import { Record } from 'immutable';
 
 import { SizeState } from './SizeState';
-import { PostionState } from './PostionState';
+import { PositionState } from './PositionState';
 
 export interface IContentState {
     // 是否选中：是（true）|否（false）
@@ -9,7 +9,7 @@ export interface IContentState {
     // 组件大小：width|height
     sizeState: SizeState | null;
     // 组件位置：left|right|top|bottom
-    postionState: PostionState | null;
+    positionState: PositionState | null;
     // 组件中带格式的富文本内容
     richChildNode: any;
 }
@@ -17,7 +17,7 @@ export interface IContentState {
 const defaultRecord: IContentState = {
     isSelected: false,
     sizeState: null,
-    postionState: null,
+    positionState: null,
     richChildNode: null
 };
 
@@ -28,7 +28,7 @@ export class ContentState extends ContentStateRecord {
         return ContentState.create({
             isSelected: false,
             sizeState: SizeState.createEmpty(),
-            postionState: PostionState.createEmpty(),
+            positionState: PositionState.createEmpty(),
             richChildNode: null
         });
     }
@@ -45,8 +45,8 @@ export class ContentState extends ContentStateRecord {
         return this.get('sizeState');
     }
 
-    getPostionState(): PostionState {
-        return this.get('postionState');
+    getPositionState(): PositionState {
+        return this.get('positionState');
     }
 
     getRichChildNode(): any {

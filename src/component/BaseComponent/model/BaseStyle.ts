@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {PostionState, SizeState} from '../index';
+import {PositionState, SizeState} from '../index';
 
-export const BaseStyle = (position: PostionState, size: SizeState): React.CSSProperties => {
+export const BaseStyle = (position: PositionState, size: SizeState): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
         overflow: 'auto',
         position: 'absolute',
