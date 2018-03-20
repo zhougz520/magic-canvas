@@ -1,15 +1,21 @@
 import * as React from 'react';
-import { Demo } from '../../../src/component/BaseComponent/demo/Demo';
-import { CanvasDemo } from './CanvasDemo';
+import { IComponent } from './BaseComponent/IComponent';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Example extends CanvasDemo<any, any> {
+export default class TabPanel<P = {}, S = {}> extends React.PureComponent<P, S> {
+    /**
+     * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在StageStae中
+     * @param props any
+     */
     constructor(props: any) {
         super(props);
-        this.state = {
-            selectedComponent: []
-        };
+    }
+
+    getRef = (key: string): IComponent | null => {
+        const ref = this.refs[key] as any;
+
+        return (ref as IComponent) || null;
     }
 
     selectionChangin = (newState: boolean, keyStatus: any): boolean => {
@@ -35,7 +41,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setSize({width: 22, height: 33});
+            demoComponent.setSize({ width: 22, height: 33 });
         } else {
             console.log('nima');
         }
@@ -58,7 +64,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setPostion({left: 11, right: 22, top: 33, bottom: 44});
+            demoComponent.setPostion({ left: 11, right: 22, top: 33, bottom: 44 });
         } else {
             console.log('nima');
         }
@@ -118,27 +124,13 @@ export default class Example extends CanvasDemo<any, any> {
         }
     }
 
-    selectionChanging = (metaKey: string): boolean => {
-        console.log(`canvas 接受组件${metaKey} 选中事件`);
-
-        return !metaKey;
-    }
-
     render() {
+
         return (
-            <React.Fragment>
-                <Demo
-                    ref="DemoComponent"
-                    demoProp="DemoComponent"
-                    data={{ w: 10, h: 10, l: 10, r: 10, t: 10, b: 10, text: '我是测试组件1' }}
-                    selectionChanging={this.selectionChanging}
-                />
-                <Demo
-                    ref="DemoComponent2"
-                    demoProp="DemoComponent2"
-                    data={{ w: 10, h: 10, l: 10, r: 10, t: 10, b: 10, text: '我是测试组件2' }}
-                    selectionChanging={this.selectionChanging}
-                />
+            <div style={{ position: 'absolute', top: '20px', width: '800px', left: '1200px' }}>
+                <ol>
+                    当前选中的组件:
+                </ol>
                 <ol>
                     Size:
                     <li>
@@ -181,8 +173,8 @@ export default class Example extends CanvasDemo<any, any> {
                     </li>
                 </ol>
                 获取到的值：
-                <div style={{backgroundColor: 'yellow', height: 24, width: '100%'}} id="myLable" />
-            </React.Fragment>
+                <div style={{ backgroundColor: 'yellow', height: 24, width: '100%' }} id="myLable" />
+            </div>
         );
     }
 }

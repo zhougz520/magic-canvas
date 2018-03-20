@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, BaseState, IBaseProps, IBaseState } from '../index';
+import { BaseComponent, BaseState, IBaseProps, IBaseState, BaseStyle } from '../index';
 
 export interface IDemoProps extends IBaseProps {
     demoProp: string;
@@ -20,7 +20,11 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
         const richChildNode = this.getRichChildNode();
 
         return (
-            <div>
+            <div
+                onMouseDown={this.onMouseDown.bind(this, demoProp)}
+                onMouseUp={this.onMouseUp.bind(this, demoProp)}
+                style={BaseStyle(this.getPostionState(), this.getSizeState())}
+            >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
                     onClick={this.click}
@@ -36,5 +40,21 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
         const baseState: BaseState = this.getBaseState();
         // tslint:disable-next-line:no-console
         console.log(baseState);
+    }
+
+    /**
+     * 组件选中事件
+     * @param cid 组件ref标识
+     */
+    private onMouseDown = (cid: string, e: any) => {
+        this.fireSelectChange(cid, e);
+    }
+
+    /**
+     * 组件选中事件
+     * @param cid 组件ref标识
+     */
+    private onMouseUp = (cid: string, e: any) => {
+        // this.fireSelectChange(cid, e);
     }
 }

@@ -1,5 +1,13 @@
 import { Record } from 'immutable';
-import { ISize } from './types';
+
+/**
+ * 组件大小
+ * width(宽)|height(高)
+ */
+export interface ISize {
+    width: number;
+    height: number;
+}
 
 const defaultRecord: ISize = {
     width: 0,

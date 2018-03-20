@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Anchor from '../util/AnchorPoint';
 
 /**
  * 构建BaseComponent的Props
@@ -7,24 +8,7 @@ import * as React from 'react';
 export interface IBaseProps {
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
 
-    /**
-     * 位置属性，与原型V2.0保持相同
-     * 当值为-1时，不设置对应样式
-     */
-    t: number;
-    l: number;
-    r: number;
-    b: number;
+    selectionChanging?: (cid: string, e: any) => void;
 
-    /**
-     * 大小属性，与原型V2.0保持相同
-     * 当值为-1时，不设置对应样式
-     */
-    w: number;
-    h: number;
-
-    /**
-     * 组件内数据集
-     */
     data: any;
 }

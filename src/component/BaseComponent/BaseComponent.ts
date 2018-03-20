@@ -8,7 +8,8 @@ import { BaseState } from './model/BaseState';
 import { ContentState } from './model/ContentState';
 import { SizeState } from './model/SizeState';
 import { PostionState } from './model/PostionState';
-import { ISize, IPostion } from './model/types';
+import { ISize, IPostion } from './index';
+import * as Anchor from '../util/AnchorPoint';
 
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
@@ -17,8 +18,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         const contentState: ContentState = ContentState.create({
             isSelected: false,
-            sizeState: SizeState.create({ width: props.w, height: props.h }),
-            postionState: PostionState.create({ left: props.l, right: props.r, top: props.t, bottom: props.b }),
+            sizeState: SizeState.create({ width: props.data.w, height: props.data.h }),
+            // tslint:disable-next-line:max-line-length
+            postionState: PostionState.create({ left: props.data.l, right: props.data.r, top: props.data.t, bottom: props.data.b }),
             richChildNode: null
         });
         this.state = {
@@ -143,6 +145,20 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取鼠标处于该组件8个点的具体方位
+     */
+    public getPointerAnchor = (currentX: number, currentY: number): Anchor.IAnchor | null => {
+        // 计算当前点击事件的触发位置
+        // const pointer = {x: e.pageX, y: e.pageY};
+        const postionState = this.getPostionState();
+        const sizeState = this.getSizeState();
+        const anchorList = Anchor.countAnchorPoint(
+            postionState.getLeft(), postionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
+
+        return Anchor.findAnchorPoint(currentX, currentY, anchorList);
+    }
+
+    /**
      * 获取组件的baseState
      */
     protected getBaseState = (): BaseState => {
@@ -211,6 +227,21 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         this.setState({
             baseState: newBaseState
         });
+    }
+
+    /**
+     * 组件自己不要处理选中状态，交有画布处理，因为选中状态由键盘和鼠标事件组成，
+     * 每个组件自己记录，还要判断键盘事件，比较复杂，且选中状态对组件身意义不大，故交由画布决定
+     * @param cid 组件ref标识
+     */
+    protected fireSelectChange = (cid: string, e: any): void => {
+        // 阻止点击事件冒泡到画布上
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (this.props.selectionChanging) {
+            this.props.selectionChanging(cid, e);
+        }
     }
 
 }

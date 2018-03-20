@@ -1,4 +1,5 @@
-import { ISize, IPostion } from './model/types';
+import { ISize, IPostion } from './index';
+import * as Anchor from '../util/AnchorPoint';
 
 /**
  * BaseComponent提供的方法接口
@@ -33,4 +34,9 @@ export interface IComponent {
      */
     redo: () => void;
     undo: () => void;
+
+    /**
+     * 定位鼠标点击的部位
+     */
+    getPointerAnchor: (currentX: number, currentY: number) =>  Anchor.IAnchor | null;
 }
