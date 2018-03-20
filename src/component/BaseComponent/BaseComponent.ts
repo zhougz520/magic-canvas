@@ -228,7 +228,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     protected setPositionState = (newPositionState: PositionState): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            PositionState: newPositionState
+            positionState: newPositionState
         }) as ContentState;
         const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
 

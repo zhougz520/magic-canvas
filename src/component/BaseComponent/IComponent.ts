@@ -12,10 +12,10 @@ export interface IComponent {
     setSize: (size: ISize) => void;
 
     /**
-     * 获取、设置postion属性
+     * 获取、设置position属性
      */
     getPosition: () => IPosition;
-    setPosition: (postion: IPosition) => void;
+    setPosition: (position: IPosition) => void;
 
     /**
      * 获取、设置isSelected
