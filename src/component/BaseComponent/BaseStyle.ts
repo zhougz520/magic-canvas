@@ -1,5 +1,7 @@
 import * as React from 'react';
-import {PositionState, SizeState} from '../index';
+
+import { PositionState } from './model/PositionState';
+import { SizeState } from './model/SizeState';
 
 export const BaseStyle = (position: PositionState, size: SizeState): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
