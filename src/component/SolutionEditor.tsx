@@ -5,11 +5,11 @@ import { Set } from 'immutable';
 import { StageStyle } from './style';
 // import * as PropTypes from 'prop-types';
 
-interface ISolutionProp {
+export interface ISolutionProp {
     [key: string]: any;
 }
 
-interface ISolutionState {
+export interface ISolutionState {
     stageOffset: { top: number, left: number };
     canvasOffset: { top: number, left: number };
 }
