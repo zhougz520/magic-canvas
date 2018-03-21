@@ -6,9 +6,8 @@ import { IBaseState } from './IBaseState';
 
 import { BaseState } from './model/BaseState';
 import { ContentState } from './model/ContentState';
-import { SizeState } from './model/SizeState';
-import { PositionState } from './model/PositionState';
-import { ISize, IPosition } from './index';
+import { SizeState, ISize } from './model/SizeState';
+import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
@@ -18,10 +17,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         const contentState: ContentState = ContentState.create({
             isSelected: false,
-            sizeState: SizeState.create({ width: props.data.w, height: props.data.h }),
-            // tslint:disable-next-line:max-line-length
-            positionState: PositionState.create({ left: props.data.l, right: props.data.r, top: props.data.t, bottom: props.data.b }),
-            richChildNode: null
+            sizeState: SizeState.create({
+                width: props.data.w,
+                height: props.data.h
+            }),
+            positionState: PositionState.create({
+                left: props.data.l,
+                right: props.data.r,
+                top: props.data.t,
+                bottom: props.data.b
+            }),
+            // TODO 带格式的富文本
+            richChildNode: props.data.text
         });
         this.state = {
             baseState: BaseState.createWithContent(contentState)

@@ -1,4 +1,5 @@
-import { ISize, IPosition } from './index';
+import { ISize } from './model/SizeState';
+import { IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
 /**
