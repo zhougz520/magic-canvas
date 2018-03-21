@@ -1,12 +1,10 @@
-import { Record } from 'immutable';
+import { Record, Stack } from 'immutable';
 import { ContentState } from './ContentState';
-
-import { Stack } from 'immutable';
 
 /**
  * BaseState的属性
  */
-interface IBaseState {
+export interface IBaseState {
     // 当前内容：ContentState类型的对象
     currentContent: ContentState | null;
     // 重做：ContentState类型的堆栈
@@ -42,21 +40,21 @@ export class BaseState extends BaseStateRecord {
      * @param contentState 内容对象:ContentState.create(contentState: IContentState)
      */
     static createWithContent(contentState: ContentState): BaseState {
-        const recordConfig = {
+        const baseState: IBaseState = {
             currentContent: contentState,
             undoStack: Stack(),
             redoStack: Stack()
         };
 
-        return BaseState.create(recordConfig);
+        return BaseState.create(baseState);
     }
 
     /**
      * 通过传入对象初始化BaseState
-     * @param config IBaseState中属性的集合对象（eg：{currentContent: null, undoStack: null, redoStack: null}）
+     * @param baseState IBaseState中属性的集合对象（eg：{currentContent: null, undoStack: null, redoStack: null}）
      */
-    static create(config: any): BaseState {
-        return new BaseState(config);
+    static create(baseState: IBaseState): BaseState {
+        return new BaseState(baseState);
     }
 
     /**
