@@ -1,17 +1,18 @@
 import * as React from 'react';
 import CanvasComponent from '../CanvasComponent';
-import { ICanvasComponent, ICanvasProps, ICanvasState, CanvasCommand } from '../inedx';
+import { ICanvasComponent, ICanvasProps, ICanvasState, ICanvasCommand } from '../inedx';
 import { Demo } from '../../../component/BaseComponent/demo/Demo';
 import { Set } from 'immutable';
 import { IComponent } from '../../BaseComponent';
 import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
-import * as Anchor from '../../util/AnchorPoint';
+import { CanvasCommand } from '../model/CanvasCommand';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
 export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
     container: HTMLDivElement | null = null;
     canvas: HTMLDivElement | null = null;
+    command: ICanvasCommand = CanvasCommand;
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -20,9 +21,9 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     constructor(props: any) {
         super(props);
         this.state = {
-            selectedCids: Set<string>()
+            // selectedCids: Set<string>()
         } as Readonly<ICanvasState>;
-        CanvasCommand.bind(this);
+        this.command = CanvasCommand;
     }
 
     getRef = (key: string): IComponent | null => {
@@ -56,28 +57,21 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, e: any): void => {
-        let cids: Set<string> = this.state.selectedCids;
-        if (!CanvasCommand.isMultiselect() && !cids.has(cid)) {
-            cids = cids.clear();
-        }
-        cids = cids.add(cid);
-        this.setState({ selectedCids: cids });
-        // 重绘选中框
-        this.drawSelected(cids);
-
-        // 判断点击位置
         const com = this.getRef(cid);
         if (com) {
+            // 组件选择
+            this.command.addSelectedComponent(cid, com);
+            this.repairSelected();
+
+            // 判断点击位置
             const pos = this.props.componentPosition;
             const anchor = com.getPointerAnchor(
                 e.pageX - pos.stageOffset.left - pos.canvasOffset.left,
                 e.pageY - pos.stageOffset.top - pos.canvasOffset.top);
             if (anchor === null) {
-                // 创建移动框
-                this.drawDragBox(cids);
+                this.command.drawDragBox(this.props.componentPosition);
             } else {
-                // 锚点拖动
-                this.setAnchor(com, anchor);
+                this.command.componentAnchorDown(com, anchor);
             }
         }
     }
@@ -98,56 +92,54 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     handlerMouseDown = (e: any) => {
         if (this.onMouseEvent(e)) {  // 画布上的点击
-            CanvasCommand.canvasMouseDown(e);
+            this.command.canvasMouseDown(e);
             // 非多选模式下，清楚所有组件选中状态
-            if (!CanvasCommand.isMultiselect()) {
-                this.setState({ selectedCids: Set<string>() });
+            if (!this.command.isMultiselect()) {
                 this.clearSelected();
             }
             console.log('mousedown');
         } else {// 组件中的点击
-            CanvasCommand.componentMouseDown(e);
+            this.command.componentMouseDown(e);
             console.log('com mouse down');
         }
     }
 
     handlerMouseUp = (e: any) => {
         if (this.onMouseEvent(e)) {
-            CanvasCommand.canvasMouseUp(e);
+            this.command.canvasMouseUp(e);
 
             console.log('mouseup');
         } else {
             console.log('com mouse up');
-            CanvasCommand.componentMouseUp(e);
+            this.command.componentMouseUp(e);
         }
 
         // 清除拉选框
         this.clearChoiceBox();
         // 清楚移动框
-        this.clearDragBox();
-        // TODO:重绘制选中框
+        this.command.clearDragBox();
     }
 
     handleMouseMove = (e: any) => {
-        if (CanvasCommand.isMouseDown()) {  // 鼠标按下才开始计算
-            const pointStart = CanvasCommand.getPointerStart();
+        if (this.command.isMouseDown()) {  // 鼠标按下才开始计算
+            const pointStart = this.command.getPointerStart();
             const offset = {
                 x: e === undefined ? 0 : e.pageX - pointStart.x,
                 y: e === undefined ? 0 : e.pageY - pointStart.y
             };
             // 档偏移量超过10后才开始处理拖拽事件，并隐藏选中框
             if (Math.abs(offset.x) > 10 || Math.abs(offset.y) > 10) {
-                CanvasCommand.setDragingStart();
-                this.clearSelected();
+                this.command.dragingStart();
+                this.hideSelected();
             }
-            switch (CanvasCommand.getDragType()) {
+            switch (this.command.getDragType()) {
                 case 'none': return;
                 // 鼠标拉选框
                 case 'choice': return this.drawChoiceBox(pointStart.x, pointStart.y, offset);
                 //  组件位移框
-                case 'drag': return this.moveDragBox(offset);
+                case 'drag': return this.command.moveDragBox(offset);
                 // 组件缩放框
-                case 'stretch': return this.dragAnchor(offset);
+                case 'stretch': return this.command.componentAnchorMove(offset);
             }
         }
         console.log('mouseMove');
@@ -209,14 +201,22 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 重新绘制组件选中框
      */
     repairSelected = () => {
-        this.drawSelected(this.state.selectedCids);
+        this.drawSelected(this.command.getSelectedCids());
     }
 
     /**
-     * 清理组件选中框
+     * 隐藏组件选中框
+     */
+    hideSelected = () => {
+        this.drawSelected(Set<string>());
+    }
+
+    /**
+     * 清除组件选中框
      */
     clearSelected = () => {
-        this.drawSelected(Set<string>());
+        this.command.clearSelectedComponent();
+        this.hideSelected();
     }
 
     /**
@@ -233,63 +233,5 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     clearChoiceBox = () => {
         // 通知绘画层清理选择框
         this.props.drawChoiceBox(null);
-    }
-
-    /**
-     * 绘制组件移动框
-     */
-    drawDragBox = (cids: Set<string>) => {
-        cids.map((cid) => {
-            if (cid) {
-                const com = this.getRef(cid);
-                CanvasCommand.createDocumentDiv(cid, com, this.props.componentPosition);
-            }
-        });
-    }
-
-    /**
-     * 清理组件移动框
-     */
-    clearDragBox = () => {
-        CanvasCommand.clearDocumentDiv();
-    }
-
-    /**
-     * 拖动组件移动框
-     */
-    moveDragBox = (offset: { x: number, y: number }) => {
-        CanvasCommand.moveDocumentDiv(offset);
-    }
-
-    // 设置选中锚点
-    setAnchor = (com: IComponent, anchor: Anchor.IAnchor) => {
-        CanvasCommand.componentAnchorDown(com, anchor);
-    }
-
-    // 锚点拖动
-    dragAnchor = (offset: { x: number, y: number }) => {
-        CanvasCommand.componentAnchorMove(offset);
-    }
-
-    /**
-     * 设置选中组件移动
-     * @param axis 移动方向
-     * @param distance 移动距离
-     */
-    moveSelectedComponent(axis: string, distance: number) {
-        this.state.selectedCids.map((cid) => {
-            if (cid) {
-                const component = this.getRef(cid);
-                if (component !== null) {
-                    const position = component.getPosition();
-                    component.setPosition({
-                        left: axis === 'y' ? position.left : position.left + distance,
-                        right: position.right,
-                        top: axis === 'x' ? position.top : position.top + distance,
-                        bottom: position.bottom
-                    });
-                }
-            }
-        });
     }
 }

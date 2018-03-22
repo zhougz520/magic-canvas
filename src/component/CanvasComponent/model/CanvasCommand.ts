@@ -1,7 +1,7 @@
 import * as keycode from 'keycode';
 import { IPointerArgs, IKeyArgs, IKeyFun, ICanvasCommand } from './types';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
 
 const body: HTMLBodyElement = document.getElementsByTagName('body')[0];
@@ -35,24 +35,35 @@ interface IDragDiv {
 
 // tslint:disable-next-line:prefer-const
 let globalVar = {
-    ctrlPress: false,  // 是否按下ctrl键
-    mouseDown: false,  // 鼠标是否按下
-    dargingStart: false, // 是否开始拖拽
-    pointStart: {    // 鼠标按下时的位置
+    // 是否按下ctrl键
+    ctrlPress: false,
+    // 鼠标是否按下
+    mouseDown: false,
+    // 是否开始拖拽
+    dargingStart: false,
+    // 当前鼠标按下时的位置
+    pointStart: {
         x: 0, y: 0,
         setValue(args: IPointerArgs) {
             this.x = args.pageX;
             this.y = args.pageY;
+        },
+        getValue() {
+            return { x: this.x, y: this.y };
         }
     },
-    componentOffset: {  // 画布的偏移量
+    // 当前选中的组件集合
+    selectedComponents: Map<string, IComponent>(),
+    // 当前画布的偏移量
+    componentOffset: {
         x: 0, y: 0,
         setValue(args: { offsetX: number, offsetY: number }) {
             this.x = args.offsetX;
             this.y = args.offsetY;
         }
     },
-    currentComponentData: {      // 当前触发组件的数据
+    // 当前触发组件的数据
+    currentComponentData: {
         component: null as IComponent | null,
         position: null as IPosition | null,  // 此处的position和size对象为不可修改对象，可以用作缓存
         size: null as ISize | null,
@@ -62,8 +73,11 @@ let globalVar = {
             this.size = component.getSize();
         }
     },
-    currentAnchor: null as Anchor.IAnchor | null,   // 当前触发的锚点
+    // 当前触发的锚点
+    currentAnchor: null as Anchor.IAnchor | null,
+    // 当前鼠标移动的类型
     dragType: 'none' as string,
+    // 当前生成的组件位移框
     dragDivList: Map<string, IDragDiv>()
 };
 
@@ -159,34 +173,34 @@ const keyFun: IKeyFun = {
  * 创建Canvas的命令集合
  */
 export const CanvasCommand: ICanvasCommand = {
-    canvas: null,
     // 初始化CanvasCommand
     initCanvas() {
         keyFun.addKeyEvent();
     },
 
-    // 将CanvasCommand中的函数绑定到CanvasCanvas组件中
-    bind(ins: any) {
-        for (const key in this) {
-            if (key !== 'bind' && key !== 'canvas') {
-                ins[key] = this[key].bind(ins);
-            }
-        }
-        this.canvas = ins;
-    },
+    // // 将CanvasCommand中的函数绑定到CanvasCanvas组件中
+    // bind(ins: any) {
+    //     for (const key in this) {
+    //         if (key !== 'bind' && key !== 'canvas') {
+    //             ins[key] = this[key].bind(ins);
+    //         }
+    //     }
+    //     this.canvas = ins;
+    // },
 
     // 是否时多选状态
     isMultiselect() {
         return globalVar.ctrlPress;
     },
 
+    // 鼠标是否按下
     isMouseDown() {
         return globalVar.mouseDown;
     },
 
     // 返回鼠标按下时的初始位置
     getPointerStart() {
-        return globalVar.pointStart;
+        return globalVar.pointStart.getValue();
     },
 
     // 是否开始拖拽
@@ -195,12 +209,12 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 开始拖拽
-    setDragingStart() {
+    dragingStart() {
         if (globalVar.mouseDown) globalVar.dargingStart = true;
     },
 
     // 结束拖拽
-    setDragingEnd() {
+    dragingEnd() {
         if (!globalVar.mouseDown) globalVar.dargingStart = false;
     },
 
@@ -250,10 +264,43 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.currentAnchor = anchorPoint;
     },
 
-    // // 键盘移动组件
-    // moveComponent(axis: string, distance: number) {
+    // 新增选中组件
+    addSelectedComponent(cid: string, com: IComponent) {
+        let components = globalVar.selectedComponents;
+        if (!this.isMultiselect() && !components.has(cid)) {
+            components = components.clear();
+        }
+        globalVar.selectedComponents = components.set(cid, com);
+    },
 
-    // },
+    // 获取所以选中组件
+    getSelectedComponents() {
+        return globalVar.selectedComponents;
+    },
+
+    getSelectedCids() {
+        return Set.fromKeys(globalVar.selectedComponents);
+    },
+
+    // 清空选中组件
+    clearSelectedComponent() {
+        globalVar.selectedComponents = globalVar.selectedComponents.clear();
+    },
+
+    // 键盘移动组件
+    moveComponent(axis: string, distance: number) {
+        globalVar.selectedComponents.map((component, cid) => {
+            if (component) {
+                const position = component.getPosition();
+                component.setPosition({
+                    left: axis === 'y' ? position.left : position.left + distance,
+                    right: position.right,
+                    top: axis === 'x' ? position.top : position.top + distance,
+                    bottom: position.bottom
+                });
+            }
+        });
+    },
 
     // 组件伸展
     stretchComponent(left: number, top: number, width: number, height: number) {
@@ -300,31 +347,35 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 在body中创建组件的移动框
-    createDocumentDiv(cid: string, component: IComponent, componentPosition: any) {
+    drawDragBox(componentPosition: any) {
         // 每次创建的时候都跟新一次偏移量
         const offsetX = componentPosition.stageOffset.left + componentPosition.canvasOffset.left;
         const offsetY = componentPosition.stageOffset.top + componentPosition.canvasOffset.top;
         globalVar.componentOffset.setValue({ offsetX, offsetY });
 
-        if (!globalVar.dragDivList.has(cid)) {
-            const documentDiv = document.createElement('div');
-            documentDiv.style.position = 'absolute';
-            documentDiv.style.top = `${component.getPosition().top + offsetY}px`;
-            documentDiv.style.left = `${component.getPosition().left + offsetX}px`;
-            documentDiv.style.width = `${component.getSize().width}px`;
-            documentDiv.style.height = `${component.getSize().height}px`;
-            documentDiv.style.border = '1px solid #108ee9';
-            documentDiv.style.zIndex = '3';
-            documentDiv.style.display = 'none';
-            documentDiv.style.pointerEvents = 'none';
-            body.appendChild(documentDiv);
+        const selectedComponents = globalVar.selectedComponents;
+        selectedComponents.map((component, cid) => {
+            if (!cid || !component) return;
+            if (!globalVar.dragDivList.has(cid)) {
+                const documentDiv = document.createElement('div');
+                documentDiv.style.position = 'absolute';
+                documentDiv.style.top = `${component.getPosition().top + offsetY}px`;
+                documentDiv.style.left = `${component.getPosition().left + offsetX}px`;
+                documentDiv.style.width = `${component.getSize().width}px`;
+                documentDiv.style.height = `${component.getSize().height}px`;
+                documentDiv.style.border = '1px solid #108ee9';
+                documentDiv.style.zIndex = '3';
+                documentDiv.style.display = 'none';
+                documentDiv.style.pointerEvents = 'none';
+                body.appendChild(documentDiv);
 
-            globalVar.dragDivList = globalVar.dragDivList.set(cid, { component, documentDiv, hasChange: false });
-        }
+                globalVar.dragDivList = globalVar.dragDivList.set(cid, { component, documentDiv, hasChange: false });
+            }
+        });
     },
 
     // 在body中移动组件的移动框
-    moveDocumentDiv(offset: { x: number, y: number }) {
+    moveDragBox(offset: { x: number, y: number }) {
         if (!globalVar.dargingStart) return;
         globalVar.dragDivList.map((item: IDragDiv | undefined) => {
             if (item !== undefined) {
@@ -339,7 +390,7 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 在body中删除组件的移动框
-    clearDocumentDiv() {
+    clearDragBox() {
         globalVar.dragDivList.map((value, key) => {
             if (value !== undefined) {
                 const div = value.documentDiv;
