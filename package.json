@@ -51,18 +51,20 @@
     }
   },
   "dependencies": {
+    "@types/react-addons-create-fragment": "^0.14.18",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
+    "react-addons-create-fragment": "^15.6.2",
     "styled-components": "^3.2.3"
   },
   "devDependencies": {
     "@types/debug": "^0.0.30",
     "@types/immutable": "^3.8.7",
     "@types/lodash": "^4.14.102",
-    "@types/node": "^9.4.5",
+    "@types/node": "^9.6.0",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.36",
     "@types/react-dom": "^16.0.3",

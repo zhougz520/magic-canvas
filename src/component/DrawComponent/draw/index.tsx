@@ -3,7 +3,7 @@ import { IDrawComponent, IDrawProps, IDrawState, DrawStyle } from '../index';
 import { Frame, IReactData } from '../box/FrameComponent';
 import { ChoiceBox, IChoiceBoxData } from '../box/ChoiceBoxComponent';
 import DrawComponent from '../DrawComponent';
-import { Set, Map } from 'immutable';
+import { Set } from 'immutable';
 import { IComponent } from '../../BaseComponent';
 
 /* tslint:disable:no-console */
@@ -13,48 +13,26 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
     constructor(props: IDrawProps, context?: any) {
         super(props, context);
         this.state = {
-            frameMap: Map<string, IReactData>(),
+            cids: Set<string>(),
             choiceBox: null
         };
     }
 
-    getComponent = (cid: string) => {
-        const com = this.props.getCanvas().refs[cid] as any;
+    getComponent = (cid: string): IComponent | null => {
+        const canvas = this.props.getCanvas();
+        if (canvas !== null) {
+            return canvas.getComponent(cid);
+        }
 
-        return (com as IComponent) || null;
+        return null;
     }
 
-    // 显示选择框
-    showFrame = (cids: Set<string>) => {
-        const pos = this.props.componentPosition;
-        let frameMap: Map<string, IReactData> = this.state.frameMap.clear();
-        cids.map((cid) => {
-            if (cid) {
-                const com = this.getComponent(cid);
-                const frameData: IReactData = {
-                    pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
-                    pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
-                    width: com.getSize().width + 1,
-                    height: com.getSize().height + 1,
-                    anchorFill: '#fff',
-                    stroke: '#108ee9',
-                    strokeWidth: 1
-                };
-                frameMap = frameMap.set(cid, frameData);
-            }
-        });
-        this.setState({ frameMap });
-    }
-
-    // 绘制拖拽中的选中框
-    showDragingFrame = (cid: string) => {
-        let frameMap = this.state.frameMap;
-        if (frameMap.has(cid)) frameMap = frameMap.remove(cid);
-        this.setState({ frameMap });
+    setSelectedCids = (cids: Set<string>) => {
+        this.setState({ cids });
     }
 
     // 绘制拉选框
-    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any }) => {
+    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any } | null) => {
         const pos = this.props.componentPosition;
         let choiceBox = null;
         if (data !== null) {
@@ -72,24 +50,43 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
     }
 
     render() {
-        const frameRect: any = [];
-        if (this.state.choiceBox !== null) {
-            frameRect.push(<ChoiceBox key="canvas" data={this.state.choiceBox} />);
-        }
-        this.state.frameMap.map((data, key) => {
-            if (data && key) {
-                frameRect.push(<Frame key={key} data={data} />);
-            }
-        });
+        const frameRect: any = this.getSelectedFrame();
 
         return (
             // tslint:disable-next-line:jsx-no-string-ref
             <div className="draw" style={DrawStyle} ref={(draw) => this.draw = draw}>
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
                     {frameRect}
+                    {this.state.choiceBox === null ? '' : <ChoiceBox key="canvas" data={this.state.choiceBox} />}
                 </svg>
             </div>
         );
+    }
+
+    // 根据选中的组件cid 绘制组件选中框
+    getSelectedFrame = (): JSX.Element[] => {
+        const frameRect: JSX.Element[] = [];
+        const pos = this.props.componentPosition;
+        this.state.cids.map((cid) => {
+            if (cid === undefined) return;
+
+            const com = this.getComponent(cid);
+            if (com === null) return;
+
+            const frameData: IReactData = {
+                pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
+                pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
+                width: com.getSize().width + 1,
+                height: com.getSize().height + 1,
+                anchorFill: '#fff',
+                stroke: '#108ee9',
+                strokeWidth: 1
+            };
+            // tslint:disable-next-line:max-line-length
+            frameRect.push(<Frame key={cid} cid={cid} data={frameData} />);
+        });
+
+        return frameRect;
     }
 }
 

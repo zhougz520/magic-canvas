@@ -1,35 +1,34 @@
 import * as React from 'react';
 import { BaseComponent, BaseState, IBaseProps, IBaseState, BaseStyle } from '../index';
 
+// tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
-    demoProp: string;
 }
 
 export interface IDemoState extends IBaseState {
     demoState: string;
 }
 
-export class Demo extends BaseComponent<IDemoProps, IDemoState> {
+/* tslint:disable:no-console */
+export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
     // constructor(props: IDemoProps) {
     //     super(props);
     // }
 
     public render() {
-        const { demoProp } = this.props;
-
         const richChildNode = this.getRichChildNode();
 
         return (
             <div
-                onMouseDown={this.onMouseDown.bind(this, demoProp)}
-                onMouseUp={this.onMouseUp.bind(this, demoProp)}
-                style={BaseStyle(this.getPositionState(), this.getSizeState())}
+                onMouseDown={this.onMouseDown}
+                onMouseUp={this.onMouseUp}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
                     onClick={this.click}
                 >
-                    {demoProp + '.'} - {richChildNode}
+                    {this.getCid() + '.'} - {richChildNode}
                 </div>
                 <button onClick={this.click}>DemoClick(console)</button>
             </div>
@@ -38,7 +37,6 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
 
     private click = () => {
         const baseState: BaseState = this.getBaseState();
-        // tslint:disable-next-line:no-console
         console.log(baseState);
     }
 
@@ -46,15 +44,15 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
      * 组件选中事件
      * @param cid 组件ref标识
      */
-    private onMouseDown = (cid: string, e: any) => {
-        this.fireSelectChange(cid, e);
+    private onMouseDown = (e: any) => {
+        this.fireSelectChange(e);
     }
 
     /**
      * 组件选中事件
      * @param cid 组件ref标识
      */
-    private onMouseUp = (cid: string, e: any) => {
+    private onMouseUp = (e: any) => {
         // this.fireSelectChange(cid, e);
     }
 }

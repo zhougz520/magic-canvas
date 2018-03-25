@@ -3,7 +3,7 @@ import * as React from 'react';
 import { PositionState } from './model/PositionState';
 import { SizeState } from './model/SizeState';
 
-export const BaseStyle = (position: PositionState, size: SizeState): React.CSSProperties => {
+export const BaseStyle = (position: PositionState, size: SizeState, zIndex: number): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
         overflow: 'auto',
         position: 'absolute',
@@ -11,7 +11,8 @@ export const BaseStyle = (position: PositionState, size: SizeState): React.CSSPr
         width: size.getWidth(),
         height: size.getHeight(),
         top: position.getTop(),
-        left: position.getLeft()
+        left: position.getLeft(),
+        zIndex
     };
 
     return styleObj;

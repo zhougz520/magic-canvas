@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Demo } from '../../../src/component/BaseComponent/demo/Demo';
 import { CanvasDemo } from './CanvasDemo';
 
 /* tslint:disable:no-console */
@@ -35,7 +34,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setSize({width: 600, height: 400});
+            demoComponent.setSize({ width: 600, height: 400 });
         } else {
             console.log('nima');
         }
@@ -58,7 +57,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setPosition({left: 700, right: 22, top: 100, bottom: 44});
+            demoComponent.setPosition({ left: 700, right: 22, top: 100, bottom: 44 });
         } else {
             console.log('nima');
         }
@@ -127,12 +126,6 @@ export default class Example extends CanvasDemo<any, any> {
     render() {
         return (
             <React.Fragment>
-                <Demo
-                    ref="DemoComponent"
-                    demoProp="DemoComponent"
-                    data={{ w: 500, h: 100, l: 500, r: 10, t: 10, b: 10, text: '我是测试组件1' }}
-                    selectionChanging={this.selectionChanging}
-                />
                 <ol>
                     Size:
                     <li>
@@ -175,7 +168,7 @@ export default class Example extends CanvasDemo<any, any> {
                     </li>
                 </ol>
                 获取到的值：
-                <div style={{backgroundColor: 'yellow', height: 24, width: '100%'}} id="myLable" />
+                <div style={{ backgroundColor: 'yellow', height: 24, width: '100%' }} id="myLable" />
             </React.Fragment>
         );
     }

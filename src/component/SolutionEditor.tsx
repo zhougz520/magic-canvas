@@ -1,9 +1,10 @@
 import * as React from 'react';
-import Canvas from './CanvasComponent/canvas';
+import BarList from './BarComponent';
 import Draw from './DrawComponent/draw';
-import { Set } from 'immutable';
+import Canvas from './CanvasComponent/canvas';
 import { StageStyle } from './style';
-// import * as PropTypes from 'prop-types';
+import { IDrawComponent } from './DrawComponent';
+import { ICanvasComponent } from './CanvasComponent/inedx';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -17,37 +18,23 @@ export interface ISolutionState {
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
-    private canvas: Canvas | null = null;
-    private draw: Draw | null = null;
+    private canvas: ICanvasComponent | null = null;
+    private draw: IDrawComponent | null = null;
 
     constructor(props: ISolutionProp) {
         super(props);
     }
 
-    findComponentRef = (cid: string): void => {
-        console.log(cid);
-    }
-
-    getDrawRef = (): Draw | null => {
+    getDrawRef = (): IDrawComponent | null => {
         return this.draw;
-    }
-
-    // 显示选中框
-    showSelected = (coms: Set<string>) => {
-        if (null !== this.draw) this.draw.showFrame(coms);
-    }
-
-    // 回执拉选框
-    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any }) => {
-        if (null !== this.draw) this.draw.drawChoiceBox(data);
-    }
-
-    componnetDispatcher = (cid: string) => {
-        console.log(cid);
     }
 
     getCanvas = () => {
         return this.canvas;
+    }
+
+    getDraw = () => {
+        return this.draw;
     }
 
     render() {
@@ -58,6 +45,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
         return (
             <div className="main-editor">
+                <BarList />
                 <div className="stage" style={StageStyle(componentPosition.stageOffset)}>
                     <Draw
                         ref={(render) => this.draw = render}
@@ -66,12 +54,53 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     />
                     <Canvas
                         ref={(render) => this.canvas = render}
-                        showSelected={this.showSelected}
-                        drawChoiceBox={this.drawChoiceBox}
+                        getDraw={this.getDraw}
                         componentPosition={componentPosition}
+                        components={detail.content.components}
                     />
                 </div>
             </div>
         );
     }
 }
+
+const detail = {
+    content: {
+        components: [
+            {
+                t: 'Demo',
+                p: {
+                    id: 'cs1',
+                    txt_v: '我是测试组件1',
+                    w: 200,
+                    h: 125,
+                    l: 10,
+                    t: 10
+                }
+            },
+            {
+                t: 'Demo',
+                p: {
+                    id: 'cs2',
+                    txt_v: '我是测试组件2',
+                    w: 300,
+                    h: 200,
+                    l: 300,
+                    t: 10
+                }
+            },
+            {
+                t: 'Demo',
+                p: {
+                    id: 'cs3',
+                    txt_v: '我是测试组件3',
+                    w: 200,
+                    h: 200,
+                    l: 150,
+                    t: 150
+                }
+            }
+        ]
+    },
+    layout: { mode: 'free' }
+};

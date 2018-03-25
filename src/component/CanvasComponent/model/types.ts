@@ -2,6 +2,20 @@ import { IComponent } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
 
+// 鼠标拖拽类型
+export enum DragType {
+    None = 'none',
+    Choice = 'choice',  // 鼠标拉选框
+    Shift = 'shift',    //  组件位移框
+    Stretch = 'stretch' // 组件缩放框
+}
+
+export interface IDragDiv {
+    component: IComponent;
+    documentDiv: HTMLDivElement;
+    hasChange: boolean;
+}
+
 export interface IKeyArgs {
     key: string;
     keyCode: number;
@@ -32,22 +46,22 @@ export interface ICanvasCommand {
     isMultiselect: () => boolean;
     isMouseDown: () => boolean;
     getPointerStart: () => { x: number, y: number };
-    isDargingStart: () => boolean;
-    dragingStart: () => void;
-    dragingEnd: () => void;
+    isDargging: () => boolean;
     getDragType: () => string;
     canvasMouseDown: (e: any) => void;
     canvasMouseUp: (e: any) => void;
     componentMouseDown: (e: any) => void;
     componentMouseUp: (e: any) => void;
-    componentAnchorDown: (component: IComponent, anchorPoint: Anchor.IAnchor) => void;
+    anchorCalc: (currentX: number, currentY: number) => Anchor.IAnchor | null;
+    anchorMouseDown: (e: any, anchor: Anchor.IAnchor) => void;
+    anchorMouseUp: (e: any) => void;
     addSelectedComponent: (cid: string, com: IComponent) => void;
     getSelectedComponents: () => Map<string, IComponent>;
     getSelectedCids: () => Set<string>;
     clearSelectedComponent: () => void;
     moveComponent: (axis: string, distance: number) => void;
     stretchComponent: (left: number, top: number, width: number, height: number) => void;
-    componentAnchorMove: (offset: { x: number, y: number }) => void;
+    anchorMove: (offset: { x: number, y: number }) => void;
     drawDragBox: (componentPosition: any) => void;
     moveDragBox: (offset: { x: number, y: number }) => void;
     clearDragBox: () => void;

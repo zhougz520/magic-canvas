@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as Anchor from '../../util/AnchorPoint';
 
 export interface IFrameProps {
+    key: string;
+    cid: string;
     data: IReactData;
 }
 
@@ -15,9 +17,9 @@ export interface IReactData {
     strokeWidth: number;
 }
 
-const createFrame = (data: IReactData) => {
-    const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth } = data;
-    const anchorList = Anchor.countAnchorPoint(pointX, pointY, width, height);
+const createFrame = (props: IFrameProps) => {
+    const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth } = props.data;
+    const anchorList = Anchor.countAnchorPoint(props.cid, pointX, pointY, width, height);
 
     const rectList: any[] = [];
     // tslint:disable-next-line:max-line-length
@@ -31,7 +33,7 @@ const createFrame = (data: IReactData) => {
                 width={anchor.offset * 2}
                 height={anchor.offset * 2}
                 fill={anchorFill}
-                style={{ stroke, strokeWidth }}
+                style={{ stroke, strokeWidth, pointerEvents: 'none', cursor: anchor.cursor }}
             />);
     });
 
@@ -39,7 +41,7 @@ const createFrame = (data: IReactData) => {
 };
 
 export const Frame = (props: IFrameProps) => {
-    const rectList = createFrame(props.data);
+    const rectList = createFrame(props);
 
     return (
         <React.Fragment>

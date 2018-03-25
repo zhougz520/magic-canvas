@@ -23,14 +23,14 @@ const runDevServer = () => {
         },
         devtool: 'source-map',
         plugins: [
-            new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')}})
+            new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') } })
         ],
-        resolve: {extensions: ['.ts', '.tsx', '.js', '.json']},
+        resolve: { extensions: ['.ts', '.tsx', '.js', '.json'] },
         module: {
             rules: [
-                {test: /\.tsx?$/, loader: 'awesome-typescript-loader'},
-                {test: /\.css$/, use: ['style-loader', 'css-loader']},
-                {enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'}
+                { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
+                { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+                { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
             ]
         }
     };

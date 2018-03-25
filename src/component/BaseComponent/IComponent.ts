@@ -37,7 +37,17 @@ export interface IComponent {
     undo: () => void;
 
     /**
+     * 组件层级
+     */
+    setHierarchy: (zIndex: number) => void;
+    getHierarchy: () => number;
+    /**
      * 定位鼠标点击的部位
      */
     getPointerAnchor: (currentX: number, currentY: number) =>  Anchor.IAnchor | null;
+
+    /**
+     * 获取组件标识cid
+     */
+    getCid: () => string;
 }
