@@ -2,9 +2,9 @@ import * as React from 'react';
 import BarList from './BarComponent';
 import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
-import { StageStyle } from './style';
 import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent } from './CanvasComponent/inedx';
+import styled from 'styled-components';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -38,27 +38,39 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     render() {
-        const componentPosition = {
-            stageOffset: { top: 40, left: 24 },  // stage相对body的偏移量
+        const compos = {
+            stageOffset: { top: 80, left: 184, right: 250, bottom: 35 },  // stage相对body的偏移量
             canvasOffset: { top: 48, left: 48 }  // canvas相对stage的偏移量
         };
+
+        const StageStyle = styled.div`
+                position: absolute;
+                top: ${compos.stageOffset.top}px;
+                left: ${compos.stageOffset.left}px;
+                right: ${compos.stageOffset.right}px;
+                bottom: ${compos.stageOffset.bottom}px;
+                margin: auto;
+                overflow: auto;
+                background-color: #f3f3f3;
+                display: block;
+        `;
 
         return (
             <div className="main-editor">
                 <BarList />
-                <div className="stage" style={StageStyle(componentPosition.stageOffset)}>
+                <StageStyle className="stage">
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
-                        componentPosition={componentPosition}
+                        componentPosition={compos}
                     />
                     <Canvas
                         ref={(render) => this.canvas = render}
                         getDraw={this.getDraw}
-                        componentPosition={componentPosition}
+                        componentPosition={compos}
                         components={detail.content.components}
                     />
-                </div>
+                </StageStyle>
             </div>
         );
     }
