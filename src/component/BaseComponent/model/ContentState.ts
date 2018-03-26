@@ -3,7 +3,7 @@ import { Record } from 'immutable';
 import { SizeState } from './SizeState';
 import { PositionState } from './PositionState';
 
-export interface IContentState {
+export interface IContent {
     // 是否选中：是（true）|否（false）
     isSelected: boolean;
     // 组件大小：width|height
@@ -16,7 +16,7 @@ export interface IContentState {
     // TODO 组件个性化属性
 }
 
-const defaultRecord: IContentState = {
+const defaultRecord: IContent = {
     isSelected: false,
     sizeState: null,
     positionState: null,
@@ -35,7 +35,7 @@ export class ContentState extends ContentStateRecord {
         });
     }
 
-    static create(contentState: IContentState): ContentState {
+    static create(contentState: IContent): ContentState {
         return new ContentState(contentState);
     }
 
