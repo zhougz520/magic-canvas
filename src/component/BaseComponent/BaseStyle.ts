@@ -8,6 +8,7 @@ export const BaseStyle = (position: PositionState, size: SizeState): React.CSSPr
         overflow: 'auto',
         position: 'absolute',
         border: '1px solid',
+        outline: 'none',
         width: size.getWidth(),
         height: size.getHeight(),
         top: position.getTop(),

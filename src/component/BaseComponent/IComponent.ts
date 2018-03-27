@@ -19,12 +19,6 @@ export interface IComponent {
     setPosition: (position: IPosition) => void;
 
     /**
-     * 获取、设置isSelected
-     */
-    getIsSelected: () => boolean;
-    setIsSelected: (isSelected: boolean) => void;
-
-    /**
      * 获取、设置richChildNode
      */
     getRichChildNode: () => any;
@@ -35,6 +29,11 @@ export interface IComponent {
      */
     redo: () => void;
     undo: () => void;
+
+    /**
+     * 手动设置堆栈
+     */
+    setUndoStack: () => void;
 
     /**
      * 定位鼠标点击的部位

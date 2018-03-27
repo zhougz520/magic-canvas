@@ -24,10 +24,12 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 onMouseDown={this.onMouseDown.bind(this, demoProp)}
                 onMouseUp={this.onMouseUp.bind(this, demoProp)}
                 style={BaseStyle(this.getPositionState(), this.getSizeState())}
+                tabIndex={0}
+                onFocus={this.onFocus.bind(this, demoProp)}
+                onBlur={this.onBlur.bind(this, demoProp)}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
-                    onClick={this.click}
                 >
                     {demoProp + '.'} - {richChildNode}
                 </div>
@@ -56,5 +58,17 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
      */
     private onMouseUp = (cid: string, e: any) => {
         // this.fireSelectChange(cid, e);
+    }
+
+    // TODO onFocus、onBlur方法需完善
+    private onFocus = (cid: string, e: any) => {
+        // tslint:disable-next-line:no-console
+        console.log(cid + 'onFocus');
+        this.onComFocus(cid, e);
+    }
+
+    private onBlur = (cid: string, e: any) => {
+        // tslint:disable-next-line:no-console
+        console.log(cid + 'onBlur');
     }
 }

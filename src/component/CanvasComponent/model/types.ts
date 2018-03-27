@@ -2,28 +2,12 @@ import { IComponent } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
 
-export interface IKeyArgs {
-    key: string;
-    keyCode: number;
-    ctrl: boolean;
-    shift: boolean;
-    alt: boolean;
-    target: object;
-    targetName: string;
-}
-
 export interface IKeyFun {
     [key: string]: any;
     addKeyEvent: () => void;
     handleKeyDown: (e: any) => void;
     handleKeyUp: (e: any) => void;
     ctrl: any;
-}
-
-export interface IPointerArgs {
-    pageX: number;
-    pageY: number;
-    keyArgs: IKeyArgs | undefined;
 }
 
 export interface ICanvasCommand {

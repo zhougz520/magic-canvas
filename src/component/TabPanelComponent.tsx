@@ -70,30 +70,6 @@ export default class TabPanel<P = {}, S = {}> extends React.PureComponent<P, S> 
         }
     }
 
-    getIsSelected = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        let myLableText: any = '';
-        if (null !== demoComponent) {
-            myLableText = JSON.stringify(demoComponent.getIsSelected());
-        } else {
-            myLableText = 'nima';
-        }
-
-        (document.getElementById('myLable') as HTMLElement).innerText = myLableText;
-    }
-
-    setIsSelected = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        if (null !== demoComponent) {
-            const isSelected = demoComponent.getIsSelected();
-            demoComponent.setIsSelected(!isSelected);
-        } else {
-            console.log('nima');
-        }
-    }
-
     setText = () => {
         const demoComponent = this.getRef('DemoComponent');
 
@@ -147,15 +123,6 @@ export default class TabPanel<P = {}, S = {}> extends React.PureComponent<P, S> 
                     </li>
                     <li>
                         <button onClick={this.setPosition}>设置Position</button>
-                    </li>
-                </ol>
-                <ol>
-                    是否选中:
-                    <li>
-                        <button onClick={this.getIsSelected}>获取选中状态</button>
-                    </li>
-                    <li>
-                        <button onClick={this.setIsSelected}>设置选中状态</button>
                     </li>
                 </ol>
                 <ol>
