@@ -1,24 +1,25 @@
-import { Record } from 'immutable';
+import { Record, Stack } from 'immutable';
 
 import { Set } from 'immutable';
-import { ICanvasState } from '../ICanvasState';
+import { IAnchor } from '../../util/AnchorPoint';
 
-// /**
-//  * CanvasState的属性
-//  */
-// interface ICanvasState {
-
-//     // 已选中的组件名称集合
-//     selectedComponents: Set<string>;
-//     // 组件数据集合
-//     compomentsData: Map<string, IBaseData>;
-// }
+export interface ICanvasState {
+    anchor: IAnchor | null;
+    redoStack: Stack<string>;
+    undoStack: Stack<string>;
+}
 
 /**
- * CanvasState的默认值
+ * CanvasState的默认值,
+ * canvas的缓存堆栈只缓存cid的顺序
  */
 const defaultRecord: ICanvasState = {
-    selectedCids: Set<string>()  // 选中的组件
+    // 当前鼠标图标类型
+    anchor: null,
+    // 重做的缓存
+    redoStack: Stack(),
+    // 撤销的缓存
+    undoStack: Stack()
 };
 
 export const CanvasStateRecord: Record.Class = Record(defaultRecord);

@@ -1,23 +1,26 @@
 export interface IAnchor {
+    cid: string;
     key: string;
     x: number;
     y: number;
     offset: number;
+    cursor: string;
 }
 
 /**
  * 统计8个定位点
  */
-export const countAnchorPoint = (pointX: number, pointY: number, width: number, height: number, offset: number = 4) => {
+export const countAnchorPoint = (cid: string, pointX: number, pointY: number, width: number, height: number,
+                                 offset: number = 4) => {
     const anchorList: IAnchor[] = [];
-    anchorList.push({ key: 'ul', offset, x: pointX, y: pointY });   // 左上
-    anchorList.push({ key: 'ml', offset, x: pointX, y: pointY + height / 2 });   // 左中
-    anchorList.push({ key: 'bl', offset, x: pointX, y: pointY + height });   // 左下
-    anchorList.push({ key: 'um', offset, x: pointX + width / 2, y: pointY });   // 上中
-    anchorList.push({ key: 'ur', offset, x: pointX + width, y: pointY }); // 右上
-    anchorList.push({ key: 'mr', offset, x: pointX + width, y: pointY + height / 2 });  // 右中
-    anchorList.push({ key: 'br', offset, x: pointX + width, y: pointY + height });   // 右下
-    anchorList.push({ key: 'bm', offset, x: pointX + width / 2, y: pointY + height });   // 下中
+    anchorList.push({ cid, key: 'ul', offset, x: pointX, y: pointY, cursor: 'nw-resize' });   // 左上
+    anchorList.push({ cid, key: 'ml', offset, x: pointX, y: pointY + height / 2, cursor: 'ew-resize' });   // 左中
+    anchorList.push({ cid, key: 'bl', offset, x: pointX, y: pointY + height, cursor: 'ne-resize' });   // 左下
+    anchorList.push({ cid, key: 'um', offset, x: pointX + width / 2, y: pointY, cursor: 'ns-resize' });   // 上中
+    anchorList.push({ cid, key: 'ur', offset, x: pointX + width, y: pointY, cursor: 'ne-resize' }); // 右上
+    anchorList.push({ cid, key: 'mr', offset, x: pointX + width, y: pointY + height / 2, cursor: 'ew-resize' });  // 右中
+    anchorList.push({ cid, key: 'br', offset, x: pointX + width, y: pointY + height, cursor: 'nw-resize' });   // 右下
+    anchorList.push({ cid, key: 'bm', offset, x: pointX + width / 2, y: pointY + height, cursor: 'ns-resize' });   // 下中
 
     return anchorList;
 };
@@ -30,7 +33,8 @@ export const findAnchorPoint = (currentX: number, currentY: number, anchorList: 
     anchorList.map((anchor) => {
         const offsetX = currentX - anchor.x;
         const offsetY = currentY - anchor.y;
-        if (Math.abs(offsetX) <= anchor.offset && Math.abs(offsetY) <= anchor.offset) {
+        // 由于鼠标悬停的范围大2px
+        if (Math.abs(offsetX) <= anchor.offset + 1 && Math.abs(offsetY) <= anchor.offset + 1) {
             currentAnchor = anchor;
         }
     });

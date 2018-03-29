@@ -1,3 +1,6 @@
+import { ICanvasComponent } from '../CanvasComponent/inedx';
+
 export interface IDrawProps {
-    [key: string]: any;
+    componentPosition: any;
+    getCanvas: () => ICanvasComponent | null;
 }

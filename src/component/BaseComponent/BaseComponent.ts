@@ -24,6 +24,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         super(props, context);
 
         const contentState: ContentState = ContentState.create({
+            cid: props.data.id,
+            zIndex: props.zIndex,
             sizeState: SizeState.create({
                 width: props.data.w,
                 height: props.data.h
@@ -35,7 +37,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 bottom: props.data.b
             }),
             // TODO 带格式的富文本
-            richChildNode: props.data.text
+            richChildNode: props.data.txt_v
         });
 
         this.state = {
@@ -91,6 +93,36 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newPositionState: PositionState = PositionState.create(Position);
 
         this.setPositionState(newPositionState);
+    }
+
+    /**
+     * 获取组件标识cid
+     */
+    public getCid = (): string => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getCurrentContent().getCid();
+    }
+
+    /**
+     * 获取组件的zIndex
+     */
+    public getHierarchy = (): number => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getCurrentContent().getZIndex();
+    }
+
+    /**
+     * 设置组件的层级
+     */
+    public setHierarchy = (zIndex: number) => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            zIndex
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+        this.setBaseState(newBaseState);
     }
 
     /**
@@ -165,7 +197,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // const pointer = {x: e.pageX, y: e.pageY};
         const positionState = this.getPositionState();
         const sizeState = this.getSizeState();
-        const anchorList = Anchor.countAnchorPoint(
+        const anchorList = Anchor.countAnchorPoint(this.getCid(),
             positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
         return Anchor.findAnchorPoint(currentX, currentY, anchorList);
@@ -257,9 +289,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 每个组件自己记录，还要判断键盘事件，比较复杂，且选中状态对组件身意义不大，故交由画布决定
      * @param cid 组件ref标识
      */
-    protected fireSelectChange = (cid: string, e: any): void => {
+    protected fireSelectChange = (e: any): void => {
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid, e);
+            this.props.selectionChanging(this.getCid(), e);
         }
     }
 
@@ -269,7 +301,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected onComFocus = (cid: string, e: any): void => {
         if (this.props.onComFocus) {
-            this.props.onComFocus(cid, e);
+            this.props.onComFocus(cid);
         }
     }
 

@@ -1,10 +1,9 @@
 
-import { Set } from 'immutable';
+import { IAnchor } from '../util/AnchorPoint';
 
 /**
  * CanvasState的属性
  */
 export interface ICanvasState {
-    // 已选中的组件名称集合
-    selectedCids: Set<string>;
+    anchor: IAnchor | null;
 }

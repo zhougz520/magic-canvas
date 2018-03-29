@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { TitleBar, CommandBar, ResourceBar, PropsBar, ContributorBar } from './style';
+import Title from './TitleBar';
+import Command from './CommandBar';
+import Resource from './ResourceBar';
+import Property from './PropertyBar';
+import Contributor from './ContributorBar';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -16,11 +20,11 @@ export default class BarList<P = {}, S = {}> extends React.PureComponent<P, S> {
 
         return (
             <React.Fragment>
-                <div className="title-bar page" style={TitleBar}>title-bar page</div>
-                <div className="command-bar page" style={CommandBar} > command - bar page</div>
-                <div className="resource-bar" style={ResourceBar}>resource-bar</div>
-                <div className="props-bar" style={PropsBar}>props-bar</div>
-                <div className="contributor-bar" style={ContributorBar}>contributor-bar</div>
+                <Title />
+                <Command />
+                <Resource />
+                <Property />
+                <Contributor />
             </React.Fragment>
         );
     }

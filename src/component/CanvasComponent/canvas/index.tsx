@@ -1,11 +1,14 @@
 import * as React from 'react';
 import CanvasComponent from '../CanvasComponent';
 import { ICanvasComponent, ICanvasProps, ICanvasState, ICanvasCommand } from '../inedx';
-import { Demo } from '../../../component/BaseComponent/demo/Demo';
 import { Set } from 'immutable';
 import { IComponent } from '../../BaseComponent';
 import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
+import { DragType } from '../model/types';
+import util from '../../util';
+// tslint:disable-next-line:no-var-requires
+const createFragment = require('react-addons-create-fragment');
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -21,19 +24,20 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     constructor(props: any) {
         super(props);
         this.state = {
+            anchor: null
             // selectedCids: Set<string>()
         } as Readonly<ICanvasState>;
         this.command = CanvasCommand;
     }
 
-    getRef = (key: string): IComponent | null => {
-        const ref = this.refs[key] as any;
+    getComponent = (cid: string): IComponent | null => {
+        const ref = this.refs[`c.${cid}`] as any;
 
         return (ref as IComponent) || null;
     }
 
     setUndo = () => {
-        const demoComponent = this.getRef('DemoComponent');
+        const demoComponent = this.getComponent('DemoComponent');
 
         if (null !== demoComponent) {
             demoComponent.undo();
@@ -43,7 +47,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     setRedo = () => {
-        const demoComponent = this.getRef('DemoComponent');
+        const demoComponent = this.getComponent('DemoComponent');
 
         if (null !== demoComponent) {
             demoComponent.redo();
@@ -57,22 +61,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, e: any): void => {
-        const com = this.getRef(cid);
+        const com = this.getComponent(cid);
         if (com) {
             // 组件选择
             this.command.addSelectedComponent(cid, com);
             this.repairSelected();
-
-            // 判断点击位置
-            const pos = this.props.componentPosition;
-            const anchor = com.getPointerAnchor(
-                e.pageX - pos.stageOffset.left - pos.canvasOffset.left,
-                e.pageY - pos.stageOffset.top - pos.canvasOffset.top);
-            if (anchor === null) {
-                this.command.drawDragBox(this.props.componentPosition);
-            } else {
-                this.command.componentAnchorDown(com, anchor);
-            }
+            this.command.drawDragBox(this.props.componentPosition);
         }
     }
 
@@ -81,8 +75,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 通知EditComponent获得焦点，准备开始输入
      * @param cid 组件ID
      */
-    onComFocus = (cid: string, e: any): void => {
-        const com: IComponent | null = this.getRef(cid);
+    onComFocus = (cid: string): void => {
+        const com: IComponent | null = this.getComponent(cid);
         if (com) {
             this.beforeEditCom(com);
         }
@@ -103,23 +97,35 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handlerMouseDown = (e: any) => {
-        if (this.onMouseEvent(e)) {  // 画布上的点击
+        // 鼠标按下时，计算鼠标位置
+        const pos = this.props.componentPosition;
+        const anchor = this.command.anchorCalc(
+            e.pageX - pos.stageOffset.left - pos.canvasOffset.left,
+            e.pageY - pos.stageOffset.top - pos.canvasOffset.top
+        );
+        if (anchor) {                           // 锚点上点击
+            this.command.anchorMouseDown(e, anchor);
+        } else if (this.onMouseEvent(e)) {      // 画布上的点击
             this.command.canvasMouseDown(e);
             // 非多选模式下，清楚所有组件选中状态
             if (!this.command.isMultiselect()) {
                 this.clearSelected();
             }
             console.log('mousedown');
-        } else {// 组件中的点击
+        } else {                                // 组件中的点击
             this.command.componentMouseDown(e);
             console.log('com mouse down');
         }
     }
 
     handlerMouseUp = (e: any) => {
+        // switch (this.command.getDragType()) {
+        //     case DragType.Choice: {
+
+        //     }
+        // }
         if (this.onMouseEvent(e)) {
             this.command.canvasMouseUp(e);
-
             console.log('mouseup');
         } else {
             console.log('com mouse up');
@@ -133,89 +139,113 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleMouseMove = (e: any) => {
+        console.log('mouseMove:' + e.target.className + ',type:' + this.command.getDragType());
         if (this.command.isMouseDown()) {  // 鼠标按下才开始计算
             const pointStart = this.command.getPointerStart();
             const offset = {
                 x: e === undefined ? 0 : e.pageX - pointStart.x,
                 y: e === undefined ? 0 : e.pageY - pointStart.y
             };
-            // 档偏移量超过10后才开始处理拖拽事件，并隐藏选中框
-            if (Math.abs(offset.x) > 10 || Math.abs(offset.y) > 10) {
-                this.command.dragingStart();
-                this.hideSelected();
-            }
             switch (this.command.getDragType()) {
-                case 'none': return;
-                // 鼠标拉选框
-                case 'choice': return this.drawChoiceBox(pointStart.x, pointStart.y, offset);
-                //  组件位移框
-                case 'drag': return this.command.moveDragBox(offset);
-                // 组件缩放框
-                case 'stretch': return this.command.componentAnchorMove(offset);
+                case DragType.None: return;
+                case DragType.Choice: return this.drawChoiceBox(pointStart.x, pointStart.y, offset);
+                case DragType.Stretch: return this.command.anchorMove(offset);
+                case DragType.Shift: {
+                    // 档偏移量超过10后才开始处理拖拽事件，并隐藏选中框
+                    if (Math.abs(offset.x) > 10 || Math.abs(offset.y) > 10) {
+                        this.command.moveDragBox(offset);
+                        this.hideSelected();
+                    }
+
+                    return;
+                }
             }
+        } else {    // 鼠标未按下时，计算鼠标位置
+            const pos = this.props.componentPosition;
+            const anchor = this.command.anchorCalc(
+                e.pageX - pos.stageOffset.left - pos.canvasOffset.left,
+                e.pageY - pos.stageOffset.top - pos.canvasOffset.top
+            );
+            this.setState({ anchor });
         }
-        console.log('mouseMove');
+    }
+
+    handleMouseLeave = (e: any) => {
+        // 清除拉选框
+        this.clearChoiceBox();
+        // 清楚移动框
+        this.command.clearDragBox();
+        this.command.canvasMouseUp(e);
     }
 
     componentDidMount() {
         CanvasCommand.initCanvas();
+        document.addEventListener('mousemove', this.handleMouseMove);
         if (this.container && this.canvas) {
-            this.container.addEventListener('mousemove', this.handleMouseMove);
             this.container.addEventListener('mousedown', this.handlerMouseDown);
             this.container.addEventListener('mouseup', this.handlerMouseUp);
+            // 异常鼠标不在画布内释放了
+            this.container.addEventListener('mouseleave', this.handleMouseLeave);
         }
     }
 
     render() {
-        const pos = this.props.componentPosition;
+        const { componentPosition, components } = this.props;
+        const children = this.getChildrenComponent(components);
+        const cursor = this.state.anchor ? this.state.anchor.cursor : 'default';
 
         return (
-            <div ref={(handler) => this.container = handler} className="container" style={ContainerStyle}>
+            <div
+                ref={(handler) => this.container = handler}
+                className="container"
+                style={{ ...ContainerStyle, cursor }}
+            >
                 <div
                     ref={(handler) => this.canvas = handler}
                     className="canvas"
-                    style={CanvasStyle(pos.canvasOffset)}
+                    style={CanvasStyle(componentPosition.canvasOffset)}
                 >
-                    <Demo
-                        ref="DemoComponent"
-                        demoProp="DemoComponent"
-                        data={{ w: 100, h: 100, l: 10, r: 10, t: 10, b: 10, text: '我是测试组件1' }}
-                        selectionChanging={this.selectionChanging}
-                        repairSelected={this.repairSelected}
-                        onComFocus={this.onComFocus}
-                    />
-                    <Demo
-                        ref="DemoComponent2"
-                        demoProp="DemoComponent2"
-                        data={{ w: 100, h: 100, l: 200, r: 10, t: 200, b: 10, text: '我是测试组件2' }}
-                        selectionChanging={this.selectionChanging}
-                        repairSelected={this.repairSelected}
-                        onComFocus={this.onComFocus}
-                    />
-                    <Demo
-                        ref="DemoComponent3"
-                        demoProp="DemoComponent3"
-                        data={{ w: 100, h: 100, l: 300, r: 10, t: 10, b: 10, text: '我是测试组件3' }}
-                        selectionChanging={this.selectionChanging}
-                        repairSelected={this.repairSelected}
-                        onComFocus={this.onComFocus}
-                    />
+                    {children}
                 </div>
             </div>
         );
+    }
+
+    getChildrenComponent = (components: { [key: string]: any }): React.ReactFragment => {
+        const array: { [key: string]: any } = {};
+        let zIndex = 0;
+        components.map((cs: { [key: string]: any }) => {
+            const csType = util.componentsType(cs.t);
+            array[cs.p.id] = React.createElement(csType,
+                Object.assign({}, { data: cs.p }, {
+                    zIndex,
+                    ref: `c.${cs.p.id}`,
+                    selectionChanging: this.selectionChanging,
+                    repairSelected: this.repairSelected,
+                    onComFocus: this.onComFocus
+                })
+            );
+            zIndex++;
+        });
+
+        return createFragment(array);
     }
 
     /**
      * 绘制组件选中框
      */
     drawSelected = (cids: Set<string>) => {
-        this.props.showSelected(cids);
+        const draw = this.props.getDraw();
+        if (draw !== null) {
+            draw.setSelectedCids(cids);
+        }
     }
 
     /**
      * 重新绘制组件选中框
      */
     repairSelected = () => {
+        console.log('重新绘制组件选中框' + this.command.getDragType());
         this.drawSelected(this.command.getSelectedCids());
     }
 
@@ -239,7 +269,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      */
     drawChoiceBox = (pointX: number, pointY: number, offset: { x: number, y: number }) => {
         // 通知绘画层出现选择框
-        this.props.drawChoiceBox({ pointX, pointY, offset });
+        const draw = this.props.getDraw();
+        if (draw !== null) {
+            draw.drawChoiceBox({ pointX, pointY, offset });
+        }
     }
 
     /**
@@ -247,7 +280,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      */
     clearChoiceBox = () => {
         // 通知绘画层清理选择框
-        this.props.drawChoiceBox(null);
+        const draw = this.props.getDraw();
+        if (draw !== null) {
+            draw.drawChoiceBox(null);
+        }
     }
 
     /**
@@ -258,4 +294,5 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             this.props.beforeEditCom(com);
         }
     }
+
 }

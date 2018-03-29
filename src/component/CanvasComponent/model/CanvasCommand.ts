@@ -1,4 +1,4 @@
-import { IKeyFun, ICanvasCommand } from './types';
+import { IKeyFun, ICanvasCommand, IDragDiv, DragType } from './types';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
@@ -6,20 +6,14 @@ import { IKeyArgs, IPointerArgs, keyArgs, pointerArgs } from '../../util/KeyAndP
 
 const body: HTMLBodyElement = document.getElementsByTagName('body')[0];
 
-interface IDragDiv {
-    component: IComponent;
-    documentDiv: HTMLDivElement;
-    hasChange: boolean;
-}
-
-// tslint:disable-next-line:prefer-const
-let globalVar = {
+// 画布操作中的临时数据
+const globalVar = {
     // 是否按下ctrl键
     ctrlPress: false,
     // 鼠标是否按下
     mouseDown: false,
     // 是否开始拖拽
-    dargingStart: false,
+    dargging: false,
     // 当前鼠标按下时的位置
     pointStart: {
         x: 0, y: 0,
@@ -60,6 +54,7 @@ let globalVar = {
     dragDivList: Map<string, IDragDiv>()
 };
 
+// 键盘事件集合
 const keyFun: IKeyFun = {
     addKeyEvent() {
         document.addEventListener('keydown', this.handleKeyDown);
@@ -169,16 +164,6 @@ export const CanvasCommand: ICanvasCommand = {
         keyFun.addKeyEvent();
     },
 
-    // // 将CanvasCommand中的函数绑定到CanvasCanvas组件中
-    // bind(ins: any) {
-    //     for (const key in this) {
-    //         if (key !== 'bind' && key !== 'canvas') {
-    //             ins[key] = this[key].bind(ins);
-    //         }
-    //     }
-    //     this.canvas = ins;
-    // },
-
     // 是否时多选状态
     isMultiselect() {
         return globalVar.ctrlPress;
@@ -195,18 +180,8 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 是否开始拖拽
-    isDargingStart() {
-        return globalVar.dargingStart;
-    },
-
-    // 开始拖拽
-    dragingStart() {
-        if (globalVar.mouseDown) globalVar.dargingStart = true;
-    },
-
-    // 结束拖拽
-    dragingEnd() {
-        if (!globalVar.mouseDown) globalVar.dargingStart = false;
+    isDargging() {
+        return globalVar.dargging;
     },
 
     // 返回鼠标拖拽类型
@@ -217,7 +192,7 @@ export const CanvasCommand: ICanvasCommand = {
     // canvas上的鼠标点击事件
     canvasMouseDown(e: any) {
         globalVar.mouseDown = true;
-        globalVar.dragType = 'choice';
+        globalVar.dragType = DragType.Choice;
         const args = pointerArgs(e);
         if (args !== undefined) {
             globalVar.pointStart.setValue(args);
@@ -227,14 +202,14 @@ export const CanvasCommand: ICanvasCommand = {
     // canvas上的鼠标点击事件
     canvasMouseUp(e: any) {
         globalVar.mouseDown = false;
-        globalVar.dargingStart = false;
-        globalVar.dragType = 'none';
+        globalVar.dargging = false;
+        globalVar.dragType = DragType.None;
     },
 
     // 组件传递而来的鼠标点击事件
     componentMouseDown(e: any) {
         globalVar.mouseDown = true;
-        globalVar.dragType = 'drag';
+        globalVar.dragType = DragType.Shift;
         const args = pointerArgs(e);
         if (args !== undefined) {
             globalVar.pointStart.setValue(args);
@@ -243,16 +218,70 @@ export const CanvasCommand: ICanvasCommand = {
     // 组件传递而来的鼠标点击事件
     componentMouseUp(e: any) {
         globalVar.mouseDown = false;
-        globalVar.dargingStart = false;
-        globalVar.dragType = 'none';
+        globalVar.dargging = false;
+        globalVar.dragType = DragType.None;
+    },
+
+    // 鼠标移动时计算组件锚点位置
+    anchorCalc(currentX: number, currentY: number) {
+        let anchor: Anchor.IAnchor | null = null;
+        globalVar.selectedComponents.map((com, cid) => {
+            if (com) {
+                anchor = com.getPointerAnchor(currentX, currentY);
+            }
+        });
+
+        return anchor;
     },
 
     // 组件上锚点触发的鼠标点击事件
-    componentAnchorDown(component: IComponent, anchorPoint: Anchor.IAnchor) {
-        globalVar.mouseDown = true;
-        globalVar.dragType = 'stretch';
-        globalVar.currentComponentData.setValue(component);
-        globalVar.currentAnchor = anchorPoint;
+    anchorMouseDown(e: any, anchor: Anchor.IAnchor) {
+        // 鼠标按下事件
+        const args = pointerArgs(e);
+        if (args !== undefined) {
+            globalVar.pointStart.setValue(args);
+            globalVar.mouseDown = true;
+            globalVar.dragType = DragType.Stretch;
+        }
+        const com = globalVar.selectedComponents.get(anchor.cid);
+        if (com) {
+            globalVar.currentComponentData.setValue(com);
+            globalVar.currentAnchor = anchor;
+        }
+    },
+
+    // 组件上锚点触发的鼠标点击事件
+    anchorMouseUp(e: any) {
+        globalVar.mouseDown = false;
+        globalVar.dargging = false;
+        globalVar.dragType = DragType.None;
+    },
+
+    //  组件上锚点拖动事件
+    anchorMove(offset: { x: number, y: number }) {
+        // tslint:disable-next-line:no-console
+        console.log(offset);
+        globalVar.dargging = true;
+        if (globalVar.currentAnchor) {
+            switch (globalVar.currentAnchor.key) {
+                // 左上锚点，修改position
+                case 'ul': return this.stretchComponent(offset.x, offset.y, -offset.x, -offset.y);
+                // 左中锚点，修改position(left)
+                case 'ml': return this.stretchComponent(offset.x, 0, -offset.x, 0);
+                // 左下锚点
+                case 'bl': return this.stretchComponent(offset.x, 0, -offset.x, offset.y);
+                // 上中锚点
+                case 'um': return this.stretchComponent(0, offset.y, 0, -offset.y);
+                // 右上锚点
+                case 'ur': return this.stretchComponent(0, offset.y, offset.x, -offset.y);
+                // 右中锚点
+                case 'mr': return this.stretchComponent(0, 0, offset.x, 0);
+                // 右下锚点
+                case 'br': return this.stretchComponent(0, 0, offset.x, offset.y);
+                // 下中锚点
+                case 'bm': return this.stretchComponent(0, 0, 0, offset.y);
+            }
+        }
     },
 
     // 新增选中组件
@@ -312,31 +341,6 @@ export const CanvasCommand: ICanvasCommand = {
         }
     },
 
-    //  组件上锚点拖动事件
-    componentAnchorMove(offset: { x: number, y: number }) {
-        if (!globalVar.dargingStart) return;
-        if (globalVar.currentAnchor) {
-            switch (globalVar.currentAnchor.key) {
-                // 左上锚点，修改position
-                case 'ul': return this.stretchComponent(offset.x, offset.y, -offset.x, -offset.y);
-                // 左中锚点，修改position(left)
-                case 'ml': return this.stretchComponent(offset.x, 0, -offset.x, 0);
-                // 左下锚点
-                case 'bl': return this.stretchComponent(offset.x, 0, -offset.x, offset.y);
-                // 上中锚点
-                case 'um': return this.stretchComponent(0, offset.y, 0, -offset.y);
-                // 右上锚点
-                case 'ur': return this.stretchComponent(0, offset.y, offset.x, -offset.y);
-                // 右中锚点
-                case 'mr': return this.stretchComponent(0, 0, offset.x, 0);
-                // 右下锚点
-                case 'br': return this.stretchComponent(0, 0, offset.x, offset.y);
-                // 下中锚点
-                case 'bm': return this.stretchComponent(0, 0, 0, offset.y);
-            }
-        }
-    },
-
     // 在body中创建组件的移动框
     drawDragBox(componentPosition: any) {
         // 每次创建的时候都跟新一次偏移量
@@ -367,7 +371,7 @@ export const CanvasCommand: ICanvasCommand = {
 
     // 在body中移动组件的移动框
     moveDragBox(offset: { x: number, y: number }) {
-        if (!globalVar.dargingStart) return;
+        globalVar.dargging = true;
         globalVar.dragDivList.map((item: IDragDiv | undefined) => {
             if (item !== undefined) {
                 const pos = item.component.getPosition();

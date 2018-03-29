@@ -1,9 +1,7 @@
-import { Map } from 'immutable';
-import { IReactData } from './box/FrameComponent';
+import { Set } from 'immutable';
 import { IChoiceBoxData } from './box/ChoiceBoxComponent';
 
 export interface IDrawState {
-    // [key: string]: any;
-    frameMap: Map<string, IReactData>;
+    cids: Set<string>;
     choiceBox: IChoiceBoxData | null;
 }
