@@ -1,14 +1,21 @@
 import * as React from 'react';
-import { CanvasDemo } from './CanvasDemo';
+import { IComponent } from './BaseComponent/IComponent';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Example extends CanvasDemo<any, any> {
+export default class TabPanel<P = {}, S = {}> extends React.PureComponent<P, S> {
+    /**
+     * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在StageStae中
+     * @param props any
+     */
     constructor(props: any) {
         super(props);
-        this.state = {
-            selectedComponent: []
-        };
+    }
+
+    getRef = (key: string): IComponent | null => {
+        const ref = this.refs[key] as any;
+
+        return (ref as IComponent) || null;
     }
 
     selectionChangin = (newState: boolean, keyStatus: any): boolean => {
@@ -34,37 +41,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setSize({width: 100, height: 50});
-        } else {
-            console.log('nima');
-        }
-    }
-
-    setSize2 = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        if (null !== demoComponent) {
-            demoComponent.setSize({width: 200, height: 100});
-        } else {
-            console.log('nima');
-        }
-    }
-
-    setSize3 = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        if (null !== demoComponent) {
-            demoComponent.setSize({width: 300, height: 150});
-        } else {
-            console.log('nima');
-        }
-    }
-
-    setUndoStack = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        if (null !== demoComponent) {
-            demoComponent.setUndoStack();
+            demoComponent.setSize({ width: 22, height: 33 });
         } else {
             console.log('nima');
         }
@@ -87,7 +64,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setPosition({left: 700, right: 22, top: 100, bottom: 44});
+            demoComponent.setPosition({ left: 11, right: 22, top: 33, bottom: 44 });
         } else {
             console.log('nima');
         }
@@ -123,15 +100,13 @@ export default class Example extends CanvasDemo<any, any> {
         }
     }
 
-    selectionChanging = (metaKey: string): boolean => {
-        console.log(`canvas 接受组件${metaKey} 选中事件`);
-
-        return !metaKey;
-    }
-
     render() {
+
         return (
-            <React.Fragment>
+            <div style={{ position: 'absolute', top: '20px', width: '800px', left: '1200px' }}>
+                <ol>
+                    当前选中的组件:
+                </ol>
                 <ol>
                     Size:
                     <li>
@@ -139,11 +114,6 @@ export default class Example extends CanvasDemo<any, any> {
                     </li>
                     <li>
                         <button onClick={this.setSize}>设置size</button>
-                        <button onClick={this.setSize2}>设置size2</button>
-                        <button onClick={this.setSize3}>设置size3</button>
-                    </li>
-                    <li>
-                        <button onClick={this.setUndoStack}>设置堆栈</button>
                     </li>
                 </ol>
                 <ol>
@@ -171,7 +141,7 @@ export default class Example extends CanvasDemo<any, any> {
                 </ol>
                 获取到的值：
                 <div style={{ backgroundColor: 'yellow', height: 24, width: '100%' }} id="myLable" />
-            </React.Fragment>
+            </div>
         );
     }
 }

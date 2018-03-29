@@ -9,5 +9,9 @@ export interface IBaseProps {
     zIndex: number;
     repairSelected?: () => void;
     selectionChanging?: (cid: string, e: any) => void;
+
+    // 组件获得焦点的时候触发画布上的对应事件，通知编辑框准备开始输入
+    onComFocus?: (cid: string) => void;
+
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
 }

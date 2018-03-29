@@ -51,7 +51,7 @@
     }
   },
   "dependencies": {
-    "@types/react-addons-create-fragment": "^0.14.18",
+    "antd": "^3.3.3",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "lodash": "^4.17.5",
@@ -67,6 +67,7 @@
     "@types/node": "^9.6.0",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.36",
+    "@types/react-addons-create-fragment": "^0.14.18",
     "@types/react-dom": "^16.0.3",
     "@types/webpack": "^3.8.5",
     "awesome-typescript-loader": "^3.4.1",

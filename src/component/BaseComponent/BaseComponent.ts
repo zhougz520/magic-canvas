@@ -10,15 +10,22 @@ import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
+import { Stack } from 'immutable';
+
+/**
+ * 基类
+ * 所有基础组件继承于该类
+ * 实现接口IComponent定义的所有方法，提供给外部调用
+ */
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
+
     constructor(props: P, context?: any) {
         super(props, context);
 
         const contentState: ContentState = ContentState.create({
             cid: props.data.id,
             zIndex: props.zIndex,
-            isSelected: false,
             sizeState: SizeState.create({
                 width: props.data.w,
                 height: props.data.h
@@ -32,6 +39,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             // TODO 带格式的富文本
             richChildNode: props.data.txt_v
         });
+
         this.state = {
             baseState: BaseState.createWithContent(contentState)
         } as Readonly<S>;
@@ -42,7 +50,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 返回：ISize类型的对象{width: 10, height: 10}
      */
     public getSize = (): ISize => {
-        const sizeState = this.getSizeState();
+        const sizeState: SizeState = this.getSizeState();
 
         return {
             width: sizeState.getWidth(),
@@ -52,6 +60,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 设置组件size
+     * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
      * @param size ISize类型的对象{width: 10, height: 10}
      */
     public setSize = (size: ISize): void => {
@@ -77,36 +86,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 设置组件Position
+     * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
      * @param Position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
     public setPosition = (Position: IPosition): void => {
         const newPositionState: PositionState = PositionState.create(Position);
 
         this.setPositionState(newPositionState);
-    }
-
-    /**
-     * 获取组件是否选中
-     * 返回：true(选中)|false(未选中)
-     */
-    public getIsSelected = (): boolean => {
-        const baseState: BaseState = this.getBaseState();
-
-        return baseState.getCurrentContent().getIsSelected();
-    }
-
-    /**
-     * 设置组件是否选中
-     * @param isSelected true(选中)|false(未选中)
-     */
-    public setIsSelected = (isSelected: boolean): void => {
-        const oldBaseState: BaseState = this.getBaseState();
-        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            isSelected
-        }) as ContentState;
-        const newBaseState = BaseState.push(oldBaseState, newContent);
-
-        this.setBaseState(newBaseState);
     }
 
     /**
@@ -184,6 +170,26 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 手动设置堆栈
+     */
+    public setUndoStack = (): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const currentContent: ContentState = oldBaseState.getCurrentContent();
+        // tempContentState记录的线性调整开始前的ContentState
+        const tempContentState: ContentState = oldBaseState.getTempContentState();
+        const undoStack: Stack<ContentState> = oldBaseState.getUndoStack().push(tempContentState);
+
+        const newBaseState: BaseState = BaseState.set(oldBaseState, {
+            currentContent,
+            tempContentState: currentContent,
+            undoStack,
+            redoStack: Stack()
+        });
+
+        this.setState({ baseState: newBaseState });
+    }
+
+    /**
      * 获取鼠标处于该组件8个点的具体方位
      */
     public getPointerAnchor = (currentX: number, currentY: number): Anchor.IAnchor | null => {
@@ -195,14 +201,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
         return Anchor.findAnchorPoint(currentX, currentY, anchorList);
-    }
-
-    /**
-     * 修改组件的大小
-     */
-    public stretchComponent = (position: IPosition, size: ISize) => {
-        this.setPosition(position);
-        this.setSize(size);
     }
 
     /**
@@ -234,12 +232,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return sizeState;
     }
 
-    // render后的回调函数
-    protected renderCallback = () => {
-        // 通知画布重绘组件的选中框
-        if (this.props.repairSelected) this.props.repairSelected();
-    }
-
     /**
      * 设置组件的sizeState
      * @param newSizeState 构建好的新的sizeState
@@ -249,7 +241,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             sizeState: newSizeState
         }) as ContentState;
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
+
+        // 不自动设置撤销栈，由画布手动设置
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, false);
 
         this.setState({
             baseState: newBaseState
@@ -275,11 +269,19 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             positionState: newPositionState
         }) as ContentState;
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
+
+        // 不自动设置撤销栈，由画布手动设置
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, false);
 
         this.setState({
             baseState: newBaseState
         }, this.renderCallback);
+    }
+
+    // render后的回调函数
+    protected renderCallback = (): void => {
+        // 通知画布重绘组件的选中框
+        if (this.props.repairSelected) this.props.repairSelected();
     }
 
     /**
@@ -288,12 +290,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param cid 组件ref标识
      */
     protected fireSelectChange = (e: any): void => {
-        // 阻止点击事件冒泡到画布上
-        e.stopPropagation();
-        e.preventDefault();
-
         if (this.props.selectionChanging) {
             this.props.selectionChanging(this.getCid(), e);
+        }
+    }
+
+    /**
+     * 组件获得焦点：通知EditComponent获得焦点，准备输入
+     * @param cid 组件ref标识
+     */
+    protected onComFocus = (cid: string, e: any): void => {
+        if (this.props.onComFocus) {
+            this.props.onComFocus(cid);
         }
     }
 

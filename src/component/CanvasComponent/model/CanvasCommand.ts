@@ -1,8 +1,8 @@
-import * as keycode from 'keycode';
-import { IPointerArgs, IKeyArgs, IKeyFun, ICanvasCommand, IDragDiv, DragType } from './types';
+import { IKeyFun, ICanvasCommand, IDragDiv, DragType } from './types';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
+import { IKeyArgs, IPointerArgs, keyArgs, pointerArgs } from '../../util/KeyAndPointUtil';
 
 const body: HTMLBodyElement = document.getElementsByTagName('body')[0];
 
@@ -54,27 +54,6 @@ const globalVar = {
     dragDivList: Map<string, IDragDiv>()
 };
 
-const keyArgs = (evt: any): undefined | IKeyArgs => {
-    return evt === undefined ? undefined : {
-        key: keycode(evt),
-        keyCode: evt.keyCode,
-        ctrl: /mac os x/i.test(navigator.userAgent) ? evt.metaKey : evt.ctrlKey,
-        shift: evt.shiftKey,
-        alt: evt.altKey,
-        target: evt.target,
-        // tslint:disable-next-line:max-line-length
-        targetName: (evt.target === undefined || evt.target.tagName === undefined) ? undefined : evt.target.tagName.toLowerCase()
-    };
-};
-
-const pointerArgs = (e: any): undefined | IPointerArgs => {
-    return e === undefined ? undefined : {
-        pageX: e.pageX as number,
-        pageY: e.pageY as number,
-        keyArgs: keyArgs(e)
-    };
-};
-
 // 键盘事件集合
 const keyFun: IKeyFun = {
     addKeyEvent() {
@@ -83,7 +62,13 @@ const keyFun: IKeyFun = {
     },
     handleKeyDown(e: any) {
         const args = keyArgs(e);
-        const { key, ctrl, targetName } = args as IKeyArgs;
+        const { key, ctrl, targetName, target } = args as IKeyArgs;
+
+        // 如果是编辑框，则跳出键盘事件，执行默认事件
+        if (target !== undefined && (target as any).id === 'editComponent') {
+            return;
+        }
+
         if (targetName !== 'textarea') {
             if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
                 || key === 'delete' || key === 'esc' || key === 'backspace') {
@@ -97,7 +82,13 @@ const keyFun: IKeyFun = {
     },
     handleKeyUp(e: any) {
         const args = keyArgs(e);
-        const { key, ctrl, targetName } = args as IKeyArgs;
+        const { key, ctrl, targetName, target } = args as IKeyArgs;
+
+        // 如果是编辑框，则跳出键盘事件，执行默认事件
+        if (target !== undefined && (target as any).id === 'editComponent') {
+            return;
+        }
+
         if (targetName !== 'textarea') {
             if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
                 || key === 'delete' || key === 'esc' || key === 'backspace') {

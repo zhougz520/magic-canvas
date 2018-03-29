@@ -3,13 +3,11 @@ import { Record } from 'immutable';
 import { SizeState } from './SizeState';
 import { PositionState } from './PositionState';
 
-export interface IContentState {
+export interface IContent {
     // 组件ID
     cid: string;
     // 组件层级结构
     zIndex: number;
-    // 是否选中：是（true）|否（false）
-    isSelected: boolean;
     // 组件大小：width|height
     sizeState: SizeState | null;
     // 组件位置：left|right|top|bottom
@@ -20,10 +18,9 @@ export interface IContentState {
     // TODO 组件个性化属性
 }
 
-const defaultRecord: IContentState = {
+const defaultRecord: IContent = {
     cid: '',
     zIndex: 0,
-    isSelected: false,
     sizeState: null,
     positionState: null,
     richChildNode: null
@@ -36,14 +33,13 @@ export class ContentState extends ContentStateRecord {
         return ContentState.create({
             cid: '',
             zIndex: 0,
-            isSelected: false,
             sizeState: SizeState.createEmpty(),
             positionState: PositionState.createEmpty(),
             richChildNode: null
         });
     }
 
-    static create(contentState: IContentState): ContentState {
+    static create(contentState: IContent): ContentState {
         return new ContentState(contentState);
     }
 
@@ -53,10 +49,6 @@ export class ContentState extends ContentStateRecord {
 
     getZIndex(): number {
         return this.get('zIndex');
-    }
-
-    getIsSelected(): boolean {
-        return this.get('isSelected');
     }
 
     getSizeState(): SizeState {
