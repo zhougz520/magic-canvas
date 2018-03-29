@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
+    "antd": "^3.3.3",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "lodash": "^4.17.5",
