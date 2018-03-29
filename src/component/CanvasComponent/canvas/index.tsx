@@ -7,8 +7,6 @@ import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
 import { DragType } from '../model/types';
 import util from '../../util';
-// tslint:disable-next-line:no-var-requires
-const createFragment = require('react-addons-create-fragment');
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -71,6 +69,18 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
+     * 组件获得焦点
+     * 通知EditComponent获得焦点，准备开始输入
+     * @param cid 组件ID
+     */
+    onComFocus = (cid: string): void => {
+        const com: IComponent | null = this.getComponent(cid);
+        if (com) {
+            this.beforeEditCom(com);
+        }
+    }
+
+    /**
      * 阻止合成事件与除最外层document上的原生事件上的冒泡，通过判断e.target来避免
      * 判断事件源是否是画布
      */
@@ -107,11 +117,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handlerMouseUp = (e: any) => {
-        // switch (this.command.getDragType()) {
-        //     case DragType.Choice: {
-
-        //     }
-        // }
         if (this.onMouseEvent(e)) {
             this.command.canvasMouseUp(e);
             console.log('mouseup');
@@ -209,11 +214,13 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     zIndex,
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
-                    repairSelected: this.repairSelected
+                    repairSelected: this.repairSelected,
+                    onComFocus: this.onComFocus
                 })
             );
             zIndex++;
         });
+        const createFragment = require('react-addons-create-fragment');
 
         return createFragment(array);
     }
@@ -274,9 +281,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
-     * 计算鼠标选择框选中的组件
+     * 准备开始输入
      */
-    // calcChoiceBox = () => {
+    beforeEditCom = (com: IComponent): void => {
+        if (this.props.beforeEditCom) {
+            this.props.beforeEditCom(com);
+        }
+    }
 
-    // }
 }

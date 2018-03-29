@@ -9,24 +9,23 @@ export interface IDemoState extends IBaseState {
     demoState: string;
 }
 
-/* tslint:disable:no-console */
 export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
-    // constructor(props: IDemoProps) {
-    //     super(props);
-    // }
+    public com: HTMLElement | null = null;
 
     public render() {
         const richChildNode = this.getRichChildNode();
 
         return (
             <div
+                ref={(handler: HTMLElement | null) => this.com = handler}
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                tabIndex={0}
+                onFocus={this.onFocus}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
-                    onClick={this.click}
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>
@@ -35,8 +34,9 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
         );
     }
 
-    private click = () => {
+    private click = (): void => {
         const baseState: BaseState = this.getBaseState();
+        // tslint:disable-next-line:no-console
         console.log(baseState);
     }
 
@@ -54,5 +54,10 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
      */
     private onMouseUp = (e: any) => {
         // this.fireSelectChange(cid, e);
+    }
+
+    // TODO onFocus、onBlur方法需完善
+    private onFocus = (e: any): void => {
+        this.onComFocus(this.getCid(), e);
     }
 }

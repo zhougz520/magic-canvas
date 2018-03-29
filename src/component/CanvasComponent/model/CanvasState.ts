@@ -1,6 +1,4 @@
-import { Record, Stack } from 'immutable';
-
-import { Set } from 'immutable';
+import { Record, Stack, Set } from 'immutable';
 import { IAnchor } from '../../util/AnchorPoint';
 
 export interface ICanvasState {

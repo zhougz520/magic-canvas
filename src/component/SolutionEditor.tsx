@@ -4,15 +4,17 @@ import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
 import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent } from './CanvasComponent/inedx';
-import styled from 'styled-components';
+import './solution.css';
+import { ICompos, config } from './config';
+import { EditComponent } from './EditComponent';
+import { IComponent } from './BaseComponent';
 
 export interface ISolutionProp {
     [key: string]: any;
 }
 
 export interface ISolutionState {
-    stageOffset: { top: number, left: number };
-    canvasOffset: { top: number, left: number };
+    compos: ICompos;
 }
 
 /* tslint:disable:no-console */
@@ -20,13 +22,13 @@ export interface ISolutionState {
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
     private canvas: ICanvasComponent | null = null;
     private draw: IDrawComponent | null = null;
+    private edit: EditComponent | null = null;
 
     constructor(props: ISolutionProp) {
         super(props);
-    }
-
-    getDrawRef = (): IDrawComponent | null => {
-        return this.draw;
+        this.state = {
+            compos: config.componentPosition
+        };
     }
 
     getCanvas = () => {
@@ -37,28 +39,42 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         return this.draw;
     }
 
-    render() {
-        const compos = {
-            stageOffset: { top: 80, left: 184, right: 250, bottom: 35 },  // stage相对body的偏移量
-            canvasOffset: { top: 48, left: 48 }  // canvas相对stage的偏移量
-        };
+    // 修改画布的偏移量
+    changeStageOffset = (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => {
+        const newStageOffset = Object.assign({}, this.state.compos.stageOffset, {
+            top: titleBarCollapsed ? 35 : 80,
+            left: resourceBarCollapsed ? 24 : 184,
+            right: propsBarCollapsed ? 24 : 250
+        });
+        this.setState({
+            compos: Object.assign({}, this.state.compos, { stageOffset: newStageOffset })
+        });
+    }
+    // 准备开始编辑，通知EditComponent获得焦点
+    beforeEditCom = (com: IComponent): void => {
+        if (null !== this.edit) this.edit.onEditComFocus(com);
+    }
 
-        const StageStyle = styled.div`
-                position: absolute;
-                top: ${compos.stageOffset.top}px;
-                left: ${compos.stageOffset.left}px;
-                right: ${compos.stageOffset.right}px;
-                bottom: ${compos.stageOffset.bottom}px;
-                margin: auto;
-                overflow: auto;
-                background-color: #f3f3f3;
-                display: block;
-        `;
+    StageStyle = (stageOffset: { top: number, left: number, right: number, bottom: number }) => {
+        return {
+            top: `${stageOffset.top}px`,
+            left: `${stageOffset.left}px`,
+            right: `${stageOffset.right}px`,
+            bottom: `${stageOffset.bottom}px`
+        } as React.CSSProperties;
+    }
+
+    render() {
+        const { compos } = this.state;
 
         return (
             <div className="main-editor">
-                <BarList />
-                <StageStyle className="stage">
+                <BarList changeStageOffset={this.changeStageOffset} />
+                <div className="stage" style={this.StageStyle(compos.stageOffset)}>
+                    <EditComponent
+                        ref={(render: EditComponent) => this.edit = render}
+                        componentPosition={compos}
+                    />
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
@@ -69,8 +85,9 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         getDraw={this.getDraw}
                         componentPosition={compos}
                         components={detail.content.components}
+                        beforeEditCom={this.beforeEditCom}
                     />
-                </StageStyle>
+                </div>
             </div>
         );
     }

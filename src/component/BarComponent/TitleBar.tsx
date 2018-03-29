@@ -1,29 +1,32 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import './bar.css';
+
+export interface ITitleProps {
+    collapsed: boolean;
+}
+
+export interface ITitleState {
+    [key: string]: string;
+}
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Title<P = {}, S = {}> extends React.PureComponent<P, S> {
-    constructor(props: any) {
+export default class Title extends React.PureComponent<ITitleProps, ITitleState> {
+    constructor(props: ITitleProps) {
         super(props);
     }
 
     render() {
+        const { collapsed } = this.props;
 
-        const TitleBar = styled.div`
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 45px;
-            border-bottom: 1px solid #cbcbcb;
-            background-color: #fff;
-        `;
+        const title = (
+            collapsed ? '' : <div>title-bar page</div>
+        );
 
         return (
             <React.Fragment>
-                <TitleBar className="title-bar page">title-bar page</TitleBar>
-            </React.Fragment>
+                <div className={`title-bar ${collapsed ? 'collapsed' : ''}`}>{title}</div>
+            </React.Fragment >
         );
     }
 }

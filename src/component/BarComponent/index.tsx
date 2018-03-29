@@ -5,27 +5,64 @@ import Resource from './ResourceBar';
 import Property from './PropertyBar';
 import Contributor from './ContributorBar';
 
+export interface IBarProps {
+    changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
+}
+
+export interface IBarState {
+    titleBarCollapsed: boolean;
+    resourceBarCollapsed: boolean;
+    propsBarCollapsed: boolean;
+}
+
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class BarList<P = {}, S = {}> extends React.PureComponent<P, S> {
-    /**
-     * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在StageStae中
-     * @param props any
-     */
+export default class BarList<P extends IBarProps, S extends IBarState> extends React.PureComponent<P, S> {
     constructor(props: any) {
         super(props);
+        this.state = {
+            titleBarCollapsed: false,
+            resourceBarCollapsed: false,
+            propsBarCollapsed: false
+        } as Readonly<S>;
     }
 
     render() {
+        const { titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed } = this.state;
 
         return (
             <React.Fragment>
-                <Title />
-                <Command />
-                <Resource />
-                <Property />
+                <Title ref="title" collapsed={titleBarCollapsed} />
+                <Command
+                    titleBarCollapsed={titleBarCollapsed}
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
+                />
+                <Resource
+                    collapsed={resourceBarCollapsed}
+                    titleBarCollapsed={titleBarCollapsed}
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onResourceBarCollapse={(collapsed) => this.collapseBar(undefined, collapsed)}
+                />
+                <Property
+                    collapsed={propsBarCollapsed}
+                    titleBarCollapsed={titleBarCollapsed}
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onPropsBarCollapse={(collapsed) => this.collapseBar(undefined, undefined, collapsed)}
+                />
                 <Contributor />
             </React.Fragment>
         );
+    }
+
+    /*折叠面板*/
+    // tslint:disable-next-line:max-line-length
+    collapseBar = (tc: boolean | undefined = undefined, rc: boolean | undefined = undefined, pc: boolean | undefined = undefined) => {
+        let { titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed } = this.state;
+        if (tc !== undefined) titleBarCollapsed = tc;
+        if (rc !== undefined) resourceBarCollapsed = rc;
+        if (pc !== undefined) propsBarCollapsed = pc;
+        this.setState({ titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed });
+        this.props.changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
     }
 }

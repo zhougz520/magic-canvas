@@ -1,28 +1,67 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import './bar.css';
+
+export interface IPropertyProps {
+    collapsed: boolean;
+    titleBarCollapsed: boolean;
+    onPropsBarCollapse: (collapsed: boolean) => void;
+}
+
+export interface IPropertyState {
+    showProps: boolean;
+}
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Property<P = {}, S = {}> extends React.PureComponent<P, S> {
-    constructor(props: any) {
+export default class Property extends React.PureComponent<IPropertyProps, IPropertyState> {
+    constructor(props: IPropertyProps) {
         super(props);
+        this.state = {
+            showProps: true
+        };
     }
 
     render() {
-        const PropertyBar = styled.div`
-            position: absolute;
-            top: 80px;
-            right: 0;
-            width: 250px;
-            bottom: 35px;
-            border-left: 1px solid #cbcbcb;
-            background-color: #fff;
-        `;
+        const { collapsed, titleBarCollapsed } = this.props;
+        const { showProps } = this.state;
+
+        const bar = (
+            <div className="bar">
+                <div className="panel">
+                    <div className={`props${showProps ? ' active' : ''}`}>
+                        {showProps ? 'props-bar' : ''}
+                    </div>
+                </div>
+            </div>
+        );
 
         return (
             <React.Fragment>
-                <PropertyBar className="props-bar">props-bar</PropertyBar>
+                <div
+                    // tslint:disable-next-line:max-line-length
+                    className={`props-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}${showProps ? ' props-bar-show' : ' props-bar-hide'}`}
+                >
+                    <div className="holder">
+                        <div onClick={this.onClick}>折叠</div>
+                    </div>
+                    {collapsed ? '' : bar}
+                </div>
             </React.Fragment>
         );
+    }
+
+    showProps = () => {
+        this.collapse(false);
+        this.setState({
+            showProps: true
+        });
+    }
+
+    onClick = () => {
+        this.collapse(!this.props.collapsed);
+    }
+
+    collapse = (collapsed: boolean) => {
+        this.props.onPropsBarCollapse(collapsed);
     }
 }

@@ -34,7 +34,37 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setSize({ width: 600, height: 400 });
+            demoComponent.setSize({width: 100, height: 50});
+        } else {
+            console.log('nima');
+        }
+    }
+
+    setSize2 = () => {
+        const demoComponent = this.getRef('DemoComponent');
+
+        if (null !== demoComponent) {
+            demoComponent.setSize({width: 200, height: 100});
+        } else {
+            console.log('nima');
+        }
+    }
+
+    setSize3 = () => {
+        const demoComponent = this.getRef('DemoComponent');
+
+        if (null !== demoComponent) {
+            demoComponent.setSize({width: 300, height: 150});
+        } else {
+            console.log('nima');
+        }
+    }
+
+    setUndoStack = () => {
+        const demoComponent = this.getRef('DemoComponent');
+
+        if (null !== demoComponent) {
+            demoComponent.setUndoStack();
         } else {
             console.log('nima');
         }
@@ -57,31 +87,7 @@ export default class Example extends CanvasDemo<any, any> {
         const demoComponent = this.getRef('DemoComponent');
 
         if (null !== demoComponent) {
-            demoComponent.setPosition({ left: 700, right: 22, top: 100, bottom: 44 });
-        } else {
-            console.log('nima');
-        }
-    }
-
-    getIsSelected = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        let myLableText: any = '';
-        if (null !== demoComponent) {
-            myLableText = JSON.stringify(demoComponent.getIsSelected());
-        } else {
-            myLableText = 'nima';
-        }
-
-        (document.getElementById('myLable') as HTMLElement).innerText = myLableText;
-    }
-
-    setIsSelected = () => {
-        const demoComponent = this.getRef('DemoComponent');
-
-        if (null !== demoComponent) {
-            const isSelected = demoComponent.getIsSelected();
-            demoComponent.setIsSelected(!isSelected);
+            demoComponent.setPosition({left: 700, right: 22, top: 100, bottom: 44});
         } else {
             console.log('nima');
         }
@@ -133,6 +139,11 @@ export default class Example extends CanvasDemo<any, any> {
                     </li>
                     <li>
                         <button onClick={this.setSize}>设置size</button>
+                        <button onClick={this.setSize2}>设置size2</button>
+                        <button onClick={this.setSize3}>设置size3</button>
+                    </li>
+                    <li>
+                        <button onClick={this.setUndoStack}>设置堆栈</button>
                     </li>
                 </ol>
                 <ol>
@@ -142,15 +153,6 @@ export default class Example extends CanvasDemo<any, any> {
                     </li>
                     <li>
                         <button onClick={this.setPosition}>设置Position</button>
-                    </li>
-                </ol>
-                <ol>
-                    是否选中:
-                    <li>
-                        <button onClick={this.getIsSelected}>获取选中状态</button>
-                    </li>
-                    <li>
-                        <button onClick={this.setIsSelected}>设置选中状态</button>
                     </li>
                 </ol>
                 <ol>
