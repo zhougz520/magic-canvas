@@ -7,8 +7,6 @@ import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
 import { DragType } from '../model/types';
 import util from '../../util';
-// tslint:disable-next-line:no-var-requires
-const createFragment = require('react-addons-create-fragment');
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -107,11 +105,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handlerMouseUp = (e: any) => {
-        // switch (this.command.getDragType()) {
-        //     case DragType.Choice: {
-
-        //     }
-        // }
         if (this.onMouseEvent(e)) {
             this.command.canvasMouseUp(e);
             console.log('mouseup');
@@ -214,6 +207,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             );
             zIndex++;
         });
+        const createFragment = require('react-addons-create-fragment');
 
         return createFragment(array);
     }
@@ -273,10 +267,4 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         }
     }
 
-    /**
-     * 计算鼠标选择框选中的组件
-     */
-    // calcChoiceBox = () => {
-
-    // }
 }
