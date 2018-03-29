@@ -1,54 +1,132 @@
 import * as React from 'react';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 
-import { EditStyle } from './EditStyle';
+import { IEditProps } from './IEditProps';
+import { IEditState } from './IEditState';
+import { IEditStyle, EditStyle } from './EditStyle';
+import { ISize, IPosition, IComponent } from '../BaseComponent';
 
-// const EditDiv = styled.div`
-//     border-color: black;
-//     border-style: solid;
-//     display: inline-block;
-//     position: absolute;
-//     overflow: visible;
-//     word-wrap: normal;
-//     border-width: 1;
-//     min-width: 1px;
-//     min-height: 1em;
-//     resize: none;
-//     padding: 0px;
-//     margin: 0px;
+const EditDiv = styled.div`
+    border-color: transparent;
+    border-style: solid;
+    display: inline-block;
+    position: absolute;
+    overflow: visible;
+    word-wrap: normal;
+    border-width: 0;
+    min-width: 1px;
+    resize: none;
+    padding: 0px;
+    margin: 0px;
+`;
 
-//     /* outline: none; */
-//     line-height: 1.2;
-//     text-align: center;
-
-//     transform-origin: 0px 0px 0px;
-//     transform: scale(1, 1) translate(-50%, -50%);
-
-//     z-index: 1000;
-// `;
-
-export class EditComponent extends React.PureComponent<any, any> {
+/* tslint:disable:jsx-no-string-ref */
+export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
     public editor: HTMLElement | null = null;
 
-    componentDidMount() {
-        (this.editor as HTMLElement).focus();
+    constructor(props: IEditProps, context?: any) {
+        super(props, context);
 
-        (this.editor as HTMLElement).addEventListener('keydown', (e) => {
-            // tslint:disable-next-line:no-console
-            console.log(e);
+        this.state = {
+            maxWidth: 1,
+            top: -1000,
+            left: -1000,
+            currentCom: null
+        } ;
+    }
+
+    // Edit获取焦点
+    onEditComFocus = (com: IComponent) => {
+        (this.editor as HTMLElement).focus();
+        this.setCurrentCom(com);
+        // tslint:disable-next-line:no-console
+        console.log(com);
+    }
+
+    onEditComKeyDown = () => {
+        const currentCom: IComponent | null = this.state.currentCom;
+        if (currentCom !== null) {
+            const comSize: ISize = currentCom.getSize();
+            const comPosition: IPosition = currentCom.getPosition();
+            const pos = this.props.componentPosition;
+
+            const maxWidth = comSize.width;
+            const top = comPosition.top + comSize.height / 2 + pos.canvasOffset.top;
+            const left = comPosition.left + comSize.width / 2 + pos.canvasOffset.left;
+
+            this.setPosition(maxWidth, top, left);
+        }
+    }
+
+    // Edit失去焦点
+    onEditComBlur = () => {
+        (this.editor as HTMLElement).blur();
+
+        const value = (this.editor as HTMLElement).innerText;
+        (this.editor as HTMLElement).innerText = '';
+
+        this.hiddenEditCom();
+        const currentCom: IComponent | null = this.state.currentCom;
+        if (currentCom !== null) {
+            currentCom.setRichChildNode(value);
+        }
+    }
+
+    showEditCom = (size: ISize, position: IPosition) => {
+        // tslint:disable-next-line:no-console
+        console.log('showEditCom');
+        // tslint:disable-next-line:no-console
+        console.log(size);
+        // tslint:disable-next-line:no-console
+        console.log(position);
+    }
+
+    hiddenEditCom = () => {
+        this.setState({
+            maxWidth: 1,
+            top: -1000,
+            left: -1000
+        });
+    }
+
+    sendContent = () => {
+        // tslint:disable-next-line:no-console
+        console.log('sendContent');
+    }
+
+    setCurrentCom = (com: IComponent): void => {
+        this.setState({
+            currentCom: com
+        });
+    }
+
+    setPosition = (maxWidth: number, top: number, left: number): void => {
+        this.setState({
+            maxWidth,
+            top,
+            left
         });
     }
 
     render() {
-        const { position, size } = this.props;
+        const { maxWidth, top, left } = this.state;
+        const editStyle: IEditStyle = {
+            maxWidth,
+            top,
+            left
+        };
 
         return (
-            <div
+            <EditDiv
                 id="editComponent"
+                // tslint:disable-next-line:jsx-no-lambda
+                innerRef={(handler) => this.editor = handler}
                 contentEditable
                 suppressContentEditableWarning
-                style={EditStyle(position, size)}
-                ref={(ref: HTMLElement | null) => (this.editor = ref)}
+                style={EditStyle(editStyle)}
+                tabIndex={-1}
+                onKeyDown={this.onEditComKeyDown}
+                onBlur={this.onEditComBlur}
             />
         );
     }

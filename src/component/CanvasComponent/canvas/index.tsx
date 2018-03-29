@@ -77,6 +77,18 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
+     * 组件获得焦点
+     * 通知EditComponent获得焦点，准备开始输入
+     * @param cid 组件ID
+     */
+    onComFocus = (cid: string, e: any): void => {
+        const com: IComponent | null = this.getRef(cid);
+        if (com) {
+            this.beforeEditCom(com);
+        }
+    }
+
+    /**
      * 阻止合成事件与除最外层document上的原生事件上的冒泡，通过判断e.target来避免
      * 判断事件源是否是画布
      */
@@ -170,6 +182,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                         data={{ w: 100, h: 100, l: 10, r: 10, t: 10, b: 10, text: '我是测试组件1' }}
                         selectionChanging={this.selectionChanging}
                         repairSelected={this.repairSelected}
+                        onComFocus={this.onComFocus}
                     />
                     <Demo
                         ref="DemoComponent2"
@@ -177,6 +190,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                         data={{ w: 100, h: 100, l: 200, r: 10, t: 200, b: 10, text: '我是测试组件2' }}
                         selectionChanging={this.selectionChanging}
                         repairSelected={this.repairSelected}
+                        onComFocus={this.onComFocus}
                     />
                     <Demo
                         ref="DemoComponent3"
@@ -184,6 +198,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                         data={{ w: 100, h: 100, l: 300, r: 10, t: 10, b: 10, text: '我是测试组件3' }}
                         selectionChanging={this.selectionChanging}
                         repairSelected={this.repairSelected}
+                        onComFocus={this.onComFocus}
                     />
                 </div>
             </div>
@@ -233,5 +248,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     clearChoiceBox = () => {
         // 通知绘画层清理选择框
         this.props.drawChoiceBox(null);
+    }
+
+    /**
+     * 准备开始输入
+     */
+    beforeEditCom = (com: IComponent): void => {
+        if (this.props.beforeEditCom) {
+            this.props.beforeEditCom(com);
+        }
     }
 }

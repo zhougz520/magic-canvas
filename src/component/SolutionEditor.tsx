@@ -1,6 +1,8 @@
 import * as React from 'react';
 import Canvas from './CanvasComponent/canvas';
 import Draw from './DrawComponent/draw';
+import { EditComponent } from './EditComponent/EditComponent';
+import { IComponent } from './BaseComponent';
 import { Set } from 'immutable';
 import { StageStyle } from './style';
 // import * as PropTypes from 'prop-types';
@@ -19,6 +21,7 @@ export interface ISolutionState {
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
     private canvas: Canvas | null = null;
     private draw: Draw | null = null;
+    private edit: EditComponent | null = null;
 
     constructor(props: ISolutionProp) {
         super(props);
@@ -35,6 +38,11 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     // 显示选中框
     showSelected = (coms: Set<string>) => {
         if (null !== this.draw) this.draw.showFrame(coms);
+    }
+
+    // 准备开始编辑，通知EditComponent获得焦点
+    beforeEditCom = (com: IComponent): void => {
+        if (null !== this.edit) this.edit.onEditComFocus(com);
     }
 
     // 回执拉选框
@@ -59,6 +67,10 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         return (
             <div className="main-editor">
                 <div className="stage" style={StageStyle(componentPosition.stageOffset)}>
+                    <EditComponent
+                        ref={(render: EditComponent) => this.edit = render}
+                        componentPosition={componentPosition}
+                    />
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
@@ -67,6 +79,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     <Canvas
                         ref={(render) => this.canvas = render}
                         showSelected={this.showSelected}
+                        beforeEditCom={this.beforeEditCom}
                         drawChoiceBox={this.drawChoiceBox}
                         componentPosition={componentPosition}
                     />

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Demo } from '../../../src/component/BaseComponent/demo/Demo';
-import { EditComponent } from '../../../src/component/EditComponent/index';
 import { CanvasDemo } from './CanvasDemo';
 
 /* tslint:disable:no-console */
@@ -134,10 +133,6 @@ export default class Example extends CanvasDemo<any, any> {
     render() {
         return (
             <React.Fragment>
-                <EditComponent
-                    position={{top: 100, left: 700}}
-                    size={{width: 600, height: 400}}
-                />
                 <Demo
                     ref="DemoComponent"
                     demoProp="DemoComponent"

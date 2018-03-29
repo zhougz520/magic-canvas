@@ -10,9 +10,7 @@ export interface IDemoState extends IBaseState {
 }
 
 export class Demo extends BaseComponent<IDemoProps, IDemoState> {
-    // constructor(props: IDemoProps) {
-    //     super(props);
-    // }
+    public com: HTMLElement | null = null;
 
     public render() {
         const { demoProp } = this.props;
@@ -21,12 +19,12 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
 
         return (
             <div
+                ref={(handler: HTMLElement | null) => this.com = handler}
                 onMouseDown={this.onMouseDown.bind(this, demoProp)}
                 onMouseUp={this.onMouseUp.bind(this, demoProp)}
                 style={BaseStyle(this.getPositionState(), this.getSizeState())}
                 tabIndex={0}
                 onFocus={this.onFocus.bind(this, demoProp)}
-                onBlur={this.onBlur.bind(this, demoProp)}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
@@ -38,7 +36,7 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
         );
     }
 
-    private click = () => {
+    private click = (): void => {
         const baseState: BaseState = this.getBaseState();
         // tslint:disable-next-line:no-console
         console.log(baseState);
@@ -48,7 +46,7 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
      * 组件选中事件
      * @param cid 组件ref标识
      */
-    private onMouseDown = (cid: string, e: any) => {
+    private onMouseDown = (cid: string, e: any): void => {
         this.fireSelectChange(cid, e);
     }
 
@@ -56,19 +54,14 @@ export class Demo extends BaseComponent<IDemoProps, IDemoState> {
      * 组件选中事件
      * @param cid 组件ref标识
      */
-    private onMouseUp = (cid: string, e: any) => {
+    private onMouseUp = (cid: string, e: any): void => {
         // this.fireSelectChange(cid, e);
     }
 
     // TODO onFocus、onBlur方法需完善
-    private onFocus = (cid: string, e: any) => {
+    private onFocus = (cid: string, e: any): void => {
         // tslint:disable-next-line:no-console
         console.log(cid + 'onFocus');
         this.onComFocus(cid, e);
-    }
-
-    private onBlur = (cid: string, e: any) => {
-        // tslint:disable-next-line:no-console
-        console.log(cid + 'onBlur');
     }
 }

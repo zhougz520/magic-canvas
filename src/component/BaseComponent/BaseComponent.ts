@@ -247,7 +247,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     // render后的回调函数
-    protected renderCallback = () => {
+    protected renderCallback = (): void => {
         // 通知画布重绘组件的选中框
         if (this.props.repairSelected) this.props.repairSelected();
     }
