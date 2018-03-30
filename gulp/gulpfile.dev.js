@@ -4,6 +4,9 @@ const runSequence = require('run-sequence');
 const tasks = require('./tasks');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const tsImportPluginFactory = require('ts-import-plugin');
+const theme = require('./theme');
 
 const dist = 'dev';
 
@@ -23,14 +26,45 @@ const runDevServer = () => {
         },
         devtool: 'source-map',
         plugins: [
-            new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') } })
+            new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')}}),
+            new CopyWebpackPlugin([
+                {from: './gulp/antd/localfont/iconfont.eot', to: 'antd_iconfont.eot'},
+                {from: './gulp/antd/localfont/iconfont.svg', to: 'antd_iconfont.svg'},
+                {from: './gulp/antd/localfont/iconfont.ttf', to: 'antd_iconfont.ttf'},
+                {from: './gulp/antd/localfont/iconfont.woff', to: 'antd_iconfont.woff'}
+            ])
         ],
-        resolve: { extensions: ['.ts', '.tsx', '.js', '.json'] },
+        resolve: {extensions: ['.ts', '.tsx', '.js', '.json']},
         module: {
             rules: [
-                { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
-                { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-                { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
+                {
+                    test: /\.tsx?$/,
+                    loader: 'ts-loader',
+                    options: {
+                        transpileOnly: true,
+                        getCustomTransformers: () => ({
+                            before: [tsImportPluginFactory({
+                                libraryName: 'antd',
+                                libraryDirectory: 'lib',
+                                style: true
+                            })]
+                        }),
+                        compilerOptions: {module: 'es2015'}
+                    },
+                    exclude: /node_modules/
+                },
+                {test: /\.css$/, use: ['style-loader', 'css-loader']},
+                {
+                    test: /\.less$/, use: [
+                        {loader: 'style-loader'},
+                        {loader: 'css-loader'},
+                        {
+                            loader: 'less-loader',
+                            options: {modifyVars: theme}
+                        }
+                    ]
+                },
+                {enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'}
             ]
         }
     };
