@@ -13,7 +13,7 @@ export interface IConfig {
 export const config: IConfig = {
     componentPosition: {
         stageOffset: { top: 80, left: 184, right: 250, bottom: 35 },
-        canvasOffset: { top: 48, left: 48, right: 48, bottom: 32 },
+        canvasOffset: { top: 32, left: 32, right: 32, bottom: 32 },
         borderOffset: { border: 1 }
     }
 };

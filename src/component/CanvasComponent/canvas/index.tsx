@@ -3,11 +3,10 @@ import CanvasComponent from '../CanvasComponent';
 import { ICanvasComponent, ICanvasProps, ICanvasState, ICanvasCommand } from '../inedx';
 import { Set } from 'immutable';
 import { IComponent } from '../../BaseComponent';
-import { ContainerStyle } from '../model/CanvasStyle';
+import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
 import { DragType } from '../model/types';
 import util from '../../util';
-import styled from 'styled-components';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -189,33 +188,20 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const children = this.getChildrenComponent(components);
         const cursor = this.state.anchor ? this.state.anchor.cursor : 'default';
 
-        const CanvasStyle = styled.div`
-            position: absolute;
-            top: ${ canvasOffset.top}px;
-            left: ${ canvasOffset.left}px;
-            right: ${ canvasOffset.right}px;
-            bottom: ${ canvasOffset.bottom}px;
-            margin: 0;
-            padding: 0;
-            overflow: auto;
-            box-shadow: 0 2px 8px rgba(0,0,0,.2);
-            background-color: #fff;
-            z-index: 0;
-        `;
-
         return (
             <div
                 ref={(handler) => this.container = handler}
                 className="container"
                 style={{ ...ContainerStyle, cursor }}
             >
-                <CanvasStyle
+                <div
                     // tslint:disable-next-line:jsx-no-lambda
-                    innerRef={(handler) => this.canvas = handler}
+                    ref={(handler) => this.canvas = handler}
+                    style={CanvasStyle(canvasOffset)}
                     className="canvas"
                 >
                     {children}
-                </CanvasStyle>
+                </div>
             </div>
         );
     }

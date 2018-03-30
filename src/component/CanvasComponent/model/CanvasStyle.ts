@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-export const CanvasStyle = (pos: { top: number, left: number }) => {
+export const CanvasStyle = (pos: { top: number, left: number, right: number, bottom: number }) => {
     return {
         position: 'absolute',
-        width: '1027px',
-        height: '668px',
         top: `${pos.top}px`,
         left: `${pos.left}px`,
-        bottom: `${pos.top}px`,
+        right: `${pos.right}px`,
+        bottom: `${pos.bottom}px`,
         margin: 0,
         padding: 0,
         overflow: 'auto',
