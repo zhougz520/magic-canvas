@@ -80,7 +80,8 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
                 height: com.getSize().height + 1,
                 anchorFill: '#fff',
                 stroke: '#108ee9',
-                strokeWidth: 1
+                strokeWidth: 1,
+                borderOffset: pos.borderOffset.border * 2
             };
             // tslint:disable-next-line:max-line-length
             frameRect.push(<Frame key={cid} cid={cid} data={frameData} />);

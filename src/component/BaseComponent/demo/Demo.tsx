@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, BaseState, IBaseProps, IBaseState, BaseStyle } from '../index';
+import { Button, Icon } from 'antd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -29,7 +30,8 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>
-                <button onClick={this.click}>DemoClick(console)</button>
+                <Button type="primary" size="small" onClick={this.click}>DemoClick</Button>
+                <Icon type="fast-backward" />
             </div>
         );
     }

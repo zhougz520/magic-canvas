@@ -15,15 +15,16 @@ export interface IReactData {
     anchorFill: string;
     stroke: string;
     strokeWidth: number;
+    borderOffset: number;
 }
 
 const createFrame = (props: IFrameProps) => {
-    const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth } = props.data;
-    const anchorList = Anchor.countAnchorPoint(props.cid, pointX, pointY, width, height);
+    const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth, borderOffset } = props.data;
+    const anchorList = Anchor.countAnchorPoint(props.cid, pointX, pointY, width, height, undefined, borderOffset);
 
     const rectList: any[] = [];
     // tslint:disable-next-line:max-line-length
-    rectList.push(<rect key="frame" x={pointX} y={pointY} width={width} height={height} fill="none" style={{ stroke, strokeWidth }} />);
+    rectList.push(<rect key="frame" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth }} />);
     anchorList.map((anchor) => {
         rectList.push(
             <rect

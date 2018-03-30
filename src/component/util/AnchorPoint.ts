@@ -10,20 +10,22 @@ export interface IAnchor {
 /**
  * 统计8个定位点
  */
+/* tslint:disable:max-line-length */
 export const countAnchorPoint = (cid: string, pointX: number, pointY: number, width: number, height: number,
-                                 offset: number = 4) => {
+                                 offset: number = 4, borderOffset: number = 2) => {
     const anchorList: IAnchor[] = [];
     anchorList.push({ cid, key: 'ul', offset, x: pointX, y: pointY, cursor: 'nw-resize' });   // 左上
     anchorList.push({ cid, key: 'ml', offset, x: pointX, y: pointY + height / 2, cursor: 'ew-resize' });   // 左中
-    anchorList.push({ cid, key: 'bl', offset, x: pointX, y: pointY + height, cursor: 'ne-resize' });   // 左下
+    anchorList.push({ cid, key: 'bl', offset, x: pointX, y: pointY + height - borderOffset, cursor: 'ne-resize' });   // 左下
     anchorList.push({ cid, key: 'um', offset, x: pointX + width / 2, y: pointY, cursor: 'ns-resize' });   // 上中
-    anchorList.push({ cid, key: 'ur', offset, x: pointX + width, y: pointY, cursor: 'ne-resize' }); // 右上
-    anchorList.push({ cid, key: 'mr', offset, x: pointX + width, y: pointY + height / 2, cursor: 'ew-resize' });  // 右中
-    anchorList.push({ cid, key: 'br', offset, x: pointX + width, y: pointY + height, cursor: 'nw-resize' });   // 右下
-    anchorList.push({ cid, key: 'bm', offset, x: pointX + width / 2, y: pointY + height, cursor: 'ns-resize' });   // 下中
+    anchorList.push({ cid, key: 'ur', offset, x: pointX + width - borderOffset, y: pointY, cursor: 'ne-resize' }); // 右上
+    anchorList.push({ cid, key: 'mr', offset, x: pointX + width - borderOffset, y: pointY + height / 2, cursor: 'ew-resize' });  // 右中
+    anchorList.push({ cid, key: 'br', offset, x: pointX + width - borderOffset, y: pointY + height - borderOffset, cursor: 'nw-resize' });   // 右下
+    anchorList.push({ cid, key: 'bm', offset, x: pointX + width / 2, y: pointY + height - borderOffset, cursor: 'ns-resize' });   // 下中
 
     return anchorList;
 };
+/* tslint:enable:max-line-length */
 
 /**
  * 计算当前点所在的定位点的方位
