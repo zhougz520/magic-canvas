@@ -62,12 +62,7 @@ const keyFun: IKeyFun = {
     },
     handleKeyDown(e: any) {
         const args = keyArgs(e);
-        const { key, ctrl, targetName, target } = args as IKeyArgs;
-
-        // 如果是编辑框，则跳出键盘事件，执行默认事件
-        if (target !== undefined && (target as any).id === 'editComponent') {
-            return;
-        }
+        const { key, ctrl, targetName } = args as IKeyArgs;
 
         if (targetName !== 'textarea') {
             if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
@@ -82,12 +77,7 @@ const keyFun: IKeyFun = {
     },
     handleKeyUp(e: any) {
         const args = keyArgs(e);
-        const { key, ctrl, targetName, target } = args as IKeyArgs;
-
-        // 如果是编辑框，则跳出键盘事件，执行默认事件
-        if (target !== undefined && (target as any).id === 'editComponent') {
-            return;
-        }
+        const { key, ctrl, targetName } = args as IKeyArgs;
 
         if (targetName !== 'textarea') {
             if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
