@@ -18,7 +18,19 @@ export const EditStyle = (config: IEditStyle): React.CSSProperties => {
         transform: 'scale(1, 1) translate(-50%, -50%)',
         maxWidth: config.maxWidth,
         top: config.top,
-        left: config.left
+        left: config.left,
+
+        borderColor: 'transparent',
+        borderStyle: 'solid',
+        display: 'inline-block',
+        position: 'absolute',
+        overflow: 'visible',
+        wordWrap: 'normal',
+        borderWidth: 0,
+        minWidth: '1px',
+        resize: 'none',
+        padding: '0px',
+        margin: '0px'
     };
 
     return styleObj;

@@ -1,24 +1,9 @@
 import * as React from 'react';
-import styled from 'styled-components';
 
 import { IEditProps } from './IEditProps';
 import { IEditState } from './IEditState';
 import { IEditStyle, EditStyle } from './EditStyle';
 import { ISize, IPosition, IComponent } from '../BaseComponent';
-
-const EditDiv = styled.div`
-    border-color: transparent;
-    border-style: solid;
-    display: inline-block;
-    position: absolute;
-    overflow: visible;
-    word-wrap: normal;
-    border-width: 0;
-    min-width: 1px;
-    resize: none;
-    padding: 0px;
-    margin: 0px;
-`;
 
 /* tslint:disable:jsx-no-string-ref */
 export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
@@ -117,10 +102,9 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         };
 
         return (
-            <EditDiv
+            <div
                 id="editComponent"
-                // tslint:disable-next-line:jsx-no-lambda
-                innerRef={(handler) => this.editor = handler}
+                ref={(handler) => this.editor = handler}
                 contentEditable
                 suppressContentEditableWarning
                 style={EditStyle(editStyle)}
