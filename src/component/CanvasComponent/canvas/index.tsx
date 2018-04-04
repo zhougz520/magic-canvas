@@ -236,7 +236,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         };
     }
 
-    // 将document的坐标转换为相对Canvas的坐标
+    // 将document的坐标转换为相对Stage的坐标
     getPositionRelativeStage = (pageX: number, pageY: number) => {
         const pos = this.props.componentPosition;
         const scroll = this.props.getStageScroll();
