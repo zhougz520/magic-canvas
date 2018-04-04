@@ -184,6 +184,11 @@ export const CanvasCommand: ICanvasCommand = {
         return globalVar.dargging;
     },
 
+    // 开始拖拽, 用于判断刚刚开始拖拽
+    darggingStart() {
+        globalVar.dargging = true;
+    },
+
     // 返回鼠标拖拽类型
     getDragType() {
         return globalVar.dragType;
@@ -342,10 +347,10 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 在body中创建组件的移动框
-    drawDragBox(componentPosition: any) {
+    drawDragBox(offset: any) {
         // 每次创建的时候都跟新一次偏移量
-        const offsetX = componentPosition.stageOffset.left + componentPosition.canvasOffset.left;
-        const offsetY = componentPosition.stageOffset.top + componentPosition.canvasOffset.top;
+        const offsetX: number = offset.pageX;
+        const offsetY: number = offset.pageY;
         globalVar.componentOffset.setValue({ offsetX, offsetY });
 
         const selectedComponents = globalVar.selectedComponents;

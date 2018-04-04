@@ -33,12 +33,11 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
 
     // 绘制拉选框
     drawChoiceBox = (data: { pointX: number, pointY: number, offset: any } | null) => {
-        const pos = this.props.componentPosition;
         let choiceBox = null;
         if (data !== null) {
             choiceBox = {
-                pointX: data.pointX - pos.stageOffset.left,
-                pointY: data.pointY - pos.stageOffset.top,
+                pointX: data.pointX,
+                pointY: data.pointY,
                 offset: data.offset,
                 fill: '#108ee9',
                 fillOpacity: 0.05,

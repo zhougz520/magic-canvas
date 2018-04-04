@@ -11,4 +11,5 @@ export interface ICanvasProps {
      */
     beforeEditCom: (com: IComponent) => void;
     getDraw: () => IDrawComponent | null;
+    getStageScroll: () => { scrollLeft: number, scrollTop: number };
 }

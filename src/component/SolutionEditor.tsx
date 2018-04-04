@@ -23,6 +23,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     private canvas: ICanvasComponent | null = null;
     private draw: IDrawComponent | null = null;
     private edit: EditComponent | null = null;
+    private stage: HTMLDivElement | null = null;
 
     constructor(props: ISolutionProp) {
         super(props);
@@ -55,7 +56,9 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         if (null !== this.edit) this.edit.onEditComFocus(com);
     }
 
-    StageStyle = (stageOffset: { top: number, left: number, right: number, bottom: number }) => {
+    StageStyle = () => {
+        const stageOffset = this.state.compos.stageOffset;
+
         return {
             top: `${stageOffset.top}px`,
             left: `${stageOffset.left}px`,
@@ -64,13 +67,27 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         } as React.CSSProperties;
     }
 
+    // 获取stage上滚动条的偏移量
+    getStageScroll = () => {
+        let scrollLeft: number = 0;
+        let scrollTop: number = 0;
+        if (this.stage !== null) {
+            scrollLeft = this.stage.scrollLeft;
+            scrollTop = this.stage.scrollTop;
+        }
+
+        return { scrollLeft, scrollTop };
+    }
+
     render() {
         const { compos } = this.state;
+        const stateStyle = this.StageStyle();
+        console.log('重绘了stage');
 
         return (
             <div className="main-editor">
                 <BarList changeStageOffset={this.changeStageOffset} />
-                <div className="stage" style={this.StageStyle(compos.stageOffset)}>
+                <div ref={(render) => this.stage = render} className="stage" style={stateStyle}>
                     <EditComponent
                         ref={(render: EditComponent) => this.edit = render}
                         componentPosition={compos}
@@ -79,11 +96,13 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
                         componentPosition={compos}
+                        getStageScroll={this.getStageScroll}
                     />
                     <Canvas
                         ref={(render) => this.canvas = render}
                         getDraw={this.getDraw}
                         componentPosition={compos}
+                        getStageScroll={this.getStageScroll}
                         components={detail.content.components}
                         beforeEditCom={this.beforeEditCom}
                     />

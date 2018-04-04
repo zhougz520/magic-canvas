@@ -31,6 +31,7 @@ export interface ICanvasCommand {
     isMouseDown: () => boolean;
     getPointerStart: () => { x: number, y: number };
     isDargging: () => boolean;
+    darggingStart: () => void;
     getDragType: () => string;
     canvasMouseDown: (e: any) => void;
     canvasMouseUp: (e: any) => void;
