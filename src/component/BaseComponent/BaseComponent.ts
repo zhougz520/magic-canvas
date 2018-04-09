@@ -294,15 +294,4 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             this.props.selectionChanging(this.getCid(), e);
         }
     }
-
-    /**
-     * 组件获得焦点：通知EditComponent获得焦点，准备输入
-     * @param cid 组件ref标识
-     */
-    protected onComFocus = (cid: string, e: any): void => {
-        if (this.props.onComFocus) {
-            this.props.onComFocus(cid);
-        }
-    }
-
 }

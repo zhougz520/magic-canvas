@@ -22,8 +22,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 onMouseDown={this.onMouseDown}
                 onMouseUp={this.onMouseUp}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
-                tabIndex={0}
-                onFocus={this.onFocus}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
@@ -56,10 +54,5 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
      */
     private onMouseUp = (e: any) => {
         // this.fireSelectChange(cid, e);
-    }
-
-    // TODO onFocus、onBlur方法需完善
-    private onFocus = (e: any): void => {
-        this.onComFocus(this.getCid(), e);
     }
 }

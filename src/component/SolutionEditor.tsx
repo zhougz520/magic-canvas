@@ -6,8 +6,6 @@ import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent } from './CanvasComponent/inedx';
 import './solution.css';
 import { ICompos, config } from './config';
-import { EditComponent } from './EditComponent';
-import { IComponent } from './BaseComponent';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -22,7 +20,6 @@ export interface ISolutionState {
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
     private canvas: ICanvasComponent | null = null;
     private draw: IDrawComponent | null = null;
-    private edit: EditComponent | null = null;
     private stage: HTMLDivElement | null = null;
 
     constructor(props: ISolutionProp) {
@@ -50,10 +47,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         this.setState({
             compos: Object.assign({}, this.state.compos, { stageOffset: newStageOffset })
         });
-    }
-    // 准备开始编辑，通知EditComponent获得焦点
-    beforeEditCom = (com: IComponent): void => {
-        if (null !== this.edit) this.edit.onEditComFocus(com);
     }
 
     StageStyle = () => {
@@ -88,10 +81,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             <div className="main-editor">
                 <BarList changeStageOffset={this.changeStageOffset} />
                 <div ref={(render) => this.stage = render} className="stage" style={stateStyle}>
-                    <EditComponent
-                        ref={(render: EditComponent) => this.edit = render}
-                        componentPosition={compos}
-                    />
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
@@ -104,7 +93,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
                         components={detail.content.components}
-                        beforeEditCom={this.beforeEditCom}
                     />
                 </div>
             </div>

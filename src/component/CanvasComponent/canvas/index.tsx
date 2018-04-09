@@ -70,18 +70,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
-     * 组件获得焦点
-     * 通知EditComponent获得焦点，准备开始输入
-     * @param cid 组件ID
-     */
-    onComFocus = (cid: string): void => {
-        const com: IComponent | null = this.getComponent(cid);
-        if (com) {
-            this.beforeEditCom(com);
-        }
-    }
-
-    /**
      * 阻止合成事件与除最外层document上的原生事件上的冒泡，通过判断e.target来避免
      * 判断事件源是否是画布
      */
@@ -214,8 +202,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     zIndex,
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
-                    repairSelected: this.repairSelected,
-                    onComFocus: this.onComFocus
+                    repairSelected: this.repairSelected
                 })
             );
             zIndex++;
@@ -323,14 +310,4 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         // 清楚移动框
         this.command.clearDragBox();
     }
-
-    /**
-     * 准备开始输入
-     */
-    beforeEditCom = (com: IComponent): void => {
-        if (this.props.beforeEditCom) {
-            this.props.beforeEditCom(com);
-        }
-    }
-
 }
