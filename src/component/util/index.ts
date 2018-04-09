@@ -1,6 +1,6 @@
 const util = {
     componentsType: (csType: string) => {
-        return require(`../BaseComponent/demo/${csType}`).default;
+        return require(`../${csType}`).default;
     }
 };
 

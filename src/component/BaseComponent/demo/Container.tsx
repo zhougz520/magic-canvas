@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { BaseComponent, BaseState, IBaseProps, IBaseState, BaseStyle } from '../index';
-import { Button, Icon } from 'antd';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
+import BtnDemo from '../../MapComponent/demo/BtnDemo'
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -10,17 +10,22 @@ export interface IDemoState extends IBaseState {
     demoState: string;
 }
 
-export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
+export default class Container extends BaseComponent<IDemoProps, IDemoState> {
     public com: HTMLElement | null = null;
 
     public render() {
         const richChildNode = this.getRichChildNode();
+        const { p } = this.props.data;
+        const children: any = [];
+        if(p!=undefined && p.components.length>0){
+            p.components.forEach((com: any) => {
+                children.push(<BtnDemo key={`c.${com.p.id}`} data={com.p} ref={`c.${com.p.id}`} fireSelect={this.fireSelectChange} />);
+            });
+        }
 
         return (
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.onMouseDown}
-                onMouseUp={this.onMouseUp}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
                 tabIndex={0}
                 onFocus={this.onFocus}
@@ -30,32 +35,11 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>
-                <Button type="primary" size="small" onClick={this.click}>DemoClick</Button>
-                <Icon type="fast-backward" />
+                {
+                    children
+                }
             </div>
         );
-    }
-
-    private click = (): void => {
-        const baseState: BaseState = this.getBaseState();
-        // tslint:disable-next-line:no-console
-        console.log(baseState);
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseUp = (e: any) => {
-        // this.fireSelectChange(cid, e);
     }
 
     // TODO onFocus、onBlur方法需完善
