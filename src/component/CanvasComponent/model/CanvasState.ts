@@ -12,7 +12,6 @@ export interface ICanvasState {
  * canvas的缓存堆栈只缓存cid的顺序
  */
 const defaultRecord: ICanvasState = {
-    // 当前鼠标图标类型
     anchor: null,
     // 重做的缓存
     redoStack: Stack(),

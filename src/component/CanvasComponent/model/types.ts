@@ -24,13 +24,23 @@ export interface IKeyFun {
     ctrl: any;
 }
 
+export interface IBoundary {
+    startPoint: IOffset;
+    endPoint: IOffset;
+}
+
+export interface IOffset {
+    x: number;
+    y: number;
+}
+
 export interface ICanvasCommand {
     initCanvas: () => void;
-    // bind: (ins: any) => void;
     isMultiselect: () => boolean;
     isMouseDown: () => boolean;
-    getPointerStart: () => { x: number, y: number };
+    getPointerStart: () => IOffset;
     isDargging: () => boolean;
+    darggingStart: () => void;
     getDragType: () => string;
     canvasMouseDown: (e: any) => void;
     canvasMouseUp: (e: any) => void;
@@ -39,14 +49,16 @@ export interface ICanvasCommand {
     anchorCalc: (currentX: number, currentY: number) => Anchor.IAnchor | null;
     anchorMouseDown: (e: any, anchor: Anchor.IAnchor) => void;
     anchorMouseUp: (e: any) => void;
-    addSelectedComponent: (cid: string, com: IComponent) => void;
+    addSelectedComponent: (cid: string, com: IComponent, multiselect?: boolean) => void;
     getSelectedComponents: () => Map<string, IComponent>;
     getSelectedCids: () => Set<string>;
     clearSelectedComponent: () => void;
     moveComponent: (axis: string, distance: number) => void;
     stretchComponent: (left: number, top: number, width: number, height: number) => void;
-    anchorMove: (offset: { x: number, y: number }) => void;
+    anchorMove: (offset: IOffset) => void;
     drawDragBox: (componentPosition: any) => void;
-    moveDragBox: (offset: { x: number, y: number }) => void;
-    clearDragBox: () => void;
+    moveDragBox: (offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) => void;
+    clearDragBox: (offset: any) => void;
+    startScroll: (scrollOffset: IOffset, setStageScroll: any) => void;
+    stopScroll: () => void;
 }

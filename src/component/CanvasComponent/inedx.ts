@@ -4,3 +4,4 @@ export { ICanvasState } from './ICanvasState';
 
 export { CanvasStyle } from './model/CanvasStyle';
 export { ICanvasCommand } from './model/types';
+export { IBoundary } from './model/types';

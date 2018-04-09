@@ -103,7 +103,7 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
 
         return (
             <div
-                id="editComponent"
+                id="_editComponent"
                 ref={(handler) => this.editor = handler}
                 contentEditable
                 suppressContentEditableWarning

@@ -7,6 +7,7 @@ export interface ICompos {
 
 export interface IConfig {
     componentPosition: ICompos; // 画布的初始偏移量
+    canvasSize: { width: number, height: number };  // 画布初始的宽高百分比
 }
 
 // config的值为不可修改值，尽量用Record
@@ -15,5 +16,6 @@ export const config: IConfig = {
         stageOffset: { top: 80, left: 184, right: 250, bottom: 35 },
         canvasOffset: { top: 32, left: 32, right: 32, bottom: 32 },
         borderOffset: { border: 1 }
-    }
+    },
+    canvasSize: { width: 3000, height: 6000 }
 };

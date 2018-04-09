@@ -1,7 +1,7 @@
 .main-editor .stage {
     position: absolute;
     margin: auto;
-    overflow: hidden;
+    overflow: auto;
     background-color: #f3f3f3;
     display: block;
     transition-property: top, left, right;

@@ -8,6 +8,5 @@ export interface ICanvasComponent {
     command: ICanvasCommand;
     container: HTMLDivElement | null;
     canvas: HTMLDivElement | null;
-    clearChoiceBox: () => void;
     getComponent: (cid: string) => IComponent | null;
 }

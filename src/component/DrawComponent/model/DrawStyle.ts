@@ -1,11 +1,13 @@
 import * as React from 'react';
 
-export const DrawStyle: React.CSSProperties = {
-    zIndex: 2,
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    pointerEvents: 'none',
-    left: 0,
-    top: 0
+export const DrawStyle = (canvasSize: { width: number, height: number }): React.CSSProperties => {
+    return {
+        zIndex: 2,
+        position: 'absolute',
+        width: `${canvasSize.width}px`,
+        height: `${canvasSize.height}px`,
+        pointerEvents: 'none',
+        left: 0,
+        top: 0
+    } as React.CSSProperties;
 };
