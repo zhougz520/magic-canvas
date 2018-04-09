@@ -17,7 +17,7 @@ const basePage: IBasePage[] = [
         expanded: true,
         components: [
             // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
-            { t: 'Demo', p: { name: 'demo', w: 100, h: 100 } }
+            { t: 'BaseComponent/demo/Demo', p: { name: 'demo', w: 100, h: 100 } }
         ]
     },
     {

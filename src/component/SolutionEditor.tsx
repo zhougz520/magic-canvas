@@ -184,30 +184,30 @@ const detail = {
                                 t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs1',
-                                    txt_v: '我是内部组件-按钮1',
+                                    txt_v: '我是内部组件-按钮1'
                                 }
                             },
                             {
                                 t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs2',
-                                    txt_v: '我是内部组件-按钮2',
+                                    txt_v: '我是内部组件-按钮2'
                                 }
                             },
                             {
                                 t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs3',
-                                    txt_v: '我是内部组件-按钮3',
+                                    txt_v: '我是内部组件-按钮3'
                                 }
                             },
                             {
                                 t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs4',
-                                    txt_v: '我是内部组件-按钮4',
+                                    txt_v: '我是内部组件-按钮4'
                                 }
-                            },
+                            }
                         ]
                     }
                 }

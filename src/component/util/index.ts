@@ -7,8 +7,8 @@ export interface IUtil {
 
 const util: IUtil = {
     componentsType: (csType: string) => {
-        // return require(`../${csType}`).default;
-        return require(`../BaseComponent/demo/${csType}`).default;
+        return require(`../${csType}`).default;
+        // return require(`../BaseComponent/demo/${csType}`).default;
     },
     isUndefined: (variable: any) => {
         if (variable === undefined || variable == null) return true;
