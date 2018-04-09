@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 export interface IUtil {
     componentsType: (csType: string) => any;
     isUndefined: (variable: any) => boolean;

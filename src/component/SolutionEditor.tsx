@@ -6,8 +6,6 @@ import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
 import { ICompos, config } from './config';
-import { EditComponent } from './EditComponent';
-import { IComponent } from './BaseComponent';
 import { IOffset } from './CanvasComponent/model/types';
 
 export interface ISolutionProp {
@@ -24,7 +22,6 @@ export interface ISolutionState {
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
     private canvas: ICanvasComponent | null = null;
     private draw: IDrawComponent | null = null;
-    private edit: EditComponent | null = null;
     private stage: HTMLDivElement | null = null;
 
     constructor(props: ISolutionProp) {
@@ -53,10 +50,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         this.setState({
             compos: Object.assign({}, this.state.compos, { stageOffset: newStageOffset })
         });
-    }
-    // 准备开始编辑，通知EditComponent获得焦点
-    beforeEditCom = (com: IComponent): void => {
-        if (null !== this.edit) this.edit.onEditComFocus(com);
     }
 
     StageStyle = () => {
@@ -133,7 +126,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
                         components={detail.content.components}
-                        beforeEditCom={this.beforeEditCom}
                     />
                 </div>
             </div>
