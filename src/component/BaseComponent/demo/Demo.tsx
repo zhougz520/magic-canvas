@@ -11,6 +11,17 @@ export interface IDemoState extends IBaseState {
 }
 
 export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
+    static defaultProps = {
+        data: {
+            id: 'cs2',
+            txt_v: '我是测试组件2',
+            w: 300,
+            h: 200,
+            l: 300,
+            t: 10
+        }
+    };
+
     public com: HTMLElement | null = null;
 
     public render() {

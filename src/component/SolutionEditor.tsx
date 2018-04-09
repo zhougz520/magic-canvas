@@ -3,11 +3,12 @@ import BarList from './BarComponent';
 import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
 import { IDrawComponent } from './DrawComponent';
-import { ICanvasComponent } from './CanvasComponent/inedx';
+import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
 import { ICompos, config } from './config';
 import { EditComponent } from './EditComponent';
 import { IComponent } from './BaseComponent';
+import { IOffset } from './CanvasComponent/model/types';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -15,6 +16,7 @@ export interface ISolutionProp {
 
 export interface ISolutionState {
     compos: ICompos;
+    canvasSzie: { width: number, height: number };
 }
 
 /* tslint:disable:no-console */
@@ -28,7 +30,8 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     constructor(props: ISolutionProp) {
         super(props);
         this.state = {
-            compos: config.componentPosition
+            compos: config.componentPosition,
+            canvasSzie: config.canvasSize
         };
     }
 
@@ -79,30 +82,56 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         return { scrollLeft, scrollTop };
     }
 
+    // 修改滚动条
+    setStageScroll = (offset: IOffset) => {
+        console.log(offset);
+        if (this.stage !== null) {
+            this.stage.scrollLeft += offset.x;
+            this.stage.scrollTop += offset.y;
+        }
+    }
+
+    // 获取stage的边界范围
+    getStageBoundary = () => {
+        if (this.stage === null) return;
+
+        const stageOffset = this.state.compos.stageOffset;
+        const width = this.stage.offsetWidth;
+        const height = this.stage.offsetHeight;
+
+        return {
+            startPoint: { x: stageOffset.left, y: stageOffset.top },
+            endPoint: {
+                x: stageOffset.left + width,
+                y: stageOffset.top + height
+            }
+        } as IBoundary;
+    }
+
     render() {
-        const { compos } = this.state;
+        const { compos, canvasSzie } = this.state;
         const stateStyle = this.StageStyle();
         console.log('重绘了stage');
 
         return (
             <div className="main-editor">
                 <BarList changeStageOffset={this.changeStageOffset} />
-                <div ref={(render) => this.stage = render} className="stage" style={stateStyle}>
-                    <EditComponent
-                        ref={(render: EditComponent) => this.edit = render}
-                        componentPosition={compos}
-                    />
+                <div id="stage" ref={(render) => this.stage = render} className="stage" style={stateStyle}>
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
+                        canvasSize={canvasSzie}
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
                     />
                     <Canvas
                         ref={(render) => this.canvas = render}
                         getDraw={this.getDraw}
+                        canvasSize={canvasSzie}
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
+                        setStageScroll={this.setStageScroll}
+                        getStageBoundary={this.getStageBoundary}
                         components={detail.content.components}
                         beforeEditCom={this.beforeEditCom}
                     />
