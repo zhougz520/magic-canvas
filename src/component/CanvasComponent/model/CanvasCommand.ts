@@ -55,11 +55,7 @@ const globalVar = {
 };
 
 // 键盘事件集合
-const keyFun: IKeyFun = {
-    addKeyEvent() {
-        document.addEventListener('keydown', this.handleKeyDown);
-        document.addEventListener('keyup', this.handleKeyUp);
-    },
+export const keyFun: IKeyFun = {
     handleKeyDown(e: any) {
         const args = keyArgs(e);
         const { key, ctrl, targetName } = args as IKeyArgs;
@@ -149,11 +145,6 @@ const keyFun: IKeyFun = {
  * 创建Canvas的命令集合
  */
 export const CanvasCommand: ICanvasCommand = {
-    // 初始化CanvasCommand
-    initCanvas() {
-        keyFun.addKeyEvent();
-    },
-
     // 是否时多选状态
     isMultiselect() {
         return globalVar.ctrlPress;

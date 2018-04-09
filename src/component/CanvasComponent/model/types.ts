@@ -18,14 +18,12 @@ export interface IDragDiv {
 
 export interface IKeyFun {
     [key: string]: any;
-    addKeyEvent: () => void;
     handleKeyDown: (e: any) => void;
     handleKeyUp: (e: any) => void;
     ctrl: any;
 }
 
 export interface ICanvasCommand {
-    initCanvas: () => void;
     // bind: (ins: any) => void;
     isMultiselect: () => boolean;
     isMouseDown: () => boolean;

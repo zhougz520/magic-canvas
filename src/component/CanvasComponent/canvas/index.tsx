@@ -157,7 +157,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     componentDidMount() {
-        CanvasCommand.initCanvas();
         document.addEventListener('mousemove', this.handleMouseMove);
         if (this.container && this.canvas) {
             this.container.addEventListener('mousedown', this.handlerMouseDown);
