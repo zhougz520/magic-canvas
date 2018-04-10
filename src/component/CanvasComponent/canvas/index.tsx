@@ -200,14 +200,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         if (currentSelectedComponent !== null) {
             const size: ISize = currentSelectedComponent.getSize();
             const position: IPosition = currentSelectedComponent.getPosition();
-            const canvasOffset: any = this.props.componentPosition.canvasOffset;
+            const bodyOffset: any = this.getPositionRelativeDocument(position.left, position.top);
 
             this.command.setIsEditMode(true);
             this.getEditor().setValue('');
             this.getEditor().setPosition(
                 size.width,
-                position.top + size.height / 2 + canvasOffset.top,
-                position.left + size.width / 2 + canvasOffset.left
+                bodyOffset.pageY + size.height / 2,
+                bodyOffset.pageX + size.width / 2
             );
 
             return true;

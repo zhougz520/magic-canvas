@@ -23,7 +23,7 @@ export const EditStyle = (config: IEditStyle): React.CSSProperties => {
         borderColor: 'transparent',
         borderStyle: 'solid',
         display: 'inline-block',
-        position: 'absolute',
+        position: 'fixed',
         overflow: 'visible',
         wordWrap: 'normal',
         borderWidth: 0,
