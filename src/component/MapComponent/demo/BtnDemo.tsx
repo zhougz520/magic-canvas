@@ -22,7 +22,6 @@ export default class BtnDemo extends MapComponent<IDemoProps, IDemoState> {
         return (
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                tabIndex={0}
                 onMouseDown={this.onSelectChange}
                 draggable
             >
