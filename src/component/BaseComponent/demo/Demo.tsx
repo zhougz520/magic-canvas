@@ -35,7 +35,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
                 <div
-                    style={{ backgroundColor: '#F0F0FF', userSelect: 'none' }}
+                    style={{ backgroundColor: '#F0F0FF' }}
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>

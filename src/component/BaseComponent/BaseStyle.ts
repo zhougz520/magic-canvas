@@ -13,6 +13,7 @@ export const BaseStyle = (position: PositionState, size: SizeState, zIndex: numb
         height: size.getHeight(),
         top: position.getTop(),
         left: position.getLeft(),
+        userSelect: 'none',
         zIndex
     };
 
