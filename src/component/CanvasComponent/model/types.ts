@@ -18,8 +18,6 @@ export interface IDragDiv {
 
 export interface IKeyFun {
     [key: string]: any;
-    handleKeyDown: (e: any) => void;
-    handleKeyUp: (e: any) => void;
     ctrl: any;
 }
 
@@ -48,4 +46,9 @@ export interface ICanvasCommand {
     drawDragBox: (componentPosition: any) => void;
     moveDragBox: (offset: { x: number, y: number }) => void;
     clearDragBox: () => void;
+    getIsEditMode: () => boolean;
+    setIsEditMode: (isEditMode: boolean) => void;
+    getSelectedComponent: () => IComponent | null;
+    setSelectedComponent: (com: IComponent | null) => void;
+    getTECellEditorActivateKeyRange: () => any;
 }
