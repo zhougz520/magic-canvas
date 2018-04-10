@@ -18,9 +18,6 @@ export interface IDragDiv {
 
 export interface IKeyFun {
     [key: string]: any;
-    addKeyEvent: () => void;
-    handleKeyDown: (e: any) => void;
-    handleKeyUp: (e: any) => void;
     ctrl: any;
 }
 
@@ -35,7 +32,6 @@ export interface IOffset {
 }
 
 export interface ICanvasCommand {
-    initCanvas: () => void;
     isMultiselect: () => boolean;
     isMouseDown: () => boolean;
     getPointerStart: () => IOffset;
@@ -61,4 +57,9 @@ export interface ICanvasCommand {
     clearDragBox: (offset: any) => void;
     startScroll: (scrollOffset: IOffset, setStageScroll: any) => void;
     stopScroll: () => void;
+    getIsEditMode: () => boolean;
+    setIsEditMode: (isEditMode: boolean) => void;
+    getSelectedComponent: () => IComponent | null;
+    setSelectedComponent: (com: IComponent | null) => void;
+    getTECellEditorActivateKeyRange: () => any;
 }

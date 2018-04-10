@@ -2,7 +2,7 @@ import { IKeyFun, ICanvasCommand, IDragDiv, DragType, IOffset, IBoundary } from 
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
-import { IKeyArgs, IPointerArgs, keyArgs, pointerArgs } from '../../util/KeyAndPointUtil';
+import { IPointerArgs, pointerArgs } from '../../util/KeyAndPointUtil';
 
 const body: HTMLBodyElement = document.getElementsByTagName('body')[0];
 
@@ -52,6 +52,20 @@ const globalVar = {
     dragType: 'none' as string,
     // 当前生成的组件位移框
     dragDivList: Map<string, IDragDiv>(),
+    // 是否编辑状态
+    isEditMode: false,
+    // 当前选中组件
+    currentSelectedComponent: null as IComponent | null,
+    TECellEditorActivateKeyRange: [
+        { min: 229, max: 229 }, // 中文输入法
+        { min: 32, max: 32 }, // 空格
+        { min: 65, max: 90 },
+        { min: 48, max: 57 },
+        { min: 96, max: 107 },
+        { min: 109, max: 111 },
+        { min: 186, max: 192 },
+        { min: 219, max: 222 }
+    ],
     // 当前所有拖拽框的大小，用于document坐标系边界检测
     dragDivVolume: {
         startPoint: { x: 10000, y: 10000 } as IOffset,
@@ -76,41 +90,7 @@ const globalVar = {
 };
 
 // 键盘事件集合
-const keyFun: IKeyFun = {
-    addKeyEvent() {
-        document.addEventListener('keydown', this.handleKeyDown);
-        document.addEventListener('keyup', this.handleKeyUp);
-    },
-    handleKeyDown(e: any) {
-        const args = keyArgs(e);
-        const { key, ctrl, targetName } = args as IKeyArgs;
-
-        if (targetName !== 'textarea') {
-            if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
-                || key === 'delete' || key === 'esc' || key === 'backspace') {
-                e.stopPropagation();
-                e.preventDefault();
-                keyFun[key].press();
-            } else if (ctrl) {
-                keyFun.ctrl.press();
-            }
-        }
-    },
-    handleKeyUp(e: any) {
-        const args = keyArgs(e);
-        const { key, ctrl, targetName } = args as IKeyArgs;
-
-        if (targetName !== 'textarea') {
-            if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
-                || key === 'delete' || key === 'esc' || key === 'backspace') {
-                e.stopPropagation();
-                e.preventDefault();
-                keyFun[key].release();
-            } else if (!ctrl && globalVar.ctrlPress) {
-                keyFun.ctrl.release();
-            }
-        }
-    },
+export const keyFun: IKeyFun = {
     ctrl: {
         press() {
             globalVar.ctrlPress = true;
@@ -170,11 +150,6 @@ const keyFun: IKeyFun = {
  * 创建Canvas的命令集合
  */
 export const CanvasCommand: ICanvasCommand = {
-    // 初始化CanvasCommand
-    initCanvas() {
-        keyFun.addKeyEvent();
-    },
-
     // 是否时多选状态
     isMultiselect() {
         return globalVar.ctrlPress;
@@ -461,5 +436,24 @@ export const CanvasCommand: ICanvasCommand = {
             clearInterval(globalVar.scrollTimer);
             globalVar.scrollTimer = null;
         }
+    },
+
+    getIsEditMode(): boolean {
+        return globalVar.isEditMode;
+    },
+    setIsEditMode(isEditMode: boolean): void {
+        globalVar.isEditMode = isEditMode;
+    },
+
+    getSelectedComponent(): IComponent | null {
+        return globalVar.currentSelectedComponent;
+    },
+    setSelectedComponent(com: IComponent | null): void {
+        globalVar.currentSelectedComponent = com;
+    },
+
+    getTECellEditorActivateKeyRange(): any {
+        return globalVar.TECellEditorActivateKeyRange;
     }
+
 };
