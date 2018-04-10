@@ -11,9 +11,11 @@ import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
 import { Stack } from 'immutable';
-const moveOver = function (event: any, id: string) {
+const moveOver = (event: any, id: string) => {
     // let intersects: any= [];
+    // tslint:disable-next-line:no-console
     console.log('bs-event:');
+    // tslint:disable-next-line:no-console
     console.log(event);
 };
 /**
@@ -46,7 +48,7 @@ export class MapComponent<P extends IMapProps, S extends IMapState>
         this.state = {
             mapState: MapState.createWithContent(contentState)
         } as Readonly<S>;
-        document.addEventListener('mouseover', (event: any)=>moveOver(event, props.data.id));
+        document.addEventListener('mouseover', (event: any) => moveOver(event, props.data.id));
     }
 
     /**
