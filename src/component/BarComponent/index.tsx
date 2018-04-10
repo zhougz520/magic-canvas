@@ -13,6 +13,8 @@ export interface IBarState {
     titleBarCollapsed: boolean;
     resourceBarCollapsed: boolean;
     propsBarCollapsed: boolean;
+    mapMenuType: string;    // mapStage左侧列表展示分类
+    componentMode: string;  // 组件模式
 }
 
 /* tslint:disable:no-console */
@@ -23,12 +25,14 @@ export default class BarList<P extends IBarProps, S extends IBarState> extends R
         this.state = {
             titleBarCollapsed: false,
             resourceBarCollapsed: false,
-            propsBarCollapsed: false
+            propsBarCollapsed: false,
+            mapMenuType: 'defaultType',
+            componentMode: 'page'
         } as Readonly<S>;
     }
 
     render() {
-        const { titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed } = this.state;
+        const { titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed, mapMenuType, componentMode } = this.state;
 
         return (
             <React.Fragment>
@@ -41,6 +45,8 @@ export default class BarList<P extends IBarProps, S extends IBarState> extends R
                 <Resource
                     collapsed={resourceBarCollapsed}
                     titleBarCollapsed={titleBarCollapsed}
+                    mapMenuType={mapMenuType}
+                    componentMode={componentMode}
                     // tslint:disable-next-line:jsx-no-lambda
                     onResourceBarCollapse={(collapsed) => this.collapseBar(undefined, collapsed)}
                 />

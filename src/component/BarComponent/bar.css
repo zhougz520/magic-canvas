@@ -35,45 +35,6 @@
     top: 0px;
 }
 
-.main-editor .resource-bar{
-    position: absolute;
-    top: 80px;
-    left: 0;
-    width: 184px;
-    bottom: 35px;
-    border-right: 1px solid #cbcbcb;
-    background-color: #fff;
-    transition-property: top, width;
-    transition-duration: 0.3s;
-    transition-timing-function: cubic-bezier(0.65, 0.05, 0.36, 1);
-}
-
-.main-editor .resource-bar.title-bar-collapsed{
-    top: 35px;
-}
-
-.main-editor .resource-bar.collapsed{
-    width: 24px;
-}
-
-.main-editor .resource-bar .holder {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 24px;
-    border-right: 1px solid #cbcbcb;
-}
-
-.main-editor .resource-bar .bar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 24px;
-    right: 0;
-    border-left: 1px solid #fafafa;
-}
-
 .main-editor .props-bar{
     position: absolute;
     top: 80px;

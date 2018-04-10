@@ -53,7 +53,7 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
 
         return (
             // tslint:disable-next-line:jsx-no-string-ref
-            <div className="draw" style={DrawStyle} ref={(draw) => this.draw = draw}>
+            <div className="draw" style={DrawStyle(this.props.canvasSize)} ref={(draw) => this.draw = draw}>
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
                     {frameRect}
                     {this.state.choiceBox === null ? '' : <ChoiceBox key="canvas" data={this.state.choiceBox} />}

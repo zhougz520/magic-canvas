@@ -11,6 +11,17 @@ export interface IDemoState extends IBaseState {
 }
 
 export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
+    static defaultProps = {
+        data: {
+            id: 'cs2',
+            txt_v: '我是测试组件2',
+            w: 300,
+            h: 200,
+            l: 300,
+            t: 10
+        }
+    };
+
     public com: HTMLElement | null = null;
 
     public render() {
@@ -24,7 +35,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
                 <div
-                    style={{ backgroundColor: '#F0F0FF' }}
+                    style={{ backgroundColor: '#F0F0FF', userSelect: 'none' }}
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>
@@ -45,7 +56,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
      * @param cid 组件ref标识
      */
     private onMouseDown = (e: any) => {
-        this.fireSelectChange(e);
+        this.fireSelectChange(e, this.getCid());
     }
 
     /**

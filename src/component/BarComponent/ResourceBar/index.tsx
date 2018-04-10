@@ -1,9 +1,13 @@
 import * as React from 'react';
-import './bar.css';
+import { Icon } from 'antd';
+import ComponentList from './ComponentList';
+import './resource.css';
 
 export interface IResourceProps {
     collapsed: boolean;
     titleBarCollapsed: boolean;
+    mapMenuType: string;
+    componentMode: string;
     onResourceBarCollapse: (collapsed: boolean) => void;
 }
 
@@ -24,9 +28,17 @@ export default class Resource extends React.PureComponent<IResourceProps, IResou
     }
 
     render() {
-        const { collapsed, titleBarCollapsed } = this.props;
+        const { collapsed, titleBarCollapsed, mapMenuType, componentMode } = this.props;
 
-        const bar = (<div className="bar">resource-bar</div>);
+        const bar = (
+            <div className="bar">
+                <div className="panel">
+                    <div className="components active">
+                        <ComponentList mapMenuType={mapMenuType} componentMode={componentMode} />
+                    </div>
+                </div>
+            </div>
+        );
 
         return (
             <React.Fragment>
@@ -35,7 +47,7 @@ export default class Resource extends React.PureComponent<IResourceProps, IResou
                     className={`resource-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}`}
                 >
                     <div className="holder">
-                        <div onClick={this.showPages}>折叠</div>
+                        <div onClick={this.showPages}><Icon type="panel-component" />组件</div>
                     </div>
                     {collapsed ? '' : bar}
                 </div>

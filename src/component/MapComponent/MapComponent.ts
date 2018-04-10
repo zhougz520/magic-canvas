@@ -1,31 +1,34 @@
 import * as React from 'react';
 
-import { IComponent } from './IComponent';
-import { IBaseProps } from './IBaseProps';
-import { IBaseState } from './IBaseState';
+import { IMapComponent } from './IMapComponent';
+import { IMapProps } from './IMapProps';
+import { IMapState } from './IMapState';
 
-import { BaseState } from './model/BaseState';
+import { MapState } from './model/MapState';
 import { ContentState } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
 import { Stack } from 'immutable';
-
+const moveOver = function (event: any, id: string) {
+    // let intersects: any= [];
+    console.log('bs-event:');
+    console.log(event);
+};
 /**
  * 基类
  * 所有基础组件继承于该类
  * 实现接口IComponent定义的所有方法，提供给外部调用
  */
-export class BaseComponent<P extends IBaseProps, S extends IBaseState>
-    extends React.PureComponent<P, S> implements IComponent {
+export class MapComponent<P extends IMapProps, S extends IMapState>
+    extends React.PureComponent<P, S> implements IMapComponent {
 
     constructor(props: P, context?: any) {
         super(props, context);
 
         const contentState: ContentState = ContentState.create({
             cid: props.data.id,
-            zIndex: props.zIndex,
             sizeState: SizeState.create({
                 width: props.data.w,
                 height: props.data.h
@@ -41,8 +44,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         });
 
         this.state = {
-            baseState: BaseState.createWithContent(contentState)
+            mapState: MapState.createWithContent(contentState)
         } as Readonly<S>;
+        document.addEventListener('mouseover', (event: any)=>moveOver(event, props.data.id));
     }
 
     /**
@@ -99,29 +103,29 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 获取组件标识cid
      */
     public getCid = (): string => {
-        const baseState: BaseState = this.getBaseState();
+        const mapState: MapState = this.getBaseState();
 
-        return baseState.getCurrentContent().getCid();
+        return mapState.getCurrentContent().getCid();
     }
 
     /**
      * 获取组件的zIndex
      */
     public getHierarchy = (): number => {
-        const baseState: BaseState = this.getBaseState();
+        const mapState: MapState = this.getBaseState();
 
-        return baseState.getCurrentContent().getZIndex();
+        return mapState.getCurrentContent().getZIndex();
     }
 
     /**
      * 设置组件的层级
      */
     public setHierarchy = (zIndex: number) => {
-        const oldBaseState: BaseState = this.getBaseState();
+        const oldBaseState: MapState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             zIndex
         }) as ContentState;
-        const newBaseState = BaseState.push(oldBaseState, newContent);
+        const newBaseState = MapState.push(oldBaseState, newContent);
         this.setBaseState(newBaseState);
     }
 
@@ -130,9 +134,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 返回：带格式的富文本内容（html）
      */
     public getRichChildNode = (): any => {
-        const baseState: BaseState = this.getBaseState();
+        const mapState: MapState = this.getBaseState();
 
-        return baseState.getCurrentContent().getRichChildNode();
+        return mapState.getCurrentContent().getRichChildNode();
     }
 
     /**
@@ -140,11 +144,11 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param richChildNode 带格式的富文本内容（html）
      */
     public setRichChildNode = (richChildNode: any): void => {
-        const oldBaseState: BaseState = this.getBaseState();
+        const oldBaseState: MapState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             richChildNode
         }) as ContentState;
-        const newBaseState = BaseState.push(oldBaseState, newContent);
+        const newBaseState = MapState.push(oldBaseState, newContent);
 
         this.setBaseState(newBaseState);
     }
@@ -153,8 +157,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 重做
      */
     public redo = (): void => {
-        const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState: BaseState = BaseState.redo(oldBaseState);
+        const oldBaseState: MapState = this.getBaseState();
+        const newBaseState: MapState = MapState.redo(oldBaseState);
 
         this.setBaseState(newBaseState);
     }
@@ -163,8 +167,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 撤销
      */
     public undo = (): void => {
-        const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState: BaseState = BaseState.undo(oldBaseState);
+        const oldBaseState: MapState = this.getBaseState();
+        const newBaseState: MapState = MapState.undo(oldBaseState);
 
         this.setBaseState(newBaseState);
     }
@@ -173,20 +177,20 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 手动设置堆栈
      */
     public setUndoStack = (): void => {
-        const oldBaseState: BaseState = this.getBaseState();
+        const oldBaseState: MapState = this.getBaseState();
         const currentContent: ContentState = oldBaseState.getCurrentContent();
         // tempContentState记录的线性调整开始前的ContentState
         const tempContentState: ContentState = oldBaseState.getTempContentState();
         const undoStack: Stack<ContentState> = oldBaseState.getUndoStack().push(tempContentState);
 
-        const newBaseState: BaseState = BaseState.set(oldBaseState, {
+        const newBaseState: MapState = MapState.set(oldBaseState, {
             currentContent,
             tempContentState: currentContent,
             undoStack,
             redoStack: Stack()
         });
 
-        this.setState({ baseState: newBaseState });
+        this.setState({ mapState: newBaseState });
     }
 
     /**
@@ -206,19 +210,19 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的baseState
      */
-    protected getBaseState = (): BaseState => {
-        const baseState: BaseState = this.state.baseState;
+    protected getBaseState = (): MapState => {
+        const mapState: MapState = this.state.mapState;
 
-        return baseState;
+        return mapState;
     }
 
     /**
      * 设置组件的baseState
      * @param newBaseState 构建好的新的baseState
      */
-    protected setBaseState = (newBaseState: BaseState): void => {
+    protected setBaseState = (newBaseState: MapState): void => {
         this.setState({
-            baseState: newBaseState
+            mapState: newBaseState
         });
     }
 
@@ -226,8 +230,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 获取组件sizeState
      */
     protected getSizeState = (): SizeState => {
-        const baseState: BaseState = this.getBaseState();
-        const sizeState: SizeState = baseState.getCurrentContent().getSizeState();
+        const mapState: MapState = this.getBaseState();
+        const sizeState: SizeState = mapState.getCurrentContent().getSizeState();
 
         return sizeState;
     }
@@ -237,16 +241,16 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param newSizeState 构建好的新的sizeState
      */
     protected setSizeState = (newSizeState: SizeState): void => {
-        const oldBaseState: BaseState = this.getBaseState();
+        const oldBaseState: MapState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             sizeState: newSizeState
         }) as ContentState;
 
         // 不自动设置撤销栈，由画布手动设置
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, false);
+        const newBaseState: MapState = MapState.push(oldBaseState, newContent, false);
 
         this.setState({
-            baseState: newBaseState
+            mapState: newBaseState
         }, this.renderCallback);
     }
 
@@ -254,8 +258,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 获取组件的PositionState
      */
     protected getPositionState = (): PositionState => {
-        const baseState: BaseState = this.getBaseState();
-        const positionState: PositionState = baseState.getCurrentContent().getPositionState();
+        const mapState: MapState = this.getBaseState();
+        const positionState: PositionState = mapState.getCurrentContent().getPositionState();
 
         return positionState;
     }
@@ -265,16 +269,16 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param newPositionState 构建好的新的PositionState
      */
     protected setPositionState = (newPositionState: PositionState): void => {
-        const oldBaseState: BaseState = this.getBaseState();
+        const oldBaseState: MapState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             positionState: newPositionState
         }) as ContentState;
 
         // 不自动设置撤销栈，由画布手动设置
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, false);
+        const newBaseState: MapState = MapState.push(oldBaseState, newContent, false);
 
         this.setState({
-            baseState: newBaseState
+            mapState: newBaseState
         }, this.renderCallback);
     }
 
@@ -289,9 +293,20 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 每个组件自己记录，还要判断键盘事件，比较复杂，且选中状态对组件身意义不大，故交由画布决定
      * @param cid 组件ref标识
      */
-    protected fireSelectChange = (e: any, cid: string): void => {
+    protected fireSelectChange = (e: any): void => {
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid, e);
+            this.props.selectionChanging(this.getCid(), e);
         }
     }
+
+    /**
+     * 组件获得焦点：通知EditComponent获得焦点，准备输入
+     * @param cid 组件ref标识
+     */
+    protected onComFocus = (cid: string, e: any): void => {
+        if (this.props.onComFocus) {
+            this.props.onComFocus(cid);
+        }
+    }
+
 }

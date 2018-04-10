@@ -24,6 +24,6 @@ export const ContainerStyle = (size: { width: number, height: number }): React.C
         right: 0,
         margin: 0,
         padding: 0,
-        overflow: 'hidden'
+        overflow: 'visible'
     } as React.CSSProperties;
 };

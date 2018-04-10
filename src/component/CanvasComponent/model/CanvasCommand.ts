@@ -1,4 +1,4 @@
-import { IKeyFun, ICanvasCommand, IDragDiv, DragType } from './types';
+import { IKeyFun, ICanvasCommand, IDragDiv, DragType, IOffset, IBoundary } from './types';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
@@ -27,7 +27,7 @@ const globalVar = {
     },
     // 当前选中的组件集合
     selectedComponents: Map<string, IComponent>(),
-    // 当前画布的偏移量
+    // 当前画布canvas相对document的偏移量
     componentOffset: {
         x: 0, y: 0,
         setValue(args: { offsetX: number, offsetY: number }) {
@@ -57,15 +57,36 @@ const globalVar = {
     // 当前选中组件
     currentSelectedComponent: null as IComponent | null,
     TECellEditorActivateKeyRange: [
-        {min: 229, max: 229}, // 中文输入法
-        {min: 32, max: 32}, // 空格
-        {min: 65, max: 90},
-        {min: 48, max: 57},
-        {min: 96, max: 107},
-        {min: 109, max: 111},
-        {min: 186, max: 192},
-        {min: 219, max: 222}
-    ]
+        { min: 229, max: 229 }, // 中文输入法
+        { min: 32, max: 32 }, // 空格
+        { min: 65, max: 90 },
+        { min: 48, max: 57 },
+        { min: 96, max: 107 },
+        { min: 109, max: 111 },
+        { min: 186, max: 192 },
+        { min: 219, max: 222 }
+    ],
+    // 当前所有拖拽框的大小，用于document坐标系边界检测
+    dragDivVolume: {
+        startPoint: { x: 10000, y: 10000 } as IOffset,
+        endPoint: { x: 0, y: 0 } as IOffset,
+        addValue(top: number, left: number, width: number, height: number) {
+            this.startPoint = {
+                x: Math.min(this.startPoint.x, left),
+                y: Math.min(this.startPoint.y, top)
+            };
+            this.endPoint = {
+                x: Math.max(this.endPoint.x, left + width),
+                y: Math.max(this.endPoint.y, top + height)
+            };
+        },
+        rest() {
+            this.startPoint = { x: 10000, y: 10000 };
+            this.endPoint = { x: 0, y: 0 };
+        }
+    },
+    // stage的滚动定时器
+    scrollTimer: null as null | NodeJS.Timer
 };
 
 // 键盘事件集合
@@ -228,7 +249,7 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     //  组件上锚点拖动事件
-    anchorMove(offset: { x: number, y: number }) {
+    anchorMove(offset: IOffset) {
         // tslint:disable-next-line:no-console
         console.log(offset);
         globalVar.dargging = true;
@@ -255,9 +276,9 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 新增选中组件
-    addSelectedComponent(cid: string, com: IComponent) {
+    addSelectedComponent(cid: string, com: IComponent, multiselect?: boolean) {
         let components = globalVar.selectedComponents;
-        if (!this.isMultiselect() && !components.has(cid)) {
+        if (!this.isMultiselect() && !components.has(cid) && !multiselect) {
             components = components.clear();
         }
         globalVar.selectedComponents = components.set(cid, com);
@@ -322,12 +343,19 @@ export const CanvasCommand: ICanvasCommand = {
         selectedComponents.map((component, cid) => {
             if (!cid || !component) return;
             if (!globalVar.dragDivList.has(cid)) {
+                // 将canvas坐标系转换为document坐标系
+                const top = component.getPosition().top + offsetY;
+                const left = component.getPosition().left + offsetX;
+                const width = component.getSize().width;
+                const height = component.getSize().height;
+
+                // 根据document坐标系在documnet.body上创建div
                 const documentDiv = document.createElement('div');
                 documentDiv.style.position = 'absolute';
-                documentDiv.style.top = `${component.getPosition().top + offsetY}px`;
-                documentDiv.style.left = `${component.getPosition().left + offsetX}px`;
-                documentDiv.style.width = `${component.getSize().width}px`;
-                documentDiv.style.height = `${component.getSize().height}px`;
+                documentDiv.style.top = `${top}px`;
+                documentDiv.style.left = `${left}px`;
+                documentDiv.style.width = `${width}px`;
+                documentDiv.style.height = `${height}px`;
                 documentDiv.style.border = '1px solid #108ee9';
                 documentDiv.style.zIndex = '3';
                 documentDiv.style.display = 'none';
@@ -335,13 +363,32 @@ export const CanvasCommand: ICanvasCommand = {
                 body.appendChild(documentDiv);
 
                 globalVar.dragDivList = globalVar.dragDivList.set(cid, { component, documentDiv, hasChange: false });
+                globalVar.dragDivVolume.addValue(top, left, width, height);
             }
         });
     },
 
     // 在body中移动组件的移动框
-    moveDragBox(offset: { x: number, y: number }) {
+    moveDragBox(offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) {
         globalVar.dargging = true;
+        // 碰撞检测, 碰撞到边界后滚动stage的滚动条
+        if (!stageBoundary) return;
+        const leftCrash = globalVar.dragDivVolume.startPoint.x + offset.x <= stageBoundary.startPoint.x;
+        const topCrash = globalVar.dragDivVolume.startPoint.y + offset.y <= stageBoundary.startPoint.y;
+        const rightCrash = globalVar.dragDivVolume.endPoint.x + offset.x >= stageBoundary.endPoint.x;
+        const bottomCrash = globalVar.dragDivVolume.endPoint.y + offset.y >= stageBoundary.endPoint.y;
+
+        // 边界滚动
+        if (leftCrash || topCrash || rightCrash || bottomCrash) {
+            this.startScroll({
+                x: leftCrash ? -20 : rightCrash ? 20 : 0,
+                y: topCrash ? -20 : bottomCrash ? 20 : 0
+            } as IOffset, setStageScroll);
+        } else {
+            this.stopScroll();
+        }
+
+        // 移动组件移动框
         globalVar.dragDivList.map((item: IDragDiv | undefined) => {
             if (item !== undefined) {
                 const pos = item.component.getPosition();
@@ -355,16 +402,16 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 在body中删除组件的移动框
-    clearDragBox() {
+    clearDragBox(offset: any) {
         globalVar.dragDivList.map((value, key) => {
             if (value !== undefined) {
                 const div = value.documentDiv;
                 if (div.style.left && div.style.top && value.hasChange) {
                     const pos = value.component.getPosition();
                     value.component.setPosition({
-                        left: parseInt(div.style.left, 10) - globalVar.componentOffset.x,
+                        left: parseInt(div.style.left, 10) - offset.pageX,
                         right: pos.right,
-                        top: parseInt(div.style.top, 10) - globalVar.componentOffset.y,
+                        top: parseInt(div.style.top, 10) - offset.pageY,
                         bottom: pos.bottom
                     });
                 }
@@ -372,6 +419,23 @@ export const CanvasCommand: ICanvasCommand = {
             }
         });
         globalVar.dragDivList = globalVar.dragDivList.clear();
+        globalVar.dragDivVolume.rest();
+        this.stopScroll();
+    },
+
+    // 开始滚动stage
+    startScroll(scrollOffset: IOffset, setStageScroll: any) {
+        if (globalVar.scrollTimer === null) {
+            globalVar.scrollTimer = setInterval(() => { setStageScroll(scrollOffset); }, 50);
+        }
+    },
+
+    // 停止滚动stage
+    stopScroll() {
+        if (globalVar.scrollTimer !== null) {
+            clearInterval(globalVar.scrollTimer);
+            globalVar.scrollTimer = null;
+        }
     },
 
     getIsEditMode(): boolean {
@@ -391,4 +455,5 @@ export const CanvasCommand: ICanvasCommand = {
     getTECellEditorActivateKeyRange(): any {
         return globalVar.TECellEditorActivateKeyRange;
     }
+
 };
