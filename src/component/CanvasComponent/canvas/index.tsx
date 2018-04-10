@@ -257,7 +257,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             this.canvas.addEventListener('drop', this.handleDrop);
             // 异常鼠标不在画布内释放了
             this.container.addEventListener('mouseleave', this.handleMouseLeave);
-            this.container.addEventListener('focus', () => { this.getEditor().setFocus(); });
         }
     }
 

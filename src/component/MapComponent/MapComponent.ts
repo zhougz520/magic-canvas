@@ -13,10 +13,6 @@ import * as Anchor from '../util/AnchorPoint';
 import { Stack } from 'immutable';
 const moveOver = (event: any, id: string) => {
     // let intersects: any= [];
-    // tslint:disable-next-line:no-console
-    console.log('bs-event:');
-    // tslint:disable-next-line:no-console
-    console.log(event);
 };
 /**
  * 基类

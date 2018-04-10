@@ -117,6 +117,10 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         }
     }
 
+    onBlur = () => {
+        this.setFocus();
+    }
+
     componentDidMount() {
         this.setFocus();
     }
@@ -139,6 +143,7 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
                 tabIndex={-1}
                 onKeyDown={this.onKeyDown}
                 onKeyUp={this.onKeyUp}
+                onBlur={this.onBlur}
             />
         );
     }
