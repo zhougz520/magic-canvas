@@ -16,6 +16,7 @@ export interface IContent {
     // 组件中带格式的富文本内容
     richChildNode: any;
     // TODO 组件个性化属性
+    customState: any;
 }
 
 const defaultRecord: IContent = {
@@ -23,7 +24,8 @@ const defaultRecord: IContent = {
     zIndex: 0,
     sizeState: null,
     positionState: null,
-    richChildNode: null
+    richChildNode: null,
+    customState: null
 };
 
 export const ContentStateRecord: Record.Class = Record(defaultRecord);
@@ -35,7 +37,8 @@ export class ContentState extends ContentStateRecord {
             zIndex: 0,
             sizeState: SizeState.createEmpty(),
             positionState: PositionState.createEmpty(),
-            richChildNode: null
+            richChildNode: null,
+            customState: null
         });
     }
 
@@ -61,5 +64,9 @@ export class ContentState extends ContentStateRecord {
 
     getRichChildNode(): any {
         return this.get('richChildNode');
+    }
+
+    getCustomState(): any {
+        return this.get('customState');
     }
 }

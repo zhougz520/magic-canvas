@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Button as AntButton } from 'antd';
+import { Map } from 'immutable';
 
 import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState, ContentState, SizeState, PositionState, BaseState
@@ -8,10 +9,10 @@ import {
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
 }
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoState {
-    aa: string;
-}
+
+const buttonState: Map<string, string> = Map({
+    type: 'primary'
+});
 
 export default class Button extends BaseComponent<IDemoProps, IBaseState> {
     private com: any = null;
@@ -33,7 +34,8 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
                 bottom: props.data.b
             }),
             // TODO 带格式的富文本
-            richChildNode: props.data.txt_v
+            richChildNode: props.data.txt_v,
+            customState: buttonState
         });
 
         this.state = {
@@ -44,14 +46,23 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
     render() {
         return (
             <AntButton
-                type="primary"
+                type={this.getCustomState().get('type')}
                 onMouseDown={this.onMouseDown}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
                 ref={(handler) => this.com = handler}
+                onClick={this.onClick}
             >
                 {this.getRichChildNode() as JSX.Element}
             </AntButton>
         );
+    }
+
+    private onClick = () => {
+        const newState: Map<string, string> = Map({
+            type: 'danger'
+        });
+
+        this.setCustomState(newState);
     }
 
     /**

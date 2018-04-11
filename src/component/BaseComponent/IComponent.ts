@@ -25,6 +25,9 @@ export interface IComponent {
     getRichChildNode: () => any;
     setRichChildNode: (richChildNode: any) => void;
 
+    getCustomState: () => any;
+    setCustomState: (customState: any) => void;
+
     /**
      * 重做、撤销
      */

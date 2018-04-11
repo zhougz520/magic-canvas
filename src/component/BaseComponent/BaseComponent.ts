@@ -38,7 +38,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 bottom: props.data.b
             }),
             // TODO 带格式的富文本
-            richChildNode: props.data.txt_v
+            richChildNode: props.data.txt_v,
+            customState: null
         });
 
         this.state = {
@@ -153,6 +154,23 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             richChildNode
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setBaseState(newBaseState);
+    }
+
+    public getCustomState = (): any => {
+        const baseState: BaseState = this.getBaseState();
+        const customState: any = baseState.getCurrentContent().getCustomState();
+
+        return customState;
+    }
+
+    public setCustomState = (customState: any): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            customState
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
