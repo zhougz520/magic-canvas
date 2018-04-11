@@ -53,6 +53,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, e: any): void => {
+        const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const com = this.getComponent(cid);
         if (com) {
             this.selectedComponent(cid, com);
@@ -60,10 +61,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
         // 记录当前选中组件
         const newCom: IComponent | null = com;
-        const oldCom: IComponent | null = this.command.getSelectedComponent();
         if (newCom !== oldCom) {
             this.command.setIsEditMode(false);
-            this.command.setSelectedComponent(newCom);
         }
     }
 
@@ -83,7 +82,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     handleMouseDown = (e: any) => {
         this.endEdit();
         this.command.setIsEditMode(false);
-        this.command.setSelectedComponent(null);
 
         // 鼠标按下时，计算鼠标位置
         this.recordPointStart(e);
@@ -193,19 +191,19 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     // 编辑框开始编辑
     beginEdit = (): boolean => {
-        const currentSelectedComponent: IComponent | null = this.command.getSelectedComponent();
+        const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
 
         if (currentSelectedComponent !== null) {
             const size: ISize = currentSelectedComponent.getSize();
             const position: IPosition = currentSelectedComponent.getPosition();
-            const canvasOffset: any = this.props.componentPosition.canvasOffset;
+            const bodyOffset: any = this.getPositionRelativeDocument(position.left, position.top);
 
             this.command.setIsEditMode(true);
             this.getEditor().setValue('');
             this.getEditor().setPosition(
                 size.width,
-                position.top + size.height / 2 + canvasOffset.top,
-                position.left + size.width / 2 + canvasOffset.left
+                bodyOffset.pageY + size.height / 2,
+                bodyOffset.pageX + size.width / 2
             );
 
             return true;
@@ -216,7 +214,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     // 编辑框结束编辑
     endEdit = () => {
-        const currentSelectedComponent: IComponent | null = this.command.getSelectedComponent();
+        const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
         const currentIsEditMode: boolean = this.command.getIsEditMode();
 
         if (currentIsEditMode === true && currentSelectedComponent !== null) {

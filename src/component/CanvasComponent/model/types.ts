@@ -72,7 +72,5 @@ export interface ICanvasCommand {
     stopScroll: () => void;
     getIsEditMode: () => boolean;
     setIsEditMode: (isEditMode: boolean) => void;
-    getSelectedComponent: () => IComponent | null;
-    setSelectedComponent: (com: IComponent | null) => void;
     getTECellEditorActivateKeyRange: () => any;
 }

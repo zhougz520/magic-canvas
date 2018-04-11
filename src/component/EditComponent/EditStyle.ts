@@ -10,7 +10,7 @@ export const EditStyle = (config: IEditStyle): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
         minHeight: '1em',
         lineHeight: '1.2',
-        zIndex: 5,
+        zIndex: 10000,
         textAlign: 'center',
         outline: 'none',
         whiteSpace: 'normal',
@@ -23,7 +23,7 @@ export const EditStyle = (config: IEditStyle): React.CSSProperties => {
         borderColor: 'transparent',
         borderStyle: 'solid',
         display: 'inline-block',
-        position: 'absolute',
+        position: 'fixed',
         overflow: 'visible',
         wordWrap: 'normal',
         borderWidth: 0,

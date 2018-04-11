@@ -34,8 +34,6 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
-                tabIndex={0}
-                onFocus={this.onFocus}
             >
                 <div
                     style={{ backgroundColor: '#F0F0FF' }}
@@ -45,10 +43,5 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
                 {children}
             </div>
         );
-    }
-
-    // TODO onFocus、onBlur方法需完善
-    private onFocus = (e: any): void => {
-        // this.onComFocus(this.getCid(), e);
     }
 }

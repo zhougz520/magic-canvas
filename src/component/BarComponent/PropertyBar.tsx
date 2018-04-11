@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './bar.css';
+import { Button, Input } from 'antd';
 
 export interface IPropertyProps {
     collapsed: boolean;
@@ -30,6 +31,9 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                 <div className="panel">
                     <div className={`props${showProps ? ' active' : ''}`}>
                         {showProps ? 'props-bar' : ''}
+                        <br />
+                        <Button type="primary" size="small">DemoClick</Button>
+                        <Input placeholder="Basic usage" />
                     </div>
                 </div>
             </div>

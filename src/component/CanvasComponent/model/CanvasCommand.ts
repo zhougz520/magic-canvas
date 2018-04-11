@@ -64,8 +64,6 @@ const globalVar = {
     dragDivList: Map<string, IDragDiv>(),
     // 是否编辑状态
     isEditMode: false,
-    // 当前选中组件
-    currentSelectedComponent: null as IComponent | null,
     TECellEditorActivateKeyRange: [
         { min: 229, max: 229 }, // 中文输入法
         { min: 32, max: 32 }, // 空格
@@ -463,13 +461,6 @@ export const CanvasCommand: ICanvasCommand = {
     },
     setIsEditMode(isEditMode: boolean): void {
         globalVar.isEditMode = isEditMode;
-    },
-
-    getSelectedComponent(): IComponent | null {
-        return globalVar.currentSelectedComponent;
-    },
-    setSelectedComponent(com: IComponent | null): void {
-        globalVar.currentSelectedComponent = com;
     },
 
     getTECellEditorActivateKeyRange(): any {
