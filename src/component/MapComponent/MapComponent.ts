@@ -287,7 +287,7 @@ export class MapComponent<P extends IMapProps, S extends IMapState>
     // render后的回调函数
     protected renderCallback = (): void => {
         // 通知画布重绘组件的选中框
-        if (this.props.repairSelected) this.props.repairSelected();
+        if (this.props.repaintSelected) this.props.repaintSelected();
     }
 
     /**

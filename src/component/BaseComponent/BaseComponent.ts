@@ -105,6 +105,15 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的临时状态
+     */
+    public getTempContentState = (): ContentState => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getTempContentState();
+    }
+
+    /**
      * 获取组件的zIndex
      */
     public getHierarchy = (): number => {
@@ -281,7 +290,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     // render后的回调函数
     protected renderCallback = (): void => {
         // 通知画布重绘组件的选中框
-        if (this.props.repairSelected) this.props.repairSelected();
+        if (this.props.repaintSelected) this.props.repaintSelected();
     }
 
     /**

@@ -1,7 +1,6 @@
-import { Set } from 'immutable';
 import { IChoiceBoxData } from './box/ChoiceBoxComponent';
 
 export interface IDrawState {
-    cids: Set<string>;
+    rectList: JSX.Element[];
     choiceBox: IChoiceBoxData | null;
 }

@@ -1,30 +1,20 @@
 import * as React from 'react';
 import * as Anchor from '../../util/AnchorPoint';
+import { IReactData } from '../model/types';
 
-export interface IFrameProps {
+export interface ISelectedProps {
     key: string;
     cid: string;
     data: IReactData;
 }
 
-export interface IReactData {
-    pointX: number;
-    pointY: number;
-    width: number;
-    height: number;
-    anchorFill: string;
-    stroke: string;
-    strokeWidth: number;
-    borderOffset: number;
-}
-
-const createFrame = (props: IFrameProps) => {
+const createSelected = (props: ISelectedProps) => {
     const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth, borderOffset } = props.data;
     const anchorList = Anchor.countAnchorPoint(props.cid, pointX, pointY, width, height, undefined, borderOffset);
 
     const rectList: any[] = [];
     // tslint:disable-next-line:max-line-length
-    rectList.push(<rect key="frame" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth }} />);
+    rectList.push(<rect key="Selected" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth }} />);
     anchorList.map((anchor) => {
         rectList.push(
             <rect
@@ -41,8 +31,8 @@ const createFrame = (props: IFrameProps) => {
     return rectList;
 };
 
-export const Frame = (props: IFrameProps) => {
-    const rectList = createFrame(props);
+export const Selected = (props: ISelectedProps) => {
+    const rectList = createSelected(props);
 
     return (
         <React.Fragment>
