@@ -160,6 +160,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         this.setBaseState(newBaseState);
     }
 
+    /**
+     * 获取组件自定义state
+     */
     public getCustomState = (): any => {
         const baseState: BaseState = this.getBaseState();
         const customState: any = baseState.getCurrentContent().getCustomState();
@@ -167,10 +170,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return customState;
     }
 
-    public setCustomState = (customState: any): void => {
+    /**
+     * 设置组件自定义state
+     */
+    public setCustomState = (newCustomState: any): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            customState
+            customState: newCustomState
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
