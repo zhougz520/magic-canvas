@@ -225,9 +225,7 @@ export const CanvasCommand: ICanvasCommand = {
     // 手动设置组件堆栈(当组件位置和大小改变完成后，在设置，其他情况请慎用)
     setUndoStack() {
         globalVar.selectedComponents.map((com, cid) => {
-            if (com) {
-                com.setUndoStack();
-            }
+            if (com) com.setUndoStack();
         });
     },
 
@@ -320,6 +318,7 @@ export const CanvasCommand: ICanvasCommand = {
             components = components.clear();
         }
         globalVar.selectedComponents = components.set(cid, com);
+        globalVar.currentComponentSize.setValue();
     },
 
     // 获取所有选中组件
@@ -392,31 +391,47 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.dargging = true;
         // 碰撞检测, 碰撞到边界后滚动stage的滚动条
         if (!stageBoundary) return;
-        const leftCrash = globalVar.dragDivVolume.startPoint.x + offset.x <= stageBoundary.startPoint.x;
-        const topCrash = globalVar.dragDivVolume.startPoint.y + offset.y <= stageBoundary.startPoint.y;
-        const rightCrash = globalVar.dragDivVolume.endPoint.x + offset.x >= stageBoundary.endPoint.x;
-        const bottomCrash = globalVar.dragDivVolume.endPoint.y + offset.y >= stageBoundary.endPoint.y;
+        const leftCrash = globalVar.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
+        const topCrash = globalVar.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
+        const rightCrash = globalVar.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
+        const bottomCrash = globalVar.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
 
         // 边界滚动
         if (leftCrash || topCrash || rightCrash || bottomCrash) {
             this.startScroll({
-                x: leftCrash ? -20 : rightCrash ? 20 : 0,
-                y: topCrash ? -20 : bottomCrash ? 20 : 0
+                x: leftCrash ? -15 : rightCrash ? 15 : 0,
+                y: topCrash ? -15 : bottomCrash ? 15 : 0
             } as IOffset, setStageScroll);
         } else {
             this.stopScroll();
         }
 
-        globalVar.dragDivList.map((item: IDragDiv | undefined) => {
-            if (item !== undefined) {
-                const pos = item.component.getPosition();
-                const div = item.documentDiv;
-                div.style.display = 'block';
-                item.hasChange = true;
-                if (div.style.left) div.style.left = `${pos.left + offset.x + globalVar.componentOffset.x}px`;
-                if (div.style.top) div.style.top = `${pos.top + offset.y + globalVar.componentOffset.y}px`;
-            }
-        });
+        if (config.highPerformance) {
+            // 高性能模式，直接拖动组件
+            globalVar.selectedComponents.map((component, cid) => {
+                if (component && cid) {
+                    const value = globalVar.currentComponentSize.getValue(cid);
+                    const left = value.position.left + offset.x;
+                    const top = value.position.top + offset.y;
+                    const right = value.position.right;
+                    const bottom = value.position.bottom;
+                    component.setPosition({ left, right, top, bottom });
+                }
+            });
+        } else {
+            // 低性能模式，移动拖动框
+            globalVar.dragDivList.map((item: IDragDiv | undefined) => {
+                if (item !== undefined) {
+                    const pos = item.component.getPosition();
+                    const div = item.documentDiv;
+                    div.style.display = 'block';
+                    item.hasChange = true;
+                    if (div.style.left) div.style.left = `${pos.left + offset.x + globalVar.componentOffset.x}px`;
+                    if (div.style.top) div.style.top = `${pos.top + offset.y + globalVar.componentOffset.y}px`;
+                }
+            });
+        }
+
     },
 
     // 在body中删除组件的移动框

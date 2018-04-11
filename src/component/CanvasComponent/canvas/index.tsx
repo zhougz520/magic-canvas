@@ -502,18 +502,28 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 拖动组件移动框
      */
     moveDragBox = (e: any) => {
+        let stageBoundary = this.props.getStageBoundary();
+        // 低性能模式，创建拖动框并拖动
+        let start = this.command.getPointerStart('dom');
+        let offset = { x: e.pageX - start.x, y: e.pageY - start.y };
+        if (stageBoundary) {
+            stageBoundary = {
+                startPoint: { x: stageBoundary.startPoint.x - offset.x, y: stageBoundary.startPoint.y - offset.y },
+                endPoint: { x: stageBoundary.endPoint.x - offset.x, y: stageBoundary.endPoint.y - offset.y }
+            };
+        }
+        if (config.highPerformance) {
+            // 高性能模式，直接拖动组件
+            start = this.command.getPointerStart('canvas');
+            const end = this.getPositionRelativeCanvas(e.pageX, e.pageY);
+            offset = { x: end.x - start.x, y: end.y - start.y };
+        }
+
         // 档偏移量超过10后才开始处理拖拽事件，并隐藏选中框
-        const pointStart = this.command.getPointerStart('dom');
-        const offset = {
-            x: e === undefined ? 0 : e.pageX - pointStart.x,
-            y: e === undefined ? 0 : e.pageY - pointStart.y
-        };
         if (!this.command.isDargging() && Math.abs(offset.x) < 10 && Math.abs(offset.y) < 10) return;
 
-        const stageBoundary = this.props.getStageBoundary();
         this.command.darggingStart();
         this.command.moveDragBox(offset, stageBoundary, this.props.setStageScroll);
-        this.hideSelected();
     }
 
     /**
