@@ -27,3 +27,21 @@ export interface IFrame {
     border: List<ILine>;
     anchor: List<IPoint>;
 }
+
+export interface IReactData {
+    pointX: number;
+    pointY: number;
+    width: number;
+    height: number;
+    anchorFill: string;
+    stroke: string;
+    strokeWidth: number;
+    borderOffset: number;
+}
+
+export interface IBaseData {
+    cid: string;
+    anchorKey: string;
+    position: { left: number, top: number, right?: number, bottom?: number };
+    size: { width: number, height: number };
+}

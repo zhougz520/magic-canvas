@@ -1,6 +1,7 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
+import { ContentState } from '.';
 
 /**
  * BaseComponent提供的方法接口
@@ -44,10 +45,15 @@ export interface IComponent {
     /**
      * 定位鼠标点击的部位
      */
-    getPointerAnchor: (currentX: number, currentY: number) =>  Anchor.IAnchor | null;
+    getPointerAnchor: (currentX: number, currentY: number) => Anchor.IAnchor | null;
 
     /**
      * 获取组件标识cid
      */
     getCid: () => string;
+
+    /**
+     * 获取组件的临时状态
+     */
+    getTempContentState: () => ContentState;
 }

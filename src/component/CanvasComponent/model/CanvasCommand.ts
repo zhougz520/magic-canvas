@@ -2,7 +2,7 @@ import { IKeyFun, ICanvasCommand, IDragDiv, DragType, IOffset, IBoundary } from 
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
-import { IPointerArgs, pointerArgs } from '../../util/KeyAndPointUtil';
+import { config } from '../../config';
 
 const body: HTMLBodyElement = document.getElementsByTagName('body')[0];
 
@@ -14,36 +14,46 @@ const globalVar = {
     mouseDown: false,
     // 是否开始拖拽
     dargging: false,
-    // 当前鼠标按下时的位置
+    // 鼠标按下时的位置
     pointStart: {
-        x: 0, y: 0,
-        setValue(args: IPointerArgs) {
-            this.x = args.pageX;
-            this.y = args.pageY;
+        pos: {
+            canvas: { x: 0, y: 0 },
+            stage: { x: 0, y: 0 },
+            dom: { x: 0, y: 0 }
+        } as { [key: string]: { x: number, y: number } },
+        setValue(x: number, y: number, type: string) {
+            this.pos[type] = { x, y };
         },
-        getValue() {
-            return { x: this.x, y: this.y };
+        getValue(type: string) {
+            return this.pos[type];
         }
     },
     // 当前选中的组件集合
     selectedComponents: Map<string, IComponent>(),
+    // 当前选中的组件组件的大小和位置(为了实时修改组件的大小)
+    currentComponentSize: {
+        list: Map<string, { position: IPosition, size: ISize }>(),
+        setValue() {
+            this.list = this.list.clear();
+            globalVar.selectedComponents.map((com, cid) => {
+                if (com && cid) {
+                    this.list = this.list.set(cid, {
+                        position: com.getPosition(),
+                        size: com.getSize()
+                    });
+                }
+            });
+        },
+        getValue(cid: string) {
+            return this.list.get(cid);
+        }
+    },
     // 当前画布canvas相对document的偏移量
     componentOffset: {
         x: 0, y: 0,
         setValue(args: { offsetX: number, offsetY: number }) {
             this.x = args.offsetX;
             this.y = args.offsetY;
-        }
-    },
-    // 当前触发组件的数据
-    currentComponentData: {
-        component: null as IComponent | null,
-        position: null as IPosition | null,  // 此处的position和size对象为不可修改对象，可以用作缓存
-        size: null as ISize | null,
-        setValue(component: IComponent) {
-            this.component = component;
-            this.position = component.getPosition();
-            this.size = component.getSize();
         }
     },
     // 当前触发的锚点
@@ -158,11 +168,6 @@ export const CanvasCommand: ICanvasCommand = {
         return globalVar.mouseDown;
     },
 
-    // 返回鼠标按下时的初始位置
-    getPointerStart() {
-        return globalVar.pointStart.getValue();
-    },
-
     // 是否开始拖拽
     isDargging() {
         return globalVar.dargging;
@@ -182,14 +187,12 @@ export const CanvasCommand: ICanvasCommand = {
     canvasMouseDown(e: any) {
         globalVar.mouseDown = true;
         globalVar.dragType = DragType.Choice;
-        const args = pointerArgs(e);
-        if (args !== undefined) {
-            globalVar.pointStart.setValue(args);
-        }
     },
 
     // canvas上的鼠标点击事件
     canvasMouseUp(e: any) {
+        // 当组件经历过形状位置改变后，手动设置一次组件堆栈
+        if (globalVar.dargging) this.setUndoStack();
         globalVar.mouseDown = false;
         globalVar.dargging = false;
         globalVar.dragType = DragType.None;
@@ -199,24 +202,41 @@ export const CanvasCommand: ICanvasCommand = {
     componentMouseDown(e: any) {
         globalVar.mouseDown = true;
         globalVar.dragType = DragType.Shift;
-        const args = pointerArgs(e);
-        if (args !== undefined) {
-            globalVar.pointStart.setValue(args);
-        }
     },
     // 组件传递而来的鼠标点击事件
     componentMouseUp(e: any) {
+        // 当组件经历过形状位置改变后，手动设置一次组件堆栈
+        if (globalVar.dargging) this.setUndoStack();
         globalVar.mouseDown = false;
         globalVar.dargging = false;
         globalVar.dragType = DragType.None;
     },
 
+    // 记录Stage上鼠标按下时的位置
+    setPointStart(x: number, y: number, type: string) {
+        globalVar.pointStart.setValue(x, y, type);
+    },
+
+    // 返回鼠标按下时的初始位置
+    getPointerStart(type: string) {
+        return globalVar.pointStart.getValue(type);
+    },
+
+    // 手动设置组件堆栈(当组件位置和大小改变完成后，在设置，其他情况请慎用)
+    setUndoStack() {
+        globalVar.selectedComponents.map((com, cid) => {
+            if (com) com.setUndoStack();
+        });
+    },
+
     // 鼠标移动时计算组件锚点位置
     anchorCalc(currentX: number, currentY: number) {
         let anchor: Anchor.IAnchor | null = null;
+        let find = false;
         globalVar.selectedComponents.map((com, cid) => {
-            if (com) {
+            if (com && !find) {
                 anchor = com.getPointerAnchor(currentX, currentY);
+                if (anchor !== null) find = true;
             }
         });
 
@@ -225,18 +245,10 @@ export const CanvasCommand: ICanvasCommand = {
 
     // 组件上锚点触发的鼠标点击事件
     anchorMouseDown(e: any, anchor: Anchor.IAnchor) {
-        // 鼠标按下事件
-        const args = pointerArgs(e);
-        if (args !== undefined) {
-            globalVar.pointStart.setValue(args);
-            globalVar.mouseDown = true;
-            globalVar.dragType = DragType.Stretch;
-        }
-        const com = globalVar.selectedComponents.get(anchor.cid);
-        if (com) {
-            globalVar.currentComponentData.setValue(com);
-            globalVar.currentAnchor = anchor;
-        }
+        globalVar.mouseDown = true;
+        globalVar.dragType = DragType.Stretch;
+        globalVar.currentComponentSize.setValue();
+        globalVar.currentAnchor = anchor;
     },
 
     // 组件上锚点触发的鼠标点击事件
@@ -247,30 +259,56 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     //  组件上锚点拖动事件
-    anchorMove(offset: IOffset) {
-        // tslint:disable-next-line:no-console
-        console.log(offset);
+    anchorMove(offset: IOffset, end: boolean, callBack: any) {
         globalVar.dargging = true;
         if (globalVar.currentAnchor) {
-            switch (globalVar.currentAnchor.key) {
+            const anchorKey = globalVar.currentAnchor.key;
+            switch (anchorKey) {
                 // 左上锚点，修改position
-                case 'ul': return this.stretchComponent(offset.x, offset.y, -offset.x, -offset.y);
+                case 'ul': return this.stretchComponent(
+                    offset.x, offset.y, -offset.x, -offset.y, anchorKey, end, callBack);
                 // 左中锚点，修改position(left)
-                case 'ml': return this.stretchComponent(offset.x, 0, -offset.x, 0);
+                case 'ml': return this.stretchComponent(offset.x, 0, -offset.x, 0, anchorKey, end, callBack);
                 // 左下锚点
-                case 'bl': return this.stretchComponent(offset.x, 0, -offset.x, offset.y);
+                case 'bl': return this.stretchComponent(offset.x, 0, -offset.x, offset.y, anchorKey, end, callBack);
                 // 上中锚点
-                case 'um': return this.stretchComponent(0, offset.y, 0, -offset.y);
+                case 'um': return this.stretchComponent(0, offset.y, 0, -offset.y, anchorKey, end, callBack);
                 // 右上锚点
-                case 'ur': return this.stretchComponent(0, offset.y, offset.x, -offset.y);
+                case 'ur': return this.stretchComponent(
+                    0, offset.y, offset.x, -offset.y, anchorKey, end, callBack);
                 // 右中锚点
-                case 'mr': return this.stretchComponent(0, 0, offset.x, 0);
+                case 'mr': return this.stretchComponent(0, 0, offset.x, 0, anchorKey, end, callBack);
                 // 右下锚点
-                case 'br': return this.stretchComponent(0, 0, offset.x, offset.y);
+                case 'br': return this.stretchComponent(0, 0, offset.x, offset.y, anchorKey, end, callBack);
                 // 下中锚点
-                case 'bm': return this.stretchComponent(0, 0, 0, offset.y);
+                case 'bm': return this.stretchComponent(0, 0, 0, offset.y, anchorKey, end, callBack);
             }
         }
+    },
+
+    // 组件伸展
+    stretchComponent(x: number, y: number, w: number, h: number, anchorKey: string, end: boolean, callBack: any) {
+        const comData: any[] = [];
+        globalVar.selectedComponents.map((com, cid) => {
+            if (com && cid) {
+                const value = globalVar.currentComponentSize.getValue(cid);
+                const left = value.position.left + x;
+                const top = value.position.top + y;
+                const width = value.size.width + w < 10 ? 10 : value.size.width + w;
+                const height = value.size.height + h < 10 ? 10 : value.size.height + h;
+                const position = { left, right: value.position.right, top, bottom: value.position.bottom };
+                const size = { width, height };
+                if (end || config.highPerformance) {
+                    // 高性能模式，组件立即变化
+                    com.setPosition(position);
+                    com.setSize(size);
+                } else {
+                    // 低性能模式，组件在鼠标放下时变化
+                    comData.push({ cid, position, size, anchorKey });
+                }
+            }
+        });
+        if (comData.length > 0) callBack(comData);
     },
 
     // 新增选中组件
@@ -280,9 +318,10 @@ export const CanvasCommand: ICanvasCommand = {
             components = components.clear();
         }
         globalVar.selectedComponents = components.set(cid, com);
+        globalVar.currentComponentSize.setValue();
     },
 
-    // 获取所以选中组件
+    // 获取所有选中组件
     getSelectedComponents() {
         return globalVar.selectedComponents;
     },
@@ -309,25 +348,6 @@ export const CanvasCommand: ICanvasCommand = {
                 });
             }
         });
-    },
-
-    // 组件伸展
-    stretchComponent(left: number, top: number, width: number, height: number) {
-        const component = globalVar.currentComponentData.component;
-        const position = globalVar.currentComponentData.position;
-        const size = globalVar.currentComponentData.size;
-        if (component !== null && position !== null && size !== null) {
-            component.setPosition({
-                left: position.left + left,
-                right: position.right,
-                top: position.top + top,
-                bottom: position.bottom
-            });
-            component.setSize({
-                width: size.width + width,
-                height: size.height + height
-            });
-        }
     },
 
     // 在body中创建组件的移动框
@@ -371,32 +391,47 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.dargging = true;
         // 碰撞检测, 碰撞到边界后滚动stage的滚动条
         if (!stageBoundary) return;
-        const leftCrash = globalVar.dragDivVolume.startPoint.x + offset.x <= stageBoundary.startPoint.x;
-        const topCrash = globalVar.dragDivVolume.startPoint.y + offset.y <= stageBoundary.startPoint.y;
-        const rightCrash = globalVar.dragDivVolume.endPoint.x + offset.x >= stageBoundary.endPoint.x;
-        const bottomCrash = globalVar.dragDivVolume.endPoint.y + offset.y >= stageBoundary.endPoint.y;
+        const leftCrash = globalVar.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
+        const topCrash = globalVar.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
+        const rightCrash = globalVar.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
+        const bottomCrash = globalVar.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
 
         // 边界滚动
         if (leftCrash || topCrash || rightCrash || bottomCrash) {
             this.startScroll({
-                x: leftCrash ? -20 : rightCrash ? 20 : 0,
-                y: topCrash ? -20 : bottomCrash ? 20 : 0
+                x: leftCrash ? -15 : rightCrash ? 15 : 0,
+                y: topCrash ? -15 : bottomCrash ? 15 : 0
             } as IOffset, setStageScroll);
         } else {
             this.stopScroll();
         }
 
-        // 移动组件移动框
-        globalVar.dragDivList.map((item: IDragDiv | undefined) => {
-            if (item !== undefined) {
-                const pos = item.component.getPosition();
-                const div = item.documentDiv;
-                div.style.display = 'block';
-                item.hasChange = true;
-                if (div.style.left) div.style.left = `${pos.left + offset.x + globalVar.componentOffset.x}px`;
-                if (div.style.top) div.style.top = `${pos.top + offset.y + globalVar.componentOffset.y}px`;
-            }
-        });
+        if (config.highPerformance) {
+            // 高性能模式，直接拖动组件
+            globalVar.selectedComponents.map((component, cid) => {
+                if (component && cid) {
+                    const value = globalVar.currentComponentSize.getValue(cid);
+                    const left = value.position.left + offset.x;
+                    const top = value.position.top + offset.y;
+                    const right = value.position.right;
+                    const bottom = value.position.bottom;
+                    component.setPosition({ left, right, top, bottom });
+                }
+            });
+        } else {
+            // 低性能模式，移动拖动框
+            globalVar.dragDivList.map((item: IDragDiv | undefined) => {
+                if (item !== undefined) {
+                    const pos = item.component.getPosition();
+                    const div = item.documentDiv;
+                    div.style.display = 'block';
+                    item.hasChange = true;
+                    if (div.style.left) div.style.left = `${pos.left + offset.x + globalVar.componentOffset.x}px`;
+                    if (div.style.top) div.style.top = `${pos.top + offset.y + globalVar.componentOffset.y}px`;
+                }
+            });
+        }
+
     },
 
     // 在body中删除组件的移动框

@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { IDrawComponent, IDrawProps, IDrawState, DrawStyle } from '../index';
-import { Frame, IReactData } from '../box/FrameComponent';
+import { IReactData, IDrawComponent, IDrawProps, IDrawState, DrawStyle } from '../index';
+import { Selected } from '../box/SelectedBoxComponent';
 import { ChoiceBox, IChoiceBoxData } from '../box/ChoiceBoxComponent';
+import { Stretch } from '../box/StretchBoxComponent';
 import DrawComponent from '../DrawComponent';
 import { Set } from 'immutable';
 import { IComponent } from '../../BaseComponent';
+import { IBaseData } from '../model/types';
 
 /* tslint:disable:no-console */
 export default class Draw extends DrawComponent<IDrawProps, IDrawState> implements IDrawComponent {
@@ -13,7 +15,7 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
     constructor(props: IDrawProps, context?: any) {
         super(props, context);
         this.state = {
-            cids: Set<string>(),
+            rectList: [],
             choiceBox: null
         };
     }
@@ -27,8 +29,51 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
         return null;
     }
 
-    setSelectedCids = (cids: Set<string>) => {
-        this.setState({ cids });
+    // 绘制组件选中框
+    drawSelectedBox = (cids: Set<string>) => {
+        const rectList: JSX.Element[] = [];
+        const pos = this.props.componentPosition;
+        cids.map((cid) => {
+            if (cid === undefined) return;
+
+            const com = this.getComponent(cid);
+            if (com === null) return;
+
+            const frameData: IReactData = {
+                pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
+                pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
+                width: com.getSize().width + 1,
+                height: com.getSize().height + 1,
+                anchorFill: '#fff',
+                stroke: '#108ee9',
+                strokeWidth: 1,
+                borderOffset: pos.borderOffset.border * 2
+            };
+            rectList.push(<Selected key={cid} cid={cid} data={frameData} />);
+        });
+        this.setState({ rectList });
+    }
+
+    // 绘制组件大小拉伸框
+    drawStretchBox = (data: IBaseData[]) => {
+        const rectList: JSX.Element[] = [];
+        const pos = this.props.componentPosition;
+        data.map((item: IBaseData) => {
+            const frameData: IReactData = {
+                pointX: item.position.left + pos.canvasOffset.left + 0.5,
+                pointY: item.position.top + pos.canvasOffset.top + 0.5,
+                width: item.size.width + 1,
+                height: item.size.height + 1,
+                anchorFill: '#fff',
+                stroke: '#108ee9',
+                strokeWidth: 1,
+                borderOffset: pos.borderOffset.border * 2
+            };
+            rectList.push(
+                <Stretch key={item.cid} cid={item.cid} data={frameData} anchorKey={item.anchorKey} />
+            );
+        });
+        this.setState({ rectList });
     }
 
     // 绘制拉选框
@@ -49,44 +94,15 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
     }
 
     render() {
-        const frameRect: any = this.getSelectedFrame();
-
         return (
             // tslint:disable-next-line:jsx-no-string-ref
             <div className="draw" style={DrawStyle(this.props.canvasSize)} ref={(draw) => this.draw = draw}>
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
-                    {frameRect}
+                    {this.state.rectList}
                     {this.state.choiceBox === null ? '' : <ChoiceBox key="canvas" data={this.state.choiceBox} />}
                 </svg>
             </div>
         );
-    }
-
-    // 根据选中的组件cid 绘制组件选中框
-    getSelectedFrame = (): JSX.Element[] => {
-        const frameRect: JSX.Element[] = [];
-        const pos = this.props.componentPosition;
-        this.state.cids.map((cid) => {
-            if (cid === undefined) return;
-
-            const com = this.getComponent(cid);
-            if (com === null) return;
-
-            const frameData: IReactData = {
-                pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
-                pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
-                width: com.getSize().width + 1,
-                height: com.getSize().height + 1,
-                anchorFill: '#fff',
-                stroke: '#108ee9',
-                strokeWidth: 1,
-                borderOffset: pos.borderOffset.border * 2
-            };
-            // tslint:disable-next-line:max-line-length
-            frameRect.push(<Frame key={cid} cid={cid} data={frameData} />);
-        });
-
-        return frameRect;
     }
 }
 

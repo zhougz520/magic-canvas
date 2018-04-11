@@ -6,7 +6,7 @@ import * as React from 'react';
  */
 export interface IMapProps {
     data: any;
-    repairSelected?: () => void;
+    repaintSelected?: () => void;
     selectionChanging?: (cid: string, e: any) => void;
 
     // 组件获得焦点的时候触发画布上的对应事件，通知编辑框准备开始输入

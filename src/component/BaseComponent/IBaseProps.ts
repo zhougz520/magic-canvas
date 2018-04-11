@@ -7,7 +7,7 @@ import * as React from 'react';
 export interface IBaseProps {
     data: any;
     zIndex: number;
-    repairSelected?: () => void;
+    repaintSelected?: () => void;
     selectionChanging?: (cid: string, e: any) => void;
 
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
