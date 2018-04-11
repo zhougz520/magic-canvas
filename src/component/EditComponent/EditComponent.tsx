@@ -18,52 +18,6 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         } ;
     }
 
-    // // Edit获取焦点
-    // onEditComFocus = (com: IComponent) => {
-    //     (this.editor as HTMLElement).focus();
-    //     this.setCurrentCom(com);
-    //     // tslint:disable-next-line:no-console
-    //     console.log(com);
-    // }
-
-    // onEditComKeyDown = () => {
-    //     const currentCom: IComponent | null = this.state.currentCom;
-    //     if (currentCom !== null) {
-    //         const comSize: ISize = currentCom.getSize();
-    //         const comPosition: IPosition = currentCom.getPosition();
-    //         const pos = this.props.componentPosition;
-
-    //         const maxWidth = comSize.width;
-    //         const top = comPosition.top + comSize.height / 2 + pos.canvasOffset.top;
-    //         const left = comPosition.left + comSize.width / 2 + pos.canvasOffset.left;
-
-    //         this.setPosition(maxWidth, top, left);
-    //     }
-    // }
-
-    // // Edit失去焦点
-    // onEditComBlur = () => {
-    //     (this.editor as HTMLElement).blur();
-
-    //     const value = (this.editor as HTMLElement).innerText;
-    //     (this.editor as HTMLElement).innerText = '';
-
-    //     this.hiddenEditCom();
-    //     const currentCom: IComponent | null = this.state.currentCom;
-    //     if (currentCom !== null) {
-    //         currentCom.setRichChildNode(value);
-    //     }
-    // }
-
-    // showEditCom = (size: ISize, position: IPosition) => {
-    //     // tslint:disable-next-line:no-console
-    //     console.log('showEditCom');
-    //     // tslint:disable-next-line:no-console
-    //     console.log(size);
-    //     // tslint:disable-next-line:no-console
-    //     console.log(position);
-    // }
-
     hiddenEditCom = () => {
         this.setState({
             maxWidth: 1,
@@ -72,25 +26,20 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         });
     }
 
-    // sendContent = () => {
-    //     // tslint:disable-next-line:no-console
-    //     console.log('sendContent');
-    // }
-
-    // setCurrentCom = (com: IComponent): void => {
-    //     this.setState({
-    //         currentCom: com
-    //     });
-    // }
-
     onKeyDown = (e: any) => {
         if (this.props.handleKeyDownCommand && this.props.handleKeyDownCommand(e) === true) {
+            e.stopPropagation();
+            e.preventDefault();
+
             return;
         }
     }
 
     onKeyUp = (e: any) => {
         if (this.props.handleKeyUpCommand && this.props.handleKeyUpCommand(e) === true) {
+            e.stopPropagation();
+            e.preventDefault();
+
             return;
         }
     }
@@ -123,6 +72,13 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
 
     componentDidMount() {
         this.setFocus();
+        (this.editor as HTMLElement).addEventListener('mousedown', this.handleMouseStop);
+        (this.editor as HTMLElement).addEventListener('mouseup', this.handleMouseStop);
+        (this.editor as HTMLElement).addEventListener('mousemove', this.handleMouseStop);
+    }
+
+    handleMouseStop = (e: any) => {
+        e.stopPropagation();
     }
 
     render() {
