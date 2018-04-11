@@ -118,7 +118,7 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
     }
 
     onBlur = () => {
-        this.setFocus();
+        // this.setFocus();
     }
 
     componentDidMount() {
