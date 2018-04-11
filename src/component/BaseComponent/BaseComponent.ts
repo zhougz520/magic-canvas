@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
@@ -213,6 +214,16 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的样式表
+     * @param com 组件对象
+     */
+    public getStyle = (com: any): CSSStyleDeclaration => {
+        const style = window.getComputedStyle(ReactDOM.findDOMNode(com));
+
+        return style;
+    }
+
+    /**
      * 获取组件的baseState
      */
     protected getBaseState = (): BaseState => {
@@ -302,5 +313,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         if (this.props.selectionChanging) {
             this.props.selectionChanging(cid, e);
         }
+        e.preventDefault();
     }
 }

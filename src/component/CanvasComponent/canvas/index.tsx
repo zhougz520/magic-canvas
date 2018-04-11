@@ -193,17 +193,20 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     beginEdit = (): boolean => {
         const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
 
-        if (currentSelectedComponent !== null) {
+        if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
+            currentSelectedComponent.setRichChildNode(null);
+            const style: CSSStyleDeclaration = currentSelectedComponent.getStyle(currentSelectedComponent);
             const size: ISize = currentSelectedComponent.getSize();
             const position: IPosition = currentSelectedComponent.getPosition();
             const bodyOffset: any = this.getPositionRelativeDocument(position.left, position.top);
 
             this.command.setIsEditMode(true);
             this.getEditor().setValue('');
-            this.getEditor().setPosition(
+            this.getEditor().setEditComState(
                 size.width,
                 bodyOffset.pageY + size.height / 2,
-                bodyOffset.pageX + size.width / 2
+                bodyOffset.pageX + size.width / 2,
+                style
             );
 
             return true;
@@ -234,6 +237,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const data = JSON.parse(localStorage.__dnd_value);
         const position = this.getPositionRelativeCanvas(e.pageX, e.pageY);
         this.addCancasComponent(data, position);
+        this.getEditor().setFocus();
     }
 
     componentDidMount() {

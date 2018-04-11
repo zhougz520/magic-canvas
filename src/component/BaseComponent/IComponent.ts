@@ -56,4 +56,9 @@ export interface IComponent {
      * 获取组件的临时状态
      */
     getTempContentState: () => ContentState;
+
+    /**
+     * 获取组件样式表
+     */
+    getStyle: (com: any) => CSSStyleDeclaration;
 }

@@ -25,7 +25,7 @@ const basePage: IBasePage[] = [
         categoryKey: 'basic',
         expanded: false,
         components: [
-            { t: 'UniversalComponents/Button/Button', p: { name: 'demo', w: 100, h: 100 } }
+            { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } }
         ]
     },
     {
