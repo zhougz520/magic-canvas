@@ -24,7 +24,9 @@ const basePage: IBasePage[] = [
         category: '基础组件',
         categoryKey: 'basic',
         expanded: false,
-        components: []
+        components: [
+            { t: 'UniversalComponents/Button/Button', p: { name: 'demo', w: 100, h: 100 } }
+        ]
     },
     {
         category: 'ERP页面',
