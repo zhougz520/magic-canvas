@@ -40,8 +40,8 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
      */
     onKeyDown = (e: any) => {
         if (this.props.handleKeyDownCommand && this.props.handleKeyDownCommand(e) === true) {
-            e.stopPropagation();
-            e.preventDefault();
+            // e.stopPropagation();
+            // e.preventDefault();
 
             return;
         }

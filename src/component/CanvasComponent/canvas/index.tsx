@@ -53,6 +53,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, e: any): void => {
+        this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const com = this.getComponent(cid);
         if (com) {
