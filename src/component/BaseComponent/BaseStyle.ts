@@ -3,12 +3,17 @@ import * as React from 'react';
 import { PositionState } from './model/PositionState';
 import { SizeState } from './model/SizeState';
 
-export const BaseStyle = (position: PositionState, size: SizeState, zIndex: number): React.CSSProperties => {
+export const BaseStyle = (
+    position: PositionState,
+    size: SizeState,
+    zIndex: number,
+    hasBorder: boolean = true
+): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
         overflow: 'hidden',
         transition: 'none',
         position: 'absolute',
-        border: '1px solid',
+        border: hasBorder ? '1px solid' : null,
         outline: 'none',
         width: size.getWidth(),
         height: size.getHeight(),

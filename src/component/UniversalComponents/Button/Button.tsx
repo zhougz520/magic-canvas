@@ -44,7 +44,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
             <AntButton
                 type={this.getCustomState().getType()}
                 onMouseDown={this.onMouseDown}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
                 onClick={this.onClick}
             >
