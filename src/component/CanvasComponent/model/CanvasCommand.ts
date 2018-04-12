@@ -292,8 +292,10 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.selectedComponents.map((com, cid) => {
             if (com && cid) {
                 const value = globalVar.currentComponentSize.getValue(cid);
-                const left = value.position.left + x;
-                const top = value.position.top + y;
+                const left = x > value.size.width - 10 ?
+                    value.position.left + value.size.width - 10 : value.position.left + x;
+                const top = y > value.size.height - 10 ?
+                    value.position.top + value.size.height - 10 : value.position.top + y;
                 const width = value.size.width + w < 10 ? 10 : value.size.width + w;
                 const height = value.size.height + h < 10 ? 10 : value.size.height + h;
                 const position = { left, right: value.position.right, top, bottom: value.position.bottom };
@@ -389,23 +391,6 @@ export const CanvasCommand: ICanvasCommand = {
     // 在body中移动组件的移动框
     moveDragBox(offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) {
         globalVar.dargging = true;
-        // 碰撞检测, 碰撞到边界后滚动stage的滚动条
-        if (!stageBoundary) return;
-        const leftCrash = globalVar.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
-        const topCrash = globalVar.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
-        const rightCrash = globalVar.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
-        const bottomCrash = globalVar.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
-
-        // 边界滚动
-        if (leftCrash || topCrash || rightCrash || bottomCrash) {
-            this.startScroll({
-                x: leftCrash ? -15 : rightCrash ? 15 : 0,
-                y: topCrash ? -15 : bottomCrash ? 15 : 0
-            } as IOffset, setStageScroll);
-        } else {
-            this.stopScroll();
-        }
-
         if (config.highPerformance) {
             // 高性能模式，直接拖动组件
             globalVar.selectedComponents.map((component, cid) => {
@@ -420,6 +405,22 @@ export const CanvasCommand: ICanvasCommand = {
             });
         } else {
             // 低性能模式，移动拖动框
+            if (stageBoundary) {// 碰撞检测, 碰撞到边界后滚动stage的滚动条
+                const leftCrash = globalVar.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
+                const topCrash = globalVar.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
+                const rightCrash = globalVar.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
+                const bottomCrash = globalVar.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
+
+                if (leftCrash || topCrash || rightCrash || bottomCrash) {
+                    this.startScroll({
+                        x: leftCrash ? -15 : rightCrash ? 15 : 0,
+                        y: topCrash ? -15 : bottomCrash ? 15 : 0
+                    } as IOffset, setStageScroll);
+                } else {
+                    this.stopScroll();
+                }
+            }
+
             globalVar.dragDivList.map((item: IDragDiv | undefined) => {
                 if (item !== undefined) {
                     const pos = item.component.getPosition();

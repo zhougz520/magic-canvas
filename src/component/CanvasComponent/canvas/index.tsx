@@ -283,6 +283,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
+     * 修改画布大小
+     */
+    updateCanvasSize = () => {
+        const canvasSize = { width: 1000, height: 1000 };
+        this.setState({ canvasSize });
+    }
+
+    /**
      * 画布增加组件
      */
     addCancasComponent = (data: any, position: IOffset) => {
