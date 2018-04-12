@@ -380,6 +380,7 @@ export const CanvasCommand: ICanvasCommand = {
                 documentDiv.style.zIndex = '3';
                 documentDiv.style.display = 'none';
                 documentDiv.style.pointerEvents = 'none';
+                documentDiv.style.borderStyle = 'dashed';
                 body.appendChild(documentDiv);
 
                 globalVar.dragDivList = globalVar.dragDivList.set(cid, { component, documentDiv, hasChange: false });
