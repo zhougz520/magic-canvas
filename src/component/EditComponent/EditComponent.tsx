@@ -18,7 +18,8 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         this.state = {
             maxWidth: 1,
             top: -10000,
-            left: -10000
+            left: -10000,
+            style: null
         } ;
     }
 
@@ -59,16 +60,18 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
     }
 
     /**
-     * 设置编辑框位置
+     * 设置编辑框的状态
      * @param maxWidth 编辑框最大宽度
      * @param top 相对document的Y偏移量
      * @param left 相对document的X偏移量
+     * @param font fontStyle
      */
-    setPosition = (maxWidth: number, top: number, left: number): void => {
+    setEditComState = (maxWidth: number, top: number, left: number, style: CSSStyleDeclaration): void => {
         this.setState({
             maxWidth,
             top,
-            left
+            left,
+            style
         });
     }
 
@@ -118,11 +121,12 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
     }
 
     render() {
-        const { maxWidth, top, left } = this.state;
+        const { maxWidth, top, left, style } = this.state;
         const editStyle: IEditStyle = {
             maxWidth,
             top,
-            left
+            left,
+            style
         };
 
         return (

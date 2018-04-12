@@ -4,6 +4,7 @@ export interface IEditStyle {
     maxWidth: number;
     top: number;
     left: number;
+    style: CSSStyleDeclaration | null;
 }
 
 export const EditStyle = (config: IEditStyle): React.CSSProperties => {
@@ -19,8 +20,11 @@ export const EditStyle = (config: IEditStyle): React.CSSProperties => {
         maxWidth: config.maxWidth,
         top: config.top,
         left: config.left,
+        font: config.style === null ? null : config.style.font,
+        color: config.style === null ? null : config.style.color,
+        backgroundColor: config.style === null ? null : config.style.backgroundColor,
+        borderColor:  config.style === null ? null : config.style.borderColor,
 
-        borderColor: 'transparent',
         borderStyle: 'solid',
         display: 'inline-block',
         position: 'fixed',

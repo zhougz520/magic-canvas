@@ -5,7 +5,8 @@ import { SizeState } from './model/SizeState';
 
 export const BaseStyle = (position: PositionState, size: SizeState, zIndex: number): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
-        overflow: 'auto',
+        overflow: 'hidden',
+        transition: 'none',
         position: 'absolute',
         border: '1px solid',
         outline: 'none',

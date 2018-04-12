@@ -25,6 +25,9 @@ export interface IComponent {
     getRichChildNode: () => any;
     setRichChildNode: (richChildNode: any) => void;
 
+    getCustomState: () => any;
+    setCustomState: (newCustomState: any) => void;
+
     /**
      * 重做、撤销
      */
@@ -56,4 +59,9 @@ export interface IComponent {
      * 获取组件的临时状态
      */
     getTempContentState: () => ContentState;
+
+    /**
+     * 获取组件样式表
+     */
+    getStyle: (com: any) => CSSStyleDeclaration;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
@@ -37,7 +38,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 bottom: props.data.b
             }),
             // TODO 带格式的富文本
-            richChildNode: props.data.txt_v
+            richChildNode: props.data.txt_v,
+            customState: null
         });
 
         this.state = {
@@ -159,6 +161,29 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件自定义state
+     */
+    public getCustomState = (): any => {
+        const baseState: BaseState = this.getBaseState();
+        const customState: any = baseState.getCurrentContent().getCustomState();
+
+        return customState;
+    }
+
+    /**
+     * 设置组件自定义state
+     */
+    public setCustomState = (newCustomState: any): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            customState: newCustomState
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setBaseState(newBaseState);
+    }
+
+    /**
      * 重做
      */
     public redo = (): void => {
@@ -210,6 +235,16 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
         return Anchor.findAnchorPoint(currentX, currentY, anchorList);
+    }
+
+    /**
+     * 获取组件的样式表
+     * @param com 组件对象
+     */
+    public getStyle = (com: any): CSSStyleDeclaration => {
+        const style = window.getComputedStyle(ReactDOM.findDOMNode(com));
+
+        return style;
     }
 
     /**
@@ -302,5 +337,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         if (this.props.selectionChanging) {
             this.props.selectionChanging(cid, e);
         }
+        e.preventDefault();
     }
 }

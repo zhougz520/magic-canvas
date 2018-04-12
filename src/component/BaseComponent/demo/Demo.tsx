@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, BaseState, IBaseProps, IBaseState, BaseStyle } from '../index';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
 import { Button, Icon } from 'antd';
 
 // tslint:disable-next-line:no-empty-interface
@@ -23,6 +23,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
     };
 
     public com: HTMLElement | null = null;
+    public antCom: any = null;
 
     public render() {
         const richChildNode = this.getRichChildNode();
@@ -39,16 +40,24 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>
-                <Button type="primary" size="small" onClick={this.click}>DemoClick</Button>
+                <Button
+                    type="primary"
+                    size="small"
+                    onClick={this.click}
+                    ref={(handler) => this.antCom = handler}
+                >
+                    DemoClick
+                </Button>
                 <Icon type="fast-backward" />
             </div>
         );
     }
 
     private click = (): void => {
-        const baseState: BaseState = this.getBaseState();
+        // const baseState: BaseState = this.getBaseState();
+
         // tslint:disable-next-line:no-console
-        console.log(baseState);
+        console.log(this.getStyle(this.antCom));
     }
 
     /**
