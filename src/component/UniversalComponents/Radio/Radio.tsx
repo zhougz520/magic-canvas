@@ -7,6 +7,7 @@ import { RadioState, RadioProperties } from './RadioState';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 const RadioGroup = AntRadio.Group;
+const AntRadioButton = AntRadio.Button;
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -46,14 +47,29 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         // tslint:disable-next-line:no-shadowed-variable
         const radioElem = (radiosList: RadioProperties[]): any => {
             const res = [];
-            for (let i = 0; i < radioList.length; i++) {
-                res.push(
-                    <AntRadio
-                        value={radiosList[i].value}
-                        disabled={radioList[i].disabled}
-                    >
-                        {radiosList[i].label}
-                    </AntRadio>);
+            if (this.getCustomState().getIsButton()) {
+                for (let i = 0; i < radioList.length; i++) {
+                    res.push(
+                        <AntRadioButton
+                            value={radiosList[i].value}
+                            disabled={radioList[i].disabled}
+                            key={radiosList[i].value}
+                        >
+                            {radiosList[i].label}
+                        </AntRadioButton>
+                    );
+                }
+            } else {
+                for (let i = 0; i < radioList.length; i++) {
+                    res.push(
+                        <AntRadio
+                            value={radiosList[i].value}
+                            disabled={radioList[i].disabled}
+                            key={radiosList[i].value}
+                        >
+                            {radiosList[i].label}
+                        </AntRadio>);
+                }
             }
 
             return res;
@@ -68,7 +84,6 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
             >
                 <RadioGroup
                     value={this.getCustomState().getValue()}
-                    options={this.getCustomState().getOptions()}
                     // tslint:disable-next-line:jsx-no-lambda
                     onChange={this.onChange}
                 >
