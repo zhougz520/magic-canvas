@@ -16,35 +16,15 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
-        const contentState: ContentState = ContentState.create({
-            cid: props.data.id,
-            zIndex: props.zIndex,
-            sizeState: SizeState.create({
-                width: props.data.w,
-                height: props.data.h
-            }),
-            positionState: PositionState.create({
-                left: props.data.l,
-                right: props.data.r,
-                top: props.data.t,
-                bottom: props.data.b
-            }),
-            richChildNode: props.data.txt_v,
-            customState: new TextFieldState()
-
-        });
-
         this.state = {
-            baseState: BaseState.createWithContent(contentState)
+            baseState: this.initBaseStateWithCustomState(new TextFieldState())
         } as Readonly<IBaseState>;
     }
-
     render() {
 
         return (
-
             <div
-                onMouseDown={this.onMouseDown}
+                onMouseDown={this.fireSelectChange}
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
@@ -69,11 +49,4 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newTextFieldState);
     }
 
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
-    }
 }

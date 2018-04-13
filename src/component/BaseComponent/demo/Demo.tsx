@@ -33,7 +33,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
         return (
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.onMouseDown}
+                onMouseDown={this.fireSelectChange}
                 onMouseUp={this.onMouseUp}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >

@@ -25,7 +25,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
         return (
             <AntButton
                 type={this.getCustomState().getType()}
-                onMouseDown={this.onMouseDown}
+                onMouseDown={this.fireSelectChange}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
                 onClick={this.onClick}
@@ -46,11 +46,4 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newButtonState);
     }
 
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
-    }
 }
