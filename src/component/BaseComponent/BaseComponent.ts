@@ -24,26 +24,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     constructor(props: P, context?: any) {
         super(props, context);
 
-        const contentState: ContentState = ContentState.create({
-            cid: props.data.id,
-            zIndex: props.zIndex,
-            sizeState: SizeState.create({
-                width: props.data.w,
-                height: props.data.h
-            }),
-            positionState: PositionState.create({
-                left: props.data.l,
-                right: props.data.r,
-                top: props.data.t,
-                bottom: props.data.b
-            }),
-            // TODO 带格式的富文本
-            richChildNode: props.data.txt_v,
-            customState: null
-        });
-
         this.state = {
-            baseState: BaseState.createWithContent(contentState)
+            baseState: this.initBaseStateWithCustomState()
         } as Readonly<S>;
     }
 
@@ -245,6 +227,32 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const style = window.getComputedStyle(ReactDOM.findDOMNode(com));
 
         return style;
+    }
+
+    /**
+     * 初始化BaseSate
+     * @param customState 组件自定义State
+     */
+    protected initBaseStateWithCustomState(customState: any = null): BaseState {
+        const contentState: ContentState = ContentState.create({
+            cid: this.props.data.id,
+            zIndex: this.props.zIndex,
+            sizeState: SizeState.create({
+                width: this.props.data.w,
+                height: this.props.data.h
+            }),
+            positionState: PositionState.create({
+                left: this.props.data.l,
+                right: this.props.data.r,
+                top: this.props.data.t,
+                bottom: this.props.data.b
+            }),
+            // TODO 带格式的富文本
+            richChildNode: this.props.data.txt_v,
+            customState
+        });
+
+        return BaseState.createWithContent(contentState);
     }
 
     /**
