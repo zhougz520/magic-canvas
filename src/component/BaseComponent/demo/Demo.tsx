@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
-import { Button, Icon } from 'antd';
+import { Button, Icon, Radio } from 'antd';
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -49,6 +51,16 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                     DemoClick
                 </Button>
                 <Icon type="fast-backward" />
+                <br />
+                <RadioGroup
+                    defaultValue="a"
+                    options={[{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}]}
+                >
+                    <RadioButton value="a">Hangzhou</RadioButton>
+                    <RadioButton value="b">Shanghai</RadioButton>
+                    <RadioButton value="c">Beijing</RadioButton>
+                    <RadioButton value="d">Chengdu</RadioButton>
+                </RadioGroup>
             </div>
         );
     }

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { BaseComponent, IBaseState, IBaseProps, ContentState, SizeState, PositionState, BaseState } from '../../..';
-import { HyperlinkState, IHyperlinkState } from './HyperlinkState';
+import { BaseComponent, IBaseState, IBaseProps, BaseStyle} from '../../..';
+import { HyperlinkState } from './HyperlinkState';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -12,32 +12,32 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
-        const contentState: ContentState = ContentState.create({
-            cid: props.data.id,
-            zIndex: props.zIndex,
-            sizeState: SizeState.create({
-                width: props.data.w,
-                height: props.data.h
-            }),
-            positionState: PositionState.create({
-                left: props.data.l,
-                right: props.data.r,
-                top: props.data.t,
-                bottom: props.data.b
-            }),
-            richChildNode: props.data.txt_v,
-            customState: new HyperlinkState()
-
-        });
-
         this.state = {
-            baseState: BaseState.createWithContent(contentState)
+            baseState: this.initBaseStateWithCustomState(new HyperlinkState())
         } as Readonly<IBaseState>;
     }
+    render() {
+        return (
+            <div
+                onMouseDown={this.onMouseDown}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                ref={(handler) => this.com = handler}
+            >
+                <a
+                    href={this.getCustomState().getHerf()}
+                >
+                {this.getCustomState().getContent()}
+                </a>
+            </div>
+        );
+    }
 
-    // render(){
-    //     return (
-    //         <Ant
-    //     )
-    // }
+    /**
+     * 组件选中事件
+     * @param cid 组件ref标识
+     */
+    private onMouseDown = (e: any) => {
+        this.fireSelectChange(e, this.getCid());
+    }
+
 }

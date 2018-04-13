@@ -25,7 +25,7 @@ export class InputState extends InputRecord {
         return new InputState(map);
     }
 
-    getPlace(): string {
+    getPlaceholder(): string {
         return this.get('placeholder');
     }
 }

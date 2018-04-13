@@ -1,11 +1,13 @@
 import { Record } from 'immutable';
 
 export interface IHyperlinkState {
-    type: string;
+    herf: string;
+    content: string;
 }
 
 const defaultRecord: IHyperlinkState = {
-    type: 'primary'
+    herf: 'https://ps.mingyuanyun.com',
+    content: 'this is a content'
 };
 
 export const HyperlinkRecord: Record.Class = Record(defaultRecord);
@@ -25,7 +27,11 @@ export class HyperlinkState extends HyperlinkRecord {
         return new HyperlinkState(map);
     }
 
-    getType(): string {
-        return this.get('type');
+    getHerf(): string {
+        return this.get('herf');
+    }
+
+    getContent(): string {
+        return this.get('content');
     }
 }

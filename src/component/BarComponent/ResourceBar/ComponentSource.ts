@@ -26,6 +26,7 @@ const basePage: IBasePage[] = [
         expanded: false,
         components: [
             { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } },
+            { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 120, h: 30 } },
             { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 30 } },
             { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 30 } },
             { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } },
