@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { BaseComponent, IBaseState, IBaseProps, BaseStyle} from '../../..';
+import {
+    BaseComponent, BaseStyle, IBaseProps, IBaseState
+} from '../../BaseComponent';
 import { HyperlinkState } from './HyperlinkState';
 
 // tslint:disable-next-line:no-empty-interface
@@ -19,7 +21,7 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     render() {
         return (
             <div
-                onMouseDown={this.onMouseDown}
+                onMouseDown={this.fireSelectChange}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
             >
@@ -30,14 +32,6 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                 </a>
             </div>
         );
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
     }
 
 }

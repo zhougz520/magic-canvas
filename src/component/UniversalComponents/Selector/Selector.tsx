@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { BaseComponent, IBaseState, IBaseProps, ContentState, SizeState, PositionState, BaseState } from '../../..';
+import {
+    BaseComponent, BaseStyle, IBaseProps, IBaseState
+} from '../../BaseComponent';
 import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
-
-import { BaseStyle } from '../../MapComponent';
 
 const Option = AntSelector.Option;
 // tslint:disable-next-line:no-empty-interface
@@ -16,26 +16,8 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
-        const contentState: ContentState = ContentState.create({
-            cid: props.data.id,
-            zIndex: props.zIndex,
-            sizeState: SizeState.create({
-                width: props.data.w,
-                height: props.data.h
-            }),
-            positionState: PositionState.create({
-                left: props.data.l,
-                right: props.data.r,
-                top: props.data.t,
-                bottom: props.data.b
-            }),
-            richChildNode: props.data.txt_v,
-            customState: new SelectorState()
-
-        });
-
         this.state = {
-            baseState: BaseState.createWithContent(contentState)
+            baseState: this.initBaseStateWithCustomState(new SelectorState())
         } as Readonly<IBaseState>;
     }
 
@@ -54,8 +36,8 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         return (
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.onMouseDown}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                onMouseDown={this.fireSelectChange}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 onClick={this.onClick}
             >
                 <AntSelector
@@ -80,13 +62,5 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         );
 
         this.setCustomState(newSelectorState);
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
     }
 }
