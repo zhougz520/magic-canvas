@@ -25,7 +25,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         return (
 
             <div
-                onMouseDown={this.onMouseDown}
+                onMouseDown={this.fireSelectChange}
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >

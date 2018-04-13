@@ -76,14 +76,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
      * 组件选中事件
      * @param cid 组件ref标识
      */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
     private onMouseUp = (e: any) => {
         // this.fireSelectChange(cid, e);
     }

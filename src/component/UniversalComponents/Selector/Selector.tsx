@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseState, IBaseProps, ContentState, SizeState, PositionState, BaseState } from '../../..';
+import { BaseComponent, IBaseState, IBaseProps } from '../../..';
 import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
 
