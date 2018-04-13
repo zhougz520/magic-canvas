@@ -25,7 +25,13 @@ const basePage: IBasePage[] = [
         categoryKey: 'basic',
         expanded: false,
         components: [
-            { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } }
+            { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } },
+            { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 30 } },
+            { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 30 } },
+            { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } },
+            { t: 'UniversalComponents/Radio/Radio', p: { name: 'radio', w: 260, h: 40 } },
+            { t: 'UniversalComponents/CheckBox/CheckGroup', p: { name: 'checkbox', w: 460, h: 40 } }
+
         ]
     },
     {
