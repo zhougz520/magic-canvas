@@ -4,7 +4,6 @@ import { Checkbox as AntCheckbox} from 'antd';
 
 import { BaseStyle } from '../../MapComponent';
 import { CheckGroupState } from './CheckGroupState';
-import { CheckboxChangeEvent } from 'antd/lib/Checkbox';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {

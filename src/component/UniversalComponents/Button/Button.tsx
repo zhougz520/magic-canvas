@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button as AntButton } from 'antd';
 
 import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState, ContentState, SizeState, PositionState, BaseState
+    BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
 import { ButtonState } from './ButtonState';
 
@@ -16,26 +16,8 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
-        const contentState: ContentState = ContentState.create({
-            cid: props.data.id,
-            zIndex: props.zIndex,
-            sizeState: SizeState.create({
-                width: props.data.w,
-                height: props.data.h
-            }),
-            positionState: PositionState.create({
-                left: props.data.l,
-                right: props.data.r,
-                top: props.data.t,
-                bottom: props.data.b
-            }),
-            // TODO 带格式的富文本
-            richChildNode: props.data.txt_v,
-            customState: new ButtonState()
-        });
-
         this.state = {
-            baseState: BaseState.createWithContent(contentState)
+            baseState: this.initBaseStateWithCustomState(new ButtonState())
         } as Readonly<IBaseState>;
     }
 
@@ -44,7 +26,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
             <AntButton
                 type={this.getCustomState().getType()}
                 onMouseDown={this.onMouseDown}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
                 onClick={this.onClick}
             >

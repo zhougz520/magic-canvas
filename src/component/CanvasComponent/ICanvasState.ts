@@ -12,4 +12,6 @@ export interface ICanvasState {
     componentList: Set<object>;
     // 当前最大的组件序号
     componentIndex: number;
+    // 画布初始的大小
+    canvasSize: { width: number, height: number };
 }

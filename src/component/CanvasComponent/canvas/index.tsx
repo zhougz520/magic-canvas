@@ -53,6 +53,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, e: any): void => {
+        this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const com = this.getComponent(cid);
         if (com) {
@@ -284,6 +285,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 </div>
             </div>
         );
+    }
+
+    /**
+     * 修改画布大小
+     */
+    updateCanvasSize = () => {
+        const canvasSize = { width: 1000, height: 1000 };
+        this.setState({ canvasSize });
     }
 
     /**
