@@ -31,7 +31,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
         return (
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.onMouseDown}
+                onMouseDown={this.fireSelectChange}
                 onMouseUp={this.onMouseUp}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
@@ -58,14 +58,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
 
         // tslint:disable-next-line:no-console
         console.log(this.getStyle(this.antCom));
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseDown = (e: any) => {
-        this.fireSelectChange(e, this.getCid());
     }
 
     /**

@@ -341,7 +341,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 每个组件自己记录，还要判断键盘事件，比较复杂，且选中状态对组件身意义不大，故交由画布决定
      * @param cid 组件ref标识
      */
-    protected fireSelectChange = (e: any, cid: string): void => {
+    protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
         if (this.props.selectionChanging) {
             this.props.selectionChanging(cid, e);
         }
