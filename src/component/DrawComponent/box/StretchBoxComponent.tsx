@@ -16,7 +16,7 @@ const createStretch = (props: IStretchProps) => {
 
     const rectList: any[] = [];
     // tslint:disable-next-line:max-line-length
-    rectList.push(<rect key="Stretch" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth, strokeDasharray: '5,5' }} />);
+    rectList.push(<rect key="Stretch" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth, strokeDasharray: '2.5,2.5' }} />);
     anchorList.map((anchor) => {
         if (anchor.key === anchorKey) {
             rectList.push(
