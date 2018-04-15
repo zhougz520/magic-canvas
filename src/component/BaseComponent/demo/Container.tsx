@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
-import BtnDemo from '../../MapComponent/demo/BtnDemo';
+import BtnChildDemo from '../../MapComponent/demo/BtnChildDemo';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -20,7 +20,7 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
         if (p !== undefined && p.components.length > 0) {
             p.components.forEach((com: any) => {
                 children.push(
-                    <BtnDemo
+                    <BtnChildDemo
                         key={`c.${com.p.id}`}
                         data={com.p}
                         // tslint:disable-next-line:jsx-no-string-ref
