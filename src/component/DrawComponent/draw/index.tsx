@@ -49,7 +49,7 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
                 strokeWidth: 1,
                 borderOffset: pos.borderOffset.border * 2
             };
-            rectList.push(<Selected key={cid} cid={cid} data={frameData} />);
+            rectList.push(<Selected key={cid} cid={cid} type={com.getType()} data={frameData} />);
         });
         this.setState({ rectList });
     }
@@ -70,7 +70,7 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
                 borderOffset: pos.borderOffset.border * 2
             };
             rectList.push(
-                <Stretch key={item.cid} cid={item.cid} data={frameData} anchorKey={item.anchorKey} />
+                <Stretch key={item.cid} cid={item.cid} type={item.type} data={frameData} anchorKey={item.anchorKey} />
             );
         });
         this.setState({ rectList });

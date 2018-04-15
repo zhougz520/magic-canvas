@@ -86,8 +86,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
         // 鼠标按下时，计算鼠标位置
         this.recordPointStart(e);
-        const relative = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-        const anchor = this.command.anchorCalc(relative.x, relative.y);
+        const anchor = this.command.getCurrentAnchor();
         if (anchor) {                           // 锚点上点击
             this.command.anchorMouseDown(e, anchor);
         } else if (this.onMouseEvent(e)) {      // 画布上的点击

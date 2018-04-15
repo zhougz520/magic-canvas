@@ -56,6 +56,11 @@ export interface IComponent {
     getCid: () => string;
 
     /**
+     * 获取组件类型
+     */
+    getType: () => string;
+
+    /**
      * 获取组件的临时状态
      */
     getTempContentState: () => ContentState;

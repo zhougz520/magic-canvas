@@ -55,6 +55,7 @@ export interface ICanvasCommand {
     setPointStart: (x: number, y: number, type: string) => void;
     setUndoStack: () => void;
     anchorCalc: (currentX: number, currentY: number) => Anchor.IAnchor | null;
+    getCurrentAnchor: () => Anchor.IAnchor | null;
     anchorMouseDown: (e: any, anchor: Anchor.IAnchor) => void;
     anchorMouseUp: (e: any) => void;
     addSelectedComponent: (cid: string, com: IComponent, multiselect?: boolean) => void;
