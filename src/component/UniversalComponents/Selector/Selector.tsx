@@ -1,9 +1,8 @@
 import * as React from 'react';
-import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState
-} from '../../BaseComponent';
+import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
+import { BoxType } from '../../util/AnchorPoint';
 
 const Option = AntSelector.Option;
 // tslint:disable-next-line:no-empty-interface
@@ -19,6 +18,13 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         this.state = {
             baseState: this.initBaseStateWithCustomState(new SelectorState())
         } as Readonly<IBaseState>;
+    }
+
+    /**
+     * 重写basecomponent方法, 设置此组件的类型
+     */
+    public getType(): string {
+        return BoxType.BarType;
     }
 
     render() {
@@ -43,10 +49,10 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                 <AntSelector
                     disabled={this.getCustomState().getDisable()}
                     placeholder={this.getCustomState().getPlaceholder()}
-                    style={{width: this.getSizeState().getWidth(), height: this.getSizeState().getHeight()}}
-                    // onChange={this.handleChange}
+                    style={{ width: this.getSizeState().getWidth(), height: this.getSizeState().getHeight() }}
+                // onChange={this.handleChange}
                 >
-                {optionElem(optionsList)}
+                    {optionElem(optionsList)}
                 </AntSelector>
 
             </div>

@@ -3,6 +3,7 @@ import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { Map, Set } from 'immutable';
 import * as Anchor from '../../util/AnchorPoint';
 import { config } from '../../config';
+import { IBaseData } from '../../DrawComponent/model/types';
 
 const body: HTMLBodyElement = document.getElementsByTagName('body')[0];
 
@@ -229,6 +230,11 @@ export const CanvasCommand: ICanvasCommand = {
         });
     },
 
+    // 获取当前鼠标所在锚点
+    getCurrentAnchor() {
+        return globalVar.currentAnchor;
+    },
+
     // 鼠标移动时计算组件锚点位置
     anchorCalc(currentX: number, currentY: number) {
         let anchor: Anchor.IAnchor | null = null;
@@ -236,9 +242,12 @@ export const CanvasCommand: ICanvasCommand = {
         globalVar.selectedComponents.map((com, cid) => {
             if (com && !find) {
                 anchor = com.getPointerAnchor(currentX, currentY);
-                if (anchor !== null) find = true;
+                if (anchor !== null) {
+                    find = true;
+                }
             }
         });
+        globalVar.currentAnchor = anchor;
 
         return anchor;
     },
@@ -306,7 +315,7 @@ export const CanvasCommand: ICanvasCommand = {
                     com.setSize(size);
                 } else {
                     // 低性能模式，组件在鼠标放下时变化
-                    comData.push({ cid, position, size, anchorKey });
+                    comData.push({ cid, position, size, anchorKey, type: com.getType() } as IBaseData);
                 }
             }
         });

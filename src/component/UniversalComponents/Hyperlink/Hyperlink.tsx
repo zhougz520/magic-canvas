@@ -1,8 +1,7 @@
 import * as React from 'react';
-import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState
-} from '../../BaseComponent';
+import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { HyperlinkState } from './HyperlinkState';
+import { BoxType } from '../../util/AnchorPoint';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -11,6 +10,7 @@ export interface IDemoProps extends IBaseProps {
 
 export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     private com: any = null;
+
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -18,6 +18,14 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
             baseState: this.initBaseStateWithCustomState(new HyperlinkState())
         } as Readonly<IBaseState>;
     }
+
+    /**
+     * 重写basecomponent方法, 设置此组件的类型
+     */
+    public getType(): string {
+        return BoxType.BarType;
+    }
+
     render() {
         return (
             <div
@@ -28,7 +36,7 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                 <a
                     href={this.getCustomState().getHerf()}
                 >
-                {this.getCustomState().getContent()}
+                    {this.getCustomState().getContent()}
                 </a>
             </div>
         );

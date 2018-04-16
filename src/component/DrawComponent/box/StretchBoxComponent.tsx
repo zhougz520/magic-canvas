@@ -5,6 +5,7 @@ import { IReactData } from '../model/types';
 export interface IStretchProps {
     key: string;
     cid: string;
+    type: string;
     data: IReactData;
     anchorKey: string;
 }
@@ -12,7 +13,8 @@ export interface IStretchProps {
 const createStretch = (props: IStretchProps) => {
     const { anchorKey } = props;
     const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth, borderOffset } = props.data;
-    const anchorList = Anchor.countAnchorPoint(props.cid, pointX, pointY, width, height, undefined, borderOffset);
+    const anchorList = Anchor.countAnchorPoint(props.cid, props.type,
+        pointX, pointY, width, height, undefined, borderOffset);
 
     const rectList: any[] = [];
     // tslint:disable-next-line:max-line-length

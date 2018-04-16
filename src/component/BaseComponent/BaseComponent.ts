@@ -89,6 +89,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的选中框类型，成员函数
+     */
+    public getType(): string {
+        return Anchor.BoxType.Base;
+    }
+
+    /**
      * 获取组件的临时状态
      */
     public getTempContentState = (): ContentState => {
@@ -210,10 +217,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public getPointerAnchor = (currentX: number, currentY: number): Anchor.IAnchor | null => {
         // 计算当前点击事件的触发位置
-        // const pointer = {x: e.pageX, y: e.pageY};
         const positionState = this.getPositionState();
         const sizeState = this.getSizeState();
-        const anchorList = Anchor.countAnchorPoint(this.getCid(),
+        const anchorList = Anchor.countAnchorPoint(this.getCid(), this.getType(),
             positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
         return Anchor.findAnchorPoint(currentX, currentY, anchorList);
