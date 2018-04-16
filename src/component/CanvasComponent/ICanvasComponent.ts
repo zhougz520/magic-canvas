@@ -9,4 +9,5 @@ export interface ICanvasComponent {
     container: HTMLDivElement | null;
     canvas: HTMLDivElement | null;
     getComponent: (cid: string) => IComponent | null;
+    findComponent: (cid: string[]) => IComponent | null;
 }

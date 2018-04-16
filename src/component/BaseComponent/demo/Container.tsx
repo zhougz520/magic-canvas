@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
-import BtnChildDemo from '../../MapComponent/demo/BtnChildDemo';
+import BtnDemo from '../../MapComponent/demo/BtnDemo';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -20,7 +20,7 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
         if (p !== undefined && p.components.length > 0) {
             p.components.forEach((com: any) => {
                 children.push(
-                    <BtnChildDemo
+                    <BtnDemo
                         key={`c.${com.p.id}`}
                         data={com.p}
                         // tslint:disable-next-line:jsx-no-string-ref
@@ -30,13 +30,26 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
             });
         }
 
+        // 汇总style
+        const currStyle = Object.assign(
+            BaseStyle(
+                this.getPositionState(),
+                this.getSizeState(),
+                this.getHierarchy()
+            ),
+            {
+                overflow: 'auto'
+            }
+        );
+
         return (
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                style={currStyle}
+                // onMouseDown={this.fireSelectChange}
             >
                 <div
-                    style={{ backgroundColor: '#F0F0FF' }}
+                    style={{ backgroundColor: '#F0F0FF'}}
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>

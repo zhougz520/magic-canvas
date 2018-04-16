@@ -184,37 +184,102 @@ const detail = {
                     id: 'cs4',
                     txt_v: '我是测试组件4',
                     w: 200,
-                    h: 200,
+                    h: 400,
                     l: 250,
                     t: 250,
                     p: {
                         components: [
                             {
-                                t: 'MapComponent/demo/BtnChildDemo',
+                                t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs1',
-                                    txt_v: '我是内部组件-按钮1'
+                                    txt_v: '我是内部组件按钮1',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs1.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs1.cs2',
+                                                    txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             },
                             {
-                                t: 'MapComponent/demo/BtnChildDemo',
+                                t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs2',
-                                    txt_v: '我是内部组件-按钮2'
+                                    txt_v: '我是内部组件-按钮2',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs2.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs2.cs2',
+                                                    txt_v: '按钮2'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs2.cs3',
+                                                    txt_v: '按钮3'
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             },
                             {
-                                t: 'MapComponent/demo/BtnChildDemo',
+                                t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs3',
-                                    txt_v: '我是内部组件-按钮3'
+                                    txt_v: '我是内部组件-按钮3',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs3.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             },
                             {
-                                t: 'MapComponent/demo/BtnChildDemo',
+                                t: 'MapComponent/demo/BtnDemo',
                                 p: {
                                     id: 'cs4.cs4',
-                                    txt_v: '我是内部组件-按钮4'
+                                    txt_v: '我是内部组件-按钮4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs4.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             }
                         ]

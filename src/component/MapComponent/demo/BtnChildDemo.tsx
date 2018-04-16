@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { IMapProps } from '../index';
 
-export interface IDemoProps extends IMapProps {
+export interface IDemoProps {
     fireSelect: (cid: string, e: any) => void;
-    value?: string;
     data: {};
 }
 
 export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
     static defaultProps = {
-        value: 'test'
+        txt_v: 'test'
     };
 
     public com: HTMLElement | null = null;
@@ -18,28 +16,36 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
         this.state = {
-            ...this.props
+            ...this.props.data
         } as Readonly<any>;
     }
 
     public render() {
-        const { fireSelect, value } = this.state;
+        const { txt_v } = this.state;
 
         return (
             <div
+                style={{ marginLeft: 30 }}
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={fireSelect}
+                onMouseDown={this.onFireSelect}
                 draggable
                 onClick={this.onTextChange}
             >
-                <button type="primary" style={{ width: '100%', height: '100%' }} >{value}</button>
+                <button type="primary" style={{ width: '100%', height: '100%' }} >{txt_v}</button>
             </div>
         );
     }
 
     private onTextChange: any = () => {
         this.setState({
-            value : 'AAA'
+            txt_v : 'AAA'
         });
+    }
+
+    private onFireSelect = (e: any) => {
+        const { id } = this.state;
+        const { fireSelect } = this.props;
+
+        fireSelect(e, id);
     }
 }
