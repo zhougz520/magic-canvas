@@ -1,0 +1,1 @@
+declare module 'rotating-file-stream';

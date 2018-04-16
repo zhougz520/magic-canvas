@@ -39,7 +39,10 @@ const basePage: IBasePage[] = [
         category: 'ERP页面',
         categoryKey: 'erp',
         expanded: false,
-        components: []
+        components: [
+            // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
+            { t: 'MapComponent/demo/BtnChildDemo', p: { name: 'BtnChildDemo', w: 100, h: 100 } }
+        ]
     },
     {
         category: 'ERP典型页面',

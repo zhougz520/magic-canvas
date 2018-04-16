@@ -44,6 +44,22 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         return (ref as IComponent) || null;
     }
 
+    /**
+     * 根据组件cid找到组件对象
+     */
+    findComponent = (cids: string[]): IComponent | null => {
+        let currRefs: any = this.refs;
+        let ref: any = null;
+        let currCid: string = 'c';
+        cids.forEach((cid) => {
+            currCid += '.' + cid;
+            ref = currRefs[`${currCid}`] as any;
+            currRefs = currRefs[`${currCid}`].refs as any;
+        });
+
+        return (ref as IComponent) || null;
+    }
+
     getEditor = (): EditComponent => {
         return (this.editor as EditComponent);
     }
@@ -55,8 +71,19 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     selectionChanging = (cid: string, e: any): void => {
         this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
-        const com = this.getComponent(cid);
+        const cids: string[] = cid.split('.');
+        const com = this.getComponent(cids[0]);
+        let lastCom: IComponent | null = null;
+        if (cids.length > 1) {
+            lastCom = this.findComponent(cids);
+            console.log('event:');
+            console.log(e.target);
+            console.log('lastCom:');
+            console.log(lastCom);
+        }
         if (com) {
+            // TODO: 正常在这里应该传递 lastCom
+            // this.selectedComponent(cid, lastCom === null ? com : lastCom);
             this.selectedComponent(cid, com);
         }
 
@@ -304,11 +331,13 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             t: data.type,
             p: {
                 ...data.props,
-                id: 'c.cs' + componentIndex,
+                id: 'cs' + componentIndex,
                 l: position.x - data.offset.x,
                 t: position.y - data.offset.y
             }
         });
+        console.log('refs');
+        console.log(this.refs);
         this.setState({ componentList, componentIndex });
     }
 
