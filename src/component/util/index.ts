@@ -3,6 +3,7 @@ export interface IUtil {
     isUndefined: (variable: any) => boolean;
     isEmptyString: (variable: any) => boolean;
     getDomLocation: (dom: HTMLElement) => any;
+    containClassName: (dom: HTMLElement, target: string) => boolean;
 }
 
 const util: IUtil = {
@@ -45,6 +46,16 @@ const util: IUtil = {
             scrollWidth: dom.scrollWidth, // 有滚动条时的实际宽度
             scrollHeight: dom.scrollHeight  // 有滚动条时的实际高度
         };
+    },
+    containClassName: (dom: HTMLElement, target: string) => {
+        let hasFind = dom.className === target;
+        let offsetParent = dom.offsetParent as HTMLElement;
+        while (!hasFind && offsetParent !== undefined && offsetParent !== null) {
+            hasFind = offsetParent.className === target;
+            offsetParent = offsetParent.offsetParent as HTMLElement;
+        }
+
+        return hasFind;
     }
 };
 

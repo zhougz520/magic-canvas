@@ -184,6 +184,17 @@ export const CanvasCommand: ICanvasCommand = {
         return globalVar.dragType;
     },
 
+    // stage外的鼠标点击事件
+    outsideMouseDown(e: any) {
+        globalVar.mouseDown = true;
+    },
+
+    // stage外的鼠标点击事件
+    outsizeMouseUp(e: any) {
+        globalVar.mouseDown = false;
+        globalVar.dargging = false;
+    },
+
     // canvas上的鼠标点击事件
     canvasMouseDown(e: any) {
         globalVar.mouseDown = true;
@@ -400,6 +411,7 @@ export const CanvasCommand: ICanvasCommand = {
 
     // 在body中移动组件的移动框
     moveDragBox(offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) {
+        if (!stageBoundary) return;
         globalVar.dargging = true;
         if (config.highPerformance) {
             // 高性能模式，直接拖动组件
@@ -415,12 +427,14 @@ export const CanvasCommand: ICanvasCommand = {
             });
         } else {
             // 低性能模式，移动拖动框
-            if (stageBoundary) {// 碰撞检测, 碰撞到边界后滚动stage的滚动条
+            if (stageBoundary) {
+                // 碰撞检测, 检查组件是否碰到边界
                 const leftCrash = globalVar.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
                 const topCrash = globalVar.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
                 const rightCrash = globalVar.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
                 const bottomCrash = globalVar.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
 
+                // 碰撞到边界后滚动stage的滚动条
                 if (leftCrash || topCrash || rightCrash || bottomCrash) {
                     this.startScroll({
                         x: leftCrash ? -15 : rightCrash ? 15 : 0,
@@ -437,8 +451,14 @@ export const CanvasCommand: ICanvasCommand = {
                     const div = item.documentDiv;
                     div.style.display = 'block';
                     item.hasChange = true;
-                    if (div.style.left) div.style.left = `${pos.left + offset.x + globalVar.componentOffset.x}px`;
-                    if (div.style.top) div.style.top = `${pos.top + offset.y + globalVar.componentOffset.y}px`;
+                    if (div.style.left) {
+                        const left = pos.left + offset.x + globalVar.componentOffset.x;
+                        div.style.left = `${left}px`;
+                    }
+                    if (div.style.top) {
+                        const right = pos.top + offset.y + globalVar.componentOffset.y;
+                        div.style.top = `${right}px`;
+                    }
                 }
             });
         }

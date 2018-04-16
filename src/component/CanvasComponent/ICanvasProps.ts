@@ -13,4 +13,5 @@ export interface ICanvasProps {
     getStageScroll: () => { scrollLeft: number, scrollTop: number };
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
+    updateCanvasSize: (width: number, height: number) => void;
 }

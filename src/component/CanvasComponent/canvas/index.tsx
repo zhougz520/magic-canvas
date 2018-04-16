@@ -28,7 +28,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         super(props);
         this.state = {
             anchor: null,
-            canvasSize: config.canvasSize,
             componentIndex: this.props.components.length,
             componentList: Set.of(...this.props.components)
         } as Readonly<ICanvasState>;
@@ -53,6 +52,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, e: any): void => {
+        // TODO: 焦点变换bug@周周
         this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const com = this.getComponent(cid);
@@ -68,35 +68,52 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
-     * 阻止合成事件与除最外层document上的原生事件上的冒泡，通过判断e.target来避免
-     * 判断事件源是否是画布
+     * 判断鼠标事件作用的范围，component： 组件， canvas： 画布， outside： 外框
      */
-    onMouseEvent = (e: any): boolean => {
-        // 若未在canva元素上出发则返回
-        if (e.target && (e.target.className.startsWith('canvas') || e.target.className.startsWith('container'))) {
-            return true;
+    onMouseEventType = (e: any): string => {
+        if (e.target) {
+            if (e.target.className.startsWith('canvas') || e.target.className.startsWith('container')) return 'canvas';
+            if (util.containClassName(e.target, 'canvas')) return 'component';
         }
 
-        return false;
+        return 'outside';
     }
 
     handleMouseDown = (e: any) => {
+        // TODO: 焦点变换bug@周周
         this.endEdit();
         this.command.setIsEditMode(false);
 
         // 鼠标按下时，计算鼠标位置
         this.recordPointStart(e);
+
+        // 锚点上点击
         const anchor = this.command.getCurrentAnchor();
-        if (anchor) {                           // 锚点上点击
+        if (anchor) {
+            // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
+            e.stopPropagation();
+            e.preventDefault();
             this.command.anchorMouseDown(e, anchor);
-        } else if (this.onMouseEvent(e)) {      // 画布上的点击
-            // 非多选模式下，清楚所有组件选中状态
-            if (!this.command.isMultiselect()) {
-                this.clearSelected();
+        } else {
+            switch (this.onMouseEventType(e)) {
+                // 组件中的点击
+                case 'component': return this.command.componentMouseDown(e);
+                // 画布上的点击
+                case 'canvas': {
+                    // 非多选模式下，清楚所有组件选中状态
+                    if (!this.command.isMultiselect()) {
+                        this.clearSelected();
+                    }
+
+                    return this.command.canvasMouseDown(e);
+                }
+                // 外框上
+                case 'outside': {
+                    this.clearSelected();
+
+                    return this.command.outsideMouseDown(e);
+                }
             }
-            this.command.canvasMouseDown(e);
-        } else {                                // 组件中的点击
-            this.command.componentMouseDown(e);
         }
     }
 
@@ -108,11 +125,9 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         // 清楚拉伸框
         this.drawStretchBox(e, true);
 
-        if (this.onMouseEvent(e)) {
-            this.command.canvasMouseUp(e);
-        } else {
-            this.command.componentMouseUp(e);
-        }
+        if (this.onMouseEventType(e) === 'component') this.command.componentMouseUp(e);
+        if (this.onMouseEventType(e) === 'canvas') this.command.canvasMouseUp(e);
+        if (this.onMouseEventType(e) === 'outside') this.command.outsizeMouseUp(e);
     }
 
     handleMouseMove = (e: any) => {
@@ -242,14 +257,15 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     componentDidMount() {
         document.addEventListener('mousemove', this.handleMouseMove);
+        document.addEventListener('mousedown', this.handleMouseDown);
+        document.addEventListener('mouseup', this.handleMouseUp);
+        document.addEventListener('mouseleave', this.handleMouseLeave);
         if (this.container && this.canvas) {
-            this.container.addEventListener('mousedown', this.handleMouseDown);
-            this.container.addEventListener('mouseup', this.handleMouseUp);
             // 在ondragover中一定要执行preventDefault()，否则ondrop事件不会被触发
             this.canvas.addEventListener('dragover', (evt: any) => evt.preventDefault());
             this.canvas.addEventListener('drop', this.handleDrop);
             // 异常鼠标不在画布内释放了
-            this.container.addEventListener('mouseleave', this.handleMouseLeave);
+            // this.container.addEventListener('mouseleave', this.handleMouseLeave);
             this.container.addEventListener('focus', () => { this.getEditor().setFocus(); });
         }
     }
@@ -287,11 +303,29 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     /**
-     * 修改画布大小
+     * 重绘画布的大小
      */
-    updateCanvasSize = () => {
-        const canvasSize = { width: 1000, height: 1000 };
-        this.setState({ canvasSize });
+    repaintCanvas = (pointX: number, pointY: number) => {
+        if (pointX > config.canvasSize.width || pointY > config.canvasSize.height) {
+            const pointXList: number[] = [config.canvasSize.width];
+            const pointYList: number[] = [config.canvasSize.height];
+
+            const componentList = this.state.componentList;
+            componentList.map((cs: any) => {
+                if (cs && cs.p) {
+                    const com = this.getComponent(cs.p.id);
+                    if (com) {
+                        const boundary = com.getBoundaryPoint();
+                        pointXList.push(boundary.pointX + 40);
+                        pointYList.push(boundary.pointY + 40);
+                    }
+                }
+            });
+
+            const width = Math.max(...pointXList);
+            const height = Math.max(...pointYList);
+            this.props.updateCanvasSize(width, height);
+        }
     }
 
     /**
@@ -337,7 +371,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     zIndex,
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
-                    repaintSelected: this.repaintSelected
+                    repaintSelected: this.repaintSelected,
+                    repaintCanvas: this.repaintCanvas
                 })
             );
             zIndex++;

@@ -96,6 +96,19 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的边界点
+     */
+    public getBoundaryPoint = () => {
+        const size = this.getSize();
+        const position = this.getPosition();
+
+        return {
+            pointX: position.left + size.width,
+            pointY: position.top + size.height
+        };
+    }
+
+    /**
      * 获取组件的临时状态
      */
     public getTempContentState = (): ContentState => {
@@ -339,7 +352,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     // render后的回调函数
     protected renderCallback = (): void => {
         // 通知画布重绘组件的选中框
-        if (this.props.repaintSelected) this.props.repaintSelected();
+        this.props.repaintSelected();
+        // 计算边界调整画布的大小
+        const boundary = this.getBoundaryPoint();
+        this.props.repaintCanvas(boundary.pointX, boundary.pointY);
     }
 
     /**

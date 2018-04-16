@@ -14,7 +14,7 @@ export interface ISolutionProp {
 
 export interface ISolutionState {
     compos: ICompos;
-    canvasSzie: { width: number, height: number };
+    canvasSize: { width: number, height: number };
 }
 
 /* tslint:disable:no-console */
@@ -28,7 +28,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         super(props);
         this.state = {
             compos: config.componentPosition,
-            canvasSzie: config.canvasSize
+            canvasSize: config.canvasSize
         };
     }
 
@@ -101,8 +101,16 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         } as IBoundary;
     }
 
+    /**
+     * 修改画布大小
+     */
+    updateCanvasSize = (width: number, height: number) => {
+        console.log('重绘了画布的大小');
+        this.setState({ canvasSize: { width, height } });
+    }
+
     render() {
-        const { compos, canvasSzie } = this.state;
+        const { compos, canvasSize } = this.state;
         const stateStyle = this.StageStyle();
         console.log('重绘了stage');
 
@@ -113,19 +121,20 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
-                        canvasSize={canvasSzie}
+                        canvasSize={canvasSize}
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
                     />
                     <Canvas
                         ref={(render) => this.canvas = render}
                         getDraw={this.getDraw}
-                        canvasSize={canvasSzie}
+                        canvasSize={canvasSize}
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
                         components={detail.content.components}
+                        updateCanvasSize={this.updateCanvasSize}
                     />
                 </div>
             </div>

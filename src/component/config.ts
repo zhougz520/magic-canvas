@@ -16,8 +16,8 @@ export const config: IConfig = {
     highPerformance: true,
     componentPosition: {
         stageOffset: { top: 80, left: 184, right: 250, bottom: 35 },
-        canvasOffset: { top: 32, left: 32, right: 32, bottom: 32 },
+        canvasOffset: { top: 0, left: 0, right: 0, bottom: 0 },
         borderOffset: { border: 1 }
     },
-    canvasSize: { width: 3000, height: 6000 }
+    canvasSize: { width: 2560, height: 1440 }
 };

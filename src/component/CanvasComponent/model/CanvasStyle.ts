@@ -9,7 +9,7 @@ export const CanvasStyle = (pos: { top: number, left: number, right: number, bot
         bottom: `${pos.bottom}px`,
         margin: 0,
         padding: 0,
-        boxShadow: '0 2px 8px rgba(0,0,0,.2)',
+        // boxShadow: '0 2px 8px rgba(0,0,0,.2)',
         backgroundColor: '#fff',
         zIndex: 0
     } as React.CSSProperties;
