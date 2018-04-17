@@ -1,1 +1,1 @@
-declare module 'rotating-file-stream';
+declare module 'drag-on-drop';

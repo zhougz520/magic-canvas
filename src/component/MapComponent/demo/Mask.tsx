@@ -16,7 +16,7 @@ export interface IDemoState {
     backGroundColor: string;
 }
 
-export default class BtnDemo extends PureComponent<IDemoProps, any> {
+export default class Mask extends PureComponent<IDemoProps, any> {
     static defaultProps = {
         value: 'test'
     };
@@ -35,9 +35,6 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
     componentDidMount() {
         if (this.com != null) {
             this.com.addEventListener('drop', this.handleDrop);
-            this.com.addEventListener('mouseover', this.handleOver);
-            this.com.addEventListener('mouseleave', this.handleLeave);
-            this.com.addEventListener('mousemove', this.handleLeave);
         }
 
         const dragonDrop = new DragOnDrop(this.com);
@@ -92,9 +89,6 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-            {/* <div>
-                
-            </div> */}
             {children}
             </div>
         );

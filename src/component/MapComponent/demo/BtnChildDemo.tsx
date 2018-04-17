@@ -27,7 +27,7 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
             <div
                 style={{ marginLeft: 30 }}
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.onFireSelect}
+                // onMouseDown={this.onFireSelect}
                 draggable
                 onClick={this.onTextChange}
             >
@@ -42,10 +42,10 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
         });
     }
 
-    private onFireSelect = (e: any) => {
-        const { id } = this.state;
-        const { fireSelect } = this.props;
+    // private onFireSelect = (e: any) => {
+    //     const { id } = this.state;
+    //     const { fireSelect } = this.props;
 
-        fireSelect(e, id);
-    }
+    //     fireSelect(e, id);
+    // }
 }
