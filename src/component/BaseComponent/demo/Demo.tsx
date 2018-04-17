@@ -4,7 +4,7 @@ import { Button, Icon, Radio } from 'antd';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-import './Demo.scss';
+import '../sass/Demo.scss';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
