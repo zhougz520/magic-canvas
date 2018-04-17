@@ -64,6 +64,7 @@ const runDevServer = () => {
                         }
                     ]
                 },
+                {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
                 {enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'}
             ]
         }
