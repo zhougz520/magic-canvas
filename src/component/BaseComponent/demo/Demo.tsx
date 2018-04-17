@@ -4,6 +4,8 @@ import { Button, Icon, Radio } from 'antd';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
+import './Demo.scss';
+
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
 }
@@ -38,7 +40,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
                 <div
-                    style={{ backgroundColor: '#F0F0FF' }}
+                    id="demoSass"
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>
