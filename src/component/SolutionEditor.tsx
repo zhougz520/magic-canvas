@@ -285,6 +285,50 @@ const detail = {
                         ]
                     }
                 }
+            },
+            {
+                t: 'BaseComponent/demo/TableContainer',
+                p: {
+                    id: 'cs5',
+                    txt_v: '我是测试组件4',
+                    w: 600,
+                    h: 500,
+                    l: 350,
+                    t: 350,
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/demo/TableDemo',
+                                p: {
+                                    id: 'cs5.cs1',
+                                    txt_v: '我是内部组件按钮1'
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                t: 'MapComponent/map/AppGridForm',
+                p: {
+                    id: 'cs6',
+                    txt_v: '编辑页面',
+                    w: 600,
+                    h: 500,
+                    l: 350,
+                    t: 350,
+                    p: {
+                        components: [
+                            // {
+                            //     t: 'MapComponent/demo/TableDemo',
+                            //     p: {
+                            //         id: 'cs5.cs1',
+                            //         txt_v: '我是内部组件按钮1'
+                            //     }
+                            // }
+                        ]
+                    }
+                }
             }
         ]
     },

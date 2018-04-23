@@ -1,22 +1,15 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import { MapComponent, IBaseProps } from '../index';
 import BtnChildDemo from './BtnChildDemo';
 import DragOnDrop from 'drag-on-drop';
-// import Button from '../../UniversalComponents/Button/Button';
 import util from '../../util';
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps {
-    fireSelect: (cid: string, e: any) => void;
+
+export interface IMapProps extends IBaseProps  {
+    updateProps: (cid: string, updateProp: any) => void;
     value?: string;
-    data: any;
 }
 
-export interface IDemoState {
-    demoState: string;
-    backGroundColor: string;
-}
-
-export default class BtnDemo extends PureComponent<IDemoProps, any> {
+export default class BtnDemo extends MapComponent<IMapProps, any> {
     static defaultProps = {
         value: 'test'
     };
@@ -53,7 +46,6 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
     }
 
     public render() {
-        const { fireSelect } = this.props;
         const { hover, data } = this.state;
         const children: any = [];
         if (data.p.components.length > 0) {
@@ -67,7 +59,6 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
                                 data={com.p}
                                 // tslint:disable-next-line:jsx-no-string-ref
                                 ref={`c.${com.p.id}`}
-                                fireSelect={fireSelect}
                             />);
                         break;
                     // case 'UniversalComponents/Button/Button':
@@ -92,10 +83,7 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-            {/* <div>
-                
-            </div> */}
-            {children}
+                {children}
             </div>
         );
     }
@@ -104,7 +92,7 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
         if (util.isEmptyString(localStorage.__dnd_type) || util.isEmptyString(localStorage.__dnd_value)) return;
         if (localStorage.__dnd_type !== 'dragging_cs') return;
         const data = JSON.parse(localStorage.__dnd_value);
-        this.addChildComponent(data);
+        this.addChildComponent(this.state.data, data);
         e.stopPropagation();
     }
 
@@ -120,31 +108,5 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
             hover: false
         });
         e.preventDefault();
-    }
-
-    public addChildComponent = (addData: any) => {
-        const { data } = this.state;
-        const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
-        data.p.components.push({
-            t: addData.type,
-            p: Object.assign({}, addData.props, { id: childId, txt_v: 'test'})
-        });
-        this.setState({
-            data
-        });
-    }
-
-    public newComponentsId = (collection: any[], prefix = 'cs', pid = '') => {
-        const ids: number[] = [];
-        collection.forEach((cs: any) => {
-            ids.push(parseInt(cs.p.id.replace(prefix, ''), undefined));
-        });
-        if (ids.length === 0) {
-            return `${pid === '' ? '' : `${pid}.`}${prefix}1`;
-        } else {
-            ids.sort((a: any, b: any) => a - b);
-
-            return `${pid === '' ? '' : `${pid}.`}${prefix}${ids[ids.length - 1] + 1}`;
-        }
     }
 }

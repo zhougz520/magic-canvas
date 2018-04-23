@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import { MaskLayer } from '../../BaseComponent/base';
 
 export interface IDemoProps {
-    fireSelect: (cid: string, e: any) => void;
+    // fireSelect: (cid: string, e: any) => void;
     data: {};
 }
 
@@ -31,6 +32,7 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
                 draggable
                 onClick={this.onTextChange}
             >
+                <MaskLayer key={0} />
                 <button type="primary" style={{ width: '100%', height: '100%' }} >{txt_v}</button>
             </div>
         );

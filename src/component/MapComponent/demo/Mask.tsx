@@ -50,7 +50,7 @@ export default class Mask extends PureComponent<IDemoProps, any> {
     }
 
     public render() {
-        const { fireSelect } = this.props;
+        // const { fireSelect } = this.props;
         const { hover, data } = this.state;
         const children: any = [];
         if (data.p.components.length > 0) {
@@ -64,7 +64,7 @@ export default class Mask extends PureComponent<IDemoProps, any> {
                                 data={com.p}
                                 // tslint:disable-next-line:jsx-no-string-ref
                                 ref={`c.${com.p.id}`}
-                                fireSelect={fireSelect}
+                                // fireSelect={fireSelect}
                             />);
                         break;
                     // case 'UniversalComponents/Button/Button':

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
-import BtnDemo from '../../MapComponent/demo/BtnDemo';
+import TableDemo from '../../MapComponent/demo/TableDemo';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -13,21 +13,6 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
     public com: HTMLElement | null = null;
 
     public render() {
-        const richChildNode = this.getRichChildNode();
-        const { p } = this.props.data;
-        const children: any = [];
-        if (p !== undefined && p.components.length > 0) {
-            p.components.forEach((com: any) => {
-                children.push(
-                    <BtnDemo
-                        key={`c.${com.p.id}`}
-                        data={com.p}
-                        // tslint:disable-next-line:jsx-no-string-ref
-                        ref={`c.${com.p.id}`}
-                        updateProps={this.fireSelectChange}
-                    />);
-            });
-        }
 
         // 汇总style
         const currStyle = Object.assign(
@@ -47,12 +32,7 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
                 style={currStyle}
                 // onMouseDown={this.fireSelectChange}
             >
-                <div
-                    style={{ backgroundColor: '#F0F0FF'}}
-                >
-                    {this.getCid() + '.'} - {richChildNode}
-                </div>
-                {children}
+                <TableDemo  />
             </div>
         );
     }
