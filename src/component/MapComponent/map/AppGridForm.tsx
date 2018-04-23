@@ -16,7 +16,7 @@ export interface IDemoProps extends IBaseProps {
 export interface IDemoState extends IBaseState {
     demoState: string;
 }
-export class AppGrid extends BaseComponent<IDemoProps, IDemoState> {
+export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
     public com: HTMLElement | null = null;
 
     public render() {
@@ -27,7 +27,7 @@ export class AppGrid extends BaseComponent<IDemoProps, IDemoState> {
             <table
                 ref={(ref) => this.com = ref}
                 className="ps-map"
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                // style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <tbody>
                     <tr>
