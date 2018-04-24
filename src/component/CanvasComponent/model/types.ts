@@ -73,7 +73,7 @@ export interface ICanvasCommand {
     clearDragBox: (offset: any) => void;
     startScroll: (scrollOffset: IOffset, setStageScroll: any) => void;
     stopScroll: () => void;
-    getIsEditMode: () => boolean;
-    setIsEditMode: (isEditMode: boolean) => void;
+    getIsRichEditMode: () => boolean;
+    setIsRichEditMode: (mode: boolean) => void;
     getTECellEditorActivateKeyRange: () => any;
 }

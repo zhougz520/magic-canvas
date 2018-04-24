@@ -63,10 +63,11 @@ const globalVar = {
     dragType: 'none' as string,
     // 当前生成的组件位移框
     dragDivList: Map<string, IDragDiv>(),
-    // 是否编辑状态
-    isEditMode: false,
+    // 是否富文本编辑状态
+    isRichEditMode: false,
     TECellEditorActivateKeyRange: [
         { min: 229, max: 229 }, // 中文输入法
+        { min: 13, max: 13 },   // 回车
         { min: 32, max: 32 }, // 空格
         { min: 65, max: 90 },
         { min: 48, max: 57 },
@@ -502,11 +503,11 @@ export const CanvasCommand: ICanvasCommand = {
         }
     },
 
-    getIsEditMode(): boolean {
-        return globalVar.isEditMode;
+    getIsRichEditMode(): boolean {
+        return globalVar.isRichEditMode;
     },
-    setIsEditMode(isEditMode: boolean): void {
-        globalVar.isEditMode = isEditMode;
+    setIsRichEditMode(mode: boolean): void {
+        globalVar.isRichEditMode = mode;
     },
 
     getTECellEditorActivateKeyRange(): any {

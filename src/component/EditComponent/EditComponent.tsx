@@ -30,7 +30,8 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         this.setState({
             maxWidth: 1,
             top: -10000,
-            left: -10000
+            left: -10000,
+            style: null
         });
     }
 
@@ -98,20 +99,18 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
         }
     }
 
-    onBlur = () => {
-        // this.setFocus();
-    }
-
-    componentDidMount() {
-        // 编辑框常驻焦点，canvas获得焦点时也把焦点定位到编辑框
-        this.setFocus();
-    }
-
     /**
      * 阻止编辑框上的鼠标事件冒泡到画布
      */
     handleMouseStop = (e: any) => {
         e.preventDefault();
+    }
+
+    componentDidMount() {
+        if (this.editor) {
+            this.editor.addEventListener('focus', () => { console.log('Edit获得焦点'); });
+            this.editor.addEventListener('blur', () => { console.log('Edit失去焦点'); });
+        }
     }
 
     render() {
@@ -133,7 +132,6 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
                 tabIndex={-1}
                 onKeyDown={this.onKeyDown}
                 onKeyUp={this.onKeyUp}
-                onBlur={this.onBlur}
                 onMouseDown={this.handleMouseStop}
                 onMouseUp={this.handleMouseStop}
                 onMouseOver={this.handleMouseStop}
