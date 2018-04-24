@@ -69,7 +69,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      */
     selectionChanging = (cid: string, e: any): void => {
         // TODO: 焦点变换bug@周周
-        this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const cids: string[] = cid.split('.');
         const com = this.getComponent(cids[0]);
@@ -118,7 +117,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const anchor = this.command.getCurrentAnchor();
         if (anchor) {
             // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
-            e.stopPropagation();
             e.preventDefault();
             this.command.anchorMouseDown(e, anchor);
         } else {
@@ -221,7 +219,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
         if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
             || key === 'esc' || key === 'backspace') {
-            e.stopPropagation();
             e.preventDefault();
             keyFun[key].release();
         } else if (!ctrl && this.command.isMultiselect()) {
@@ -279,22 +276,16 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const data = JSON.parse(localStorage.__dnd_value);
         const position = this.getPositionRelativeCanvas(e.pageX, e.pageY);
         this.addCancasComponent(data, position);
-        this.getEditor().setFocus();
+    }
+
+    handleDragOver = (e: any) => {
+        e.preventDefault();
     }
 
     componentDidMount() {
         document.addEventListener('mousemove', this.handleMouseMove);
-        document.addEventListener('mousedown', this.handleMouseDown);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mouseleave', this.handleMouseLeave);
-        if (this.container && this.canvas) {
-            // 在ondragover中一定要执行preventDefault()，否则ondrop事件不会被触发
-            this.canvas.addEventListener('dragover', (evt: any) => evt.preventDefault());
-            this.canvas.addEventListener('drop', this.handleDrop);
-            // 异常鼠标不在画布内释放了
-            // this.container.addEventListener('mouseleave', this.handleMouseLeave);
-            this.container.addEventListener('focus', () => { this.getEditor().setFocus(); });
-        }
     }
 
     render() {
@@ -310,6 +301,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 className="container"
                 tabIndex={1}
                 style={{ ...ContainerStyle(canvasSize), cursor }}
+                onMouseDown={this.handleMouseDown}
             >
                 <EditComponent
                     ref={(handler) => this.editor = handler}
@@ -322,6 +314,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     ref={(handler) => this.canvas = handler}
                     style={CanvasStyle(canvasOffset)}
                     className="canvas"
+                    onDrop={this.handleDrop}
+                    onDragOver={this.handleDragOver}
                 >
                     {children}
                 </div>

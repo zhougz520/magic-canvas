@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
+import { BaseComponent, IBaseProps, IBaseState } from '../../BaseComponent/index';
 // import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGridTitle } from './index';
 
 import '../sass/Map.scss';

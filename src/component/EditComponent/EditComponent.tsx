@@ -40,8 +40,7 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
      */
     onKeyDown = (e: any) => {
         if (this.props.handleKeyDownCommand && this.props.handleKeyDownCommand(e) === true) {
-            // e.stopPropagation();
-            // e.preventDefault();
+            e.preventDefault();
 
             return;
         }
@@ -52,7 +51,6 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
      */
     onKeyUp = (e: any) => {
         if (this.props.handleKeyUpCommand && this.props.handleKeyUpCommand(e) === true) {
-            e.stopPropagation();
             e.preventDefault();
 
             return;
@@ -107,17 +105,13 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
     componentDidMount() {
         // 编辑框常驻焦点，canvas获得焦点时也把焦点定位到编辑框
         this.setFocus();
-
-        (this.editor as HTMLElement).addEventListener('mousedown', this.handleMouseStop);
-        (this.editor as HTMLElement).addEventListener('mouseup', this.handleMouseStop);
-        (this.editor as HTMLElement).addEventListener('mousemove', this.handleMouseStop);
     }
 
     /**
      * 阻止编辑框上的鼠标事件冒泡到画布
      */
     handleMouseStop = (e: any) => {
-        e.stopPropagation();
+        e.preventDefault();
     }
 
     render() {
@@ -140,6 +134,9 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
                 onKeyDown={this.onKeyDown}
                 onKeyUp={this.onKeyUp}
                 onBlur={this.onBlur}
+                onMouseDown={this.handleMouseStop}
+                onMouseUp={this.handleMouseStop}
+                onMouseOver={this.handleMouseStop}
             />
         );
     }
