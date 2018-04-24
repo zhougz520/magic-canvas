@@ -108,7 +108,9 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
 
     componentDidMount() {
         if (this.editor) {
+            // tslint:disable-next-line:no-console
             this.editor.addEventListener('focus', () => { console.log('Edit获得焦点'); });
+            // tslint:disable-next-line:no-console
             this.editor.addEventListener('blur', () => { console.log('Edit失去焦点'); });
         }
     }
