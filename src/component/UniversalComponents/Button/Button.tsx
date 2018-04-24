@@ -45,4 +45,5 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
 
         this.setCustomState(newButtonState);
     }
+
 }

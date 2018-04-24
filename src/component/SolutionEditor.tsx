@@ -1,11 +1,11 @@
 import * as React from 'react';
-import BarList from './BarComponent';
+import BarList, { IBarListComponent } from './BarComponent';
 import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
 import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
-import { ICompos, config } from './config';
+import { ICompos, config, ComponentProperty } from './config';
 import { IOffset } from './CanvasComponent/model/types';
 
 export interface ISolutionProp {
@@ -23,6 +23,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     private canvas: ICanvasComponent | null = null;
     private draw: IDrawComponent | null = null;
     private stage: HTMLDivElement | null = null;
+    private barList: IBarListComponent |null = null;
 
     constructor(props: ISolutionProp) {
         super(props);
@@ -100,6 +101,67 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             }
         } as IBoundary;
     }
+    // 获取command点击后的命令，并传给canvas
+    onFireCommand = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
+        console.log('找当前编辑中的组件，并传递command的命令');
+        console.log('command:' + cProperty.pName + cProperty.pValue);
+
+        if (this.canvas) {
+            // 获取当前编辑中的组件
+            const commandProperties = this.canvas.getSelectedProperties(cId);
+            if (commandProperties) {
+                this.canvas.executorCommand(cId, cProperty);
+            }
+        }
+    }
+    // 获取编辑中的组件属性并传给command
+    onCommandProperties = (currentCid: string): ComponentProperty |undefined => {
+        if (this.canvas) {
+            const compProperty: ComponentProperty = {componentCid: currentCid, componentProperties: []};
+
+            const commandProperties = this.canvas.getSelectedProperties(currentCid);
+            compProperty.componentProperty = commandProperties;
+
+            // commandProperties为undefined 则未选中组件
+            if (commandProperties) {
+                console.log('这是solutioneditor中给command的获取组件属性');
+                console.log(commandProperties);
+                if (this.barList) {
+                    this.barList.setCommandState(currentCid, commandProperties.componentProperties);
+                }
+
+                return compProperty;
+            } else return undefined;
+        } else return undefined;
+    }
+
+    // 获取编辑中的组件属性并传给propertyTool
+    onPropertyProperties = (currentCid: string): ComponentProperty| undefined => {
+        if (this.canvas) {
+            const compProperty: ComponentProperty = {componentCid: currentCid, componentProperties: []};
+            const pToolProperties = this.canvas.getSelectedProperties(currentCid);
+            if (pToolProperties !== undefined) {
+                compProperty.componentProperties = pToolProperties.componentProperties;
+                console.log('这是solutioneditor中给propertyTool的获取组件属性');
+                if (this.barList) {
+                    this.barList.setPropertyState(currentCid, pToolProperties.componentProperties);
+                }
+
+                return compProperty;
+            } else return undefined;
+        } else return undefined;
+    }
+
+    // 将propertyTool的属性传给canvas 设置对应的选中控件
+    onFireProperties = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
+        if (this.canvas) {
+            const commandProperties = this.canvas.getSelectedProperties(cId);
+            if (commandProperties) {
+                console.log(commandProperties);
+                this.canvas.executorProperties(cId, cProperty);
+            }
+        }
+    }
 
     render() {
         const { compos, canvasSzie } = this.state;
@@ -108,7 +170,14 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
         return (
             <div className="main-editor">
-                <BarList changeStageOffset={this.changeStageOffset} />
+                <BarList
+                    ref={(render) => this.barList = render}
+                    changeStageOffset={this.changeStageOffset}
+                    onFireCommand={this.onFireCommand}
+                    onCommandProperties={this.onCommandProperties}
+                    onFireProperties={this.onFireProperties}
+                    onPropertyProperties={this.onPropertyProperties}
+                />
                 <div id="stage" ref={(render) => this.stage = render} className="stage" style={stateStyle}>
                     <Draw
                         ref={(render) => this.draw = render}
@@ -126,6 +195,9 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
                         components={detail.content.components}
+                        onCommandProperties={this.onCommandProperties}
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onPropertyProperties={this.onPropertyProperties}
                     />
                 </div>
             </div>

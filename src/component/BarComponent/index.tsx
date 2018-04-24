@@ -1,12 +1,21 @@
 import * as React from 'react';
 import Title from './TitleBar';
-import Command from './CommandBar';
+import Command, { ICommandComponent } from './CommandBar';
 import Resource from './ResourceBar';
-import Property from './PropertyBar';
+import Property, { IPropertyComponent } from './PropertyBar';
 import Contributor from './ContributorBar';
+import { ComponentProperty } from '../config';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
+    onFireCommand: (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
+    onCommandProperties: (currentCid: string) => ComponentProperty |undefined;
+    onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
+    // onPropertyProperties: ComponentProperty| undefined;
+
+    onFireProperties: (cId: string, pProperties: {pName: string, pValue: any, pType: string}) => void;
+    // onSelectedCid: string;
+
 }
 
 export interface IBarState {
@@ -17,9 +26,18 @@ export interface IBarState {
     componentMode: string;  // 组件模式
 }
 
+export interface IBarListComponent {
+    setPropertyState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
+    setCommandState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
+}
+
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class BarList<P extends IBarProps, S extends IBarState> extends React.PureComponent<P, S> {
+export default class BarList<P extends IBarProps, S extends IBarState>
+                    extends React.PureComponent<P, S> implements IBarListComponent {
+    private propertyTool: IPropertyComponent | null = null;
+    private commandTool: ICommandComponent | null = null;
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -38,7 +56,10 @@ export default class BarList<P extends IBarProps, S extends IBarState> extends R
             <React.Fragment>
                 <Title ref="title" collapsed={titleBarCollapsed} />
                 <Command
+                    ref={(render) => this.commandTool = render}
                     titleBarCollapsed={titleBarCollapsed}
+                    onFireCommand={this.props.onFireCommand}
+                    onCommandProperties={this.props.onCommandProperties}
                     // tslint:disable-next-line:jsx-no-lambda
                     onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
                 />
@@ -51,10 +72,14 @@ export default class BarList<P extends IBarProps, S extends IBarState> extends R
                     onResourceBarCollapse={(collapsed) => this.collapseBar(undefined, collapsed)}
                 />
                 <Property
+                    ref={(render) => this.propertyTool = render}
                     collapsed={propsBarCollapsed}
                     titleBarCollapsed={titleBarCollapsed}
                     // tslint:disable-next-line:jsx-no-lambda
                     onPropsBarCollapse={(collapsed) => this.collapseBar(undefined, undefined, collapsed)}
+                    // onSelectedCid={this.props.onSelectedCid}
+                    onPropertyProperties={this.props.onPropertyProperties}
+                    onFireProperties={this.props.onFireProperties}
                 />
                 <Contributor />
             </React.Fragment>
@@ -70,5 +95,18 @@ export default class BarList<P extends IBarProps, S extends IBarState> extends R
         if (pc !== undefined) propsBarCollapsed = pc;
         this.setState({ titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed });
         this.props.changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
+    }
+
+    setPropertyState = (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => {
+        if (this.propertyTool) {
+            this.propertyTool.setPropertyState(cId, properties);
+        }
+
+    }
+
+    setCommandState = (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => {
+        if (this.commandTool) {
+            this.commandTool.setCommandState(cId, properties);
+        }
     }
 }

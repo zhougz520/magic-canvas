@@ -1,6 +1,6 @@
 import { IDrawComponent } from '../DrawComponent';
 
-import { ICompos } from '../config';
+import { ICompos, ComponentProperty } from '../config';
 import { IBoundary, IOffset } from './model/types';
 
 export interface ICanvasProps {
@@ -13,4 +13,6 @@ export interface ICanvasProps {
     getStageScroll: () => { scrollLeft: number, scrollTop: number };
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
+    onCommandProperties: (currentCid: string) => ComponentProperty| undefined;
+    onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
 }

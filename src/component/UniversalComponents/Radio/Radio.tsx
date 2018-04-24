@@ -6,6 +6,8 @@ import { Radio as AntRadio } from 'antd';
 
 import { RadioState, RadioProperties } from './RadioState';
 import { RadioChangeEvent } from 'antd/lib/radio';
+import { Map } from 'immutable';
+import { PropertiesEnum, ComponentProperty } from '../../config';
 
 const RadioGroup = AntRadio.Group;
 const AntRadioButton = AntRadio.Button;
@@ -76,8 +78,42 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    private onChange = (event: RadioChangeEvent) => {
+    public getComponentProperties = (): ComponentProperty => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {
+                    pName: 'name',
+                    pValue: this.getCustomState().getName(),
+                    pType: 'text'
+                }, {
+                    pName: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: 'text'
+                }, {
+                    pName: 'options',
+                    pValue: this.getCustomState().getOptions(),
+                    pType: 'text'
+                }, {
+                    pName: 'isButton',
+                    pValue: this.getCustomState().getIsButton(),
+                    pType: PropertiesEnum.SWITCH
+                }]
+        };
+    }
 
+    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+        let propertiesMap = Map();
+        propertiesMap = propertiesMap.set(pProperty.pName, pProperty.pValue);
+        propertiesMap = propertiesMap.set('selectedCid', cid);
+
+        const newRadioState: RadioState = RadioState.set(
+            this.getCustomState(), propertiesMap
+        );
+        this.setCustomState(newRadioState);
+    }
+
+    private onChange = (event: RadioChangeEvent) => {
         const newRadioState: RadioState = RadioState.set(
             this.getCustomState(),
             {

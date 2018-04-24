@@ -33,6 +33,8 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     rows={this.getCustomState().getRowNum()}
                     placeholder={this.getCustomState().getPlaceholder()}
                     onClick={this.onClick}
+                    onPressEnter={this.onClick}
+                    autosize={false}
                     value={this.getRichChildNode()}
                 />
             </div>

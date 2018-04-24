@@ -2,10 +2,16 @@ import { Record } from 'immutable';
 
 export interface IInputState {
     placeholder: string;
+    value: string;
+    defaultvalue: string;
+    selectedCid: string;
 }
 
 const defaultRecord: IInputState = {
-    placeholder: 'init value'
+    placeholder: 'init value',
+    value: '',
+    defaultvalue: '',
+    selectedCid: ''
 };
 
 export const InputRecord: Record.Class = Record(defaultRecord);
@@ -27,5 +33,17 @@ export class InputState extends InputRecord {
 
     getPlaceholder(): string {
         return this.get('placeholder');
+    }
+
+    getValue(): string {
+        return this.get('value');
+    }
+
+    getDefaultValue(): string {
+        return this.get('defaultvalue');
+    }
+
+    getSelectedCid(): string {
+        return this.get('selectedCid');
     }
 }

@@ -7,7 +7,7 @@ import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
 import { DragType, IOffset, IPointpos, IPagePos } from '../model/types';
 import util from '../../util';
-import { config } from '../../config';
+import { config, ComponentProperty } from '../../config';
 import { keyFun } from '../model/CanvasCommand';
 import { EditComponent } from '../../EditComponent';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
@@ -281,6 +281,44 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         }
     }
 
+    // 给canvas编辑中的组件设置command命令
+    executorCommand(cId: string, cProperty: {pName: string, pValue: any, pType: string}) {
+        const currentSelectedComponent: IComponent | undefined  = this.command.getSelectedComponents().last();
+        if (currentSelectedComponent !== undefined) {
+            // switch (commandName) {
+            //     case commandsEnum.PLACEHOLDER:
+                    currentSelectedComponent.setComponentProperties(cId, cProperty);
+                // default: return false;
+            // }
+        }
+
+    }
+
+    // 给canvas编辑中的组件设置propertyTool中的属性
+    executorProperties(cId: string, pProperty: {pName: string, pValue: any, pType: string}) {
+        console.log(pProperty);
+        const currentSelectedComponent: IComponent | undefined  = this.command.getSelectedComponents().last();
+        if (currentSelectedComponent !== undefined) {
+            currentSelectedComponent.setProperties(cId, pProperty);
+        }
+    }
+
+    // 获取canvas编辑中的组件的属性
+    getSelectedProperties(currentCid: string | undefined)
+                : ComponentProperty|undefined {
+        let currentSelectedComponent: IComponent | null;
+        if (currentCid) {
+            currentSelectedComponent = this.getComponent(currentCid);
+        } else {
+            currentSelectedComponent = this.command.getSelectedComponents().last();
+        }
+        if (currentSelectedComponent) {
+            console.log(currentSelectedComponent.getProperties());
+
+            return currentSelectedComponent.getComponentProperties();
+        } else return undefined;
+    }
+
     render() {
         console.log('重绘了canvas');
         const { componentPosition, canvasSize } = this.props;
@@ -434,6 +472,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.command.addSelectedComponent(cid, com, multiselect);
         this.repaintSelected();
         this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
+        this.props.onCommandProperties(cid);
+        this.props.onPropertyProperties(cid);
     }
 
     /**
