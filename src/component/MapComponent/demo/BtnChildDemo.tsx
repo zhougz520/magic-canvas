@@ -29,10 +29,10 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
                 style={{ marginLeft: 30 }}
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 // onMouseDown={this.onFireSelect}
-                draggable
+                // draggable
                 onClick={this.onTextChange}
             >
-                <MaskLayer key={0} />
+                {/* <MaskLayer key={0} /> */}
                 <button type="primary" style={{ width: '100%', height: '100%' }} >{txt_v}</button>
             </div>
         );

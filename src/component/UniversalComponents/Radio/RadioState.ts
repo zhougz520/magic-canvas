@@ -17,6 +17,7 @@ export interface IRadioState {
     options: RadioProperties[];
     // options 以配置的形式设置子元素
     isButton: boolean;
+    selectedCid: string;
 }
 
 const defaultRecord: IRadioState = {
@@ -24,7 +25,8 @@ const defaultRecord: IRadioState = {
     options: [{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}],
     value: 3,
     defaultValue: 3,
-    isButton: false
+    isButton: false,
+    selectedCid: ''
 };
 
 export const RadioRecord: Record.Class = Record(defaultRecord);
@@ -63,6 +65,10 @@ export class RadioState extends RadioRecord {
 
     getIsButton(): boolean {
         return this.get('isButton');
+    }
+
+    getSelectedCid(): string {
+        return this.get('selectedCid');
     }
 
 }

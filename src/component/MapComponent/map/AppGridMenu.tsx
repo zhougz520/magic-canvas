@@ -1,69 +1,121 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import { Select } from 'antd';
-
-const Option = Select.Option;
+import { AppGridMenuItem } from './index';
+import DragOnDrop from 'drag-on-drop';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    value?: string;
+    map_gm_txt?: string;
 }
 
 export class AppGridMenu extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        // value: 'test'
+        map_gm_txt: '标题',
+        selectedId: undefined
     };
 
     public com: HTMLElement | null = null;
+    public menus: HTMLElement | null = null;
 
     constructor(props: any, context?: any) {
         super(props, context);
 
         this.state = {
-            data: props.data
+            ...props,
+            hover: false
         };
     }
 
-    public render() {
-        const { map_v_txt, map_v_o, map_v_w } = this.state.data;
-        let arrOption = [];
-        if (map_v_o instanceof Array) {
-            arrOption = map_v_o;
-        } else {
-            arrOption = map_v_o === undefined ? [''] : map_v_o.replace(/<br>/g, '\r\n').split(/\r?\n/);
-        }
-        const options: any[] = [];
-        if (arrOption !== undefined) {
-            arrOption.map((mi: string) => {
-                options.push(
-                    <Option value={mi} key={mi}>{mi}</Option>
-                );
-            });
+    componentDidMount() {
+        if (this.com != null) {
+            this.com.addEventListener('drop', this.handleDrop);
+            this.com.addEventListener('mouseover', this.handleOver);
+            this.com.addEventListener('mouseleave', this.handleLeave);
+            this.com.addEventListener('mousemove', this.handleLeave);
         }
 
+        const dragonDrop = new DragOnDrop(this.menus);
+
+        this.setState({ dragonDrop });
+    }
+
+    componentDidUpdate() {
+        const { dragonDrop } = this.state;
+        // this public method allows dragon drop to
+        // reassess the updated items and handles
+        dragonDrop.initElements();
+    }
+
+    public render() {
+        const { hover } = this.state;
+        const { updateProps, map_gm_txt, map_sm, p, id, selectedId } = this.props;
+        const components = p === undefined ? undefined : p.components;
+        const menus: any = components === undefined ? '' :
+            (
+                components.map((com: any) => {
+                    const { t } = com;
+                    if (t === 'MapComponent/map/AppGridMenuItem') {
+                        return (
+                            <AppGridMenuItem
+                                key={com.p.id}
+                                {...com.p}
+                                updateProps={updateProps}
+                            />);
+                    }
+                })
+            );
+
         return (
-            <table ref={(ref) => this.com = ref} style={{ width: '100%' }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: `${map_v_w}px`, fontFamily: '宋体' }}>
-                            <b style={{ marginLeft: '20px' }}>{map_v_txt}</b>
-                        </td>
-                        <td>
-                            <div className="first-page">
-                                <Select style={{ width: '100%' }}>
-                                    {options}
-                                </Select>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div
+                onClick={this.selectedCom}
+                ref={(ref) => this.com = ref}
+                className={`csr-pc-map-grid-menu ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+                style={Object.assign({}, { width: '100%', backgroundColor: hover ? '#007ACC' : '#4984c2' })}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+            >
+                <div className="app-grid-menu-title" >
+                    <b>{map_gm_txt}</b>
+                </div>
+                <div ref={(ref) => this.menus = ref} style={{ float: 'right' }}>
+                    {menus}
+                </div>
+            </div>
         );
     }
 
-    public onProjectValueChange = (value: string) => {
+    /*重载添加组件*/
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/map/AppGridMenuItem');
+    }
+
+    public handleDrop = (e: any) => {
+        const data: any = this.getAddComponent();
+        // 校验是否能被添加
+        if (!this.componentCanBeAdded(data.type)) {
+            e.stopPropagation();
+
+            return;
+        }
+        this.addChildComponent(this.state, data);
+        e.stopPropagation();
+    }
+
+    public handleOver = (e: any) => {
+        const data: any = this.getAddComponent();
+        if (data === undefined) return;
+        // 校验是否能被添加
+        if (!this.componentCanBeAdded(data.type)) return;
         this.setState({
-            projectValue: value
+            hover: true
         });
+        e.preventDefault();
+    }
+
+    public handleLeave = (e: any) => {
+        this.setState({
+            hover: false
+        });
+        e.preventDefault();
     }
 }

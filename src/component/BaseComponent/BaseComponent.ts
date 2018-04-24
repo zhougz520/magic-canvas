@@ -12,6 +12,7 @@ import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
 import { Stack } from 'immutable';
+import { ComponentProperty } from '../config';
 
 /**
  * 基类
@@ -248,6 +249,22 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return style;
     }
 
+    public getProperties = (): ComponentProperty => {
+        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+    }
+
+    public getComponentProperties = (): ComponentProperty => {
+        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+    }
+
+    public setProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+        // const num: number = 1 + 1;
+    }
+
+    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+        // const num: number = 1 + 1;
+    }
+
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State
@@ -369,4 +386,5 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         }
         e.preventDefault();
     }
+
 }

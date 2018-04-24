@@ -4,6 +4,8 @@ import {
 } from '../../BaseComponent';
 import { InputState } from './InputState';
 import { Input  as AntInput } from 'antd';
+import { Map } from 'immutable';
+import { ComponentProperty } from '../../config';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -37,6 +39,46 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                 />
             </div>
         );
+    }
+
+    public getComponentProperties = (): ComponentProperty  => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {pName: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
+                {pName: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
+                {pName: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+            ]
+        };
+    }
+
+    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+        let properties = Map();
+        properties = properties.set(pProperty.pName, pProperty.pValue);
+        properties = properties.set('selectedCid', cid);
+        const newInputState: InputState = InputState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newInputState);
+    }
+
+    public getProperties = (): ComponentProperty  => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {pName: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
+                {pName: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
+                {pName: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+            ]
+        };
+    }
+
+    public setProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+        let properties = Map();
+        properties = properties.set(pProperty.pName, pProperty.pValue);
+        properties = properties.set('selectedCid', cid);
+        const newInputState: InputState = InputState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newInputState);
     }
 
     private onClick = () => {

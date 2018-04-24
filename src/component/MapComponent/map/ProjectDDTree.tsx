@@ -4,12 +4,15 @@ import { TreeSelect } from 'antd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    value?: string;
+    map_pddt_txt?: string;
+    map_pddt_o?: string[];
 }
 
 export class ProjectDDTree extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        value: 'test'
+        map_pddt_txt: '组织架构',
+        map_pddt_o: [],
+        selectedId: undefined
     };
 
     public com: HTMLElement | null = null;
@@ -18,12 +21,12 @@ export class ProjectDDTree extends MapComponent<IMapProps, any> {
         super(props, context);
 
         this.state = {
-            data: props.data
+            ...props
         };
     }
 
     public render() {
-        const { map_pddt_txt, map_pddt_o } = this.state.data;
+        const { map_pddt_txt, map_pddt_o, selectedId, id } = this.props;
         const options: any[] = [];
         if (map_pddt_o !== undefined) {
             map_pddt_o.map((mi: string) => {
@@ -39,7 +42,12 @@ export class ProjectDDTree extends MapComponent<IMapProps, any> {
         const treeData = options;
 
         return (
-            <table ref={(ref) => this.com = ref} style={{ width: '100%' }}>
+            <table
+                onClick={this.selectedCom}
+                className={`csr-pc-map-app-project ${selectedId === id ? 'selectecd' : ''}`}
+                ref={(ref) => this.com = ref}
+                style={{ width: '100%' }}
+            >
                 <tbody>
                     <tr>
                         <td style={{ width: '75px', fontFamily: '宋体' }}>
@@ -53,7 +61,6 @@ export class ProjectDDTree extends MapComponent<IMapProps, any> {
                                     treeData={treeData}
                                     treeDefaultExpandAll
                                     onChange={this.onProjectValueChange}
-                                    defaultValue={map_pddt_o[0]}
                                 />
                             </div>
                         </td>
