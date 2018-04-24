@@ -29,14 +29,13 @@ export interface ICommandComponent {
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Command<P extends ICommandProps, S extends ICommandState> extends React.PureComponent<P, S>
-                        implements ICommandComponent {
-    constructor(props: P) {
+export default class Command extends React.PureComponent<ICommandProps, ICommandState> implements ICommandComponent {
+    constructor(props: ICommandProps) {
         super(props);
         this.state = {
             onSelectedCid: '',
             propsContent: new Array()
-        } as Readonly<S>;
+        };
     }
 
     onClick = (e: any) => {

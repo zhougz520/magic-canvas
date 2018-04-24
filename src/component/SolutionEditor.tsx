@@ -1,5 +1,5 @@
 import * as React from 'react';
-import BarList, { IBarListComponent } from './BarComponent';
+import { BarList, IBarListComponent } from './BarComponent';
 import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
 import { IDrawComponent } from './DrawComponent';

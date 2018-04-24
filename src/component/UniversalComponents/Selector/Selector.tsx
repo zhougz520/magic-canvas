@@ -17,7 +17,7 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new SelectorState())
-        } as Readonly<IBaseState>;
+        };
     }
 
     /**

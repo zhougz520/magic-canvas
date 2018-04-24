@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
-import BtnDemo from '../../MapComponent/demo/BtnDemo';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -19,13 +18,10 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
         if (p !== undefined && p.components.length > 0) {
             p.components.forEach((com: any) => {
                 children.push(
-                    <BtnDemo
-                        key={`c.${com.p.id}`}
-                        data={com.p}
-                        // tslint:disable-next-line:jsx-no-string-ref
-                        ref={`c.${com.p.id}`}
-                        updateProps={this.fireSelectChange}
-                    />);
+                    <button>
+                        能不能不提交报错代码
+                    </button>
+                );
             });
         }
 

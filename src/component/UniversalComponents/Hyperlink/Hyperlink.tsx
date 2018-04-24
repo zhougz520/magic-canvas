@@ -16,7 +16,7 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new HyperlinkState())
-        } as Readonly<IBaseState>;
+        };
     }
 
     /**

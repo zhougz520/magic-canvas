@@ -22,15 +22,15 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
-     * @param props any
+     * @param props ICanvasProps
      */
-    constructor(props: any) {
+    constructor(props: ICanvasProps) {
         super(props);
         this.state = {
             anchor: null,
             componentIndex: this.props.components.length,
             componentList: Set.of(...this.props.components)
-        } as Readonly<ICanvasState>;
+        };
         this.command = CanvasCommand;
     }
 

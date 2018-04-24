@@ -19,7 +19,7 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new TextFieldState())
-        } as Readonly<IBaseState>;
+        };
     }
     render() {
 

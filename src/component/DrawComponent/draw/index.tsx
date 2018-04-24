@@ -32,8 +32,7 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
     findComponent = (cids: string[]): IComponent | null => {
         const canvas = this.props.getCanvas();
         if (canvas !== null) {
-
-            return canvas.findComponent(cids);
+            return canvas.findComponent(cids.toString());
         }
 
         return null;

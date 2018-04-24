@@ -35,7 +35,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
 
     public render() {
-        const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.state;
+        const { map_g_mc, map_g_tree } = this.state;
 
         return (
             <div ref={(ref) => this.com = ref} className="csr-pc-map-app-grid">

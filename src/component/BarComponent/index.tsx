@@ -11,11 +11,7 @@ export interface IBarProps {
     onFireCommand: (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
     onCommandProperties: (currentCid: string) => ComponentProperty |undefined;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
-    // onPropertyProperties: ComponentProperty| undefined;
-
     onFireProperties: (cId: string, pProperties: {pName: string, pValue: any, pType: string}) => void;
-    // onSelectedCid: string;
-
 }
 
 export interface IBarState {
@@ -33,8 +29,7 @@ export interface IBarListComponent {
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class BarList<P extends IBarProps, S extends IBarState>
-                    extends React.PureComponent<P, S> implements IBarListComponent {
+export class BarList extends React.PureComponent<IBarProps, IBarState> implements IBarListComponent {
     private propertyTool: IPropertyComponent | null = null;
     private commandTool: ICommandComponent | null = null;
 
@@ -46,7 +41,7 @@ export default class BarList<P extends IBarProps, S extends IBarState>
             propsBarCollapsed: false,
             mapMenuType: 'defaultType',
             componentMode: 'page'
-        } as Readonly<S>;
+        };
     }
 
     render() {

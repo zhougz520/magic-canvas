@@ -18,7 +18,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new ButtonState())
-        } as Readonly<IBaseState>;
+        };
     }
 
     render() {

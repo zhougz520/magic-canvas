@@ -18,7 +18,7 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new CheckGroupState())
-        } as Readonly<IBaseState>;
+        };
     }
 
     render() {
