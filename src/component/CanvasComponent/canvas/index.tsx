@@ -81,10 +81,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             // this.selectedComponent(cid, lastCom === null ? com : lastCom);
             this.selectedComponent(cid, com);
         }
-
-        if (this.editor) {
-            this.editor.setFocus();
-        }
     }
 
     /**
@@ -509,6 +505,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
         this.props.onCommandProperties(cid);
         this.props.onPropertyProperties(cid);
+
+        if (this.editor) {
+            this.editor.setFocus();
+        }
     }
 
     /**
