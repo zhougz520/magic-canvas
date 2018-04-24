@@ -66,7 +66,18 @@ const runDevServer = () => {
                 },
                 {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']},
                 {enforce: 'pre', test: /\.js$/, loader: 'source-map-loader'},
-                {test: /\.(png|gif)$/, loader: 'url-loader?limit=8192'}
+                {
+                    test: /\.(png|jpe?g|gif)(\?.*)?$/,
+                    use: [
+                        {
+                            loader: 'url-loader',
+                            options: {
+                                limit: 8192,
+                                name: '[name].[ext]'
+                            }
+                        }
+                    ]
+                }
             ]
         }
     };
