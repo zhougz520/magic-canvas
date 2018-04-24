@@ -50,6 +50,7 @@ export interface IComponent {
      * 定位鼠标点击的部位
      */
     getPointerAnchor: (currentX: number, currentY: number) => Anchor.IAnchor | null;
+    getBoundaryPoint: () => { pointX: number, pointY: number };
 
     /**
      * 获取组件标识cid

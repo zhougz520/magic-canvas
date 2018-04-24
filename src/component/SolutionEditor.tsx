@@ -14,7 +14,7 @@ export interface ISolutionProp {
 
 export interface ISolutionState {
     compos: ICompos;
-    canvasSzie: { width: number, height: number };
+    canvasSize: { width: number, height: number };
 }
 
 /* tslint:disable:no-console */
@@ -29,7 +29,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         super(props);
         this.state = {
             compos: config.componentPosition,
-            canvasSzie: config.canvasSize
+            canvasSize: config.canvasSize
         };
     }
 
@@ -163,8 +163,16 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         }
     }
 
+    /**
+     * 修改画布大小
+     */
+    updateCanvasSize = (width: number, height: number) => {
+        console.log('重绘了画布的大小');
+        this.setState({ canvasSize: { width, height } });
+    }
+
     render() {
-        const { compos, canvasSzie } = this.state;
+        const { compos, canvasSize } = this.state;
         const stateStyle = this.StageStyle();
         console.log('重绘了stage');
 
@@ -182,22 +190,26 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     <Draw
                         ref={(render) => this.draw = render}
                         getCanvas={this.getCanvas}
-                        canvasSize={canvasSzie}
+                        canvasSize={canvasSize}
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
                     />
                     <Canvas
                         ref={(render) => this.canvas = render}
                         getDraw={this.getDraw}
-                        canvasSize={canvasSzie}
+                        canvasSize={canvasSize}
                         componentPosition={compos}
                         getStageScroll={this.getStageScroll}
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
                         components={detail.content.components}
+<<<<<<< HEAD
                         onCommandProperties={this.onCommandProperties}
                         // tslint:disable-next-line:jsx-no-lambda
                         onPropertyProperties={this.onPropertyProperties}
+=======
+                        updateCanvasSize={this.updateCanvasSize}
+>>>>>>> 82f814d5d8f0a3015ed3791403fdb78004e03b81
                     />
                 </div>
             </div>
@@ -339,6 +351,70 @@ const detail = {
                                                 p: {
                                                     id: 'cs4.cs4.cs1',
                                                     txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                t: 'MapComponent/map/AppGridForm',
+                p: {
+                    id: 'cs6',
+                    txt_v: '编辑页面',
+                    w: 600,
+                    h: 400,
+                    l: 450,
+                    t: 350,
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/map/ProjectDDTree',
+                                p: {
+                                    id: 'cs6.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppView',
+                                p: {
+                                    id: 'cs6.cs2'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppFind',
+                                p: {
+                                    id: 'cs6.cs3'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppGridMenu',
+                                p: {
+                                    id: 'cs6.cs4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs6.cs4.cs1',
+                                                    map_mi_txt: '新增'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs6.cs4.cs2',
+                                                    map_mi_txt: '删除'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs6.cs4.cs3',
+                                                    map_mi_sa: true
                                                 }
                                             }
                                         ]

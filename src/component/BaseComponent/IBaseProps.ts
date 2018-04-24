@@ -7,7 +7,8 @@ import * as React from 'react';
 export interface IBaseProps {
     data: any;
     zIndex: number;
-    repaintSelected?: () => void;
+    repaintSelected: () => void;
+    repaintCanvas: (pointX: number, pointY: number) => void;
     selectionChanging?: (cid: string, e: any) => void;
 
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);

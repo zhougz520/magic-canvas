@@ -48,6 +48,8 @@ export interface ICanvasCommand {
     isDargging: () => boolean;
     darggingStart: () => void;
     getDragType: () => string;
+    outsideMouseDown: (e: any) => void;
+    outsizeMouseUp: (e: any) => void;
     canvasMouseDown: (e: any) => void;
     canvasMouseUp: (e: any) => void;
     componentMouseDown: (e: any) => void;

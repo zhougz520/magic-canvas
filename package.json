@@ -52,12 +52,15 @@
   },
   "dependencies": {
     "antd": "^3.3.3",
+    "drag-on-drop": "^3.2.2",
+    "handsontable-pro": "^2.0.0",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
-    "react-addons-create-fragment": "^15.6.2"
+    "react-addons-create-fragment": "^15.6.2",
+    "url-loader": "^1.0.1"
   },
   "devDependencies": {
     "@types/debug": "^0.0.30",
@@ -85,8 +88,10 @@
     "less": "2.7.3",
     "less-loader": "^4.0.5",
     "merge2": "^1.2.1",
+    "node-sass": "^4.8.3",
     "react-dom": "^16.2.0",
     "run-sequence": "^2.2.1",
+    "sass-loader": "^7.0.1",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.1",
     "ts-import-plugin": "^1.4.4",

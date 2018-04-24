@@ -26,9 +26,9 @@ const basePage: IBasePage[] = [
         expanded: false,
         components: [
             { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } },
-            { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 120, h: 30 } },
-            { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 30 } },
-            { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 30 } },
+            { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 120, h: 32 } },
+            { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 32 } },
+            { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 32 } },
             { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } },
             { t: 'UniversalComponents/Radio/Radio', p: { name: 'radio', w: 260, h: 40 } },
             { t: 'UniversalComponents/CheckBox/CheckGroup', p: { name: 'checkbox', w: 460, h: 40 } }
@@ -41,7 +41,8 @@ const basePage: IBasePage[] = [
         expanded: false,
         components: [
             // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
-            { t: 'MapComponent/demo/BtnChildDemo', p: { name: 'BtnChildDemo', w: 100, h: 100 } }
+            { t: 'MapComponent/demo/BtnChildDemo', p: { name: 'BtnChildDemo'} },
+            { t: 'MapComponent/map/AppGridMenuItem', p: { name: 'AppGridMenuItem'} }
         ]
     },
     {

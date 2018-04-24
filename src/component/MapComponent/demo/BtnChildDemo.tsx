@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+import { MaskLayer } from '../../BaseComponent/base';
 
 export interface IDemoProps {
-    fireSelect: (cid: string, e: any) => void;
+    // fireSelect: (cid: string, e: any) => void;
     data: {};
 }
 
@@ -27,10 +28,11 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
             <div
                 style={{ marginLeft: 30 }}
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.onFireSelect}
-                draggable
+                // onMouseDown={this.onFireSelect}
+                // draggable
                 onClick={this.onTextChange}
             >
+                {/* <MaskLayer key={0} /> */}
                 <button type="primary" style={{ width: '100%', height: '100%' }} >{txt_v}</button>
             </div>
         );
@@ -42,10 +44,10 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
         });
     }
 
-    private onFireSelect = (e: any) => {
-        const { id } = this.state;
-        const { fireSelect } = this.props;
+    // private onFireSelect = (e: any) => {
+    //     const { id } = this.state;
+    //     const { fireSelect } = this.props;
 
-        fireSelect(e, id);
-    }
+    //     fireSelect(e, id);
+    // }
 }

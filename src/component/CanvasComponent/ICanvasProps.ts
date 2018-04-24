@@ -15,4 +15,5 @@ export interface ICanvasProps {
     getStageBoundary: () => undefined | IBoundary;
     onCommandProperties: (currentCid: string) => ComponentProperty| undefined;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
+    updateCanvasSize: (width: number, height: number) => void;
 }
