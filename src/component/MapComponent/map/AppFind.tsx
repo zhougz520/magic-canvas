@@ -1,16 +1,24 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import { Icon, Checkbox, Select, Input, Button } from 'antd';
+import { Checkbox, Select, Input, Button } from 'antd';
 const Option = Select.Option;
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    value?: string;
+    map_af_o?: string[];
+    map_af_se?: boolean;
+    map_sm?: string;
+    p?: any;
+    id: string;
+    map_form_ss_unit?: number;
 }
 
 export class AppFind extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        showExtend: false
+        map_af_se: false,
+        map_af_o: [],
+        selectedId: undefined,
+        map_form_ss_unit: 2
     };
 
     public com: HTMLElement | null = null;
@@ -19,12 +27,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
         super(props, context);
 
         this.state = {
-            data: props.data
+            map_af_se: props.map_af_se
         };
     }
 
     public render() {
-        const { map_sm, map_af_o, showExtend, p } = this.state.data;
+        const { map_sm, map_af_o, p } = this.props;
+        const { map_af_se } = this.state;
 
         const options: any[] = [];
         if (map_af_o !== undefined) {
@@ -43,17 +52,14 @@ export class AppFind extends MapComponent<IMapProps, any> {
                     <div style={{ float: 'right' }}>
                         <div className="app-find-menu-item">
                             <Checkbox style={{ float: 'left' }} defaultChecked={false} />
-                            <p style={{ marginTop: '1px' }}>视图内查询</p>
+                            <p >视图内查询</p>
                         </div>
                         <div
                             onClick={this.onChangeLowMode}
                             className="app-find-menu-item"
                             style={{ marginLeft: '14px' }}
                         >
-                            <Icon
-                                type="search"
-                                style={{ float: 'left', marginTop: '2px' }}
-                            />
+                            <img className="lookup" />
                             <p >普通</p>
                         </div>
                         <div
@@ -61,10 +67,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             className="app-find-menu-item"
                             style={{ marginLeft: '22px', marginRight: '14px' }}
                         >
-                            <Icon
-                                type="search"
-                                style={{ float: 'left', marginTop: '2px' }}
-                            />
+                            <img className="lookup" />
                             <p>高级</p>
                         </div>
                     </div>
@@ -84,7 +87,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
                                     <Input style={{ width: '100%', height: '19px' }} />
                                 </td>
                                 <td className="app-find-text-td" style={{ width: '92px' }}>
-                                    <Button style={{ width: '70px', height: '22px', marginLeft: '12px' }} > 查找 </Button>
+                                    <Button style={{ width: '70px', height: '22px', marginLeft: '12px' }} >查找</Button>
                                 </td>
                             </tr>
                         </tbody>
@@ -102,31 +105,31 @@ export class AppFind extends MapComponent<IMapProps, any> {
                                     <b style={{ color: '#66666' }}>快速查询（高级）</b>
                                     <Select
                                         defaultValue="历史查询..."
-                                        style={{ width: '130px', height: '18px', marginLeft: '30px' }}
+                                        style={{ width: '130px', height: '18px', marginLeft: '30px', marginTop: '3px' }}
                                     >
                                         <Option value="" />
                                     </Select>
-                                    <img className="height-grade" src="" />
+                                    <img className="height-grade" />
                                 </div>
                                 <div style={{ float: 'right' }}>
                                     <div className="app-find-menu-item">
                                         <Checkbox style={{ float: 'left' }} defaultChecked={false} />
-                                        <p style={{ marginTop: '1px' }}>视图内查询</p>
-                                    </div>
-                                    <div
-                                        onClick={this.onChangeHightMode}
-                                        className="app-find-menu-item"
-                                        style={{ marginLeft: '14px' }}
-                                    >
-                                        <img className="lookup" src="" />
-                                        <p >普通</p>
+                                        <p>视图内查询</p>
                                     </div>
                                     <div
                                         onClick={this.onChangeLowMode}
                                         className="app-find-menu-item"
+                                        style={{ marginLeft: '14px' }}
+                                    >
+                                        <img className="lookup" />
+                                        <p >普通</p>
+                                    </div>
+                                    <div
+                                        onClick={this.onChangeHightMode}
+                                        className="app-find-menu-item"
                                         style={{ marginLeft: '22px', marginRight: '14px' }}
                                     >
-                                        <img className="lookup" src="" />
+                                        <img className="lookup" />
                                         <p>高级</p>
                                     </div>
                                 </div>
@@ -160,24 +163,25 @@ export class AppFind extends MapComponent<IMapProps, any> {
 
         return (
             <div>
-                {showExtend ? normalFind : extendFind}
+                {!map_af_se ? normalFind : extendFind}
             </div>);
     }
 
     public onChangeHightMode = () => {
         this.setState({
-            showExtend: true
+            map_af_se: true
         });
     }
 
     public onChangeLowMode = () => {
         this.setState({
-            showExtend: false
+            map_af_se: false
         });
     }
 
     private initHightMode = (data: any) => {
-        const { map_form_ss_unit } = this.state.data;
+        const { map_form_ss_unit } = this.props;
+        const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
         const components = data === undefined ? undefined : data.components;
         const rowList: any[] = [];
 
@@ -243,7 +247,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
                     rowList.push(<tr key={index} className="fieldList-tr">{fieldRow}</tr>);
                     // 重置行
                     fieldRow = [];
-                    rowNum = map_form_ss_unit;
+                    rowNum = currUnit;
                 } else if (rowNum < 0) {
                     fieldRow.push(
                         <td key={index} className="fieldList-td" colSpan={rowNum + p.map_form_f_cols}>{``}</td>
@@ -257,18 +261,18 @@ export class AppFind extends MapComponent<IMapProps, any> {
                         <td
                             key={index}
                             className="fieldList-td"
-                            style={{ width: `${p.map_form_f_cols * 100 / map_form_ss_unit}%` }}
+                            style={{ width: `${p.map_form_f_cols * 100 / currUnit}%` }}
                             colSpan={p.map_form_f_cols}
                         >
                             {field}
                         </td>);
-                    rowNum = map_form_ss_unit - p.map_form_f_cols;
+                    rowNum =  - p.map_form_f_cols;
                 } else {
                     fieldRow.push(
                         <td
                             key={index}
                             className="fieldList-td"
-                            style={{ width: `${p.map_form_f_cols * 100 / map_form_ss_unit}%` }}
+                            style={{ width: `${p.map_form_f_cols * 100 / currUnit}%` }}
                             colSpan={p.map_form_f_cols}
                         >
                             {field}

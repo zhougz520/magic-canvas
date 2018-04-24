@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import { Select } from 'antd';
-
-const Option = Select.Option;
+import { Dropdown, Menu, Icon } from 'antd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    value?: string;
+    map_mi_txt?: string;
+    map_mi_dd?: string[];
+    map_mi_si?: boolean;
+    map_mi_ico?: string;
+    map_mi_sa?: boolean;
 }
 
 export class AppGridMenuItem extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        // value: 'test'
+        map_mi_txt: '按钮',
+        map_mi_sa: false
     };
 
     public com: HTMLElement | null = null;
@@ -20,50 +23,43 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
         super(props, context);
 
         this.state = {
-            data: props.data
+            ...props
         };
     }
 
     public render() {
-        const { map_v_txt, map_v_o, map_v_w } = this.state.data;
-        let arrOption = [];
-        if (map_v_o instanceof Array) {
-            arrOption = map_v_o;
-        } else {
-            arrOption = map_v_o === undefined ? [''] : map_v_o.replace(/<br>/g, '\r\n').split(/\r?\n/);
-        }
-        const options: any[] = [];
-        if (arrOption !== undefined) {
-            arrOption.map((mi: string) => {
-                options.push(
-                    <Option value={mi} key={mi}>{mi}</Option>
+        const { map_mi_txt, map_mi_dd, map_mi_ico, map_mi_si, map_mi_sa } = this.state;
+
+        const dropDownMenu: any[] = [];
+        if (map_mi_dd !== undefined) {
+            let idx = 0;
+            map_mi_dd.map((mi: string) => {
+                dropDownMenu.push(
+                    mi === '-' ?
+                        <Menu.Divider key={idx} /> :
+                        <Menu.Item key={idx}>{mi}</Menu.Item>
                 );
+                idx++;
             });
         }
+        const menu = (
+            <Menu>
+                {dropDownMenu}
+            </Menu>
+        );
 
         return (
-            <table ref={(ref) => this.com = ref} style={{ width: '100%' }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: `${map_v_w}px`, fontFamily: '宋体' }}>
-                            <b style={{ marginLeft: '20px' }}>{map_v_txt}</b>
-                        </td>
-                        <td>
-                            <div className="first-page">
-                                <Select style={{ width: '100%' }}>
-                                    {options}
-                                </Select>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <Dropdown overlay={menu} trigger={['click']}>
+                <div ref={(ref) => this.com = ref} className="app-grid-menu-item">
+                    {map_mi_txt}
+                    {map_mi_si ? (<div className={`ico ${map_mi_ico}`} />) : ''}
+                    <Icon
+                        type="caret-down"
+                        className="dropDownArrow"
+                        style={{ display: map_mi_sa ? `block` : `none` }}
+                    />
+                </div>
+            </Dropdown>
         );
-    }
-
-    public onProjectValueChange = (value: string) => {
-        this.setState({
-            projectValue: value
-        });
     }
 }

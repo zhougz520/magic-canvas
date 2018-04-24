@@ -292,18 +292,60 @@ const detail = {
                     id: 'cs6',
                     txt_v: '编辑页面',
                     w: 600,
-                    h: 500,
-                    l: 350,
+                    h: 400,
+                    l: 450,
                     t: 350,
                     p: {
                         components: [
-                            // {
-                            //     t: 'MapComponent/demo/TableDemo',
-                            //     p: {
-                            //         id: 'cs5.cs1',
-                            //         txt_v: '我是内部组件按钮1'
-                            //     }
-                            // }
+                            {
+                                t: 'MapComponent/map/ProjectDDTree',
+                                p: {
+                                    id: 'cs6.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppView',
+                                p: {
+                                    id: 'cs6.cs2'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppFind',
+                                p: {
+                                    id: 'cs6.cs3'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppGridMenu',
+                                p: {
+                                    id: 'cs6.cs4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs6.cs4.cs1',
+                                                    map_mi_txt: '新增'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs6.cs4.cs2',
+                                                    map_mi_txt: '删除'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs6.cs4.cs3',
+                                                    map_mi_sa: true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
                         ]
                     }
                 }

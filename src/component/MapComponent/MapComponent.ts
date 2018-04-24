@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
+import util from '../util';
 
 /**
  * 基类
@@ -39,5 +40,17 @@ export class MapComponent<P extends IBaseProps, S>
 
             return `${pid === '' ? '' : `${pid}.`}${prefix}${ids[ids.length - 1] + 1}`;
         }
+    }
+
+    public getAddComponent() {
+        if (util.isEmptyString(localStorage.__dnd_type) || util.isEmptyString(localStorage.__dnd_value)) return;
+        if (localStorage.__dnd_type !== 'dragging_cs') return;
+
+        return JSON.parse(localStorage.__dnd_value);
+    }
+
+    public selectedCom = () => {
+        const { id, selectCom } = this.props;
+        selectCom(id);
     }
 }

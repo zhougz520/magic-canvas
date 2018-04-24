@@ -6,12 +6,15 @@ const Option = Select.Option;
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    value?: string;
+    map_v_txt?: string;
+    map_v_o?: any;
 }
 
 export class AppView extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        // value: 'test'
+        map_v_txt: '视图',
+        map_v_o: '',
+        selectedId: undefined
     };
 
     public com: HTMLElement | null = null;
@@ -20,12 +23,12 @@ export class AppView extends MapComponent<IMapProps, any> {
         super(props, context);
 
         this.state = {
-            data: props.data
+            ...props
         };
     }
 
     public render() {
-        const { map_v_txt, map_v_o, map_v_w } = this.state.data;
+        const { map_v_txt, map_v_o, selectedId, id } = this.props;
         let arrOption = [];
         if (map_v_o instanceof Array) {
             arrOption = map_v_o;
@@ -42,11 +45,16 @@ export class AppView extends MapComponent<IMapProps, any> {
         }
 
         return (
-            <table ref={(ref) => this.com = ref} style={{ width: '100%' }}>
+            <table
+                onClick={this.selectedCom}
+                className={`csr-pc-map-app-view ${selectedId === id ? 'selectecd' : ''}`}
+                ref={(ref) => this.com = ref}
+                style={{ width: '100%' }}
+            >
                 <tbody>
                     <tr>
-                        <td style={{ width: `${map_v_w}px`, fontFamily: '宋体' }}>
-                            <b style={{ marginLeft: '20px' }}>{map_v_txt}</b>
+                        <td style={{ width: '75px', fontFamily: '宋体' }}>
+                            <b style={{ color: '#66666' }}>{map_v_txt}</b>
                         </td>
                         <td>
                             <div className="first-page">
