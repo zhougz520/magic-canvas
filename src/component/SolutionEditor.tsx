@@ -203,13 +203,10 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
                         components={detail.content.components}
-<<<<<<< HEAD
                         onCommandProperties={this.onCommandProperties}
                         // tslint:disable-next-line:jsx-no-lambda
                         onPropertyProperties={this.onPropertyProperties}
-=======
                         updateCanvasSize={this.updateCanvasSize}
->>>>>>> 82f814d5d8f0a3015ed3791403fdb78004e03b81
                     />
                 </div>
             </div>

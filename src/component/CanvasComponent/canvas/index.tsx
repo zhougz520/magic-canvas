@@ -46,12 +46,13 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     /**
      * 根据组件cid找到组件对象
      */
-    findComponent = (cids: string[]): IComponent | null => {
+    findComponent = (cid: string): IComponent | null => {
+        const cids: string[] = cid.split('.');
         let currRefs: any = this.refs;
         let ref: any = null;
         let currCid: string = 'c';
-        cids.forEach((cid) => {
-            currCid += '.' + cid;
+        cids.forEach((currId) => {
+            currCid += '.' + currId;
             ref = currRefs[`${currCid}`] as any;
             currRefs = currRefs[`${currCid}`].refs as any;
         });
@@ -71,16 +72,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         // TODO: 焦点变换bug@周周
         this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
-        const cids: string[] = cid.split('.');
-        const com = this.getComponent(cids[0]);
-        let lastCom: IComponent | null = null;
-        if (cids.length > 1) {
-            lastCom = this.findComponent(cids);
-            console.log('event:');
-            console.log(e.target);
-            console.log('lastCom:');
-            console.log(lastCom);
-        }
+        const com = this.findComponent(cid);
+
         if (com) {
             // TODO: 正常在这里应该传递 lastCom
             // this.selectedComponent(cid, lastCom === null ? com : lastCom);
@@ -298,22 +291,22 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     // 给canvas编辑中的组件设置command命令
-    executorCommand(cId: string, cProperty: {pName: string, pValue: any, pType: string}) {
-        const currentSelectedComponent: IComponent | undefined  = this.command.getSelectedComponents().last();
+    executorCommand(cId: string, cProperty: { pName: string, pValue: any, pType: string }) {
+        const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
             // switch (commandName) {
             //     case commandsEnum.PLACEHOLDER:
-                    currentSelectedComponent.setComponentProperties(cId, cProperty);
-                // default: return false;
+            currentSelectedComponent.setComponentProperties(cId, cProperty);
+            // default: return false;
             // }
         }
 
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
-    executorProperties(cId: string, pProperty: {pName: string, pValue: any, pType: string}) {
+    executorProperties(cId: string, pProperty: { pName: string, pValue: any, pType: string }) {
         console.log(pProperty);
-        const currentSelectedComponent: IComponent | undefined  = this.command.getSelectedComponents().last();
+        const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
             currentSelectedComponent.setProperties(cId, pProperty);
         }
@@ -321,7 +314,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     // 获取canvas编辑中的组件的属性
     getSelectedProperties(currentCid: string | undefined)
-                : ComponentProperty|undefined {
+        : ComponentProperty | undefined {
         let currentSelectedComponent: IComponent | null;
         if (currentCid) {
             currentSelectedComponent = this.getComponent(currentCid);
