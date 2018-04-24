@@ -134,9 +134,9 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
                 tabIndex={-1}
                 onKeyDown={this.onKeyDown}
                 onKeyUp={this.onKeyUp}
-                onMouseDown={this.handleMouseStop}
-                onMouseUp={this.handleMouseStop}
-                onMouseOver={this.handleMouseStop}
+                // onMouseDown={this.handleMouseStop}
+                // onMouseUp={this.handleMouseStop}
+                // onMouseOver={this.handleMouseStop}
             />
         );
     }

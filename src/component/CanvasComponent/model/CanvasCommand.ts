@@ -96,7 +96,9 @@ const globalVar = {
         }
     },
     // stage的滚动定时器
-    scrollTimer: null as null | NodeJS.Timer
+    scrollTimer: null as null | NodeJS.Timer,
+    // 新拖入组件的cid
+    addComponentCid: null as string | null
 };
 
 // 键盘事件集合
@@ -512,6 +514,20 @@ export const CanvasCommand: ICanvasCommand = {
 
     getTECellEditorActivateKeyRange(): any {
         return globalVar.TECellEditorActivateKeyRange;
+    },
+    isSelectedComponent(): boolean {
+        const selectedComponents = this.getSelectedComponents();
+        if (selectedComponents.size > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+    getAddComponentCid(): string | null {
+        return globalVar.addComponentCid;
+    },
+    setAddComponentCid(cid: string | null): void {
+        globalVar.addComponentCid = cid;
     }
 
 };

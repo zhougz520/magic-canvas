@@ -382,7 +382,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid, e);
+            this.props.selectionChanging(cid);
         }
         e.preventDefault();
     }

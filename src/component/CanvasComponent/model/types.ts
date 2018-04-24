@@ -76,4 +76,7 @@ export interface ICanvasCommand {
     getIsRichEditMode: () => boolean;
     setIsRichEditMode: (mode: boolean) => void;
     getTECellEditorActivateKeyRange: () => any;
+    isSelectedComponent: () => boolean;
+    getAddComponentCid: () => string | null;
+    setAddComponentCid: (cid: string | null) => void;
 }
