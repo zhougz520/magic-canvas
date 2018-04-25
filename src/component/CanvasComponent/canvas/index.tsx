@@ -68,18 +68,19 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 组件选中，画布不要记录组件的位置与大小信息，否则同步信息很乱
      * @param cid 组件ID
      */
-    selectionChanging = (cid: string, e: any): void => {
+    selectionChanging = (cid: string, e: any, isCanCtrl: boolean = true): void => {
         // TODO: 焦点变换bug@周周
         this.getEditor().setFocus();
         const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const com = this.findComponent(cid);
 
         if (com) {
-            // TODO: 正常在这里应该传递 lastCom
             // this.selectedComponent(cid, lastCom === null ? com : lastCom);
             this.selectedComponent(cid, com);
         }
 
+        // 是否可操作
+        if (!isCanCtrl) return;
         // 记录当前选中组件
         const newCom: IComponent | null = com;
         if (newCom !== oldCom) {
@@ -431,6 +432,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     zIndex,
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
+                    clearSelected: this.clearSelected,
                     repaintSelected: this.repaintSelected,
                     repaintCanvas: this.repaintCanvas
                 })

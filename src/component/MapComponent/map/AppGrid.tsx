@@ -12,6 +12,8 @@ export interface IMapProps extends IBaseProps {
     map_g_data: any;   // grid数据
     map_g_modal: boolean;  // 是否开启grid数据编辑
     map_g_tree: boolean;    // 是否TreeGrid
+    w: number;   // 宽度 (用于列表横向滚动条)
+    h: number;   // 高度 (用于列表数据竖向滚动条)
 }
 
 export class AppGrid extends MapComponent<IMapProps, any> {
@@ -35,12 +37,16 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
 
     public render() {
-        const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.state;
+        // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
+        const { map_g_mc, map_g_tree } = this.props;
 
         return (
             <div ref={(ref) => this.com = ref} className="csr-pc-map-app-grid">
-                <div style={{ display: map_g_tree ? 'none' : '' }}>
+                <div className={`grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
                     {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
+                </div>
+                <div className={`grid-title-content`} style={{ display: map_g_tree ? 'none' : '' }}>
+                    {}
                 </div>
             </div>
         );

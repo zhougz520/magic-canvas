@@ -63,15 +63,19 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
 
         return (
             <div
-                ref={(ref) => this.com = ref}
                 className="ps-map"
                 style={currStyle}
+                ref={(ref) => this.com = ref}
             >
-                <div className="title">
-                    {title}
-                </div>
-                <table className="grid-form" >
+                <table
+                    className="grid-form"
+                >
                     <tbody>
+                        <tr className="title" onMouseDown={this.fireSelectChange} >
+                            <td>
+                                {title === undefined ? '标题' : title}
+                            </td>
+                        </tr>
                         <tr style={{ display: !showProj && !showView ? 'none' : '', height: 30 }} >
                             <td>
                                 <table className="proj-view" >
@@ -155,13 +159,17 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                         />
                     );
                     break;
+                case 'MapComponent/map/AppGrid':
+                    this.menu = (
+                        <AppGrid
+                            selectedId={selectCom}
+                            selectCom={this.selectComChange}
+                            {...com.p}
+                            updateProps={this.props.data.updateProps}
+                        />
+                    );
+                    break;
             }
-        });
-    }
-
-    public selectComChange = (id: string) => {
-        this.setState({
-            selectCom: id
         });
     }
 }

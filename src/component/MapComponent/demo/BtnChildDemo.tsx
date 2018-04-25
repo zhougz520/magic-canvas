@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { MaskLayer } from '../../BaseComponent/base';
 
 export interface IDemoProps {
     // fireSelect: (cid: string, e: any) => void;

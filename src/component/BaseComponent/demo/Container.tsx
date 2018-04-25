@@ -21,6 +21,9 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
                 children.push(
                     <BtnDemo
                         key={`c.${com.p.id}`}
+                        {...com.p}
+                        selectCom={this.selectComChange}
+                        selectedId={com.p.id}
                         data={com.p}
                         // tslint:disable-next-line:jsx-no-string-ref
                         ref={`c.${com.p.id}`}
@@ -45,10 +48,10 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={currStyle}
-                // onMouseDown={this.fireSelectChange}
+            // onMouseDown={this.fireSelectChange}
             >
                 <div
-                    style={{ backgroundColor: '#F0F0FF'}}
+                    style={{ backgroundColor: '#F0F0FF' }}
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>

@@ -250,21 +250,43 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     public getProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+        return {
+            componentCid: '',
+            componentProperties: [
+                { pName: 'defaultname', pValue: 'defaultvalue', pType: 'text' }
+            ]
+        };
     }
 
     public getComponentProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+        return {
+            componentCid: '',
+            componentProperties: [
+                { pName: 'defaultname', pValue: 'defaultvalue', pType: 'text' }
+            ]
+        };
     }
 
-    public setProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setProperties = (cid: string, pProperty: { pName: string, pValue: any, pType: string }) => {
         // const num: number = 1 + 1;
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setComponentProperties = (cid: string, pProperty: { pName: string, pValue: any, pType: string }) => {
         // const num: number = 1 + 1;
     }
 
+    /**
+     * map控件选中
+     * @param id 组件id
+     */
+    public selectComChange = (id: string, cancelBsSelect: boolean = true) => {
+        this.setState({
+            selectCom: id
+        });
+        if (cancelBsSelect && this.props.selectionChanging) {
+            this.props.clearSelected();
+        }
+    }
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State
@@ -382,8 +404,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid, e);
+            this.props.selectionChanging(cid, e, false);
         }
+        // 取消子控件选中
+        this.selectComChange('', false);
         e.preventDefault();
     }
 
