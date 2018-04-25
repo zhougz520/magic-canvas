@@ -1,15 +1,13 @@
 import * as React from 'react';
 
-import { IEditProps } from './IEditProps';
-import { IEditState } from './IEditState';
-import { IEditStyle, EditStyle } from './EditStyle';
+import { IEditProps, IEditState, IEditStyle } from './types';
+import { EditStyle } from './EditStyle';
 
 /**
- * EditComponent：画布上的编辑框，所有组件的文本编辑都调用此编辑框来进行
- * 整个画布的焦点一直在EditComponent，避免中文输入的bug
+ * RichEdit：画布上的编辑框，所有组件的文本编辑都调用此编辑框来进行
  */
 /* tslint:disable:jsx-no-string-ref */
-export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
+export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     public editor: HTMLElement | null = null;
 
     constructor(props: IEditProps, context?: any) {
@@ -117,7 +115,6 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
 
         return (
             <div
-                id="_editComponent"
                 ref={(handler) => this.editor = handler}
                 contentEditable
                 suppressContentEditableWarning
@@ -125,9 +122,6 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
                 tabIndex={-1}
                 onKeyDown={this.onKeyDown}
                 onKeyUp={this.onKeyUp}
-                // onMouseDown={this.handleMouseStop}
-                // onMouseUp={this.handleMouseStop}
-                // onMouseOver={this.handleMouseStop}
             />
         );
     }

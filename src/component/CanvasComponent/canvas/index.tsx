@@ -9,7 +9,7 @@ import { DragType, IOffset, IPointpos, IPagePos } from '../model/types';
 import util from '../../util';
 import { config, ComponentProperty } from '../../config';
 import { keyFun } from '../model/CanvasCommand';
-import { EditComponent } from '../../EditComponent';
+import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
 
 /* tslint:disable:no-console */
@@ -17,7 +17,7 @@ import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
 export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
     container: HTMLDivElement | null = null;
     canvas: HTMLDivElement | null = null;
-    editor: EditComponent | null = null;
+    editor: RichEdit | null = null;
     command: ICanvasCommand = CanvasCommand;
 
     /**
@@ -60,8 +60,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         return (ref as IComponent) || null;
     }
 
-    getEditor = (): EditComponent => {
-        return (this.editor as EditComponent);
+    getEditor = (): RichEdit => {
+        return (this.editor as RichEdit);
     }
 
     /**
@@ -354,7 +354,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 onKeyDown={this.handleKeyDown}
                 onKeyUp={this.handleKeyUp}
             >
-                <EditComponent
+                <RichEdit
                     ref={(handler) => this.editor = handler}
                     componentPosition
                 />
