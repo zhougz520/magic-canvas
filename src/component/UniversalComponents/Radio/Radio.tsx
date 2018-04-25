@@ -24,7 +24,7 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new RadioState())
-        } as Readonly<IBaseState>;
+        };
     }
 
     render() {

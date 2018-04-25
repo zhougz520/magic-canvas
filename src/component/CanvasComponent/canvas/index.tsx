@@ -22,15 +22,15 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
-     * @param props any
+     * @param props ICanvasProps
      */
-    constructor(props: any) {
+    constructor(props: ICanvasProps) {
         super(props);
         this.state = {
             anchor: null,
             componentIndex: this.props.components.length,
             componentList: Set.of(...this.props.components)
-        } as Readonly<ICanvasState>;
+        };
         this.command = CanvasCommand;
     }
 
@@ -71,20 +71,9 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     selectionChanging = (cid: string, e: any, isCanCtrl: boolean = true): void => {
         // TODO: 焦点变换bug@周周
         this.getEditor().setFocus();
-        const oldCom: IComponent | null = this.command.getSelectedComponents().last();
         const com = this.findComponent(cid);
-
         if (com) {
-            // this.selectedComponent(cid, lastCom === null ? com : lastCom);
             this.selectedComponent(cid, com);
-        }
-
-        // 是否可操作
-        if (!isCanCtrl) return;
-        // 记录当前选中组件
-        const newCom: IComponent | null = com;
-        if (newCom !== oldCom) {
-            this.command.setIsEditMode(false);
         }
     }
 
@@ -101,10 +90,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleMouseDown = (e: any) => {
-        // TODO: 焦点变换bug@周周
-        this.endEdit();
-        this.command.setIsEditMode(false);
-
         // 鼠标按下时，计算鼠标位置
         this.recordPointStart(e);
 
@@ -112,15 +97,22 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const anchor = this.command.getCurrentAnchor();
         if (anchor) {
             // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
-            e.stopPropagation();
             e.preventDefault();
             this.command.anchorMouseDown(e, anchor);
         } else {
             switch (this.onMouseEventType(e)) {
-                // 组件中的点击
-                case 'component': return this.command.componentMouseDown(e);
-                // 画布上的点击
+                case 'component': {
+                    // 组件中的点击
+                    return this.command.componentMouseDown(e);
+                }
                 case 'canvas': {
+                    // 画布上的点击
+                    // 结束编辑模式
+                    if (this.command.getIsRichEditMode() === true) {
+                        this.endEdit();
+                        this.command.setIsRichEditMode(false);
+                    }
+
                     // 非多选模式下，清楚所有组件选中状态
                     if (!this.command.isMultiselect()) {
                         this.clearSelected();
@@ -128,12 +120,13 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
                     return this.command.canvasMouseDown(e);
                 }
-                // 外框上
-                case 'outside': {
-                    this.clearSelected();
+                // case 'outside': {
+                //     console.log('outside-MouseDown');
+                //     // 外框上
+                //     this.clearSelected();
 
-                    return this.command.outsideMouseDown(e);
-                }
+                //     return this.command.outsideMouseDown(e);
+                // }
             }
         }
     }
@@ -173,26 +166,35 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.command.canvasMouseUp(e);
     }
 
-    handleKeyDownCommand = (e: any): boolean => {
+    handleMouseEnter = (e: any) => {
+        // 鼠标进入画布的时候判断：
+        // 当前有没有选中组件，如果有选中组件就把焦点设置到editor
+        if (this.command.isSelectedComponent() === true && this.editor) {
+            this.editor.setFocus();
+        }
+    }
+
+    handleKeyDown = (e: any) => {
         const args = keyArgs(e);
         const { key, ctrl, alt, keyCode } = args as IKeyArgs;
 
-        // 如果是编辑模式直接跳过画布上的事件
-        if (this.command.getIsEditMode() === true) {
-            return false;
-        }
-
         if (key === 'delete') {
-            this.deleteCanvasComponent(this.command.getSelectedCids());
-            this.clearSelected();
-            this.clearDragBox(e);
+            if (this.command.getIsRichEditMode() === false) {
+                this.deleteCanvasComponent(this.command.getSelectedCids());
+                this.clearSelected();
+                this.clearDragBox(e);
+            }
         }
 
-        if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
-            || key === 'esc' || key === 'backspace') {
-            keyFun[key].press();
+        if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
+            if (this.command.getIsRichEditMode() === false) {
+                keyFun[key].press();
+            }
+            e.preventDefault();
         } else if (ctrl) {
-            keyFun.ctrl.press();
+            if (this.command.getIsRichEditMode() === false) {
+                keyFun.ctrl.press();
+            }
         }
 
         // 如果是输入操作，进入输入状态
@@ -201,32 +203,31 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             for (let i = 0; i < TECellEditorActivateKeyRange.length; i++) {
                 const { min, max } = TECellEditorActivateKeyRange[i];
                 if (keyCode >= min && keyCode <= max) {
-                    return !this.beginEdit();
+                    if (this.command.getIsRichEditMode() === false && this.command.isSelectedComponent() === true) {
+                        // 非编辑模式且有选中组件，进入编辑状态
+                        this.command.setIsRichEditMode(true);
+                        this.beginEdit();
+                    }
                 }
             }
         }
-
-        return true;
     }
 
-    handleKeyUpCommand = (e: any): boolean => {
+    handleKeyUp = (e: any) => {
         const args = keyArgs(e);
         const { key, ctrl } = args as IKeyArgs;
 
-        if (key === 'up' || key === 'down' || key === 'right' || key === 'left'
-            || key === 'esc' || key === 'backspace') {
-            e.stopPropagation();
+        if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
             e.preventDefault();
             keyFun[key].release();
         } else if (!ctrl && this.command.isMultiselect()) {
             keyFun.ctrl.release();
         }
-
-        return true;
     }
 
     // 编辑框开始编辑
-    beginEdit = (): boolean => {
+    beginEdit = () => {
+        // 获取最后选中的组件
         const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
 
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
@@ -236,7 +237,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             const position: IPosition = currentSelectedComponent.getPosition();
             const bodyOffset: any = this.getPositionRelativeDocument(position.left, position.top);
 
-            this.command.setIsEditMode(true);
             this.getEditor().setValue('');
             this.getEditor().setEditComState(
                 size.width,
@@ -244,25 +244,17 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 bodyOffset.pageX + size.width / 2,
                 style
             );
-
-            return true;
         }
-
-        return false;
     }
 
     // 编辑框结束编辑
     endEdit = () => {
         const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
-        const currentIsEditMode: boolean = this.command.getIsEditMode();
 
-        if (currentIsEditMode === true && currentSelectedComponent !== null) {
+        if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
             const value: string = this.getEditor().getValue();
             this.getEditor().hiddenEditCom();
             currentSelectedComponent.setRichChildNode(value);
-
-            this.command.setIsEditMode(false);
-            // this.command.setSelectedComponent(null);
         }
     }
 
@@ -273,21 +265,25 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const data = JSON.parse(localStorage.__dnd_value);
         const position = this.getPositionRelativeCanvas(e.pageX, e.pageY);
         this.addCancasComponent(data, position);
-        this.getEditor().setFocus();
+    }
+
+    handleDragOver = (e: any) => {
+        e.preventDefault();
     }
 
     componentDidMount() {
         document.addEventListener('mousemove', this.handleMouseMove);
-        document.addEventListener('mousedown', this.handleMouseDown);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mouseleave', this.handleMouseLeave);
-        if (this.container && this.canvas) {
-            // 在ondragover中一定要执行preventDefault()，否则ondrop事件不会被触发
-            this.canvas.addEventListener('dragover', (evt: any) => evt.preventDefault());
-            this.canvas.addEventListener('drop', this.handleDrop);
-            // 异常鼠标不在画布内释放了
-            // this.container.addEventListener('mouseleave', this.handleMouseLeave);
-            this.container.addEventListener('focus', () => { this.getEditor().setFocus(); });
+    }
+
+    componentDidUpdate() {
+        // 如果有新拖入的组件，选中新组件
+        const newComponentCid: string | null = this.command.getAddComponentCid();
+        if (newComponentCid !== null) {
+            this.selectionChanging(newComponentCid, null);
+            // 清除新添加组件记录
+            this.command.setAddComponentCid(null);
         }
     }
 
@@ -306,7 +302,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     // 给canvas编辑中的组件设置propertyTool中的属性
     executorProperties(cId: string, pProperty: { pName: string, pValue: any, pType: string }) {
-        console.log(pProperty);
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
             currentSelectedComponent.setProperties(cId, pProperty);
@@ -323,14 +318,11 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             currentSelectedComponent = this.command.getSelectedComponents().last();
         }
         if (currentSelectedComponent) {
-            console.log(currentSelectedComponent.getProperties());
-
             return currentSelectedComponent.getComponentProperties();
         } else return undefined;
     }
 
     render() {
-        console.log('重绘了canvas');
         const { componentPosition, canvasSize } = this.props;
         const canvasOffset = componentPosition.canvasOffset;
         const children = this.getChildrenComponent(this.state.componentList);
@@ -340,20 +332,23 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             <div
                 ref={(handler) => this.container = handler}
                 className="container"
-                tabIndex={1}
                 style={{ ...ContainerStyle(canvasSize), cursor }}
+                onMouseDown={this.handleMouseDown}
+                onMouseEnter={this.handleMouseEnter}
+                onKeyDown={this.handleKeyDown}
+                onKeyUp={this.handleKeyUp}
             >
                 <EditComponent
                     ref={(handler) => this.editor = handler}
                     componentPosition
-                    handleKeyDownCommand={this.handleKeyDownCommand}
-                    handleKeyUpCommand={this.handleKeyUpCommand}
                 />
                 <div
                     // tslint:disable-next-line:jsx-no-lambda
                     ref={(handler) => this.canvas = handler}
                     style={CanvasStyle(canvasOffset)}
                     className="canvas"
+                    onDrop={this.handleDrop}
+                    onDragOver={this.handleDragOver}
                 >
                     {children}
                 </div>
@@ -401,8 +396,9 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 t: position.y - data.offset.y
             }
         });
-        console.log('refs');
-        console.log(this.refs);
+
+        // 记录新添加的组件cid
+        this.command.setAddComponentCid('cs' + componentIndex);
         this.setState({ componentList, componentIndex });
     }
 
@@ -504,6 +500,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
         this.props.onCommandProperties(cid);
         this.props.onPropertyProperties(cid);
+
+        if (this.editor) {
+            this.editor.setFocus();
+        }
     }
 
     /**
@@ -520,7 +520,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 重新绘制组件选中框
      */
     repaintSelected = () => {
-        console.log('重新绘制组件选中框' + this.command.getDragType());
         this.drawSelected(this.command.getSelectedCids());
     }
 

@@ -17,7 +17,7 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
         super(props, context);
         this.state = {
             ...this.props.data
-        } as Readonly<any>;
+        };
     }
 
     public render() {
