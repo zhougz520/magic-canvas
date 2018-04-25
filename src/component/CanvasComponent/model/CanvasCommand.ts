@@ -337,7 +337,7 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 新增选中组件
-    addSelectedComponent(cid: string, com: IComponent, multiselect?: boolean) {
+    addSelectedComponent(cid: string, com: IComponent, multiselect: boolean) {
         let components = globalVar.selectedComponents;
         if (!this.isMultiselect() && !components.has(cid) && !multiselect) {
             components = components.clear();

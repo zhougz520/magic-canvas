@@ -104,15 +104,15 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         } as IBoundary;
     }
     // 获取command点击后的命令，并传给canvas
-    onFireCommand = (cId: string, cProperty: {pKey: string, pValue: any}) => {
+    onFireCommand = (cid: string, cProperty: {pKey: string, pValue: any}) => {
         // console.log('找当前编辑中的组件，并传递command的命令');
         // console.log('command:' + cProperty.pName + cProperty.pValue);
 
         if (this.canvas) {
             // 获取当前编辑中的组件
-            const commandProperties = this.canvas.getSelectedProperties(cId);
+            const commandProperties = this.canvas.getSelectedProperties(cid);
             if (commandProperties) {
-                this.canvas.executorCommand(cId, cProperty);
+                this.canvas.executorCommand(cid, cProperty);
             }
         }
     }

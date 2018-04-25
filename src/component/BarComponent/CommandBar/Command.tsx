@@ -37,8 +37,13 @@ export class Command extends React.PureComponent<ICommandProps, ICommandState> i
 
     render() {
         const { titleBarCollapsed } = this.props;
-        // tslint:disable-next-line:no-console
-        console.log(this.state.selectedComs);
+        const { selectedComs } = this.state;
+        const comList: any = [];
+        selectedComs.map(
+            (com, key) => {
+                comList.push(key);
+            }
+        );
 
         return (
             <div className={`command-bar ${titleBarCollapsed ? 'title-bar-collapsed' : ''}`}>
@@ -48,7 +53,7 @@ export class Command extends React.PureComponent<ICommandProps, ICommandState> i
                     <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked onChange={this.onChange} />
                 </div>
                 <div>
-                    当前选中组件：
+                    当前选中组件：{comList.join('|')}
                 </div>
             </div>
         );

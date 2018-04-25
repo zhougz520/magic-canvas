@@ -11,6 +11,7 @@ import { config, ComponentProperty } from '../../config';
 import { keyFun } from '../model/CanvasCommand';
 import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
+import { Map } from 'immutable';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -69,7 +70,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * @param cid 组件ID
      */
     selectionChanging = (cid: string, isCanCtrl: boolean = true): void => {
-        // 如果是编辑模式，结束最后一个组件的编辑状态。
+        // 选中组件就把焦点给到编辑框，随时准备输入
+        if (this.editor) {
+            this.editor.setFocus();
+        }
+
+        // 如果是编辑模式：切换选中或者点击当前组件，结束编辑状态。
         if (this.command.getIsRichEditMode() === true) {
             this.endEdit();
             this.command.setIsRichEditMode(false);
@@ -114,7 +120,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 }
                 case 'canvas': {
                     // 画布上的点击
-                    // 结束编辑模式
+                    // 如果是编辑模式：结束编辑模式
                     if (this.command.getIsRichEditMode() === true) {
                         this.endEdit();
                         this.command.setIsRichEditMode(false);
@@ -173,8 +179,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.command.canvasMouseUp(e);
     }
 
-    handleMouseEnter = (e: any) => {
-        // 鼠标进入画布的时候判断：
+    handleMouseMoveOnContainer = (e: any) => {
+        // 鼠标在画布上移动的时候判断：
         // 当前有没有选中组件，如果有选中组件就把焦点设置到editor
         if (this.command.isSelectedComponent() === true && this.editor) {
             this.editor.setFocus();
@@ -185,6 +191,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const args = keyArgs(e);
         const { key, ctrl, alt, keyCode } = args as IKeyArgs;
 
+        // 非编辑模式：执行组件删除、组件移动等操作
         if (this.command.getIsRichEditMode() === false) {
             if (key === 'delete') {
                 this.deleteCanvasComponent(this.command.getSelectedCids());
@@ -206,8 +213,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             for (let i = 0; i < TECellEditorActivateKeyRange.length; i++) {
                 const { min, max } = TECellEditorActivateKeyRange[i];
                 if (keyCode >= min && keyCode <= max) {
+                    // 非编辑模式且有选中组件，进入编辑状态
                     if (this.command.getIsRichEditMode() === false && this.command.isSelectedComponent() === true) {
-                        // 非编辑模式且有选中组件，进入编辑状态
                         this.command.setIsRichEditMode(true);
                         this.beginEdit();
                     }
@@ -217,6 +224,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleKeyUp = (e: any) => {
+        console.log('handleKeyUp');
         const args = keyArgs(e);
         const { key, ctrl } = args as IKeyArgs;
 
@@ -293,7 +301,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         document.addEventListener('mouseleave', this.handleMouseLeave);
         if (this.container) {
             this.container.addEventListener('mousedown', this.handleMouseDown);
-            this.container.addEventListener('mouseenter', this.handleMouseEnter);
+            this.container.addEventListener('mousemove', this.handleMouseMoveOnContainer);
             this.container.addEventListener('keydown', this.handleKeyDown);
             this.container.addEventListener('keyup', this.handleKeyUp);
         }
@@ -525,17 +533,11 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         }
         this.props.onPropertyProperties(cid);
 
-        // TODO 多选状态判断
-        if (multiselect === undefined) {
-            // 1
+        // 单选的时候一个个传递
+        if (multiselect === false) {
+            // 向CommandBar传递当前选中的组件集合
+            this.props.onCommandProperties(this.command.getSelectedComponents());
         }
-        // 向CommandBar传递当前选中的组件集合
-        this.props.onCommandProperties(this.command.getSelectedComponents() as any);
-
-        if (this.editor) {
-            this.editor.setFocus();
-        }
-
     }
 
     /**
@@ -572,7 +574,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             this.command.clearSelectedComponent();
             this.hideSelected();
             // 向CommandBar传递当前选中的组件集合
-            this.props.onCommandProperties(this.command.getSelectedComponents() as any);
+            this.props.onCommandProperties(Map());
         }
     }
 
@@ -620,6 +622,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     }
                 }
             });
+
+            // 框选的时候：有选中组件才做提交
+            const selectedComponents = this.command.getSelectedComponents();
+            if (selectedComponents.size > 0) {
+                this.props.onCommandProperties(selectedComponents);
+            }
 
             // 通知绘画层清理选择框
             const draw = this.props.getDraw();

@@ -10,9 +10,8 @@ import { Map } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
-    onFireCommand: (cId: string, cProperty: {pKey: string, pValue: any}) => void;
+    onFireCommand: (cid: string, cProperty: {pKey: string, pValue: any}) => void;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
-
     onFireProperties: (cId: string, pProperties: {pKey: string, pValue: any}) => void;
 }
 
@@ -100,7 +99,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
 
     }
 
-    setCommandState = (selectedComs: Map<string, any>) => {
+    setCommandState = (selectedComs: Map<string, any>): void => {
         if (this.commandTool) {
             this.commandTool.setCommandState(selectedComs);
         }
