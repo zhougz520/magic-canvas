@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { Button, Input, Switch} from 'antd';
+
+import { Button, Input, Switch, Icon} from 'antd';
 import { PropertiesEnum, ComponentProperty } from '../config';
-import { List } from 'immutable';
+import { List, fromJS } from 'immutable';
 
 import './sass/bar.scss';
 
@@ -15,18 +16,18 @@ export interface IPropertyProps {
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
     // onPropertyProperties: ComponentProperty| undefined;
 
-    onFireProperties: (cId: string, pProperties: {pName: string, pValue: any, pType: string}) => void;
+    onFireProperties: (cid: string, pProperties: {pKey: string, pValue: any}) => void;
 }
 
 export interface IPropertyState {
     showProps: boolean;
-    propsContent: List<{pName: string, pValue: any, pType: string}>;
+    propsContent: List<Map<any, any>>;
     onSelectedCid: string;
 
 }
 
 export interface IPropertyComponent {
-    setPropertyState: (cId: string, stateInput: Array<{pName: string, pValue: any, pType: string}>) => void;
+    setPropertyState: (properties: ComponentProperty) => void;
 }
 
 /* tslint:disable:no-console */
@@ -37,28 +38,27 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         super(props);
         this.state = {
             showProps: true,
-            propsContent: List<{pName: string, pValue: any, pType: string}>(),
+            propsContent: List(),
             onSelectedCid: ''
         };
     }
 
-    setPropertyState = (cId: string, stateInput: Array<{pName: string, pValue: any, pType: string}>) => {
-        const propertyList =  List<{pName: string, pValue: any, pType: string}>();
-        propertyList.merge(stateInput);
+    setPropertyState = (properties: ComponentProperty) => {
+        // const propertyList =  List<{pName: string, pValue: any, pType: string}>();
+        const propertyList = fromJS(properties.componentProperties);
+        // propertyList.merge(stateInput);
         this.setState(
             {
                 propsContent: propertyList,
-                onSelectedCid: cId
+                onSelectedCid: properties.componentCid
             });
     }
 
     onSwitchChange = (checked: boolean) => {
-        const pPropertyName: string = EventTarget.arguments;
-        console.log(EventTarget);
+        // const pPropertyName: string = EventTarget.arguments;
+        // console.log(EventTarget);
         console.log(this.props.onPropertyProperties);
-
-        this.props.onFireProperties(this.state.onSelectedCid,
-            {pName: pPropertyName, pValue: checked, pType: PropertiesEnum.SWITCH});
+        this.props.onFireProperties(this.state.onSelectedCid, {pKey: '', pValue: checked});
     }
 
         showProps = () => {
@@ -77,8 +77,10 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
     }
 
     onBlur = (e: any) => {
-        this.props.onFireProperties(this.state.onSelectedCid,
-            {pName: e.target.name, pValue: e.target.value, pType: e.target.type});
+        this.props.onFireProperties(
+            this.state.onSelectedCid,
+            {pKey: e.target.name, pValue: e.target.value}
+        );
     }
 
     addInputElem = (e: any) => {
@@ -92,9 +94,9 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
 
         const { collapsed, titleBarCollapsed } = this.props;
         const { showProps } = this.state;
-        const inputList = (inputProperty: Array<{pName: string, pValue: any, pType: string}>): any => {
-            const res = [];
-            if (inputProperty.length === 0) {
+        const inputList = (inputProperty: List<{pTitle: string, pKey: string, pValue: any, pType: string}>): any => {
+            const res: any = [];
+            if (inputProperty.size === 0) {
                 res.push(
                     <Input
                         type="text"
@@ -102,47 +104,51 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                     />
                 );
             } else {
-                for (let i = 0; i < inputProperty.length; i++) {
-                    res.push(
-                        <Input
-                            type="text"
-                            key={i}
-                            value={inputProperty[i].pValue}
-                            name={inputProperty[i].pName}
-                        />
-                    );
-                }
+                inputProperty.map((property) => {
+                    if (property) {
+                        res.push(
+                            <Input
+                                type="text"
+                                key={property.pKey}
+                                value={property.pValue}
+                                name={property.pKey}
+                            />
+                        );
+                    }
+                });
             }
 
             return res;
         };
-        const propertyElem = (propertiesItem: {pName: string, pValue: any, pType: string}) => {
-            switch (propertiesItem.pType) {
+
+        const propertyElem = (propertiesItem: Map<any, any>) => {
+            switch (propertiesItem.get('pValue')) {
                 case PropertiesEnum.SWITCH: return (
 
                     <Switch
-                        defaultChecked={propertiesItem.pValue}
-                        key={propertiesItem.pName}
+                        defaultChecked={propertiesItem.get('pValue')}
+                        key={propertiesItem.get('pKey')}
                         onChange={this.onSwitchChange}
                     />
                 );
                 case PropertiesEnum.INPUT_TEXT: return (
                     <TextArea
                         rows={4}
-                        defaultValue={propertiesItem.pValue}
+                        defaultValue={propertiesItem.get('pValue')}
                         autosize={false}
                         value={''}
                         // onPressEnter={}
+                        key={propertiesItem.get('pKey')}
                     />
                 );
                 case PropertiesEnum.INPUT_LIST: return (
                     <div>
-                        <Button
-                            onClick={this.addInputElem}
-                        >添加
-                        </Button>
+                        <label>{propertiesItem.get('pTitle')}</label>
+                        <Icon
+                            type="plus"
+                        />
                         <div >
-                            {inputList(propertiesItem.pValue)}
+                            {inputList(propertiesItem.get('pValue'))}
                         </div>
                     </div>
                 );
@@ -151,16 +157,19 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                         type="number"
                         onBlur={this.onBlur}
                         onPressEnter={this.onBlur}
-                        defaultValue={propertiesItem.pValue}
-                        name={propertiesItem.pName}
+                        defaultValue={propertiesItem.get('pValue')}
+                        name={propertiesItem.get('pKey')}
+                        key={propertiesItem.get('pKey')}
+
                     />
                 );
                 default: return (
                 <Input
                     onBlur={this.onBlur}
                     onPressEnter={this.onBlur}
-                    defaultValue={propertiesItem.pValue}
-                    name={propertiesItem.pName}
+                    defaultValue={propertiesItem.get('pValue')}
+                    name={propertiesItem.get('pKey')}
+                    key={propertiesItem.get('pKey')}
                     // value={propertiesItem.pValue}
                 />);
             }
@@ -172,8 +181,8 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
             propertiesContent.map((content) => {
                 if (content) {
                     res.push(
-                        <div key={content.pName}>
-                            <span>{content.pName}</span>
+                        <div key={content.get('pKey')}>
+                            <span>{content.get('pTitle')}</span>
                             {propertyElem(content)}
                         </div>
                     );

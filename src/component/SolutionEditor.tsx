@@ -104,7 +104,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         } as IBoundary;
     }
     // 获取command点击后的命令，并传给canvas
-    onFireCommand = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
+    onFireCommand = (cId: string, cProperty: {pKey: string, pValue: any}) => {
         // console.log('找当前编辑中的组件，并传递command的命令');
         // console.log('command:' + cProperty.pName + cProperty.pValue);
 
@@ -133,7 +133,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                 compProperty.componentProperties = pToolProperties.componentProperties;
                 // console.log('这是solutioneditor中给propertyTool的获取组件属性');
                 if (this.barList) {
-                    this.barList.setPropertyState(currentCid, pToolProperties.componentProperties);
+                    this.barList.setPropertyState(compProperty);
                 }
 
                 return compProperty;
@@ -142,7 +142,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     // 将propertyTool的属性传给canvas 设置对应的选中控件
-    onFireProperties = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
+    onFireProperties = (cId: string, cProperty: {pKey: string, pValue: any}) => {
         if (this.canvas) {
             const commandProperties = this.canvas.getSelectedProperties(cId);
             if (commandProperties) {
@@ -236,6 +236,178 @@ const detail = {
                     h: 200,
                     l: 150,
                     t: 150
+                }
+            },
+            {
+                t: 'BaseComponent/demo/Container',
+                p: {
+                    id: 'cs4',
+                    txt_v: '我是测试组件4',
+                    w: 200,
+                    h: 400,
+                    l: 250,
+                    t: 250,
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/demo/BtnDemo',
+                                p: {
+                                    id: 'cs4.cs1',
+                                    txt_v: '我是内部组件按钮1',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs1.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs1.cs2',
+                                                    txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/demo/BtnDemo',
+                                p: {
+                                    id: 'cs4.cs2',
+                                    txt_v: '我是内部组件-按钮2',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs2.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs2.cs2',
+                                                    txt_v: '按钮2'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs2.cs3',
+                                                    txt_v: '按钮3'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/demo/BtnDemo',
+                                p: {
+                                    id: 'cs4.cs3',
+                                    txt_v: '我是内部组件-按钮3',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs3.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/demo/BtnDemo',
+                                p: {
+                                    id: 'cs4.cs4',
+                                    txt_v: '我是内部组件-按钮4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/demo/BtnChildDemo',
+                                                p: {
+                                                    id: 'cs4.cs4.cs1',
+                                                    txt_v: '按钮1'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                t: 'MapComponent/map/AppGridForm',
+                p: {
+                    id: 'cs5',
+                    txt_v: '编辑页面',
+                    w: 600,
+                    h: 400,
+                    l: 450,
+                    t: 350,
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/map/ProjectDDTree',
+                                p: {
+                                    id: 'cs5.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppView',
+                                p: {
+                                    id: 'cs5.cs2'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppFind',
+                                p: {
+                                    id: 'cs5.cs3'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppGridMenu',
+                                p: {
+                                    id: 'cs5.cs4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs5.cs4.cs1',
+                                                    map_mi_txt: '新增'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs5.cs4.cs2',
+                                                    map_mi_txt: '删除'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs5.cs4.cs3',
+                                                    map_mi_sa: true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 }
             }
         ]

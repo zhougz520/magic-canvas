@@ -41,40 +41,40 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getComponentProperties = (): ComponentProperty  => {
+    public getPropertiesToCommand = (): ComponentProperty  => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
-                {pName: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pName: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pName: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
+                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
+                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
             ]
         };
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let properties = Map();
-        properties = properties.set(pProperty.pName, pProperty.pValue);
+        properties = properties.set(pProperty.pKey, pProperty.pValue);
         properties = properties.set('selectedCid', cid);
         const newInputState: InputState = InputState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);
     }
 
-    public getProperties = (): ComponentProperty  => {
+    public getPropertiesToProperty = (): ComponentProperty  => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
-                {pName: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pName: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pName: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
+                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
+                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
             ]
         };
     }
 
-    public setProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let properties = Map();
-        properties = properties.set(pProperty.pName, pProperty.pValue);
+        properties = properties.set(pProperty.pKey, pProperty.pValue);
         properties = properties.set('selectedCid', cid);
         const newInputState: InputState = InputState.set(this.getCustomState(), properties);
 

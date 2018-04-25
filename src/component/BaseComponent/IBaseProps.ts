@@ -9,8 +9,9 @@ export interface IBaseProps {
     zIndex: number;
     repaintSelected: () => void;
     repaintCanvas: (pointX: number, pointY: number) => void;
-    selectionChanging?: (cid: string) => void;
+    selectionChanging: (cid: string, e: any, isCanCtrl: boolean) => void;
     dbClickToBeginEdit?: () => void;
+    clearSelected: () => void;
 
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
 }

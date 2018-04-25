@@ -3,8 +3,10 @@ import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
 import { Input } from 'antd';
+import { Map } from 'immutable';
 
 import { TextFieldState } from './TextFieldState';
+import { ComponentProperty, PropertiesEnum } from '../../config';
 
 const { TextArea } = Input;
 // tslint:disable-next-line:no-empty-interface
@@ -21,6 +23,83 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
             baseState: this.initBaseStateWithCustomState(new TextFieldState())
         };
     }
+
+    public getComponentProperties = (): ComponentProperty  => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {
+                    pTitle: '行数',
+                    pKey: 'rowNum',
+                    pValue: this.getCustomState().getRowNum(),
+                    pType: PropertiesEnum.INPUT_NUMBER
+                }, {
+                    pTitle: '值',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '默认值',
+                    pKey: 'defaultvalue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '是否自适应行数',
+                    pKey: 'autosize',
+                    pValue: this.getCustomState().getAutosize(),
+                    pType: 'text'
+                }
+            ]
+        };
+    }
+
+    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+        let properties = Map();
+        properties = properties.set(pProperty.pKey, pProperty.pValue);
+        properties = properties.set('selectedCid', cid);
+        const newInputState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newInputState);
+    }
+
+    public getProperties = (): ComponentProperty  => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {
+                    pTitle: '行数',
+                    pKey: 'rowNum',
+                    pValue: this.getCustomState().getRowNum(),
+                    pType: PropertiesEnum.INPUT_NUMBER
+                }, {
+                    pTitle: '值',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '默认值',
+                    pKey: 'defaultvalue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '是否自适应行数',
+                    pKey: 'autosize',
+                    pValue: this.getCustomState().getAutosize(),
+                    pType: 'text'
+                }
+            ]
+        };
+    }
+
+    public setProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+        let properties = Map();
+        properties = properties.set(pProperty.pKey, pProperty.pValue);
+        properties = properties.set('selectedCid', cid);
+        const newInputState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newInputState);
+    }
+
     render() {
 
         return (

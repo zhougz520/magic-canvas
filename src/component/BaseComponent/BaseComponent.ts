@@ -249,22 +249,48 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return style;
     }
 
-    public getProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+    public getPropertiesToProperty = (): ComponentProperty => {
+        return{componentCid: '', componentProperties:
+                [{
+                    pTitle: '',
+                    pKey: '',
+                    pValue: '',
+                    pType: 'text'
+                }]
+            };
     }
 
-    public getComponentProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
-    }
-
-    public setProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         // const num: number = 1 + 1;
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public getPropertiesToCommand = (): ComponentProperty => {
+        return{componentCid: '', componentProperties:
+                [{
+                    pTitle: '',
+                    pKey: '',
+                    pValue: '',
+                    pType: 'text'
+                }]
+            };
+    }
+
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         // const num: number = 1 + 1;
     }
 
+    /**
+     * map控件选中
+     * @param id 组件id
+     */
+    public selectComChange = (id: string, cancelBsSelect: boolean = true) => {
+        this.setState({
+            selectCom: id
+        });
+        if (cancelBsSelect && this.props.selectionChanging) {
+            this.props.clearSelected();
+        }
+    }
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State
@@ -382,7 +408,20 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid);
+            this.props.selectionChanging(e, cid, true);
+        }
+        // 取消子控件选中
+        this.selectComChange('', false);
+        e.preventDefault();
+    }
+
+    /**
+     * 往外传子控件的cid
+     * @param cid 组件ref标识
+     */
+    protected fireSelectChildChange = (e: any, cid: string = this.getCid()): void => {
+        if (this.props.selectionChanging) {
+            this.props.selectionChanging(e, cid, false);
         }
         e.preventDefault();
     }

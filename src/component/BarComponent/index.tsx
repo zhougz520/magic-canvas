@@ -10,9 +10,10 @@ import { Map } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
-    onFireCommand: (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
+    onFireCommand: (cId: string, cProperty: {pKey: string, pValue: any}) => void;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
-    onFireProperties: (cId: string, pProperties: {pName: string, pValue: any, pType: string}) => void;
+
+    onFireProperties: (cId: string, pProperties: {pKey: string, pValue: any}) => void;
 }
 
 export interface IBarState {
@@ -24,7 +25,7 @@ export interface IBarState {
 }
 
 export interface IBarListComponent {
-    setPropertyState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
+    setPropertyState: (properties: ComponentProperty) => void;
     setCommandState: (selectedComs: Map<string, any>) => void;
 }
 
@@ -92,9 +93,9 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
         this.props.changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
     }
 
-    setPropertyState = (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => {
+    setPropertyState = (properties: ComponentProperty) => {
         if (this.propertyTool) {
-            this.propertyTool.setPropertyState(cId, properties);
+            this.propertyTool.setPropertyState(properties);
         }
 
     }

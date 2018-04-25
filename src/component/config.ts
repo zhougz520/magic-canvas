@@ -38,5 +38,6 @@ export const PropertiesEnum = {
 export class ComponentProperty {
     [index: string]: any
     componentCid: string = '';
-    componentProperties: Array<{pName: string, pValue: any, pType: string}> = [];
+    componentProperties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> = [];
+
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
+import BtnDemo from '../../MapComponent/demo/BtnDemo';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -18,10 +19,16 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
         if (p !== undefined && p.components.length > 0) {
             p.components.forEach((com: any) => {
                 children.push(
-                    <button>
-                        能不能不提交报错代码
-                    </button>
-                );
+                    <BtnDemo
+                        key={`c.${com.p.id}`}
+                        {...com.p}
+                        selectCom={this.selectComChange}
+                        selectedId={com.p.id}
+                        data={com.p}
+                        // tslint:disable-next-line:jsx-no-string-ref
+                        ref={`c.${com.p.id}`}
+                        updateProps={this.fireSelectChange}
+                    />);
             });
         }
 
@@ -41,10 +48,10 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={currStyle}
-                // onMouseDown={this.fireSelectChange}
+            // onMouseDown={this.fireSelectChange}
             >
                 <div
-                    style={{ backgroundColor: '#F0F0FF'}}
+                    style={{ backgroundColor: '#F0F0FF' }}
                 >
                     {this.getCid() + '.'} - {richChildNode}
                 </div>

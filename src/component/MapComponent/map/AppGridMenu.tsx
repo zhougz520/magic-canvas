@@ -50,22 +50,21 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         const { hover } = this.state;
         const { updateProps, map_gm_txt, map_sm, p, id, selectedId } = this.props;
         const components = p === undefined ? undefined : p.components;
-        const menus: any = components === undefined ? '' :
-            (
-                components.map((com: any) => {
-                    const { t } = com;
-                    if (t === 'MapComponent/map/AppGridMenuItem') {
-                        return (
-                            <AppGridMenuItem
-                                key={com.p.id}
-                                {...com.p}
-                                updateProps={updateProps}
-                            />);
-                    } else {
-                        return '';
-                    }
-                })
-            );
+        const menus: any[] = [];
+        // 循环初始化菜单按钮
+        if (components !== undefined) {
+            components.forEach((com: any) => {
+                const { t } = com;
+                if (t === 'MapComponent/map/AppGridMenuItem') {
+                    menus.push(
+                        <AppGridMenuItem
+                            key={com.p.id}
+                            {...com.p}
+                            updateProps={updateProps}
+                        />);
+                }
+            });
+        }
 
         return (
             <div

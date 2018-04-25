@@ -142,19 +142,14 @@ export class AppFind extends MapComponent<IMapProps, any> {
                     </tr>
                     <tr>
                         <td style={{ width: '100%', height: '30px', verticalAlign: 'top' }}>
-                            <Button
-                                style={{ width: '70px', height: '23px', marginRight: '23px', float: 'right' }}
-                            >
+                            <Button>
                                 重置
                             </Button>
-                            <Button
-                                style={{ width: '70px', height: '23px', marginRight: '20px', float: 'right' }}
-                            >
+                            <Button>
                                 查找
                             </Button>
-                            <Button
-                                style={{ width: '70px', height: '23px', marginRight: '20px', float: 'right' }}
-                            >保存
+                            <Button>
+                                保存
                             </Button>
                         </td>
                     </tr>

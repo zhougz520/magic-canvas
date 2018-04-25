@@ -68,18 +68,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 组件选中，画布不要记录组件的位置与大小信息，否则同步信息很乱
      * @param cid 组件ID
      */
-    selectionChanging = (cid: string): void => {
-        // 如果是编辑模式，结束最后一个组件的编辑状态。
-        if (this.command.getIsRichEditMode() === true) {
-            this.endEdit();
-            this.command.setIsRichEditMode(false);
-        }
-
+    selectionChanging = (e: any, cid: string, isCanCtrl: boolean = true): void => {
+        // TODO: 焦点变换bug@周周
+        this.getEditor().setFocus();
         const com = this.findComponent(cid);
         if (com) {
-            // TODO: 正常在这里应该传递 lastCom
-            // this.selectedComponent(cid, lastCom === null ? com : lastCom);
-            this.selectedComponent(cid, com);
+            this.selectedComponent(cid, com, false, isCanCtrl);
         }
     }
 
@@ -303,19 +297,19 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         // 如果有新拖入的组件，选中新组件
         const newComponentCid: string | null = this.command.getAddComponentCid();
         if (newComponentCid !== null) {
-            this.selectionChanging(newComponentCid);
+            this.selectionChanging(null, newComponentCid);
             // 清除新添加组件记录
             this.command.setAddComponentCid(null);
         }
     }
 
     // 给canvas编辑中的组件设置command命令
-    executorCommand(cId: string, cProperty: { pName: string, pValue: any, pType: string }) {
+    executorCommand(cId: string, cProperty: { pKey: string, pValue: any}) {
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
             // switch (commandName) {
             //     case commandsEnum.PLACEHOLDER:
-            currentSelectedComponent.setComponentProperties(cId, cProperty);
+            currentSelectedComponent.setPropertiesFromCommand(cId, cProperty);
             // default: return false;
             // }
         }
@@ -323,10 +317,11 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
-    executorProperties(cId: string, pProperty: { pName: string, pValue: any, pType: string }) {
+    executorProperties(cId: string, pProperty: { pKey: string, pValue: any}) {
+        console.log(pProperty);
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
-            currentSelectedComponent.setProperties(cId, pProperty);
+            currentSelectedComponent.setPropertiesFromProperty(cId, pProperty);
         }
     }
 
@@ -340,7 +335,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             currentSelectedComponent = this.command.getSelectedComponents().last();
         }
         if (currentSelectedComponent) {
-            return currentSelectedComponent.getComponentProperties();
+            return currentSelectedComponent.getPropertiesToCommand();
         } else return undefined;
     }
 
@@ -446,6 +441,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     zIndex,
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
+                    clearSelected: this.clearSelected,
                     repaintSelected: this.repaintSelected,
                     repaintCanvas: this.repaintCanvas,
                     dbClickToBeginEdit: this.dbClickToBeginEdit
@@ -511,21 +507,27 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     /**
      * 组件选择
      */
-    selectedComponent = (cid: string, com: IComponent, multiselect?: boolean) => {
-        // 组件选择
-        this.command.addSelectedComponent(cid, com, multiselect);
-        this.repaintSelected();
-        this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
+    selectedComponent = (cid: string, com: IComponent, multiselect: boolean = false, isCanCtrl: boolean = true) => {
+        if (isCanCtrl) {
+            // 组件选择
+            this.command.addSelectedComponent(cid, com, multiselect);
+            this.repaintSelected();
+            this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
+        } else {
+            console.log('子控件');
+            console.log(com);
+        }
         this.props.onPropertyProperties(cid);
 
         // TODO 多选状态判断
         if (multiselect === undefined) {
-            // 向CommandBar传递当前选中的组件集合
-            this.props.onCommandProperties(this.command.getSelectedComponents() as any);
+            // 1
+        }
+        // 向CommandBar传递当前选中的组件集合
+        this.props.onCommandProperties(this.command.getSelectedComponents() as any);
 
-            if (this.editor) {
-                this.editor.setFocus();
-            }
+        if (this.editor) {
+            this.editor.setFocus();
         }
 
     }

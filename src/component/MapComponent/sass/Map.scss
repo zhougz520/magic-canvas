@@ -1,33 +1,41 @@
-table{
+table {
     table-layout: auto;
 }
 
-.selectecd{
+.selectecd {
     border: 2px solid blue;
 }
 
-.ps-map{
-    .grid-form{
+.ps-map {
+    .title {
+        height: 30px;
+        background-color: #f0f0ff;
+        border-bottom: 1px solid gray;
+        td {
+            padding-left: 8px;
+        }
+    }
+    .grid-form {
         width: 100%;
         height: 100%;
     }
     background: #FBFBFB;
-    .proj-view{
+    .proj-view {
         width: 100%;
-        .csr-pc-map-app-project{
+        .csr-pc-map-app-project {
             min-width: 250px;
         }
-        .csr-pc-map-app-view{
+        .csr-pc-map-app-view {
             min-width: 250px;
             .ant-select-arrow {
                 border: 0;
                 color: #555;
             }
-            .ant-select-selection{
+            .ant-select-selection {
                 border-color: #555;
             }
         }
-        .first-page{
+        .first-page {
             margin-right: 15px;
         }
     }
@@ -46,19 +54,16 @@ table{
                 float: left;
                 font-family: 宋体;
                 line-height: 24px;
-    
                 .ant-select-selection {
                     border-radius: 0;
                 }
-                .ant-select-selection--single{
-                    line-height: 24px;
-    
-                }
-                .ant-select-selection__rendered{
+                .ant-select-selection--single {
                     line-height: 24px;
                 }
-    
-                .height-grade{
+                .ant-select-selection__rendered {
+                    line-height: 24px;
+                }
+                .height-grade {
                     margin-left: 5px;
                     width: 19px;
                     height: 19px;
@@ -69,12 +74,11 @@ table{
             .app-find-menu-item {
                 cursor: pointer;
                 float: left;
-                > p {
+                >p {
                     line-height: 24px;
                     float: left;
                     font-family: 宋体;
                 }
-    
                 .lookup {
                     float: left;
                     width: 19px;
@@ -88,6 +92,16 @@ table{
             height: 100%;
             margin: 10px;
         }
+        .app-find-text-td{
+            padding-left: 8px; 
+        }
+        .ant-btn {
+            width: 70px;
+            height: 23px;
+            border-radius: unset;
+            margin-right: 20px;
+            float: right;
+        }
     }
     .csr-pc-map-grid-menu {
         width: auto;
@@ -97,41 +111,37 @@ table{
         padding-top: 2px;
         overflow: hidden;
         color: #FFF;
-        > div {
-          > div {
-            &.app-grid-menu-item {
-              cursor: default;
-              float: left;
-              margin-right: 8px;
-              &:hover {
-                background-color: #3a7cbc;
-                cursor:hand;
-              }
-              >p {
-                line-height: 20px;
-                float: left;
-                margin-left: 5px;
-                font-family: 宋体;
-              }
-              .dropDownArrow{
-                float:right;
-                margin-top:4px;
-                margin-left:2px;
-              }
+        >div {
+            >div {
+                &.app-grid-menu-item {
+                    cursor: default;
+                    float: left;
+                    margin-right: 8px;
+                    &:hover {
+                        background-color: #3a7cbc;
+                        cursor: hand;
+                    }
+                    >p {
+                        line-height: 20px;
+                        float: left;
+                        margin-left: 5px;
+                        font-family: 宋体;
+                    }
+                    .dropDownArrow {
+                        float: right;
+                        margin-top: 4px;
+                        margin-left: 2px;
+                    }
+                }
             }
-          }
         }
-        .app-grid-menu-title{
-          float: left;
-          width: 200px;
-          font-family: 宋体;
+        .app-grid-menu-title {
+            float: left;
+            width: 200px;
+            font-family: 宋体;
         }
     }
-    .csr-pc-map-app-grid{
-    
-    }
-
-
+    .csr-pc-map-app-grid {}
     input.ant-input {
         font-size: 9pt;
         font-family: 宋体, Tahoma, Verdana, Arial;
@@ -150,25 +160,21 @@ table{
         border-radius: 0;
         padding: 0;
         margin-bottom: 5px;
-
     }
     .ant-select-selection {
         border-radius: 0px !important;
     }
-
     .ant-select-selection-selected-value {
         height: 19px;
         line-height: 19px;
         color: #000000;
     }
-
     .ant-select-selection.ant-select-selection--single {
         height: 19px;
     }
-
     .ant-select-selection__rendered {
         line-height: 19px !important;
-        > span {
+        >span {
             cursor: hand;
             color: blue;
             text-decoration: underline;
@@ -183,5 +189,4 @@ table{
         top: 0px !important;
         right: -1px !important;
     }
-
 }
