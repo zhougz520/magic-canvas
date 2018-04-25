@@ -8,6 +8,7 @@ export interface IBaseProps {
     map_sm?: string;
     id: string;
     p?: any;
+    fireSelectChildChange: (cid: string, e: any) => void;
     // key: string;
     // id: string;
 }

@@ -29,34 +29,21 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
         return null;
     }
 
-    findComponent = (cids: string[]): IComponent | null => {
-        const canvas = this.props.getCanvas();
-        if (canvas !== null) {
-            // TODO cids参数类型类型不匹配，谁写的自己改。
-            return canvas.findComponent(cids.toString());
-        }
-
-        return null;
-    }
-
     // 绘制组件选中框
     drawSelectedBox = (cids: Set<string>) => {
         const rectList: JSX.Element[] = [];
         const pos = this.props.componentPosition;
         cids.map((cid) => {
             if (cid === undefined) return;
-            const cids_curr: string[] = cid.split('.');
-            const com = this.getComponent(cids_curr[0]);
-            const lastCom = cids_curr.length > 1 ? this.findComponent(cids_curr) as any : null;
+
+            const com = this.getComponent(cid);
             if (com === null) return;
 
             const frameData: IReactData = {
-                pointX: (lastCom === null ? com.getPosition().left : com.getPosition().left + lastCom.com.offsetLeft)
-                         + pos.canvasOffset.left + 0.5,
-                pointY: (lastCom === null ? com.getPosition().top : com.getPosition().top + lastCom.com.offsetTop)
-                         + pos.canvasOffset.top + 0.5,
-                width: (lastCom === null ? com.getSize().width : lastCom.com.offsetWidth) + 1,
-                height: (lastCom === null ? com.getSize().height : lastCom.com.offsetHeight) + 1,
+                pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
+                pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
+                width: com.getSize().width + 1,
+                height: com.getSize().height + 1,
                 anchorFill: '#fff',
                 stroke: '#108ee9',
                 strokeWidth: 1,

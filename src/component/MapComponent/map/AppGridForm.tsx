@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
-import { AppView, ProjectDDTree, AppFind, AppGridMenu } from './index';
+import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './index';
 
 import '../sass/Map.scss';
 
@@ -56,15 +56,19 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
 
         return (
             <div
-                ref={(ref) => this.com = ref}
                 className="ps-map"
                 style={currStyle}
+                ref={(ref) => this.com = ref}
             >
-                <div className="title">
-                    {title}
-                </div>
-                <table className="grid-form" >
+                <table
+                    className="grid-form"
+                >
                     <tbody>
+                        <tr className="title" onMouseDown={this.fireSelectChange} >
+                            <td>
+                                {title === undefined ? '标题' : title}
+                            </td>
+                        </tr>
                         <tr style={{ display: !showProj && !showView ? 'none' : '', height: 30 }} >
                             <td>
                                 <table className="proj-view" >
@@ -112,7 +116,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.proj = (
                         <ProjectDDTree
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -122,7 +129,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.view = (
                         <AppView
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -132,7 +142,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.find = (
                         <AppFind
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -142,19 +155,29 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.menu = (
                         <AppGridMenu
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
+                            {...com.p}
+                            updateProps={this.props.data.updateProps}
+                        />
+                    );
+                    break;
+                case 'MapComponent/map/AppGrid':
+                    this.menu = (
+                        <AppGrid
+                            selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
+                            selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
                     );
                     break;
             }
-        });
-    }
-
-    public selectComChange = (id: string) => {
-        this.setState({
-            selectCom: id
         });
     }
 }

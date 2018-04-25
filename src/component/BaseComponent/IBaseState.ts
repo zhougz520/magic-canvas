@@ -5,4 +5,5 @@ import { BaseState } from './model/BaseState';
  */
 export interface IBaseState {
     baseState: BaseState;
+    selectCom?: string;
 }
