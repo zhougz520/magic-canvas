@@ -407,8 +407,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param cid 组件ref标识
      */
     protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
+        // TODO 是否可以不要e: any
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(e, cid, true);
+            this.props.selectionChanging(cid, true);
         }
         // 取消子控件选中
         this.selectComChange('', false);
@@ -421,7 +422,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected fireSelectChildChange = (e: any, cid: string = this.getCid()): void => {
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(e, cid, false);
+            this.props.selectionChanging(cid, false);
         }
         e.preventDefault();
     }

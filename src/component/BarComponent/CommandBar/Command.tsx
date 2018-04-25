@@ -37,6 +37,7 @@ export class Command extends React.PureComponent<ICommandProps, ICommandState> i
 
     render() {
         const { titleBarCollapsed } = this.props;
+        // tslint:disable-next-line:no-console
         console.log(this.state.selectedComs);
 
         return (
