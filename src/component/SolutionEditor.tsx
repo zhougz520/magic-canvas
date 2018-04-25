@@ -80,7 +80,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
     // 修改滚动条
     setStageScroll = (offset: IOffset) => {
-        // console.log(offset);
         if (this.stage !== null) {
             this.stage.scrollLeft += offset.x;
             this.stage.scrollTop += offset.y;
@@ -105,9 +104,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
     // 获取command点击后的命令，并传给canvas
     onFireCommand = (cid: string, cProperty: {pKey: string, pValue: any}) => {
-        // console.log('找当前编辑中的组件，并传递command的命令');
-        // console.log('command:' + cProperty.pName + cProperty.pValue);
-
         if (this.canvas) {
             // 获取当前编辑中的组件
             const commandProperties = this.canvas.getSelectedProperties(cid);
@@ -156,14 +152,12 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
      * 修改画布大小
      */
     updateCanvasSize = (width: number, height: number) => {
-        // console.log('重绘了画布的大小');
         this.setState({ canvasSize: { width, height } });
     }
 
     render() {
         const { compos, canvasSize } = this.state;
         const stateStyle = this.StageStyle();
-        // console.log('重绘了stage');
 
         return (
             <div className="main-editor">

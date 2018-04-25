@@ -224,7 +224,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleKeyUp = (e: any) => {
-        console.log('handleKeyUp');
         const args = keyArgs(e);
         const { key, ctrl } = args as IKeyArgs;
 
