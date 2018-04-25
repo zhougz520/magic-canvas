@@ -10,6 +10,7 @@ export interface IBaseProps {
     repaintSelected: () => void;
     repaintCanvas: (pointX: number, pointY: number) => void;
     selectionChanging?: (cid: string) => void;
+    dbClickToBeginEdit?: () => void;
 
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
 }

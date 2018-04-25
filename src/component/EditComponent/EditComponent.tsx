@@ -36,26 +36,17 @@ export class EditComponent extends React.PureComponent<IEditProps, IEditState> {
     }
 
     /**
-     * 编辑框接收整个画布的KeyDown事件，然后转发到画布的KeyDown事件上做操作
-     * 如果是非编辑模式就执行画布的KeyDown逻辑，如果是编辑模式就执行编辑框的操作逻辑
+     * TODO KeyDown
      */
     onKeyDown = (e: any) => {
-        if (this.props.handleKeyDownCommand && this.props.handleKeyDownCommand(e) === true) {
-            e.preventDefault();
-
-            return;
-        }
+        // e.preventDefault();
     }
 
     /**
-     * 同KeyDown
+     * TODO KeyUp
      */
     onKeyUp = (e: any) => {
-        if (this.props.handleKeyUpCommand && this.props.handleKeyUpCommand(e) === true) {
-            e.preventDefault();
-
-            return;
-        }
+        // e.preventDefault();
     }
 
     /**

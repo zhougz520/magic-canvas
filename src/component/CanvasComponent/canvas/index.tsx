@@ -181,24 +181,21 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleKeyDown = (e: any) => {
+        console.log('画布keydown');
         const args = keyArgs(e);
         const { key, ctrl, alt, keyCode } = args as IKeyArgs;
 
-        if (key === 'delete') {
-            if (this.command.getIsRichEditMode() === false) {
+        if (this.command.getIsRichEditMode() === false) {
+            if (key === 'delete') {
                 this.deleteCanvasComponent(this.command.getSelectedCids());
                 this.clearSelected();
                 this.clearDragBox(e);
             }
-        }
 
-        if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
-            if (this.command.getIsRichEditMode() === false) {
+            if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
                 keyFun[key].press();
-            }
-            e.preventDefault();
-        } else if (ctrl) {
-            if (this.command.getIsRichEditMode() === false) {
+                e.preventDefault();
+            } else if (ctrl) {
                 keyFun.ctrl.press();
             }
         }
@@ -223,27 +220,34 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const args = keyArgs(e);
         const { key, ctrl } = args as IKeyArgs;
 
-        if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
-            e.preventDefault();
-            keyFun[key].release();
-        } else if (!ctrl && this.command.isMultiselect()) {
-            keyFun.ctrl.release();
+        if (this.command.getIsRichEditMode() === false) {
+            if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
+                e.preventDefault();
+                keyFun[key].release();
+            } else if (!ctrl && this.command.isMultiselect()) {
+                keyFun.ctrl.release();
+            }
         }
     }
 
     // 编辑框开始编辑
-    beginEdit = () => {
+    beginEdit = (isDbClick: boolean = false) => {
         // 获取最后选中的组件
         const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
 
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
+            const value = currentSelectedComponent.getRichChildNode();
             currentSelectedComponent.setRichChildNode(null);
             const style: CSSStyleDeclaration = currentSelectedComponent.getStyle(currentSelectedComponent);
             const size: ISize = currentSelectedComponent.getSize();
             const position: IPosition = currentSelectedComponent.getPosition();
             const bodyOffset: any = this.getPositionRelativeDocument(position.left, position.top);
 
-            this.getEditor().setValue('');
+            if (isDbClick === true) {
+                this.getEditor().setValue(value);
+            } else {
+                this.getEditor().setValue('');
+            }
             this.getEditor().setEditComState(
                 size.width,
                 bodyOffset.pageY + size.height / 2,
@@ -262,6 +266,11 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             this.getEditor().hiddenEditCom();
             currentSelectedComponent.setRichChildNode(value);
         }
+    }
+
+    dbClickToBeginEdit = () => {
+        this.command.setIsRichEditMode(true);
+        this.beginEdit(true);
     }
 
     // 由组件列表拖拽进画布的组件
@@ -435,7 +444,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
                     repaintSelected: this.repaintSelected,
-                    repaintCanvas: this.repaintCanvas
+                    repaintCanvas: this.repaintCanvas,
+                    dbClickToBeginEdit: this.dbClickToBeginEdit
                 })
             );
             zIndex++;

@@ -387,4 +387,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         e.preventDefault();
     }
 
+    protected doDbClickToEdit = (): void => {
+        if (this.props.dbClickToBeginEdit) {
+            this.props.dbClickToBeginEdit();
+        }
+    }
+
 }
