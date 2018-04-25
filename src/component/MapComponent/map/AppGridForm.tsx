@@ -116,7 +116,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.proj = (
                         <ProjectDDTree
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -126,7 +129,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.view = (
                         <AppView
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -136,7 +142,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.find = (
                         <AppFind
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -146,7 +155,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.menu = (
                         <AppGridMenu
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />
@@ -156,7 +168,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     this.menu = (
                         <AppGrid
                             selectedId={selectCom}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectCom={this.selectComChange}
+                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
                         />

@@ -12,8 +12,11 @@ import util from '../util';
 export class MapComponent<P extends IBaseProps, S>
     extends React.PureComponent<P, S> implements IComponent {
 
+    /**
+     * 添加子控件
+     */
     public addChildComponent = (data: any, addData: any): any => {
-        // (this.state as any).data1;
+        // 获取新id
         const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
         data.p.components.push({
             t: addData.type,
@@ -23,11 +26,17 @@ export class MapComponent<P extends IBaseProps, S>
         return data;
     }
 
+    /**
+     * 删除控件
+     */
     public deleteComponentsById = (cid: string): any => {
 
         return cid;
     }
 
+    /**
+     * 生成新控件Id
+     */
     public newComponentsId(collection: any[], prefix = 'cs', pid = '') {
         const ids: number[] = [];
         collection.forEach((cs: any) => {
@@ -42,15 +51,22 @@ export class MapComponent<P extends IBaseProps, S>
         }
     }
 
-    public getAddComponent() {
+    /**
+     * 获取添加控件的信息
+     */
+    protected getAddComponent() {
         if (util.isEmptyString(localStorage.__dnd_type) || util.isEmptyString(localStorage.__dnd_value)) return;
         if (localStorage.__dnd_type !== 'dragging_cs') return;
 
         return JSON.parse(localStorage.__dnd_value);
     }
 
-    public selectedCom = () => {
-        const { id, selectCom } = this.props;
+    /**
+     * 选择子控件
+     */
+    protected selectedCom = (e: any) => {
+        const { id, selectCom, fireSelectChildChange } = this.props;
         selectCom(id);
+        fireSelectChildChange(e, id);
     }
 }

@@ -68,12 +68,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 组件选中，画布不要记录组件的位置与大小信息，否则同步信息很乱
      * @param cid 组件ID
      */
-    selectionChanging = (cid: string, e: any, isCanCtrl: boolean = true): void => {
+    selectionChanging = (e: any, cid: string, isCanCtrl: boolean = true): void => {
         // TODO: 焦点变换bug@周周
         this.getEditor().setFocus();
         const com = this.findComponent(cid);
         if (com) {
-            this.selectedComponent(cid, com);
+            this.selectedComponent(cid, com, false, isCanCtrl);
         }
     }
 
@@ -281,7 +281,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         // 如果有新拖入的组件，选中新组件
         const newComponentCid: string | null = this.command.getAddComponentCid();
         if (newComponentCid !== null) {
-            this.selectionChanging(newComponentCid, null);
+            this.selectionChanging(null, newComponentCid);
             // 清除新添加组件记录
             this.command.setAddComponentCid(null);
         }
@@ -493,11 +493,16 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     /**
      * 组件选择
      */
-    selectedComponent = (cid: string, com: IComponent, multiselect?: boolean) => {
-        // 组件选择
-        this.command.addSelectedComponent(cid, com, multiselect);
-        this.repaintSelected();
-        this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
+    selectedComponent = (cid: string, com: IComponent, multiselect: boolean = false, isCanCtrl: boolean = true) => {
+        if (isCanCtrl) {
+            // 组件选择
+            this.command.addSelectedComponent(cid, com, multiselect);
+            this.repaintSelected();
+            this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
+        } else {
+            console.log('子控件');
+            console.log(com);
+        }
         this.props.onCommandProperties(cid);
         this.props.onPropertyProperties(cid);
 
