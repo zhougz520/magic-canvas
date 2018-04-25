@@ -61,7 +61,7 @@ export interface ICanvasCommand {
     anchorMouseDown: (e: any, anchor: Anchor.IAnchor) => void;
     anchorMouseUp: (e: any) => void;
     addSelectedComponent: (cid: string, com: IComponent, multiselect?: boolean) => void;
-    getSelectedComponents: () => Map<string, IComponent>;
+    getSelectedComponents: () => Map<string, any>;
     getSelectedCids: () => Set<string>;
     clearSelectedComponent: () => void;
     moveComponent: (axis: string, distance: number) => void;

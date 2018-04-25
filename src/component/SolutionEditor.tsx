@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { BarList, IBarListComponent } from './BarComponent';
 import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
@@ -7,6 +8,7 @@ import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
 import { ICompos, config, ComponentProperty } from './config';
 import { IOffset } from './CanvasComponent/model/types';
+import { Map } from 'immutable';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -78,7 +80,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
     // 修改滚动条
     setStageScroll = (offset: IOffset) => {
-        console.log(offset);
+        // console.log(offset);
         if (this.stage !== null) {
             this.stage.scrollLeft += offset.x;
             this.stage.scrollTop += offset.y;
@@ -103,8 +105,8 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
     // 获取command点击后的命令，并传给canvas
     onFireCommand = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
-        console.log('找当前编辑中的组件，并传递command的命令');
-        console.log('command:' + cProperty.pName + cProperty.pValue);
+        // console.log('找当前编辑中的组件，并传递command的命令');
+        // console.log('command:' + cProperty.pName + cProperty.pValue);
 
         if (this.canvas) {
             // 获取当前编辑中的组件
@@ -114,25 +116,12 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             }
         }
     }
-    // 获取编辑中的组件属性并传给command
-    onCommandProperties = (currentCid: string): ComponentProperty |undefined => {
-        if (this.canvas) {
-            const compProperty: ComponentProperty = {componentCid: currentCid, componentProperties: []};
 
-            const commandProperties = this.canvas.getSelectedProperties(currentCid);
-            compProperty.componentProperty = commandProperties;
-
-            // commandProperties为undefined 则未选中组件
-            if (commandProperties) {
-                console.log('这是solutioneditor中给command的获取组件属性');
-                console.log(commandProperties);
-                if (this.barList) {
-                    this.barList.setCommandState(currentCid, commandProperties.componentProperties);
-                }
-
-                return compProperty;
-            } else return undefined;
-        } else return undefined;
+    // 获取选中的组件集合并传给CommandBar
+    onCommandProperties = (selectedComs: Map<string, any>): void => {
+        if (this.barList) {
+            this.barList.setCommandState(selectedComs);
+        }
     }
 
     // 获取编辑中的组件属性并传给propertyTool
@@ -142,7 +131,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             const pToolProperties = this.canvas.getSelectedProperties(currentCid);
             if (pToolProperties !== undefined) {
                 compProperty.componentProperties = pToolProperties.componentProperties;
-                console.log('这是solutioneditor中给propertyTool的获取组件属性');
+                // console.log('这是solutioneditor中给propertyTool的获取组件属性');
                 if (this.barList) {
                     this.barList.setPropertyState(currentCid, pToolProperties.componentProperties);
                 }
@@ -157,7 +146,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         if (this.canvas) {
             const commandProperties = this.canvas.getSelectedProperties(cId);
             if (commandProperties) {
-                console.log(commandProperties);
+                // console.log(commandProperties);
                 this.canvas.executorProperties(cId, cProperty);
             }
         }
@@ -167,14 +156,14 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
      * 修改画布大小
      */
     updateCanvasSize = (width: number, height: number) => {
-        console.log('重绘了画布的大小');
+        // console.log('重绘了画布的大小');
         this.setState({ canvasSize: { width, height } });
     }
 
     render() {
         const { compos, canvasSize } = this.state;
         const stateStyle = this.StageStyle();
-        console.log('重绘了stage');
+        // console.log('重绘了stage');
 
         return (
             <div className="main-editor">
@@ -182,7 +171,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     ref={(render) => this.barList = render}
                     changeStageOffset={this.changeStageOffset}
                     onFireCommand={this.onFireCommand}
-                    onCommandProperties={this.onCommandProperties}
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                 />
@@ -248,178 +236,6 @@ const detail = {
                     h: 200,
                     l: 150,
                     t: 150
-                }
-            },
-            {
-                t: 'BaseComponent/demo/Container',
-                p: {
-                    id: 'cs4',
-                    txt_v: '我是测试组件4',
-                    w: 200,
-                    h: 400,
-                    l: 250,
-                    t: 250,
-                    p: {
-                        components: [
-                            {
-                                t: 'MapComponent/demo/BtnDemo',
-                                p: {
-                                    id: 'cs4.cs1',
-                                    txt_v: '我是内部组件按钮1',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs1.cs1',
-                                                    txt_v: '按钮1'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs1.cs2',
-                                                    txt_v: '按钮1'
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                t: 'MapComponent/demo/BtnDemo',
-                                p: {
-                                    id: 'cs4.cs2',
-                                    txt_v: '我是内部组件-按钮2',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs2.cs1',
-                                                    txt_v: '按钮1'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs2.cs2',
-                                                    txt_v: '按钮2'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs2.cs3',
-                                                    txt_v: '按钮3'
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                t: 'MapComponent/demo/BtnDemo',
-                                p: {
-                                    id: 'cs4.cs3',
-                                    txt_v: '我是内部组件-按钮3',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs3.cs1',
-                                                    txt_v: '按钮1'
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                t: 'MapComponent/demo/BtnDemo',
-                                p: {
-                                    id: 'cs4.cs4',
-                                    txt_v: '我是内部组件-按钮4',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/demo/BtnChildDemo',
-                                                p: {
-                                                    id: 'cs4.cs4.cs1',
-                                                    txt_v: '按钮1'
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                t: 'MapComponent/map/AppGridForm',
-                p: {
-                    id: 'cs6',
-                    txt_v: '编辑页面',
-                    w: 600,
-                    h: 400,
-                    l: 450,
-                    t: 350,
-                    p: {
-                        components: [
-                            {
-                                t: 'MapComponent/map/ProjectDDTree',
-                                p: {
-                                    id: 'cs6.cs1'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppView',
-                                p: {
-                                    id: 'cs6.cs2'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppFind',
-                                p: {
-                                    id: 'cs6.cs3'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppGridMenu',
-                                p: {
-                                    id: 'cs6.cs4',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs6.cs4.cs1',
-                                                    map_mi_txt: '新增'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs6.cs4.cs2',
-                                                    map_mi_txt: '删除'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs6.cs4.cs3',
-                                                    map_mi_sa: true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
-                    }
                 }
             }
         ]

@@ -30,7 +30,7 @@ const globalVar = {
         }
     },
     // 当前选中的组件集合
-    selectedComponents: Map<string, IComponent>(),
+    selectedComponents: Map<string, any>(),
     // 当前选中的组件组件的大小和位置(为了实时修改组件的大小)
     currentComponentSize: {
         list: Map<string, { position: IPosition, size: ISize }>(),

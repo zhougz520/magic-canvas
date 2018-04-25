@@ -7,9 +7,6 @@ export interface IEditState {
 
 export interface IEditProps {
     componentPosition: any;
-
-    handleKeyDownCommand?: (e: any) => boolean;
-    handleKeyUpCommand?: (e: any) => boolean;
 }
 
 export interface IEditStyle {

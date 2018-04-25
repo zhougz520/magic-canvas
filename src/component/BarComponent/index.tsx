@@ -1,15 +1,16 @@
 import * as React from 'react';
+
 import Title from './TitleBar';
-import Command, { ICommandComponent } from './CommandBar';
+import { Command, ICommandComponent } from './CommandBar';
 import Resource from './ResourceBar';
 import Property, { IPropertyComponent } from './PropertyBar';
 import Contributor from './ContributorBar';
 import { ComponentProperty } from '../config';
+import { Map } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
     onFireCommand: (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
-    onCommandProperties: (currentCid: string) => ComponentProperty |undefined;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
     onFireProperties: (cId: string, pProperties: {pName: string, pValue: any, pType: string}) => void;
 }
@@ -24,7 +25,7 @@ export interface IBarState {
 
 export interface IBarListComponent {
     setPropertyState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
-    setCommandState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
+    setCommandState: (selectedComs: Map<string, any>) => void;
 }
 
 /* tslint:disable:no-console */
@@ -54,7 +55,6 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     ref={(render) => this.commandTool = render}
                     titleBarCollapsed={titleBarCollapsed}
                     onFireCommand={this.props.onFireCommand}
-                    onCommandProperties={this.props.onCommandProperties}
                     // tslint:disable-next-line:jsx-no-lambda
                     onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
                 />
@@ -99,9 +99,9 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
 
     }
 
-    setCommandState = (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => {
+    setCommandState = (selectedComs: Map<string, any>) => {
         if (this.commandTool) {
-            this.commandTool.setCommandState(cId, properties);
+            this.commandTool.setCommandState(selectedComs);
         }
     }
 }

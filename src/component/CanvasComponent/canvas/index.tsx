@@ -516,12 +516,18 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.command.addSelectedComponent(cid, com, multiselect);
         this.repaintSelected();
         this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
-        this.props.onCommandProperties(cid);
         this.props.onPropertyProperties(cid);
 
-        if (this.editor) {
-            this.editor.setFocus();
+        // TODO 多选状态判断
+        if (multiselect === undefined) {
+            // 向CommandBar传递当前选中的组件集合
+            this.props.onCommandProperties(this.command.getSelectedComponents() as any);
+
+            if (this.editor) {
+                this.editor.setFocus();
+            }
         }
+
     }
 
     /**
@@ -552,8 +558,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 清除组件选中框
      */
     clearSelected = () => {
-        this.command.clearSelectedComponent();
-        this.hideSelected();
+        const selectedComponents = this.command.getSelectedComponents();
+        // 当选中组件不为空时才进行清空操作
+        if (selectedComponents.size > 0) {
+            this.command.clearSelectedComponent();
+            this.hideSelected();
+            // 向CommandBar传递当前选中的组件集合
+            this.props.onCommandProperties(this.command.getSelectedComponents() as any);
+        }
     }
 
     /**

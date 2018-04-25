@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './bar.css';
+import './sass/bar.scss';
 
 export interface ITitleProps {
     collapsed: boolean;
