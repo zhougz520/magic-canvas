@@ -11,8 +11,8 @@ export interface ICanvasComponent {
     canvas: HTMLDivElement | null;
     getComponent: (cid: string) => IComponent | null;
     findComponent: (cid: string) => IComponent | null;
-    executorCommand: (cid: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
-    executorProperties: (cid: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
+    executorCommand: (cid: string, cProperty: {pKey: string, pValue: any}) => void;
+    executorProperties: (cid: string, cProperty: {pKey: string, pValue: any}) => void;
     // getSelectedProperties: (currentCid: string) => {}|undefined;
     getSelectedProperties: (currentCid: string) => ComponentProperty|undefined;
 }

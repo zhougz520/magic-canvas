@@ -250,18 +250,32 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     public getProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+        return{componentCid: '', componentProperties:
+                [{
+                    pTitle: '',
+                    pKey: '',
+                    pValue: '',
+                    pType: 'text'
+                }]
+            };
     }
 
     public getComponentProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties: [{pName: 'defaultname', pValue: 'defaultvalue', pType: 'text'}]};
+        return{componentCid: '', componentProperties:
+                [{
+                    pTitle: '',
+                    pKey: '',
+                    pValue: '',
+                    pType: 'text'
+                }]
+            };
     }
 
-    public setProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         // const num: number = 1 + 1;
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         // const num: number = 1 + 1;
     }
 

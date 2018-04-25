@@ -6,13 +6,13 @@ import './bar.css';
 export interface ICommandProps {
     titleBarCollapsed: boolean;
     onTitleBarCollapse: (collapsed: boolean) => void;
-    onFireCommand: (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
+    onFireCommand: (cId: string, cProperty: {pKey: string, pValue: any}) => void;
     onCommandProperties: (currentCid: string) => ComponentProperty |undefined;
 }
 
 export interface ICommandState {
     onSelectedCid: string;
-    propsContent: Array<{pName: string, pValue: any, pType: string}>;
+    propsContent: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 }
 
 export const CommandItem = (props: any) => {
@@ -24,7 +24,7 @@ export const CommandItem = (props: any) => {
 };
 
 export interface ICommandComponent {
-    setCommandState: (cId: string, stateInput: Array<{pName: string, pValue: any, pType: string}>) => void;
+    setCommandState: (properties: ComponentProperty) => void;
 }
 
 /* tslint:disable:no-console */
@@ -52,11 +52,11 @@ export default class Command<P extends ICommandProps, S extends ICommandState> e
         console.log('你点击了command的element');
         console.log(this.props.onCommandProperties);
         this.props.onFireCommand(this.state.onSelectedCid,
-            {pName: CommandsEnum.PLACEHOLDER, pValue: 'command change', pType: 'text'});
+            {pKey: CommandsEnum.PLACEHOLDER, pValue: 'command change'});
     }
 
-    setCommandState = (cId: string, stateInput: Array<{pName: string, pValue: any, pType: string}>) => {
-        this.setState({propsContent: stateInput, onSelectedCid: cId});
+    setCommandState = (properties: ComponentProperty) => {
+        this.setState({propsContent: properties.componentProperties, onSelectedCid: properties.componentCid});
     }
 
     render() {

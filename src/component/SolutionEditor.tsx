@@ -102,9 +102,9 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         } as IBoundary;
     }
     // 获取command点击后的命令，并传给canvas
-    onFireCommand = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
+    onFireCommand = (cId: string, cProperty: {pKey: string, pValue: any}) => {
         console.log('找当前编辑中的组件，并传递command的命令');
-        console.log('command:' + cProperty.pName + cProperty.pValue);
+        console.log('command:' + cProperty.pKey + cProperty.pValue);
 
         if (this.canvas) {
             // 获取当前编辑中的组件
@@ -127,7 +127,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                 console.log('这是solutioneditor中给command的获取组件属性');
                 console.log(commandProperties);
                 if (this.barList) {
-                    this.barList.setCommandState(currentCid, commandProperties.componentProperties);
+                    this.barList.setCommandState(compProperty);
                 }
 
                 return compProperty;
@@ -144,7 +144,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                 compProperty.componentProperties = pToolProperties.componentProperties;
                 console.log('这是solutioneditor中给propertyTool的获取组件属性');
                 if (this.barList) {
-                    this.barList.setPropertyState(currentCid, pToolProperties.componentProperties);
+                    this.barList.setPropertyState(compProperty);
                 }
 
                 return compProperty;
@@ -153,7 +153,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     // 将propertyTool的属性传给canvas 设置对应的选中控件
-    onFireProperties = (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => {
+    onFireProperties = (cId: string, cProperty: {pKey: string, pValue: any}) => {
         if (this.canvas) {
             const commandProperties = this.canvas.getSelectedProperties(cId);
             if (commandProperties) {

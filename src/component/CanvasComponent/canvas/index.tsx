@@ -291,7 +291,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     // 给canvas编辑中的组件设置command命令
-    executorCommand(cId: string, cProperty: { pName: string, pValue: any, pType: string }) {
+    executorCommand(cId: string, cProperty: { pKey: string, pValue: any}) {
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
             // switch (commandName) {
@@ -304,7 +304,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
-    executorProperties(cId: string, pProperty: { pName: string, pValue: any, pType: string }) {
+    executorProperties(cId: string, pProperty: { pKey: string, pValue: any}) {
         console.log(pProperty);
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {

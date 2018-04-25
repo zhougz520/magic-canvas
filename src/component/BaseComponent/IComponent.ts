@@ -74,10 +74,10 @@ export interface IComponent {
 
     getProperties: () =>  ComponentProperty;
 
-    setProperties: (cId: string, pProperty: {pName: string, pValue: any, pType: string}) => void;
+    setProperties: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
 
     getComponentProperties: () => ComponentProperty;
 
-    setComponentProperties: (cId: string, pProperty: {pName: string, pValue: any, pType: string}) => void;
+    setComponentProperties: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
 
 }

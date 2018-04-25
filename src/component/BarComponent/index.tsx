@@ -8,12 +8,12 @@ import { ComponentProperty } from '../config';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
-    onFireCommand: (cId: string, cProperty: {pName: string, pValue: any, pType: string}) => void;
+    onFireCommand: (cId: string, cProperty: {pKey: string, pValue: any}) => void;
     onCommandProperties: (currentCid: string) => ComponentProperty |undefined;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
     // onPropertyProperties: ComponentProperty| undefined;
 
-    onFireProperties: (cId: string, pProperties: {pName: string, pValue: any, pType: string}) => void;
+    onFireProperties: (cId: string, pProperties: {pKey: string, pValue: any}) => void;
     // onSelectedCid: string;
 
 }
@@ -27,8 +27,8 @@ export interface IBarState {
 }
 
 export interface IBarListComponent {
-    setPropertyState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
-    setCommandState: (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => void;
+    setPropertyState: (properties: ComponentProperty) => void;
+    setCommandState: (properties: ComponentProperty) => void;
 }
 
 /* tslint:disable:no-console */
@@ -97,16 +97,16 @@ export default class BarList<P extends IBarProps, S extends IBarState>
         this.props.changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
     }
 
-    setPropertyState = (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => {
+    setPropertyState = (properties: ComponentProperty) => {
         if (this.propertyTool) {
-            this.propertyTool.setPropertyState(cId, properties);
+            this.propertyTool.setPropertyState(properties);
         }
 
     }
 
-    setCommandState = (cId: string, properties: Array<{pName: string, pValue: any, pType: string}>) => {
+    setCommandState = (properties: ComponentProperty) => {
         if (this.commandTool) {
-            this.commandTool.setCommandState(cId, properties);
+            this.commandTool.setCommandState(properties);
         }
     }
 }

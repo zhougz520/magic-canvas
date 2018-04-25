@@ -83,28 +83,32 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
                 {
-                    pName: 'name',
+                    pTitle: '',
+                    pKey: 'name',
                     pValue: this.getCustomState().getName(),
                     pType: 'text'
                 }, {
-                    pName: 'value',
+                    pTitle: '',
+                    pKey: 'value',
                     pValue: this.getCustomState().getValue(),
                     pType: 'text'
                 }, {
-                    pName: 'options',
+                    pTitle: '',
+                    pKey: 'options',
                     pValue: this.getCustomState().getOptions(),
                     pType: 'text'
                 }, {
-                    pName: 'isButton',
+                    pTitle: '',
+                    pKey: 'isButton',
                     pValue: this.getCustomState().getIsButton(),
                     pType: PropertiesEnum.SWITCH
                 }]
         };
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pName: string, pValue: any, pType: string}) => {
+    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let propertiesMap = Map();
-        propertiesMap = propertiesMap.set(pProperty.pName, pProperty.pValue);
+        propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
         propertiesMap = propertiesMap.set('selectedCid', cid);
 
         const newRadioState: RadioState = RadioState.set(
