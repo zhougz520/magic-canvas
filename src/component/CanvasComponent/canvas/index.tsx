@@ -268,6 +268,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         }
     }
 
+    // 双击编辑
     dbClickToBeginEdit = () => {
         this.command.setIsRichEditMode(true);
         this.beginEdit(true);
