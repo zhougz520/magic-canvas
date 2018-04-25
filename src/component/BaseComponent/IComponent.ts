@@ -72,12 +72,12 @@ export interface IComponent {
      */
     getStyle: (com: any) => CSSStyleDeclaration;
 
-    getProperties: () =>  ComponentProperty;
+    getPropertiesToProperty: () =>  ComponentProperty;
 
-    setProperties: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
+    setPropertiesFromProperty: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
 
-    getComponentProperties: () => ComponentProperty;
+    getPropertiesToCommand: () => ComponentProperty;
 
-    setComponentProperties: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
+    setPropertiesFromCommand: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
 
 }

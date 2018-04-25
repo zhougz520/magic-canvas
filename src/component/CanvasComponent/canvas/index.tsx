@@ -293,7 +293,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         if (currentSelectedComponent !== undefined) {
             // switch (commandName) {
             //     case commandsEnum.PLACEHOLDER:
-            currentSelectedComponent.setComponentProperties(cId, cProperty);
+            currentSelectedComponent.setPropertiesFromCommand(cId, cProperty);
             // default: return false;
             // }
         }
@@ -305,7 +305,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         console.log(pProperty);
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
-            currentSelectedComponent.setProperties(cId, pProperty);
+            currentSelectedComponent.setPropertiesFromProperty(cId, pProperty);
         }
     }
 
@@ -319,7 +319,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             currentSelectedComponent = this.command.getSelectedComponents().last();
         }
         if (currentSelectedComponent) {
-            return currentSelectedComponent.getComponentProperties();
+            return currentSelectedComponent.getPropertiesToCommand();
         } else return undefined;
     }
 

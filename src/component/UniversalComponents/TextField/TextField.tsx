@@ -6,7 +6,7 @@ import { Input } from 'antd';
 import { Map } from 'immutable';
 
 import { TextFieldState } from './TextFieldState';
-import { ComponentProperty } from '../../config';
+import { ComponentProperty, PropertiesEnum } from '../../config';
 
 const { TextArea } = Input;
 // tslint:disable-next-line:no-empty-interface
@@ -28,9 +28,27 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
-                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+                {
+                    pTitle: '行数',
+                    pKey: 'rowNum',
+                    pValue: this.getCustomState().getRowNum(),
+                    pType: PropertiesEnum.INPUT_NUMBER
+                }, {
+                    pTitle: '值',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '默认值',
+                    pKey: 'defaultvalue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '是否自适应行数',
+                    pKey: 'autosize',
+                    pValue: this.getCustomState().getAutosize(),
+                    pType: 'text'
+                }
             ]
         };
     }
@@ -48,9 +66,27 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
-                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+                {
+                    pTitle: '行数',
+                    pKey: 'rowNum',
+                    pValue: this.getCustomState().getRowNum(),
+                    pType: PropertiesEnum.INPUT_NUMBER
+                }, {
+                    pTitle: '值',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '默认值',
+                    pKey: 'defaultvalue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: 'text'
+                }, {
+                    pTitle: '是否自适应行数',
+                    pKey: 'autosize',
+                    pValue: this.getCustomState().getAutosize(),
+                    pType: 'text'
+                }
             ]
         };
     }

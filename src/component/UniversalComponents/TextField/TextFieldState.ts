@@ -3,6 +3,7 @@ import { Record } from 'immutable';
 export interface ITextFieldState {
     placeholder: string;
     rowNum: number;
+    defaultValue: string;
     value: string;
     autosize: boolean;
     selectedCid: string;
@@ -11,6 +12,7 @@ export interface ITextFieldState {
 const defaultRecord: ITextFieldState = {
     placeholder: 'init value',
     rowNum: 3,
+    defaultValue: '',
     value: '',
     autosize: false,
     selectedCid: ''
@@ -40,6 +42,10 @@ export class TextFieldState extends TextFieldRecord {
 
     getRowNum(): number {
         return this.get('rowNum');
+    }
+
+    getDefaultValue(): string {
+        return this.get('defaultValue');
     }
 
     getValue(): string {

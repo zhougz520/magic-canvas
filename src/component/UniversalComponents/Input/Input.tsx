@@ -41,7 +41,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getComponentProperties = (): ComponentProperty  => {
+    public getPropertiesToCommand = (): ComponentProperty  => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
@@ -52,7 +52,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let properties = Map();
         properties = properties.set(pProperty.pKey, pProperty.pValue);
         properties = properties.set('selectedCid', cid);
@@ -61,7 +61,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
-    public getProperties = (): ComponentProperty  => {
+    public getPropertiesToProperty = (): ComponentProperty  => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
@@ -72,7 +72,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    public setProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let properties = Map();
         properties = properties.set(pProperty.pKey, pProperty.pValue);
         properties = properties.set('selectedCid', cid);

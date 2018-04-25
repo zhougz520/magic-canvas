@@ -249,7 +249,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return style;
     }
 
-    public getProperties = (): ComponentProperty => {
+    public getPropertiesToProperty = (): ComponentProperty => {
         return{componentCid: '', componentProperties:
                 [{
                     pTitle: '',
@@ -260,22 +260,22 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             };
     }
 
-    public getComponentProperties = (): ComponentProperty => {
-        return{componentCid: '', componentProperties:
-                [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }]
-            };
-    }
-
-    public setProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         // const num: number = 1 + 1;
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public getPropertiesToCommand = (): ComponentProperty => {
+        return{componentCid: '', componentProperties:
+                [{
+                    pTitle: '',
+                    pKey: '',
+                    pValue: '',
+                    pType: 'text'
+                }]
+            };
+    }
+
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         // const num: number = 1 + 1;
     }
 
