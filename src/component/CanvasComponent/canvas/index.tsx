@@ -103,6 +103,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const anchor = this.command.getCurrentAnchor();
         if (anchor) {
             // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
+            e.stopPropagation();
             e.preventDefault();
             this.command.anchorMouseDown(e, anchor);
         } else {
@@ -181,7 +182,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleKeyDown = (e: any) => {
-        console.log('画布keydown');
         const args = keyArgs(e);
         const { key, ctrl, alt, keyCode } = args as IKeyArgs;
 
@@ -291,6 +291,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         document.addEventListener('mousemove', this.handleMouseMove);
         document.addEventListener('mouseup', this.handleMouseUp);
         document.addEventListener('mouseleave', this.handleMouseLeave);
+        if (this.container) {
+            this.container.addEventListener('mousedown', this.handleMouseDown);
+            this.container.addEventListener('mouseenter', this.handleMouseEnter);
+            this.container.addEventListener('keydown', this.handleKeyDown);
+            this.container.addEventListener('keyup', this.handleKeyUp);
+        }
     }
 
     componentDidUpdate() {
@@ -349,10 +355,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 ref={(handler) => this.container = handler}
                 className="container"
                 style={{ ...ContainerStyle(canvasSize), cursor }}
-                onMouseDown={this.handleMouseDown}
-                onMouseEnter={this.handleMouseEnter}
-                onKeyDown={this.handleKeyDown}
-                onKeyUp={this.handleKeyUp}
             >
                 <RichEdit
                     ref={(handler) => this.editor = handler}
