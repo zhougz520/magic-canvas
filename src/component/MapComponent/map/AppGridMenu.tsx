@@ -61,6 +61,8 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
                                 {...com.p}
                                 updateProps={updateProps}
                             />);
+                    } else {
+                        return '';
                     }
                 })
             );

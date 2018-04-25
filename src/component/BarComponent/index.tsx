@@ -33,8 +33,7 @@ export interface IBarListComponent {
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class BarList<P extends IBarProps, S extends IBarState>
-                    extends React.PureComponent<P, S> implements IBarListComponent {
+export class BarList extends React.PureComponent<IBarProps, IBarState> implements IBarListComponent {
     private propertyTool: IPropertyComponent | null = null;
     private commandTool: ICommandComponent | null = null;
 
@@ -46,7 +45,7 @@ export default class BarList<P extends IBarProps, S extends IBarState>
             propsBarCollapsed: false,
             mapMenuType: 'defaultType',
             componentMode: 'page'
-        } as Readonly<S>;
+        };
     }
 
     render() {

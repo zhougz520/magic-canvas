@@ -76,7 +76,8 @@ export class AppView extends MapComponent<IMapProps, any> {
         });
     }
     public collectProps = () => {
-        const { map_v_txt, map_v_o, id } = this.props;
+        // const { map_v_txt, map_v_o, id } = this.props;
+        const { id } = this.props;
         const currProps: ComponentProperty = {
             componentCid: id,
             componentProperties: [

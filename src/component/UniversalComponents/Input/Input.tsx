@@ -19,7 +19,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new InputState())
-        } as Readonly<IBaseState>;
+        };
     }
 
     render() {

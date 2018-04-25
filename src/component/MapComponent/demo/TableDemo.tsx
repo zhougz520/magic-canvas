@@ -43,14 +43,14 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
             ],
             contextMenu: {   // 自定义右键菜单，可汉化，默认布尔值
                 items: {
-                    'row_above': {
+                    row_above: {
                         name: '上方插入一行'
                     },
-                    'row_below': {
+                    row_below: {
                         name: '下方插入一行'
                     },
-                    'hsep1': '---------', // 提供分隔线
-                    'remove_row': {
+                    hsep1: '---------', // 提供分隔线
+                    remove_row: {
                         name: '删除行'
                     }
                 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
-import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './index';
+import { AppView, ProjectDDTree, AppFind, AppGridMenu } from './index';
 
 import '../sass/Map.scss';
 
@@ -33,13 +33,6 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
     private find: any = '';
     private menu: any = '';
     private grid: any = '';
-
-    // constructor(props: IDemoProps, context?: any) {
-    //     super(props, context);
-    //     this.state = {
-    //         baseState: this.initBaseStateWithCustomState()
-    //     } as Readonly<IBaseState>;
-    // }
 
     public render() {
         const { data, showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { MaskLayer } from '../../BaseComponent/base';
 
 export interface IDemoProps {
     // fireSelect: (cid: string, e: any) => void;
@@ -18,7 +17,7 @@ export default class BtnChildDemo extends PureComponent<IDemoProps, any> {
         super(props, context);
         this.state = {
             ...this.props.data
-        } as Readonly<any>;
+        };
     }
 
     public render() {
