@@ -102,14 +102,11 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             }
         } as IBoundary;
     }
-    // 获取command点击后的命令，并传给canvas
-    onFireCommand = (cid: string, cProperty: {pKey: string, pValue: any}) => {
+
+    // 获取命令，并传给canvas
+    onCommandEmitted = (cmd: any) => {
         if (this.canvas) {
-            // 获取当前编辑中的组件
-            const commandProperties = this.canvas.getSelectedProperties(cid);
-            if (commandProperties) {
-                this.canvas.executorCommand(cid, cProperty);
-            }
+            this.canvas.executeCommand(cmd);
         }
     }
 
@@ -164,7 +161,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                 <BarList
                     ref={(render) => this.barList = render}
                     changeStageOffset={this.changeStageOffset}
-                    onFireCommand={this.onFireCommand}
+                    onCommandEmitted={this.onCommandEmitted}
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                 />

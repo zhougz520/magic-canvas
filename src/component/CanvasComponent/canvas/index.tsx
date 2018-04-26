@@ -11,7 +11,7 @@ import { config, ComponentProperty } from '../../config';
 import { keyFun } from '../model/CanvasCommand';
 import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
-import { Map } from 'immutable';
+import { Map, OrderedSet } from 'immutable';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -30,7 +30,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         this.state = {
             anchor: null,
             componentIndex: this.props.components.length,
-            componentList: Set.of(...this.props.components)
+            componentList: OrderedSet.of(...this.props.components)
         };
         this.command = CanvasCommand;
     }
@@ -316,17 +316,15 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         }
     }
 
-    // 给canvas编辑中的组件设置command命令
-    executorCommand(cId: string, cProperty: { pKey: string, pValue: any}) {
-        const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
-        if (currentSelectedComponent !== undefined) {
-            // switch (commandName) {
-            //     case commandsEnum.PLACEHOLDER:
-            currentSelectedComponent.setPropertiesFromCommand(cId, cProperty);
-            // default: return false;
-            // }
-        }
+    /**
+     * 执行命令
+     */
+    executeCommand(cmd: any) {
+        (this as any)[cmd]('我是参数啊！');
+    }
 
+    doTest = (aa: string) => {
+        console.log('执行DoTest!' + aa);
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
@@ -412,6 +410,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 画布增加组件
      */
     addCancasComponent = (data: any, position: IOffset) => {
+        console.log(data);
         const componentIndex = this.state.componentIndex + 1;
         const componentList = this.state.componentList.add({
             t: data.type,
