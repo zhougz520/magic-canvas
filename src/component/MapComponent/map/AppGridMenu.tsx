@@ -48,7 +48,16 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
 
     public render() {
         const { hover } = this.state;
-        const { updateProps, map_gm_txt, map_sm, p, id, selectedId } = this.props;
+        const {
+            updateProps,
+            map_gm_txt,
+            map_sm,
+            p,
+            id,
+            selectedId,
+            selectComChange,
+            fireSelectChildChange
+        } = this.props;
         const components = p === undefined ? undefined : p.components;
         const menus: any[] = [];
         // 循环初始化菜单按钮
@@ -58,7 +67,12 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
                 if (t === 'MapComponent/map/AppGridMenuItem') {
                     menus.push(
                         <AppGridMenuItem
-                            key={com.p.id}
+                            key={`c.${com.p.id}`}
+                            selectedId={selectedId}
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
+                            selectComChange={selectComChange}
+                            fireSelectChildChange={fireSelectChildChange}
                             {...com.p}
                             updateProps={updateProps}
                         />);
@@ -68,7 +82,7 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
 
         return (
             <div
-                onClick={this.selectedCom}
+                onMouseDown={this.selectedCom}
                 ref={(ref) => this.com = ref}
                 className={`csr-pc-map-grid-menu ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
                 style={Object.assign({}, { width: '100%', backgroundColor: hover ? '#007ACC' : '#4984c2' })}

@@ -43,7 +43,7 @@ export class ProjectDDTree extends MapComponent<IMapProps, any> {
 
         return (
             <table
-                onClick={this.selectedCom}
+                onMouseDown={this.selectedCom}
                 className={`csr-pc-map-app-project ${selectedId === id ? 'selectecd' : ''}`}
                 ref={(ref) => this.com = ref}
                 style={{ width: '100%' }}

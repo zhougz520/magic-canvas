@@ -65,8 +65,9 @@ export class MapComponent<P extends IBaseProps, S>
      * 选择子控件
      */
     protected selectedCom = (e: any) => {
-        const { id, selectCom, fireSelectChildChange } = this.props;
-        selectCom(id);
+        const { id, selectComChange, fireSelectChildChange } = this.props;
+        selectComChange(id);
         fireSelectChildChange(e, id);
+        e.stopPropagation();
     }
 }

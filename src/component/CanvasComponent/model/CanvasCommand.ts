@@ -98,7 +98,9 @@ const globalVar = {
     // stage的滚动定时器
     scrollTimer: null as null | NodeJS.Timer,
     // 新拖入组件的cid
-    addComponentCid: null as string | null
+    addComponentCid: null as string | null,
+    // 选中时是否可操作
+    isCanCtrl: true
 };
 
 // 键盘事件集合
@@ -528,6 +530,12 @@ export const CanvasCommand: ICanvasCommand = {
     },
     setAddComponentCid(cid: string | null): void {
         globalVar.addComponentCid = cid;
+    },
+    getIsCanCtrl(): boolean {
+        return globalVar.isCanCtrl;
+    },
+    setIsCanCtrl(isCanCtrl: boolean): void {
+        globalVar.isCanCtrl = isCanCtrl;
     }
 
 };

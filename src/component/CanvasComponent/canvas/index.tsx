@@ -82,10 +82,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         }
 
         const com = this.findComponent(cid);
+        // 设置当前选中是否能够进行拖拽和拖放操作
+        this.command.setIsCanCtrl(isCanCtrl);
         if (com) {
-            // TODO: 正常在这里应该传递 lastCom
-            // this.selectedComponent(cid, lastCom === null ? com : lastCom);
-            this.selectedComponent(cid, com, false, isCanCtrl);
+            this.selectedComponent(cid, com, false);
         }
     }
 
@@ -102,6 +102,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleMouseDown = (e: any) => {
+        if (!this.command.getIsCanCtrl()) return;
         // 鼠标按下时，计算鼠标位置
         this.recordPointStart(e);
 
@@ -328,7 +329,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
-    executorProperties(cId: string, pProperty: { pKey: string, pValue: any}) {
+    executorProperties(cId: string, pProperty: { pKey: string, pValue: any }) {
         console.log(pProperty);
         const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
         if (currentSelectedComponent !== undefined) {
@@ -520,14 +521,20 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 组件选择
      */
     selectedComponent = (cid: string, com: IComponent, multiselect: boolean = false, isCanCtrl: boolean = true) => {
-        if (isCanCtrl) {
-            // 组件选择
+        // 组件选择
+        if (this.command.getIsCanCtrl()) {
             this.command.addSelectedComponent(cid, com, multiselect);
             this.repaintSelected();
             this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
         } else {
-            console.log('子控件');
-            console.log(com);
+            const arrCid: string[] = cid.split('.');
+            const bsCom = this.findComponent(arrCid[0]);
+            // 顶级父控件选择
+            if (bsCom) {
+                this.command.addSelectedComponent(arrCid[0], bsCom, false);
+                this.repaintSelected();
+                this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
+            }
         }
         this.props.onPropertyProperties(cid);
 

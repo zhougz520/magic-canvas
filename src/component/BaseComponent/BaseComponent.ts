@@ -250,32 +250,34 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     public getPropertiesToProperty = (): ComponentProperty => {
-        return{componentCid: '', componentProperties:
+        return {
+            componentCid: '', componentProperties:
                 [{
                     pTitle: '',
                     pKey: '',
                     pValue: '',
                     pType: 'text'
                 }]
-            };
+        };
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (cid: string, pProperty: { pKey: string, pValue: any }) => {
         // const num: number = 1 + 1;
     }
 
     public getPropertiesToCommand = (): ComponentProperty => {
-        return{componentCid: '', componentProperties:
+        return {
+            componentCid: '', componentProperties:
                 [{
                     pTitle: '',
                     pKey: '',
                     pValue: '',
                     pType: 'text'
                 }]
-            };
+        };
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (cid: string, pProperty: { pKey: string, pValue: any }) => {
         // const num: number = 1 + 1;
     }
 
@@ -285,11 +287,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public selectComChange = (id: string, cancelBsSelect: boolean = true) => {
         this.setState({
-            selectCom: id
+            selectedId: id
         });
-        if (cancelBsSelect && this.props.selectionChanging) {
-            this.props.clearSelected();
-        }
+        this.fireSelectChildChange(null);
     }
     /**
      * 初始化BaseSate
@@ -420,8 +420,11 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param cid 组件ref标识
      */
     protected fireSelectChildChange = (e: any, cid: string = this.getCid()): void => {
-        if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid, false);
+        if (e) {
+            if (this.props.selectionChanging) {
+                this.props.selectionChanging(cid, false);
+            }
+            e.preventDefault();
         }
     }
 

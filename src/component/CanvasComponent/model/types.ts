@@ -79,4 +79,6 @@ export interface ICanvasCommand {
     isSelectedComponent: () => boolean;
     getAddComponentCid: () => string | null;
     setAddComponentCid: (cid: string | null) => void;
+    getIsCanCtrl: () => boolean;
+    setIsCanCtrl: (isCanCtrl: boolean) => void;
 }

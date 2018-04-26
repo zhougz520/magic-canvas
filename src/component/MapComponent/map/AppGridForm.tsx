@@ -15,7 +15,7 @@ export interface IDemoProps extends IBaseProps {
 
 export interface IDemoState extends IBaseState {
     demoState: string;
-    selectCom: string;  // 先...只能单选，后面看情况在调整
+    selectedId: string;  // 先...只能单选，后面看情况在调整
     title: string;
 }
 export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
@@ -108,17 +108,16 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
 
     // 初始化加载控件
     public initCom = (components: any[]) => {
-        const { selectCom } = this.state;
-        // console.log(selectCom);
+        const { selectedId } = this.state;
         components.forEach((com: any) => {
             switch (com.t) {
                 case 'MapComponent/map/ProjectDDTree':
                     this.proj = (
                         <ProjectDDTree
-                            selectedId={selectCom}
+                            selectedId={selectedId}
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
-                            selectCom={this.selectComChange}
+                            selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
@@ -128,10 +127,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                 case 'MapComponent/map/AppView':
                     this.view = (
                         <AppView
-                            selectedId={selectCom}
+                            selectedId={selectedId}
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
-                            selectCom={this.selectComChange}
+                            selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
@@ -141,10 +140,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                 case 'MapComponent/map/AppFind':
                     this.find = (
                         <AppFind
-                            selectedId={selectCom}
+                            selectedId={selectedId}
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
-                            selectCom={this.selectComChange}
+                            selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
@@ -154,10 +153,10 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                 case 'MapComponent/map/AppGridMenu':
                     this.menu = (
                         <AppGridMenu
-                            selectedId={selectCom}
+                            selectedId={selectedId}
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
-                            selectCom={this.selectComChange}
+                            selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.props.data.updateProps}
@@ -165,14 +164,15 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                     );
                     break;
                 case 'MapComponent/map/AppGrid':
-                    this.menu = (
+                    this.grid = (
                         <AppGrid
-                            selectedId={selectCom}
+                            selectedId={selectedId}
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
-                            selectCom={this.selectComChange}
+                            selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
+                            w={this.getSizeState().getWidth()}
                             updateProps={this.props.data.updateProps}
                         />
                     );
