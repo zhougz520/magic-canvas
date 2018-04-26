@@ -1,69 +1,75 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import { Select } from 'antd';
-
-const Option = Select.Option;
+import util from '../../util/index';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    value?: string;
+    map_gt_txt?: string;
+    w: number;
 }
 
 export class AppGridTitle extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        // value: 'test'
+        map_gt_txt: '标题',
+        w: 50
     };
 
     public com: HTMLElement | null = null;
+    public dragWidth: HTMLElement | null = null;
 
     constructor(props: any, context?: any) {
         super(props, context);
+    }
 
-        this.state = {
-            data: props.data
-        };
+    componentWillMount() {
+        if (this.com !== null) {
+            // this.com.addEventListener('dragstart', this.dragStart);
+            // this.com.addEventListener('dragend', this.dragEnd);
+        }
     }
 
     public render() {
-        const { map_v_txt, map_v_o, map_v_w } = this.state.data;
-        let arrOption = [];
-        if (map_v_o instanceof Array) {
-            arrOption = map_v_o;
-        } else {
-            arrOption = map_v_o === undefined ? [''] : map_v_o.replace(/<br>/g, '\r\n').split(/\r?\n/);
-        }
-        const options: any[] = [];
-        if (arrOption !== undefined) {
-            arrOption.map((mi: string) => {
-                options.push(
-                    <Option value={mi} key={mi}>{mi}</Option>
-                );
-            });
-        }
+        const { map_sm, w, map_gt_txt, selectedId, id } = this.props;
 
         return (
-            <table ref={(ref) => this.com = ref} style={{ width: '100%' }}>
-                <tbody>
-                    <tr>
-                        <td style={{ width: `${map_v_w}px`, fontFamily: '宋体' }}>
-                            <b style={{ marginLeft: '20px' }}>{map_v_txt}</b>
-                        </td>
-                        <td>
-                            <div className="first-page">
-                                <Select style={{ width: '100%' }}>
-                                    {options}
-                                </Select>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div
+                className={`title ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+                ref={(ref) => this.com = ref}
+                style={{ width: w }}
+                onMouseDown={this.selectedCom}
+                onMouseMove={this.mouseMove}
+                onMouseUp={this.mouseUp}
+            >
+                <button className={`title-content `}>
+                    {map_gt_txt}
+                </button>
+                <div
+                    className="title-split"
+                    draggable
+                // onClick={this.handleMouseup}
+                />
+            </div>
         );
     }
 
-    public onProjectValueChange = (value: string) => {
-        this.setState({
-            projectValue: value
-        });
+    public mouseMove = (evt: any) => {
+        // evt.dataTransfer.effectAllowed = 'move';
+        // evt.dataTransfer.setData('text', evt.target.outerHTML);
+
+        // 计算鼠标开始拖拽时的偏移量(鼠标落点与item左上角的偏移量)
+        // let offset = { x: 0, y: 0 } as { x: number, y: number };
+
+    }
+
+    public mouseUp = (evt: any) => {
+        // delete localStorage.__dnd_type;
+        // delete localStorage.__dnd_value;
+    }
+    // 鼠标松开时，计算title宽度
+    public handleMouseup = (e: any) => {
+        e.preventDefault();
+        e.target;
+        util.debugLog(e.target, 'e.target');
+        util.debugLog('11111', '11111');
     }
 }

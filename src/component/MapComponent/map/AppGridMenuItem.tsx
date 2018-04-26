@@ -28,7 +28,7 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
     }
 
     public render() {
-        const { map_mi_txt, map_mi_dd, map_mi_ico, map_mi_si, map_mi_sa } = this.state;
+        const { map_mi_txt, map_mi_dd, map_mi_ico, map_mi_si, map_mi_sa, selectedId, id } = this.props;
 
         const dropDownMenu: any[] = [];
         if (map_mi_dd !== undefined) {
@@ -50,7 +50,11 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
 
         return (
             <Dropdown overlay={menu} trigger={['click']}>
-                <div ref={(ref) => this.com = ref} className="app-grid-menu-item">
+                <div
+                    onMouseDown={this.selectedCom}
+                    ref={(ref) => this.com = ref}
+                    className={`app-grid-menu-item ${selectedId === id ? 'selectecd' : ''}`}
+                >
                     {map_mi_txt}
                     {map_mi_si ? (<div className={`ico ${map_mi_ico}`} />) : ''}
                     <Icon

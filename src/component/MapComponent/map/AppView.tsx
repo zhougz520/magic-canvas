@@ -47,7 +47,7 @@ export class AppView extends MapComponent<IMapProps, any> {
 
         return (
             <table
-                onClick={this.selectedCom}
+                onMouseDown={this.selectedCom}
                 className={`csr-pc-map-app-view ${selectedId === id ? 'selectecd' : ''}`}
                 ref={(ref) => this.com = ref}
                 style={{ width: '100%' }}

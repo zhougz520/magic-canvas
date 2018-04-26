@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import { Checkbox } from 'antd';
-// import { AppGridTitle } from './index';
+import { AppGridTitle } from './index';
+import DragOnDrop from 'drag-on-drop';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -27,6 +28,8 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     };
 
     public com: HTMLElement | null = null;
+    public title: HTMLElement | null = null;
+    public titles: JSX.Element[] = [];
 
     constructor(props: any, context?: any) {
         super(props, context);
@@ -35,20 +38,75 @@ export class AppGrid extends MapComponent<IMapProps, any> {
             ...props
         };
     }
+    componentDidMount() {
+        if (this.com != null) {
+            this.com.addEventListener('mouseover', this.handleOver);
+            this.com.addEventListener('mouseleave', this.handleLeave);
+            this.com.addEventListener('mousemove', this.handleLeave);
+        }
 
+        const dragonDrop = new DragOnDrop(this.title);
+
+        this.setState({ dragonDrop });
+    }
     public render() {
         // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
-        const { map_g_mc, map_g_tree } = this.props;
+        const { map_g_mc, map_g_tree, map_sm, selectedId, id, w, p } = this.props;
+        // 加载 GridTitle
+        this.initTitle(p);
 
         return (
-            <div ref={(ref) => this.com = ref} className="csr-pc-map-app-grid">
-                <div className={`grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
-                    {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
-                </div>
-                <div className={`grid-title-content`} style={{ display: map_g_tree ? 'none' : '' }}>
-                    {}
+            <div
+                onMouseDown={this.selectedCom}
+                ref={(ref) => this.com = ref}
+                className={`csr-pc-map-app-grid ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+            >
+                <div className={`grid-title`} style={{ width: w - 10 }}>
+                    <div className={`grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
+                        {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
+                    </div>
+                    <div className="title-split no-ctrl" />
+                    <div className={`grid-title-content`} ref={(ref) => this.title = ref}>
+                        {this.titles}
+                    </div>
                 </div>
             </div>
         );
+    }
+
+    public handleOver = (e: any) => {
+        this.setState({
+            hover: true
+        });
+        e.preventDefault();
+    }
+
+    public handleLeave = (e: any) => {
+        this.setState({
+            hover: false
+        });
+        e.preventDefault();
+    }
+    // 初始化标题
+    protected initTitle = (p: any) => {
+        const { selectComChange, selectedId, fireSelectChildChange, updateProps } = this.props;
+        if (p !== undefined) {
+            const currTitles: JSX.Element[] = [];
+            p.components.forEach((com: any) => {
+                currTitles.push(
+                    <AppGridTitle
+                        key={`c.${com.p.id}`}
+                        selectedId={selectedId}
+                        // tslint:disable-next-line:jsx-no-string-ref
+                        ref={`c.${com.p.id}`}
+                        selectComChange={selectComChange}
+                        fireSelectChildChange={fireSelectChildChange}
+                        {...com.p}
+                        updateProps={updateProps}
+                    />
+                );
+            });
+            this.titles = currTitles;
+        }
     }
 }

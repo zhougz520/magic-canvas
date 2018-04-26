@@ -4,6 +4,7 @@ export interface IUtil {
     isEmptyString: (variable: any) => boolean;
     getDomLocation: (dom: HTMLElement) => any;
     containClassName: (dom: HTMLElement, target: string) => boolean;
+    debugLog: (e: any, title: string) => void;
 }
 
 const util: IUtil = {
@@ -56,6 +57,10 @@ const util: IUtil = {
         }
 
         return hasFind;
+    },
+    debugLog: (e: any, title: string) => {
+        console.log(title);
+        console.log(e);
     }
 };
 
