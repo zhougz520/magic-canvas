@@ -30,7 +30,7 @@ const globalVar = {
         }
     },
     // 当前选中的组件集合
-    selectedComponents: Map<string, IComponent>(),
+    selectedComponents: Map<string, any>(),
     // 当前选中的组件组件的大小和位置(为了实时修改组件的大小)
     currentComponentSize: {
         list: Map<string, { position: IPosition, size: ISize }>(),
@@ -339,7 +339,7 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 新增选中组件
-    addSelectedComponent(cid: string, com: IComponent, multiselect?: boolean) {
+    addSelectedComponent(cid: string, com: IComponent, multiselect: boolean) {
         let components = globalVar.selectedComponents;
         if (!this.isMultiselect() && !components.has(cid) && !multiselect) {
             components = components.clear();

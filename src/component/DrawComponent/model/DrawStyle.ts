@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export const DrawStyle = (canvasSize: { width: number, height: number }): React.CSSProperties => {
     return {
-        zIndex: 2,
+        zIndex: 1,
         position: 'absolute',
         width: `${canvasSize.width}px`,
         height: `${canvasSize.height}px`,

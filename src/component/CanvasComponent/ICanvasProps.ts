@@ -2,6 +2,7 @@ import { IDrawComponent } from '../DrawComponent';
 
 import { ICompos, ComponentProperty } from '../config';
 import { IBoundary, IOffset } from './model/types';
+import { Map } from 'immutable';
 
 export interface ICanvasProps {
     components: any[];
@@ -13,7 +14,7 @@ export interface ICanvasProps {
     getStageScroll: () => { scrollLeft: number, scrollTop: number };
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
-    onCommandProperties: (currentCid: string) => ComponentProperty| undefined;
+    onCommandProperties: (selectedComs: Map<string, any>) => void;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
     updateCanvasSize: (width: number, height: number) => void;
 }

@@ -1,21 +1,18 @@
 import * as React from 'react';
+
 import Title from './TitleBar';
-import Command, { ICommandComponent } from './CommandBar';
+import { Command, ICommandComponent } from './CommandBar';
 import Resource from './ResourceBar';
 import Property, { IPropertyComponent } from './PropertyBar';
 import Contributor from './ContributorBar';
 import { ComponentProperty } from '../config';
+import { Map } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
-    onFireCommand: (cId: string, cProperty: {pKey: string, pValue: any}) => void;
-    onCommandProperties: (currentCid: string) => ComponentProperty |undefined;
+    onFireCommand: (cid: string, cProperty: {pKey: string, pValue: any}) => void;
     onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
-    // onPropertyProperties: ComponentProperty| undefined;
-
     onFireProperties: (cId: string, pProperties: {pKey: string, pValue: any}) => void;
-    // onSelectedCid: string;
-
 }
 
 export interface IBarState {
@@ -28,7 +25,7 @@ export interface IBarState {
 
 export interface IBarListComponent {
     setPropertyState: (properties: ComponentProperty) => void;
-    setCommandState: (properties: ComponentProperty) => void;
+    setCommandState: (selectedComs: Map<string, any>) => void;
 }
 
 /* tslint:disable:no-console */
@@ -58,7 +55,6 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     ref={(render) => this.commandTool = render}
                     titleBarCollapsed={titleBarCollapsed}
                     onFireCommand={this.props.onFireCommand}
-                    onCommandProperties={this.props.onCommandProperties}
                     // tslint:disable-next-line:jsx-no-lambda
                     onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
                 />
@@ -103,9 +99,9 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
 
     }
 
-    setCommandState = (properties: ComponentProperty) => {
+    setCommandState = (selectedComs: Map<string, any>): void => {
         if (this.commandTool) {
-            this.commandTool.setCommandState(properties);
+            this.commandTool.setCommandState(selectedComs);
         }
     }
 }

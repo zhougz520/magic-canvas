@@ -1,17 +1,11 @@
 import * as React from 'react';
-
-export interface IEditStyle {
-    maxWidth: number;
-    top: number;
-    left: number;
-    style: CSSStyleDeclaration | null;
-}
+import { IEditStyle } from './types';
 
 export const EditStyle = (config: IEditStyle): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
         minHeight: '1em',
         lineHeight: '1.2',
-        zIndex: 10000,
+        zIndex: 1,
         textAlign: 'center',
         outline: 'none',
         whiteSpace: 'normal',
