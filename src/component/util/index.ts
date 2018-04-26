@@ -7,6 +7,7 @@ export interface IUtil {
     debugLog: (e: any, title: string) => void;
 }
 
+/* tslint:disable:no-console */
 const util: IUtil = {
     componentsType: (csType: string) => {
         return require(`../${csType}`).default;
