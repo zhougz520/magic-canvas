@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Switch } from 'antd';
+import { Switch, Button } from 'antd';
 import { config } from '../../config';
 import { ICommandProps, ICommandState, ICommandComponent } from './types';
 import { Map } from 'immutable';
@@ -54,6 +54,15 @@ export class Command extends React.PureComponent<ICommandProps, ICommandState> i
                 </div>
                 <div>
                     当前选中组件：{comList.join('|')}
+                </div>
+                <div
+                    style={{marginLeft: 'auto', marginRight: '300px'}}
+                >
+                    <Button
+                        type="primary"
+                    >
+                        批注
+                    </Button>
                 </div>
             </div>
         );
