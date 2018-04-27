@@ -33,7 +33,10 @@ export class Toolbar extends React.PureComponent<IToolbarProps, IToolbarState> i
     fireCommand = (cmd: any) => {
         this.props.onCommandEmitted(
             {
-                t: cmd
+                t: cmd,
+                d: {
+                    value: '我是批注1'
+                }
             }
         );
     }

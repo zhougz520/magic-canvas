@@ -321,13 +321,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     /**
      * 执行命令
+     * @param cmd 命令参数：{ t: e.addComments, d: {key: xxx, value: xxx, type: xxx, name: xxx} }
      */
     executeCommand(cmd: any) {
         // 解析命令来源
         // eg：e.addComments
         const cmdParams = cmd.t.split('.');
         if (cmdParams[0] === 'e') {
-            (this as any)[cmdParams[1]]('批注1');
+            (this as any)[cmdParams[1]](cmd.d);
         }
     }
 

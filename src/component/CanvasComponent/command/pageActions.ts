@@ -8,8 +8,9 @@ export const pageActions = {
     },
 
     // 添加批注
-    addComments(aa: string) {
+    addComments(param: any) {
+        const { value } = param;
         // tslint:disable-next-line:no-console
-        console.log('添加批注：' + aa);
+        console.log('添加批注：' + value);
     }
 };
