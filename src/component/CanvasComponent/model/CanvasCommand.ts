@@ -30,7 +30,7 @@ const globalVar = {
         }
     },
     // 当前选中的组件集合
-    selectedComponents: Map<string, IComponent>(),
+    selectedComponents: Map<string, any>(),
     // 当前选中的组件组件的大小和位置(为了实时修改组件的大小)
     currentComponentSize: {
         list: Map<string, { position: IPosition, size: ISize }>(),
@@ -98,7 +98,9 @@ const globalVar = {
     // stage的滚动定时器
     scrollTimer: null as null | NodeJS.Timer,
     // 新拖入组件的cid
-    addComponentCid: null as string | null
+    addComponentCid: null as string | null,
+    // 选中时是否可操作
+    isCanCtrl: true
 };
 
 // 键盘事件集合
@@ -337,7 +339,7 @@ export const CanvasCommand: ICanvasCommand = {
     },
 
     // 新增选中组件
-    addSelectedComponent(cid: string, com: IComponent, multiselect?: boolean) {
+    addSelectedComponent(cid: string, com: IComponent, multiselect: boolean) {
         let components = globalVar.selectedComponents;
         if (!this.isMultiselect() && !components.has(cid) && !multiselect) {
             components = components.clear();
@@ -528,6 +530,12 @@ export const CanvasCommand: ICanvasCommand = {
     },
     setAddComponentCid(cid: string | null): void {
         globalVar.addComponentCid = cid;
+    },
+    getIsCanCtrl(): boolean {
+        return globalVar.isCanCtrl;
+    },
+    setIsCanCtrl(isCanCtrl: boolean): void {
+        globalVar.isCanCtrl = isCanCtrl;
     }
 
 };

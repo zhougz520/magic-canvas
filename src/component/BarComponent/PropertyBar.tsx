@@ -1,8 +1,15 @@
 import * as React from 'react';
+<<<<<<< HEAD
 import './bar.css';
 import { Button, Input, Switch} from 'antd';
+=======
+
+import { Button, Input, Switch, Icon} from 'antd';
+>>>>>>> 413e38603de124c70c42dabcef0318ad9b97d494
 import { PropertiesEnum, ComponentProperty } from '../config';
 import { List, fromJS, Map } from 'immutable';
+
+import './sass/bar.scss';
 
 const {TextArea} = Input;
 

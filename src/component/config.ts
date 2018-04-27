@@ -28,6 +28,7 @@ export const CommandsEnum = {
 
 // PropertiesEnum为属性工具的枚举类，包含属性工具子控件的种类和对应的枚举名称
 export const PropertiesEnum = {
+<<<<<<< HEAD
 
     INPUT_STRING: 'input_string',    // 单行输入框
 
@@ -43,6 +44,13 @@ export const PropertiesEnum = {
 
     SELECT: 'select'  // 选择框
 
+=======
+    INPUT_STRING: 'input_string',   // 单行输入框
+    INPUT_NUMBER: 'input_number',   // 数字输入框
+    INPUT_TEXT: 'input_text',       // 多行输入框
+    SWITCH: 'switch',               // 开关选择器
+    INPUT_LIST: 'input_list'        // 输入框列表
+>>>>>>> 413e38603de124c70c42dabcef0318ad9b97d494
 };
 
 export class ComponentProperty {

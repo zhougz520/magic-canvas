@@ -17,6 +17,7 @@ export const CanvasStyle = (pos: { top: number, left: number, right: number, bot
 
 export const ContainerStyle = (size: { width: number, height: number }): React.CSSProperties => {
     return {
+        zIndex: 0,
         position: 'absolute',
         width: `${size.width}px`,
         height: `${size.height}px`,

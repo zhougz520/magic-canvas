@@ -4,10 +4,12 @@
  */
 export interface IBaseProps {
     selectedId: string;
-    selectCom: (cid: string) => void;
+    selectComChange: (cid: string) => void;
     map_sm?: string;
     id: string;
     p?: any;
+    w?: number;
+    h?: number;
     fireSelectChildChange: (cid: string, e: any) => void;
     // key: string;
     // id: string;

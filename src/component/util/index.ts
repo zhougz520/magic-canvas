@@ -4,8 +4,10 @@ export interface IUtil {
     isEmptyString: (variable: any) => boolean;
     getDomLocation: (dom: HTMLElement) => any;
     containClassName: (dom: HTMLElement, target: string) => boolean;
+    debugLog: (e: any, title: string) => void;
 }
 
+/* tslint:disable:no-console */
 const util: IUtil = {
     componentsType: (csType: string) => {
         return require(`../${csType}`).default;
@@ -56,6 +58,10 @@ const util: IUtil = {
         }
 
         return hasFind;
+    },
+    debugLog: (e: any, title: string) => {
+        console.log(title);
+        console.log(e);
     }
 };
 

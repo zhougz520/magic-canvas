@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { BarList, IBarListComponent } from './BarComponent';
 import Draw from './DrawComponent/draw';
 import Canvas from './CanvasComponent/canvas';
@@ -7,6 +8,7 @@ import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
 import { ICompos, config, ComponentProperty } from './config';
 import { IOffset } from './CanvasComponent/model/types';
+import { Map } from 'immutable';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -78,7 +80,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
     // 修改滚动条
     setStageScroll = (offset: IOffset) => {
-        console.log(offset);
         if (this.stage !== null) {
             this.stage.scrollLeft += offset.x;
             this.stage.scrollTop += offset.y;
@@ -101,38 +102,28 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             }
         } as IBoundary;
     }
-    // 获取command点击后的命令，并传给canvas
-    onFireCommand = (cId: string, cProperty: {pKey: string, pValue: any}) => {
-        console.log('找当前编辑中的组件，并传递command的命令');
-        console.log('command:' + cProperty.pKey + cProperty.pValue);
 
+    getStageSize = () => {
+        if (this.stage === null) return;
+
+        const width = this.stage.offsetWidth;
+        const height = this.stage.offsetHeight;
+
+        return { width, height };
+    }
+
+    // 获取命令，并传给canvas
+    onCommandEmitted = (cmd: any) => {
         if (this.canvas) {
-            // 获取当前编辑中的组件
-            const commandProperties = this.canvas.getSelectedProperties(cId);
-            if (commandProperties) {
-                this.canvas.executorCommand(cId, cProperty);
-            }
+            this.canvas.executeCommand(cmd);
         }
     }
-    // 获取编辑中的组件属性并传给command
-    onCommandProperties = (currentCid: string): ComponentProperty |undefined => {
-        if (this.canvas) {
-            const compProperty: ComponentProperty = {componentCid: currentCid, componentProperties: []};
 
-            const commandProperties = this.canvas.getSelectedProperties(currentCid);
-            compProperty.componentProperty = commandProperties;
-
-            // commandProperties为undefined 则未选中组件
-            if (commandProperties) {
-                console.log('这是solutioneditor中给command的获取组件属性');
-                console.log(commandProperties);
-                if (this.barList) {
-                    this.barList.setCommandState(compProperty);
-                }
-
-                return compProperty;
-            } else return undefined;
-        } else return undefined;
+    // 获取选中的组件集合并传给CommandBar
+    onCommandProperties = (selectedComs: Map<string, any>): void => {
+        if (this.barList) {
+            this.barList.setCommandState(selectedComs);
+        }
     }
 
     // 获取编辑中的组件属性并传给propertyTool
@@ -142,7 +133,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
             const pToolProperties = this.canvas.getSelectedProperties(currentCid);
             if (pToolProperties !== undefined) {
                 compProperty.componentProperties = pToolProperties.componentProperties;
-                console.log('这是solutioneditor中给propertyTool的获取组件属性');
+                // console.log('这是solutioneditor中给propertyTool的获取组件属性');
                 if (this.barList) {
                     this.barList.setPropertyState(compProperty);
                 }
@@ -157,7 +148,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         if (this.canvas) {
             const commandProperties = this.canvas.getSelectedProperties(cId);
             if (commandProperties) {
-                console.log(commandProperties);
+                // console.log(commandProperties);
                 this.canvas.executorProperties(cId, cProperty);
             }
         }
@@ -167,22 +158,19 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
      * 修改画布大小
      */
     updateCanvasSize = (width: number, height: number) => {
-        console.log('重绘了画布的大小');
         this.setState({ canvasSize: { width, height } });
     }
 
     render() {
         const { compos, canvasSize } = this.state;
         const stateStyle = this.StageStyle();
-        console.log('重绘了stage');
 
         return (
             <div className="main-editor">
                 <BarList
                     ref={(render) => this.barList = render}
                     changeStageOffset={this.changeStageOffset}
-                    onFireCommand={this.onFireCommand}
-                    onCommandProperties={this.onCommandProperties}
+                    onCommandEmitted={this.onCommandEmitted}
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                 />
@@ -202,6 +190,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         getStageScroll={this.getStageScroll}
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
+                        getStageSize={this.getStageSize}
                         components={detail.content.components}
                         onCommandProperties={this.onCommandProperties}
                         // tslint:disable-next-line:jsx-no-lambda
@@ -412,6 +401,37 @@ const detail = {
                                                 p: {
                                                     id: 'cs5.cs4.cs3',
                                                     map_mi_sa: true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppGrid',
+                                p: {
+                                    id: 'cs5.cs5',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/AppGridTitle',
+                                                p: {
+                                                    id: 'cs5.cs5.cs1',
+                                                    map_gt_txt: 'AAA'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridTitle',
+                                                p: {
+                                                    id: 'cs5.cs5.cs2',
+                                                    map_gt_txt: 'BBB'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridTitle',
+                                                p: {
+                                                    id: 'cs5.cs5.cs3',
+                                                    map_gt_txt: 'CCC'
                                                 }
                                             }
                                         ]
