@@ -20,7 +20,7 @@ export default class Comments extends BaseComponent<IBaseProps, IBaseState> {
                 className="comments"
                 onMouseDown={this.fireSelectChange}
                 // tslint:disable-next-line:max-line-length
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 dangerouslySetInnerHTML={{__html: richChildNode}}
             />
         );
