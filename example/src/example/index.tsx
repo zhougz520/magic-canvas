@@ -7,6 +7,7 @@ import './index.scss';
 const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils, FbjsUtils, DefaultDraftBlockStyle } = DraftPublic;
 const { cx } = FbjsUtils;
 
+/* tslint:disable:no-console */
 /* tslint:disable:jsx-no-multiline-js */
 export default class Example extends React.PureComponent<any, any> {
     constructor(props: any) {
@@ -157,6 +158,7 @@ export default class Example extends React.PureComponent<any, any> {
 
     render() {
         const { editorState } = this.state;
+        console.log(editorState);
 
         return (
             <div className="RichEditor-root">
