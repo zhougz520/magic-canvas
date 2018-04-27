@@ -103,6 +103,15 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         } as IBoundary;
     }
 
+    getStageSize = () => {
+        if (this.stage === null) return;
+
+        const width = this.stage.offsetWidth;
+        const height = this.stage.offsetHeight;
+
+        return { width, height };
+    }
+
     // 获取命令，并传给canvas
     onCommandEmitted = (cmd: any) => {
         if (this.canvas) {
@@ -181,6 +190,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         getStageScroll={this.getStageScroll}
                         setStageScroll={this.setStageScroll}
                         getStageBoundary={this.getStageBoundary}
+                        getStageSize={this.getStageSize}
                         components={detail.content.components}
                         onCommandProperties={this.onCommandProperties}
                         // tslint:disable-next-line:jsx-no-lambda
