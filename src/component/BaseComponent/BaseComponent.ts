@@ -264,14 +264,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         };
     }
 
-<<<<<<< HEAD
     /**
      * 获取属性工具条的单条属性，传给组件并设置组件
      */
     public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
-=======
-    public setPropertiesFromProperty = (cid: string, pProperty: { pKey: string, pValue: any }) => {
->>>>>>> 413e38603de124c70c42dabcef0318ad9b97d494
         // const num: number = 1 + 1;
     }
 
@@ -290,14 +286,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         };
     }
 
-<<<<<<< HEAD
     /**
      * 获取命令工具条的单条属性，传给组件并设置组件
      */
     public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
-=======
-    public setPropertiesFromCommand = (cid: string, pProperty: { pKey: string, pValue: any }) => {
->>>>>>> 413e38603de124c70c42dabcef0318ad9b97d494
         // const num: number = 1 + 1;
     }
 

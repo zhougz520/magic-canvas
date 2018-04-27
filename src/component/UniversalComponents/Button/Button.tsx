@@ -46,7 +46,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
                     pTitle: '类型',
                     pKey: 'type',
                     pValue: this.getCustomState().getType(),
-                    pType: PropertiesEnum.SELECT
+                    pType: PropertiesEnum.INPUT_LIST
                 }, {
                     pTitle: '是否为圆形按钮',
                     pKey: 'isCircle',
