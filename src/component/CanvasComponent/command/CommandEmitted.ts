@@ -1,4 +1,4 @@
 
 export const CommandMap = {
-    DEMO_COMMAND: 'doTest'
+    COMMENTS_ADD: 'e.addComments'
 };

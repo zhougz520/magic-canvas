@@ -31,7 +31,11 @@ export class Toolbar extends React.PureComponent<IToolbarProps, IToolbarState> i
      * 发射命令
      */
     fireCommand = (cmd: any) => {
-        this.props.onCommandEmitted(cmd);
+        this.props.onCommandEmitted(
+            {
+                t: cmd
+            }
+        );
     }
 
     /**
@@ -72,7 +76,7 @@ export class Toolbar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     <Button
                         type="primary"
                         // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.DEMO_COMMAND)}
+                        onClick={() => this.fireCommand(CommandMap.COMMENTS_ADD)}
                     >
                         批注
                     </Button>

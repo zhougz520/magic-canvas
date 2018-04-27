@@ -11,6 +11,7 @@ import { config, ComponentProperty } from '../../config';
 import { keyFun } from '../model/CanvasCommand';
 import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
+import { pageActions } from '../command/pageActions';
 import { Map, OrderedSet } from 'immutable';
 
 /* tslint:disable:no-console */
@@ -33,6 +34,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             componentList: OrderedSet.of(...this.props.components)
         };
         this.command = CanvasCommand;
+        pageActions.bind(this);
     }
 
     /**
@@ -321,11 +323,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 执行命令
      */
     executeCommand(cmd: any) {
-        (this as any)[cmd]('我是参数啊！');
-    }
-
-    doTest = (aa: string) => {
-        console.log('执行DoTest!' + aa);
+        // 解析命令来源
+        // eg：e.addComments
+        const cmdParams = cmd.t.split('.');
+        if (cmdParams[0] === 'e') {
+            (this as any)[cmdParams[1]]('批注1');
+        }
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
