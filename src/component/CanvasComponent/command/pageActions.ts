@@ -7,18 +7,18 @@ export const pageActions = {
         }
     },
 
+    // 获得当前绑定的this
     getThis() {
         return (this as any);
     },
 
     // 添加批注
-    addComments(param: any) {
+    addComments() {
         const stageSize = this.getThis().props.getStageSize();
         if (stageSize === undefined) {
             return;
         }
-        // tslint:disable-next-line:no-console
-        console.log(stageSize);
+
         const data = {
             offset: {x: 0, y: 0},
             props: {name: '批注', w: 204, h: 170},

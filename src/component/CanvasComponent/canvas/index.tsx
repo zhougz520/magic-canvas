@@ -34,6 +34,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             componentList: OrderedSet.of(...this.props.components)
         };
         this.command = CanvasCommand;
+
+        // 绑定操作动作（模仿.net partial）
         pageActions.bind(this);
     }
 
@@ -415,7 +417,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      * 画布增加组件
      */
     addCancasComponent = (data: any, position: IOffset) => {
-        console.log(data);
         const componentIndex = this.state.componentIndex + 1;
         const componentList = this.state.componentList.add({
             t: data.type,
