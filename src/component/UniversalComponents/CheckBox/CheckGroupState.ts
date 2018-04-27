@@ -1,18 +1,25 @@
-import { Record } from 'immutable';
+import { Record, List, fromJS } from 'immutable';
 
 export interface ICheckGroupState {
-    defaultValue: string[];
+    defaultValue: List<string>;
     // defaultValue 默认选中的值
-    value: string[];
+    value: List<string>;
     // value 设置group当前选中的值
-    options: string[];
+    options: List<string>;
     // CheckGroupList: string[];
+    selectedCid: string;
+
 }
 
+const initOptions = ['option1', 'option2', 'option3'];
+const initvalue = ['option1', 'option2'];
+
 const defaultRecord: ICheckGroupState = {
-    options: [ 'Checkbox1', 'Checkbox2', 'Checkbox3'],
-    value:  ['Checkbox2'],
-    defaultValue: ['Checkbox3']
+    options: fromJS(initOptions),
+    value:  fromJS(initvalue),
+    defaultValue: fromJS(initvalue),
+    selectedCid: ''
+
 };
 
 export const CheckGroupRecord: Record.Class = Record(defaultRecord);
@@ -33,16 +40,20 @@ export class CheckGroupState extends CheckGroupRecord {
         return new CheckGroupState(map);
     }
 
-    getDefaultValue(): string[] {
+    getDefaultValue(): List<string> {
         return this.get('defaultValue');
     }
 
-    getValue(): string[] {
+    getValue(): List<string> {
         return this.get('value');
     }
 
-    getOptions(): string[] {
+    getOptions(): List<string> {
         return this.get('options');
+    }
+
+    getSelectedCid(): string {
+        return this.get('selectedCid');
     }
 
 }

@@ -37,7 +37,11 @@ export const PropertiesEnum = {
 
     SWITCH: 'switch',    // 开关选择器
 
-    INPUT_LIST: 'input_list'  // 输入框列表
+    INPUT_LIST: 'input_list',  // 输入框单元素列表
+
+    INPUT_OBJECT_LIST: 'input_object_list',  // 输入框对象列表
+
+    SELECT: 'select'  // 选择框
 
 };
 

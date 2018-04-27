@@ -5,6 +5,8 @@ import {
 import { Checkbox as AntCheckbox} from 'antd';
 
 import { CheckGroupState } from './CheckGroupState';
+import { PropertiesEnum, ComponentProperty } from '../../config';
+import { Map } from 'immutable';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -22,22 +24,22 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
-        const CheckboxList: string[] = this.getCustomState().getOptions();
+        // const CheckboxList: List<string> = this.getCustomState().getOptions();
         // tslint:disable-next-line:no-shadowed-variable
-        const CheckboxElem = (CheckboxsList: string[]): any => {
-            const res = [];
-            for (let i = 0; i < CheckboxList.length; i++) {
-                res.push(
-                    <AntCheckbox
-                        value={i}
-                        key={CheckboxList[i]}
-                    >
-                        {CheckboxsList[i]}
-                    </AntCheckbox>);
-            }
+        // const CheckboxElem = (CheckboxsList: List<string>): any => {
+        //     const res = [];
+        //     for (let i = 0; i < CheckboxList.size; i++) {
+        //         res.push(
+        //             <AntCheckbox
+        //                 value={this.getCustomState().getValue()}
+        //                 key={CheckboxList.toArray()[i]}
+        //             >
+        //                 {CheckboxList.toArray()[i]}
+        //             </AntCheckbox>);
+        //     }
 
-            return res;
-        };
+        //     return res;
+        // };
 
         return (
 
@@ -47,15 +49,80 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <AntCheckbox.Group
-                    defaultValue={this.getCustomState().getDefaultValue()}
-                    value={this.getCustomState().getValue()}
-                    options={this.getCustomState().getOptions()}
+                    defaultValue={this.getCustomState().getDefaultValue().toArray()}
+                    value={this.getCustomState().getValue().toArray()}
+                    options={this.getCustomState().getOptions().toArray()}
                     onChange={this.onCheckGroupChange}
-                >
-                    {CheckboxElem(CheckboxList)}
-                </AntCheckbox.Group>
+                    // {CheckboxElem(CheckboxList)}
+                />
             </div>
         );
+    }
+
+    public getPropertiesToCommand = (): ComponentProperty  => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {
+                    pTitle: '默认选中项',
+                    pKey: 'defaultValue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: PropertiesEnum.INPUT_LIST
+                }, {
+                    pTitle: '选中项',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: PropertiesEnum.INPUT_LIST
+                }, {
+                    pTitle: '选项',
+                    pKey: 'options',
+                    pValue: this.getCustomState().getOptions(),
+                    pType: PropertiesEnum.INPUT_LIST
+                }
+            ]
+        };
+    }
+
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+        let properties = Map();
+        properties = properties.set(pProperty.pKey, pProperty.pValue);
+        properties = properties.set('selectedCid', cid);
+        const newInputState: CheckGroupState = CheckGroupState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newInputState);
+    }
+
+    public getPropertiesToProperty = (): ComponentProperty  => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+                {
+                    pTitle: '默认选中项',
+                    pKey: 'defaultValue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: PropertiesEnum.INPUT_LIST
+                }, {
+                    pTitle: '选中项',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: PropertiesEnum.INPUT_LIST
+                }, {
+                    pTitle: '选项',
+                    pKey: 'options',
+                    pValue: this.getCustomState().getOptions(),
+                    pType: PropertiesEnum.INPUT_LIST
+                }
+            ]
+        };
+    }
+
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+        let properties = Map();
+        properties = properties.set(pProperty.pKey, pProperty.pValue);
+        properties = properties.set('selectedCid', cid);
+        const newInputState: CheckGroupState = CheckGroupState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newInputState);
     }
 
     private onCheckGroupChange = (checkedValue: any[]) => {

@@ -4,9 +4,9 @@ import {
 } from '../../BaseComponent';
 import { Radio as AntRadio } from 'antd';
 
-import { RadioState, RadioProperties } from './RadioState';
+import { RadioState } from './RadioState';
 import { RadioChangeEvent } from 'antd/lib/radio';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import { PropertiesEnum, ComponentProperty } from '../../config';
 
 const RadioGroup = AntRadio.Group;
@@ -28,31 +28,31 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
-        const radioList: RadioProperties[] = this.getCustomState().getOptions();
+        const radioList: List<Map<any, any>> = this.getCustomState().getOptions();
         // tslint:disable-next-line:no-shadowed-variable
-        const radioElem = (radiosList: RadioProperties[]): any => {
+        const radioElem = (radiosList: List<Map<any, any>>): any => {
             const res = [];
             if (this.getCustomState().getIsButton()) {
-                for (let i = 0; i < radioList.length; i++) {
+                for (let i = 0; i < radioList.size; i++) {
                     res.push(
                         <AntRadioButton
-                            value={radiosList[i].value}
-                            disabled={radioList[i].disabled}
-                            key={radiosList[i].value}
+                            value={radiosList.toArray()[i].get('value')}
+                            // disabled={radioList[i].disabled}
+                            key={radiosList.toArray()[i].get('value')}
                         >
-                            {radiosList[i].label}
+                            {radiosList.toArray()[i].get('label')}
                         </AntRadioButton>
                     );
                 }
             } else {
-                for (let i = 0; i < radioList.length; i++) {
+                for (let i = 0; i < radioList.size; i++) {
                     res.push(
                         <AntRadio
-                            value={radiosList[i].value}
-                            disabled={radioList[i].disabled}
-                            key={radiosList[i].value}
+                            value={radiosList.toArray()[i].get('value')}
+                            // disabled={radioList[i].disabled}
+                            key={radiosList.toArray()[i].get('value')}
                         >
-                            {radiosList[i].label}
+                            {radiosList.toArray()[i].get('label')}
                         </AntRadio>);
                 }
             }
@@ -78,35 +78,66 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getComponentProperties = (): ComponentProperty => {
+    public getPropertiesToProperty = (): ComponentProperty => {
+        return {
+            componentCid: this.getCustomState().getSelectedCid(),
+            componentProperties: [
+               {
+                    pTitle: '选中值',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '选项',
+                    pKey: 'options',
+                    pValue: this.getCustomState().getOptions(),
+                    pType: PropertiesEnum.INPUT_OBJECT_LIST
+                }, {
+                    pTitle: '是否为方形按钮',
+                    pKey: 'isButton',
+                    pValue: this.getCustomState().getIsButton(),
+                    pType: PropertiesEnum.SWITCH
+                }
+            ]
+        };
+    }
+
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+        let propertiesMap = Map();
+        propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
+        propertiesMap = propertiesMap.set('selectedCid', cid);
+
+        const newRadioState: RadioState = RadioState.set(
+            this.getCustomState(), propertiesMap
+        );
+        this.setCustomState(newRadioState);
+    }
+
+    public getPropertiesToCommand = (): ComponentProperty => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
                 {
-                    pTitle: '',
-                    pKey: 'name',
-                    pValue: this.getCustomState().getName(),
-                    pType: 'text'
-                }, {
-                    pTitle: '',
+                    pTitle: '选中值',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
-                    pType: 'text'
+                    pType: PropertiesEnum.INPUT_STRING
                 }, {
-                    pTitle: '',
+                    pTitle: '选项',
                     pKey: 'options',
                     pValue: this.getCustomState().getOptions(),
-                    pType: 'text'
+                    pType: PropertiesEnum.INPUT_OBJECT_LIST
                 }, {
-                    pTitle: '',
+                    pTitle: '是否为方形按钮',
                     pKey: 'isButton',
                     pValue: this.getCustomState().getIsButton(),
                     pType: PropertiesEnum.SWITCH
-                }]
+                }
+            ]
         };
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let propertiesMap = Map();
         propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
         propertiesMap = propertiesMap.set('selectedCid', cid);

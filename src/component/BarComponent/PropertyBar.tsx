@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './bar.css';
-import { Button, Input, Switch, Icon} from 'antd';
+import { Button, Input, Switch} from 'antd';
 import { PropertiesEnum, ComponentProperty } from '../config';
-import { List, fromJS } from 'immutable';
+import { List, fromJS, Map } from 'immutable';
 
 const {TextArea} = Input;
 
@@ -81,46 +81,13 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         );
     }
 
-    addInputElem = (e: any) => {
-        console.log(e);
-        // (
-        //     {pName: 'newInput', pValue: '', pType: PropertiesEnum.INPUT_LIST}
-        // )
-    }
-
     render() {
 
         const { collapsed, titleBarCollapsed } = this.props;
         const { showProps } = this.state;
-        const inputList = (inputProperty: List<{pTitle: string, pKey: string, pValue: any, pType: string}>): any => {
-            const res: any = [];
-            if (inputProperty.size === 0) {
-                res.push(
-                    <Input
-                        type="text"
-                        value={''}
-                    />
-                );
-            } else {
-                inputProperty.map((property) => {
-                    if (property) {
-                        res.push(
-                            <Input
-                                type="text"
-                                key={property.pKey}
-                                value={property.pValue}
-                                name={property.pKey}
-                            />
-                        );
-                    }
-                });
-            }
-
-            return res;
-        };
 
         const propertyElem = (propertiesItem: Map<any, any>) => {
-            switch (propertiesItem.get('pValue')) {
+            switch (propertiesItem.get('pType')) {
                 case PropertiesEnum.SWITCH: return (
 
                     <Switch
@@ -139,17 +106,33 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                         key={propertiesItem.get('pKey')}
                     />
                 );
-                case PropertiesEnum.INPUT_LIST: return (
-                    <div>
-                        <label>{propertiesItem.get('pTitle')}</label>
-                        <Icon
-                            type="plus"
-                        />
-                        <div >
-                            {inputList(propertiesItem.get('pValue'))}
+
+                case PropertiesEnum.INPUT_LIST:
+                    const  valuelist = this.getInputList(propertiesItem);
+
+                    return (
+                        <div>
+                            <TextArea
+                                rows={4}
+                                onBlur={this.setInputList}
+                                defaultValue={valuelist}
+                                id={propertiesItem.get('pKey')}
+                            />
                         </div>
-                    </div>
-                );
+                    );
+                case PropertiesEnum.INPUT_OBJECT_LIST:
+                    const  labellist = this.getInputList(propertiesItem);
+
+                    return (
+                        <div>
+                            <TextArea
+                                rows={4}
+                                onBlur={this.setInputList}
+                                defaultValue={labellist}
+                                id={propertiesItem.get('pKey')}
+                            />
+                        </div>
+                    );
                 case PropertiesEnum.INPUT_NUMBER: return (
                     <Input
                         type="number"
@@ -232,6 +215,74 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         );
     }
 
-    // setComponentProperties = (pName: string, pValue: any, pType: string) => {}
+    // 将radio/checkbox/selector中的选择项 读取成文本域对应的格式
+    private getInputList = (propertiesItem: Map<any, any>): string => {
+        let labellist: string = '';
+        for (let i = 0; i < propertiesItem.get('pValue').size; i++) {
+            const item = propertiesItem.get('pValue').toArray()[i];
+            let cr = '';
+            if (i !== propertiesItem.get('pValue').size - 1) {
+                if (navigator.userAgent.indexOf('Win') !== -1) {
+                    cr = '\r\n';
+                }
+                if (navigator.userAgent.indexOf('Mac') !== -1) {
+                    cr = '\r';
+                }
+                if (navigator.userAgent.indexOf('X11') !== -1
+                    || navigator.userAgent.indexOf('Linux') !== -1) {
+                    cr =  '\n';
+                }
+            }
+            if ( typeof(item) === 'string') {
+                labellist += item + cr;
+
+            } else {
+                labellist += item.get('label') + cr;
+            }
+        }
+
+        return labellist;
+    }
+
+    private setInputList = (e: any) => {
+
+        let newString = e.target.value.replace(/\n/g, '_@').replace(/\r/g, '_#');
+
+        newString = newString.replace(/_#_@/g, '<br/>'); // IE7-8
+        newString = newString.replace(/_@/g, '<br/>'); // IE9、FF、chrome
+        newString = newString.replace(/\s/g, '&nbsp;'); // 空格处理
+        newString = newString.replace(/\(<br\/\>\)*b/g, '<br/>'); // 如有多个换行符连续相连，则替换成一个换行符
+        newString = newString.replace(/<br\/\>$/, ''); // 如末尾有换行符，则替换掉
+        const optionList = newString.split('<br/>');
+        const properties = this.state.propsContent;
+        const pKeyContent = e.target.id;
+        const optionProperty: Map<any, any> = properties.toArray()
+                .filter((item) => item.get('pKey') === pKeyContent)[0];
+        const optionPropertyValue = optionProperty.get('pValue');
+        if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
+            this.props.onFireProperties(this.state.onSelectedCid,
+                {
+                    pKey: e.target.name.split('*')[0],
+                    pValue: optionList
+                }
+            );
+        } else {
+            let newOptionPropertyValue = List<Map<any, any>>();
+            for (let i = 0; i < optionList.length; i++) {
+                let optionItem =  Map();
+                optionItem = optionItem.set('label', optionList[i]);
+                optionItem = optionItem.set('value', i);
+
+                newOptionPropertyValue = newOptionPropertyValue.push(optionItem);
+            }
+            this.props.onFireProperties(this.state.onSelectedCid,
+                {
+                    pKey: pKeyContent,
+                    pValue: newOptionPropertyValue
+                }
+            );
+        }
+
+    }
 
 }

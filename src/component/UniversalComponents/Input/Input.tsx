@@ -5,7 +5,7 @@ import {
 import { InputState } from './InputState';
 import { Input  as AntInput } from 'antd';
 import { Map } from 'immutable';
-import { ComponentProperty } from '../../config';
+import { ComponentProperty, PropertiesEnum } from '../../config';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -32,9 +32,10 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <AntInput
-
+                    defaultValue={this.getCustomState().getDefaultValue()}
                     placeholder={this.getCustomState().getPlaceholder()}
                     onClick={this.onClick}
+                    // value={this.getRichChildNode()}
                     value={this.getRichChildNode()}
                 />
             </div>
@@ -45,9 +46,24 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
-                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+                {
+                    pTitle: '占位符',
+                    pKey: 'placeholder',
+                    pValue: this.getCustomState().getPlaceholder(),
+                    pType: PropertiesEnum.INPUT_STRING
+                },
+                // {
+                //     pTitle: '值',
+                //     pKey: 'value',
+                //     pValue: this.getCustomState().getValue(),
+                //     pType: PropertiesEnum.INPUT_STRING
+                // },
+                {
+                    pTitle: '默认值',
+                    pKey: 'defaultvalue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }
             ]
         };
     }
@@ -65,9 +81,24 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
-                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
+                {
+                    pTitle: '占位符',
+                    pKey: 'placeholder',
+                    pValue: this.getCustomState().getPlaceholder(),
+                    pType: PropertiesEnum.INPUT_STRING
+                },
+                // {
+                //     pTitle: '值',
+                //     pKey: 'value',
+                //     pValue: this.getCustomState().getValue(),
+                //     pType: PropertiesEnum.INPUT_STRING
+                // },
+                {
+                    pTitle: '默认值',
+                    pKey: 'defaultvalue',
+                    pValue: this.getCustomState().getDefaultValue(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }
             ]
         };
     }

@@ -24,7 +24,7 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    public getComponentProperties = (): ComponentProperty  => {
+    public getPropertiesToCommand = (): ComponentProperty  => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
@@ -37,23 +37,23 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     pTitle: '值',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
-                    pType: 'text'
+                    pType: PropertiesEnum.INPUT_TEXT
                 }, {
                     pTitle: '默认值',
                     pKey: 'defaultvalue',
                     pValue: this.getCustomState().getDefaultValue(),
-                    pType: 'text'
+                    pType: PropertiesEnum.INPUT_TEXT
                 }, {
                     pTitle: '是否自适应行数',
                     pKey: 'autosize',
                     pValue: this.getCustomState().getAutosize(),
-                    pType: 'text'
+                    pType: PropertiesEnum.SWITCH
                 }
             ]
         };
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let properties = Map();
         properties = properties.set(pProperty.pKey, pProperty.pValue);
         properties = properties.set('selectedCid', cid);
@@ -62,7 +62,7 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
-    public getProperties = (): ComponentProperty  => {
+    public getPropertiesToProperty = (): ComponentProperty  => {
         return {
             componentCid: this.getCustomState().getSelectedCid(),
             componentProperties: [
@@ -72,26 +72,21 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getRowNum(),
                     pType: PropertiesEnum.INPUT_NUMBER
                 }, {
-                    pTitle: '值',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: 'text'
-                }, {
                     pTitle: '默认值',
                     pKey: 'defaultvalue',
                     pValue: this.getCustomState().getDefaultValue(),
-                    pType: 'text'
+                    pType: PropertiesEnum.INPUT_TEXT
                 }, {
                     pTitle: '是否自适应行数',
                     pKey: 'autosize',
                     pValue: this.getCustomState().getAutosize(),
-                    pType: 'text'
+                    pType: PropertiesEnum.SWITCH
                 }
             ]
         };
     }
 
-    public setProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let properties = Map();
         properties = properties.set(pProperty.pKey, pProperty.pValue);
         properties = properties.set('selectedCid', cid);
@@ -115,6 +110,7 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     onPressEnter={this.onClick}
                     autosize={false}
                     value={this.getRichChildNode()}
+                    defaultValue={this.getCustomState().getDefaultValue()}
                 />
             </div>
         );

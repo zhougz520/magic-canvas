@@ -1,11 +1,11 @@
-import { Record } from 'immutable';
+import { Record, List , fromJS} from 'immutable';
 
 export class RadioProperties {
     [index: string]: any
     label: string = '';
     value: number = 1;
     // value 设置单个radio的值
-    disabled?: boolean = false;
+    // disabled?: boolean = false;
 }
 
 export interface IRadioState {
@@ -14,15 +14,26 @@ export interface IRadioState {
     // defaultValue 默认选中的值
     value: number;
     // value 设置group当前选中的值
-    options: RadioProperties[];
+    // options: RadioProperties[];
+    options: List<Map<any, any>>;
     // options 以配置的形式设置子元素
     isButton: boolean;
     selectedCid: string;
 }
 
+// const initOptionsList = List<Map<any, any>>();
+const initOptions = [{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}];
+
+// for (let i = 0; i < 3; i++) {
+//     const initMap = new Map<any, any>();
+//     initMap.set('label', 'radio' + i);
+//     initMap.set('value', '' + i);
+//     initoptions.push(initMap);
+// }
+
 const defaultRecord: IRadioState = {
     name: 'radioName',
-    options: [{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}],
+    options: fromJS(initOptions),
     value: 3,
     defaultValue: 3,
     isButton: false,

@@ -1,15 +1,23 @@
-import { Record } from 'immutable';
+import { Record, List, fromJS} from 'immutable';
 
 export interface ISelectorState {
     disable: boolean;
-    data: string[];
+    options: List<Map<any, any>>;
     placeholder: string;
+    value: string;
+    selectedCid: string;
+    defaultValue: string;
 }
+
+const initOptions = [{label: 'option1', value: 1}, {label: 'option2', value: 2}, {label: 'option3', value: 3}];
 
 const defaultRecord: ISelectorState = {
     disable: false,
-    data: ['option1', 'option2', 'option3'],
-    placeholder: 'this is a placeholer'
+    options: fromJS(initOptions),
+    placeholder: 'this is a placeholer',
+    value: 'option1',
+    selectedCid: '',
+    defaultValue: 'option2'
 };
 
 export const SelectorRecord: Record.Class = Record(defaultRecord);
@@ -29,8 +37,8 @@ export class SelectorState extends SelectorRecord {
         return new SelectorState(map);
     }
 
-    getData(): string[] {
-        return this.get('data');
+    getOptions(): List<Map<any, any>> {
+        return this.get('options');
     }
 
     getDisable(): boolean {
@@ -39,5 +47,17 @@ export class SelectorState extends SelectorRecord {
 
     getPlaceholder(): boolean {
         return this.get('placeholder');
+    }
+
+    getSelectedCid(): string {
+        return this.get('selectedCid');
+    }
+
+    getValue(): string {
+        return this.get('value');
+    }
+
+    getDefaultValue(): string {
+        return this.get('defaultValue');
     }
 }
