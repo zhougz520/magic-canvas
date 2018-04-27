@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, Input, Switch} from 'antd';
-import { PropertiesEnum, ComponentProperty } from '../config';
+import { PropertiesEnum } from '../config';
 import { List, fromJS, Map } from 'immutable';
 
 import './sass/bar.scss';
@@ -12,21 +12,19 @@ export interface IPropertyProps {
     titleBarCollapsed: boolean;
     onPropsBarCollapse: (collapsed: boolean) => void;
     // setComponentProperties: (pName: string, pValue: any, pType: string) => void;
-    onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
-    // onPropertyProperties: ComponentProperty| undefined;
+    onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
+        void;
 
-    onFireProperties: (cid: string, pProperties: {pKey: string, pValue: any}) => void;
+    onFireProperties: (pKey: string, pValue: any) => void;
 }
 
 export interface IPropertyState {
     showProps: boolean;
     propsContent: List<Map<any, any>>;
-    onSelectedCid: string;
-
 }
 
 export interface IPropertyComponent {
-    setPropertyState: (properties: ComponentProperty) => void;
+    setPropertyState: (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => void;
 }
 
 /* tslint:disable:no-console */
@@ -37,19 +35,17 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         super(props);
         this.state = {
             showProps: true,
-            propsContent: List(),
-            onSelectedCid: ''
+            propsContent: List()
         };
     }
 
-    setPropertyState = (properties: ComponentProperty) => {
+    setPropertyState = (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => {
         // const propertyList =  List<{pName: string, pValue: any, pType: string}>();
-        const propertyList = fromJS(properties.componentProperties);
+        const propertyList = fromJS(properties);
         // propertyList.merge(stateInput);
         this.setState(
             {
-                propsContent: propertyList,
-                onSelectedCid: properties.componentCid
+                propsContent: propertyList
             });
     }
 
@@ -57,7 +53,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         // const pPropertyName: string = EventTarget.arguments;
         // console.log(EventTarget);
         console.log(this.props.onPropertyProperties);
-        this.props.onFireProperties(this.state.onSelectedCid, {pKey: '', pValue: checked});
+        this.props.onFireProperties('', checked);
     }
 
         showProps = () => {
@@ -76,10 +72,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
     }
 
     onBlur = (e: any) => {
-        this.props.onFireProperties(
-            this.state.onSelectedCid,
-            {pKey: e.target.name, pValue: e.target.value}
-        );
+        this.props.onFireProperties( e.target.name, e.target.value);
     }
 
     render() {
@@ -261,12 +254,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                 .filter((item) => item.get('pKey') === pKeyContent)[0];
         const optionPropertyValue = optionProperty.get('pValue');
         if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
-            this.props.onFireProperties(this.state.onSelectedCid,
-                {
-                    pKey: e.target.name.split('*')[0],
-                    pValue: optionList
-                }
-            );
+            this.props.onFireProperties(e.target.name.split('*')[0], optionList);
         } else {
             let newOptionPropertyValue = List<Map<any, any>>();
             for (let i = 0; i < optionList.length; i++) {
@@ -276,12 +264,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
 
                 newOptionPropertyValue = newOptionPropertyValue.push(optionItem);
             }
-            this.props.onFireProperties(this.state.onSelectedCid,
-                {
-                    pKey: pKeyContent,
-                    pValue: newOptionPropertyValue
-                }
-            );
+            this.props.onFireProperties(pKeyContent, newOptionPropertyValue);
         }
 
     }

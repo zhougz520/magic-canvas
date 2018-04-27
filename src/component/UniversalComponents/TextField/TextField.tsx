@@ -6,7 +6,7 @@ import { Input } from 'antd';
 import { Map } from 'immutable';
 
 import { TextFieldState } from './TextFieldState';
-import { ComponentProperty, PropertiesEnum } from '../../config';
+import {  PropertiesEnum } from '../../config';
 
 const { TextArea } = Input;
 // tslint:disable-next-line:no-empty-interface
@@ -24,10 +24,8 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    public getPropertiesToCommand = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
                 {
                     pTitle: '行数',
                     pKey: 'rowNum',
@@ -49,23 +47,19 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getAutosize(),
                     pType: PropertiesEnum.SWITCH
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);
     }
 
-    public getPropertiesToProperty = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
                 {
                     pTitle: '行数',
                     pKey: 'rowNum',
@@ -82,14 +76,12 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getAutosize(),
                     pType: PropertiesEnum.SWITCH
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);

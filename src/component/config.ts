@@ -35,10 +35,3 @@ export const PropertiesEnum = {
     INPUT_LIST: 'input_list',  // 输入框单元素列表
     INPUT_OBJECT_LIST: 'input_object_list'  // 输入框对象列表
 };
-
-export class ComponentProperty {
-    [index: string]: any
-    componentCid: string = '';
-    componentProperties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> = [];
-
-}

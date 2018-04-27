@@ -6,7 +6,7 @@ import Canvas from './CanvasComponent/canvas';
 import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
-import { ICompos, config, ComponentProperty } from './config';
+import { ICompos, config } from './config';
 import { IOffset } from './CanvasComponent/model/types';
 import { Map } from 'immutable';
 
@@ -126,31 +126,19 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         }
     }
 
-    // 获取编辑中的组件属性并传给propertyTool
-    onPropertyProperties = (currentCid: string): ComponentProperty| undefined => {
-        if (this.canvas) {
-            const compProperty: ComponentProperty = {componentCid: currentCid, componentProperties: []};
-            const pToolProperties = this.canvas.getSelectedProperties(currentCid);
-            if (pToolProperties !== undefined) {
-                compProperty.componentProperties = pToolProperties.componentProperties;
-                // console.log('这是solutioneditor中给propertyTool的获取组件属性');
-                if (this.barList) {
+    // 将输入参数：编辑中的组件属性，传给propertyTool
+    onPropertyProperties = (
+                compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>| undefined
+            ): void => {
+                if (this.barList && compProperty !== undefined) {
                     this.barList.setPropertyState(compProperty);
                 }
-
-                return compProperty;
-            } else return undefined;
-        } else return undefined;
     }
 
-    // 将propertyTool的属性传给canvas 设置对应的选中控件
-    onFireProperties = (cId: string, cProperty: {pKey: string, pValue: any}) => {
+    // 将propertyTool的修改的属性传给canvas 设置对应的选中控件
+    onFireProperties = (pKey: string, pValue: any) => {
         if (this.canvas) {
-            const commandProperties = this.canvas.getSelectedProperties(cId);
-            if (commandProperties) {
-                // console.log(commandProperties);
-                this.canvas.executorProperties(cId, cProperty);
-            }
+            this.canvas.executeProperties(pKey, pValue);
         }
     }
 
@@ -193,7 +181,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         getStageSize={this.getStageSize}
                         components={detail.content.components}
                         onCommandProperties={this.onCommandProperties}
-                        // tslint:disable-next-line:jsx-no-lambda
                         onPropertyProperties={this.onPropertyProperties}
                         updateCanvasSize={this.updateCanvasSize}
                     />

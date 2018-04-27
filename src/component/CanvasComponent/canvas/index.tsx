@@ -7,7 +7,7 @@ import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
 import { DragType, IOffset, IPointpos, IPagePos } from '../model/types';
 import util from '../../util';
-import { config, ComponentProperty } from '../../config';
+import { config } from '../../config';
 import { keyFun } from '../model/CanvasCommand';
 import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
@@ -335,26 +335,44 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
-    executorProperties(cId: string, pProperty: { pKey: string, pValue: any }) {
-        console.log(pProperty);
-        const currentSelectedComponent: IComponent | undefined = this.command.getSelectedComponents().last();
-        if (currentSelectedComponent !== undefined) {
-            currentSelectedComponent.setPropertiesFromProperty(cId, pProperty);
+    executeProperties(pKey: string, pValue: any) {
+        const currentSelectedComponent: Map<string, any> = this.command.getSelectedComponents();
+        const componentList = currentSelectedComponent.toArray();
+        for (let i = 0; i < componentList.length; i++) {
+            componentList[i].setPropertiesFromProperty(pKey, pValue);
         }
     }
 
     // 获取canvas编辑中的组件的属性
-    getSelectedProperties(currentCid: string | undefined)
-        : ComponentProperty | undefined {
-        let currentSelectedComponent: IComponent | null;
-        if (currentCid) {
-            currentSelectedComponent = this.getComponent(currentCid);
+    getSelectedProperties(currentSelectedComponents: Map<string, any>)
+        : Array<{pTitle: string, pKey: string, pValue: any, pType: string}> | undefined {
+        let propertyResult: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> = [];
+        // 多个选中的组件 则获取共同的属性
+        if (currentSelectedComponents.size > 1) {
+            const components = currentSelectedComponents.toArray();
+            for (let i = 0; i < currentSelectedComponents.size; i++) {
+                const property = components[i].getPropertiesToProperty();
+                if (i === 0) {
+                    propertyResult = property;
+                } else {
+                    for (let x = 0; x < propertyResult.length; x++) {
+                        for (let y = 0; y < property.length; y++) {
+                            if (propertyResult[x].pKey !== property[y].pKey) {
+                                propertyResult.splice(x, 1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return propertyResult;
+        } else if (currentSelectedComponents.size === 1) {
+            // 一个选中的组件 则获取该组件的属性
+            return propertyResult = currentSelectedComponents.first().getPropertiesToProperty();
         } else {
-            currentSelectedComponent = this.command.getSelectedComponents().last();
+            return undefined;
         }
-        if (currentSelectedComponent) {
-            return currentSelectedComponent.getPropertiesToCommand();
-        } else return undefined;
+
     }
 
     render() {
@@ -541,12 +559,14 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
             }
         }
-        this.props.onPropertyProperties(cid);
+        // this.props.onPropertyProperties();
 
         // 单选的时候一个个传递
         if (multiselect === false) {
             // 向CommandBar传递当前选中的组件集合
             this.props.onCommandProperties(this.command.getSelectedComponents());
+            // 向PropertyBar传递当前选中的组件属性
+            this.props.onPropertyProperties(this.getSelectedProperties(this.command.getSelectedComponents()));
         }
     }
 
@@ -585,6 +605,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             this.hideSelected();
             // 向CommandBar传递当前选中的组件集合
             this.props.onCommandProperties(Map());
+            this.props.onPropertyProperties(undefined);
+
         }
     }
 
@@ -637,6 +659,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             const selectedComponents = this.command.getSelectedComponents();
             if (selectedComponents.size > 0) {
                 this.props.onCommandProperties(selectedComponents);
+                this.props.onPropertyProperties(this.getSelectedProperties(selectedComponents));
             }
 
             // 通知绘画层清理选择框

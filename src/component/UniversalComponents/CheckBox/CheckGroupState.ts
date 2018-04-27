@@ -7,8 +7,6 @@ export interface ICheckGroupState {
     // value 设置group当前选中的值
     options: List<string>;
     // CheckGroupList: string[];
-    selectedCid: string;
-
 }
 
 const initOptions = ['option1', 'option2', 'option3'];
@@ -17,8 +15,7 @@ const initvalue = ['option1', 'option2'];
 const defaultRecord: ICheckGroupState = {
     options: fromJS(initOptions),
     value:  fromJS(initvalue),
-    defaultValue: fromJS(initvalue),
-    selectedCid: ''
+    defaultValue: fromJS(initvalue)
 
 };
 
@@ -50,10 +47,6 @@ export class CheckGroupState extends CheckGroupRecord {
 
     getOptions(): List<string> {
         return this.get('options');
-    }
-
-    getSelectedCid(): string {
-        return this.get('selectedCid');
     }
 
 }

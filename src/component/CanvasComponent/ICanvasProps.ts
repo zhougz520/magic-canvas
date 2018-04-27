@@ -1,6 +1,6 @@
 import { IDrawComponent } from '../DrawComponent';
 
-import { ICompos, ComponentProperty } from '../config';
+import { ICompos } from '../config';
 import { IBoundary, IOffset } from './model/types';
 import { Map } from 'immutable';
 
@@ -16,6 +16,8 @@ export interface ICanvasProps {
     getStageBoundary: () => undefined | IBoundary;
     getStageSize: () => undefined | { width: number, height: number };
     onCommandProperties: (selectedComs: Map<string, any>) => void;
-    onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
+    onPropertyProperties: (
+        compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>| undefined
+    ) => void;
     updateCanvasSize: (width: number, height: number) => void;
 }

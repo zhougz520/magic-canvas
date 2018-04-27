@@ -3,13 +3,11 @@ import { Record } from 'immutable';
 export interface IHyperlinkState {
     herf: string;
     content: string;
-    selectedCid: string;
 }
 
 const defaultRecord: IHyperlinkState = {
     herf: 'https://ps.mingyuanyun.com',
-    content: 'this is a content',
-    selectedCid: ''
+    content: 'this is a content'
 };
 
 export const HyperlinkRecord: Record.Class = Record(defaultRecord);
@@ -37,7 +35,4 @@ export class HyperlinkState extends HyperlinkRecord {
         return this.get('content');
     }
 
-    getSelectedCid(): string {
-        return this.get('selectedCid');
-    }
 }

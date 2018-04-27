@@ -4,14 +4,12 @@ export interface IInputState {
     placeholder: string;
     value: string;
     defaultvalue: string;
-    selectedCid: string;
 }
 
 const defaultRecord: IInputState = {
     placeholder: 'init value',
     value: '',
-    defaultvalue: '',
-    selectedCid: ''
+    defaultvalue: ''
 };
 
 export const InputRecord: Record.Class = Record(defaultRecord);
@@ -43,7 +41,4 @@ export class InputState extends InputRecord {
         return this.get('defaultvalue');
     }
 
-    getSelectedCid(): string {
-        return this.get('selectedCid');
-    }
 }

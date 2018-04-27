@@ -2,7 +2,6 @@ import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 import { ContentState } from '.';
-import { ComponentProperty } from '../config';
 
 /**
  * BaseComponent提供的方法接口
@@ -72,12 +71,12 @@ export interface IComponent {
      */
     getStyle: (com: any) => CSSStyleDeclaration;
 
-    getPropertiesToProperty: () =>  ComponentProperty;
+    getPropertiesToProperty: () =>  Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 
-    setPropertiesFromProperty: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
+    setPropertiesFromProperty: (pKey: string, pValue: any) => void;
 
-    getPropertiesToCommand: () => ComponentProperty;
+    getPropertiesToCommand: () => Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 
-    setPropertiesFromCommand: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
+    setPropertiesFromCommand: (pKey: string, pValue: any) => void;
 
 }

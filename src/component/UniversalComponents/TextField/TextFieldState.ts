@@ -6,7 +6,6 @@ export interface ITextFieldState {
     defaultValue: string;
     value: string;
     autosize: boolean;
-    selectedCid: string;
 }
 
 const defaultRecord: ITextFieldState = {
@@ -14,8 +13,7 @@ const defaultRecord: ITextFieldState = {
     rowNum: 3,
     defaultValue: '',
     value: '',
-    autosize: false,
-    selectedCid: ''
+    autosize: false
 
 };
 
@@ -56,7 +54,4 @@ export class TextFieldState extends TextFieldRecord {
         return this.get('autosize');
     }
 
-    getSelectedCid(): string {
-        return this.get('selectedCid');
-    }
 }

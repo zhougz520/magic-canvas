@@ -7,7 +7,7 @@ import { Radio as AntRadio } from 'antd';
 import { RadioState } from './RadioState';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { Map, List } from 'immutable';
-import { PropertiesEnum, ComponentProperty } from '../../config';
+import { PropertiesEnum } from '../../config';
 
 const RadioGroup = AntRadio.Group;
 const AntRadioButton = AntRadio.Button;
@@ -78,10 +78,8 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): ComponentProperty => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return [
                {
                     pTitle: '选中值',
                     pKey: 'value',
@@ -98,14 +96,12 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getIsButton(),
                     pType: PropertiesEnum.SWITCH
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let propertiesMap = Map();
-        propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
-        propertiesMap = propertiesMap.set('selectedCid', cid);
+        propertiesMap = propertiesMap.set(pKey, pValue);
 
         const newRadioState: RadioState = RadioState.set(
             this.getCustomState(), propertiesMap
@@ -113,10 +109,8 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newRadioState);
     }
 
-    public getPropertiesToCommand = (): ComponentProperty => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return [
                 {
                     pTitle: '选中值',
                     pKey: 'value',
@@ -133,14 +127,12 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getIsButton(),
                     pType: PropertiesEnum.SWITCH
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let propertiesMap = Map();
-        propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
-        propertiesMap = propertiesMap.set('selectedCid', cid);
+        propertiesMap = propertiesMap.set(pKey, pValue);
 
         const newRadioState: RadioState = RadioState.set(
             this.getCustomState(), propertiesMap

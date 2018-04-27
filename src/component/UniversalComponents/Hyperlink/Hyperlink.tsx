@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { HyperlinkState } from './HyperlinkState';
 import { BoxType } from '../../util/AnchorPoint';
-import { PropertiesEnum, ComponentProperty } from '../../config';
+import { PropertiesEnum } from '../../config';
 import { Map } from 'immutable';
 
 // tslint:disable-next-line:no-empty-interface
@@ -44,10 +44,8 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToCommand = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
                 // {
                 //     pTitle: '内容',
                 //     pKey: 'content',
@@ -60,23 +58,19 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getHerf(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);
     }
 
-    public getPropertiesToProperty = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return  [
                 // {
                 //     pTitle: '内容',
                 //     pKey: 'content',
@@ -89,14 +83,12 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getHerf(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);

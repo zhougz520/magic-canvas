@@ -4,7 +4,7 @@ import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
 import { BoxType } from '../../util/AnchorPoint';
 import { Map, List } from 'immutable';
-import { ComponentProperty, PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../../config';
 // import { SelectValue } from 'antd/lib/select';
 // import { ReactElement } from 'react';
 
@@ -31,10 +31,8 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         return BoxType.BarType;
     }
 
-    public getPropertiesToCommand = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
                 {
                     pTitle: '选项',
                     pKey: 'options',
@@ -56,23 +54,19 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getPlaceholder(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);
     }
 
-    public getPropertiesToProperty = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
                 {
                     pTitle: '选项',
                     pKey: 'options',
@@ -94,14 +88,12 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getPlaceholder(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
-            ]
-        };
+            ];
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);

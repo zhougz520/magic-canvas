@@ -5,14 +5,14 @@ import { Toolbar, IToolbarComponent } from './Toolbar';
 import Resource from './ResourceBar';
 import Property, { IPropertyComponent } from './PropertyBar';
 import Contributor from './ContributorBar';
-import { ComponentProperty } from '../config';
 import { Map } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
     onCommandEmitted: (cmd: any) => void;
-    onPropertyProperties: (currentCid: string) =>  ComponentProperty| undefined;
-    onFireProperties: (cId: string, pProperties: {pKey: string, pValue: any}) => void;
+    onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
+        void;
+    onFireProperties: (pKey: string, pValue: any) => void;
 }
 
 export interface IBarState {
@@ -24,7 +24,7 @@ export interface IBarState {
 }
 
 export interface IBarListComponent {
-    setPropertyState: (properties: ComponentProperty) => void;
+    setPropertyState: (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => void;
     setCommandState: (selectedComs: Map<string, any>) => void;
 }
 
@@ -72,7 +72,6 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     titleBarCollapsed={titleBarCollapsed}
                     // tslint:disable-next-line:jsx-no-lambda
                     onPropsBarCollapse={(collapsed) => this.collapseBar(undefined, undefined, collapsed)}
-                    // onSelectedCid={this.props.onSelectedCid}
                     onPropertyProperties={this.props.onPropertyProperties}
                     onFireProperties={this.props.onFireProperties}
                 />
@@ -92,7 +91,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
         this.props.changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
     }
 
-    setPropertyState = (properties: ComponentProperty) => {
+    setPropertyState = (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => {
         if (this.propertyTool) {
             this.propertyTool.setPropertyState(properties);
         }

@@ -5,7 +5,6 @@ export interface ISelectorState {
     options: List<Map<any, any>>;
     placeholder: string;
     value: string;
-    selectedCid: string;
     defaultValue: string;
 }
 
@@ -16,7 +15,6 @@ const defaultRecord: ISelectorState = {
     options: fromJS(initOptions),
     placeholder: 'this is a placeholer',
     value: 'option1',
-    selectedCid: '',
     defaultValue: 'option2'
 };
 
@@ -47,10 +45,6 @@ export class SelectorState extends SelectorRecord {
 
     getPlaceholder(): boolean {
         return this.get('placeholder');
-    }
-
-    getSelectedCid(): string {
-        return this.get('selectedCid');
     }
 
     getValue(): string {

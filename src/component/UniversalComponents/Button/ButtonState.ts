@@ -5,14 +5,12 @@ import { Record } from 'immutable';
  */
 export interface IButtonState {
     type: string;
-    selectedCid: string;
     // href: string;
     isCircle: boolean;
 }
 
 const defaultRecord: IButtonState = {
     type: 'primary',
-    selectedCid: '',
     // href: '',
     isCircle: false
 };
@@ -49,10 +47,6 @@ export class ButtonState extends ButtonStateRecord {
 
     getType(): string {
         return this.get('type');
-    }
-
-    getSelectedCid(): string {
-        return this.get('selectedCid');
     }
 
     getIsCircle(): boolean {

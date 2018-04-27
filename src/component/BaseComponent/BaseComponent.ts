@@ -12,7 +12,6 @@ import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
 import { Stack } from 'immutable';
-import { ComponentProperty } from '../config';
 
 /**
  * 基类
@@ -252,44 +251,38 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给属性工具条
      */
-    public getPropertiesToProperty = (): ComponentProperty => {
-        return {
-            componentCid: '', componentProperties:
-                [{
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return [{
                     pTitle: '',
                     pKey: '',
                     pValue: '',
                     pType: 'text'
-                }]
-        };
+                }];
     }
 
     /**
      * 获取属性工具条的单条属性，传给组件并设置组件
      */
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         // const num: number = 1 + 1;
     }
 
     /**
      * 获取组件的属性，传给命令工具条
      */
-    public getPropertiesToCommand = (): ComponentProperty => {
-        return {
-            componentCid: '', componentProperties:
-                [{
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return  [{
                     pTitle: '',
                     pKey: '',
                     pValue: '',
                     pType: 'text'
-                }]
-        };
+                }];
     }
 
     /**
      * 获取命令工具条的单条属性，传给组件并设置组件
      */
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         // const num: number = 1 + 1;
     }
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import { Select } from 'antd';
-import { ComponentProperty } from '../../config';
 
 const Option = Select.Option;
 
@@ -77,14 +76,13 @@ export class AppView extends MapComponent<IMapProps, any> {
     }
     public collectProps = () => {
         // const { map_v_txt, map_v_o, id } = this.props;
-        const { id } = this.props;
-        const currProps: ComponentProperty = {
-            componentCid: id,
-            componentProperties: [
+        // const { id } = this.props;
+        const currProps: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> =
+[
                 // { pTitle: '标题', pKey: 'map_v_txt', pValue: map_v_txt, pType: '文本框' },
                 // { pTitle: '选项', pKey: 'map_v_o', pValue: map_v_o, pType: '文本框' }
             ]
-        };
+        ;
 
         return currProps;
     }
