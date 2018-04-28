@@ -11,7 +11,7 @@ import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
 
-import { Stack } from 'immutable';
+import { Stack, Map } from 'immutable';
 
 /**
  * 基类
@@ -186,6 +186,30 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的批注集合
+     */
+    public getCommentsMap = (): Map<any, any> => {
+        const baseState: BaseState = this.getBaseState();
+        const commentsMap: Map<any, any> = baseState.getCurrentContent().getCommentsMap();
+
+        return commentsMap;
+    }
+
+    /**
+     * 设置组件的批注集合
+     * @param newCommentsMap 新的批注集合
+     */
+    public setCommentsMap = (newCommentsMap: Map<any, any>): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            commentsMap: newCommentsMap
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setBaseState(newBaseState);
+    }
+
+    /**
      * 重做
      */
     public redo = (): void => {
@@ -316,7 +340,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             }),
             // TODO 带格式的富文本
             richChildNode: this.props.data.txt_v,
-            customState
+            customState,
+            // TODO 组件对应的批注集合
+            commentsMap: this.props.data.comments
         });
 
         return BaseState.createWithContent(contentState);

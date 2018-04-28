@@ -1,7 +1,8 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import * as Anchor from '../util/AnchorPoint';
-import { ContentState } from '.';
+import { ContentState } from './model/ContentState';
+import { Map } from 'immutable';
 
 /**
  * BaseComponent提供的方法接口
@@ -25,8 +26,14 @@ export interface IComponent {
     getRichChildNode: () => any;
     setRichChildNode: (richChildNode: any) => void;
 
+    /**
+     * 获取、设置customState
+     */
     getCustomState: () => any;
     setCustomState: (newCustomState: any) => void;
+
+    getCommentsMap: () => Map<any, any>;
+    setCommentsMap: (newCommentsMap: Map<any, any>) => void;
 
     /**
      * 重做、撤销
