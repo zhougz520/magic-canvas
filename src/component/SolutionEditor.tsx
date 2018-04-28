@@ -229,7 +229,7 @@ const detail = {
             {
                 t: 'MapComponent/map/AppGridForm',
                 p: {
-                    id: 'cs5',
+                    id: 'cs4',
                     txt_v: '编辑页面',
                     w: 600,
                     h: 400,
