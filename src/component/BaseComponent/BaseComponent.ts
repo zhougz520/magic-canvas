@@ -342,7 +342,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             richChildNode: this.props.data.txt_v,
             customState,
             // TODO 组件对应的批注集合
-            commentsMap: this.props.data.comments
+            commentsMap: Map()
         });
 
         return BaseState.createWithContent(contentState);

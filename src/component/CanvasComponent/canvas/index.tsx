@@ -12,6 +12,7 @@ import { keyFun } from '../model/CanvasCommand';
 import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
 import { pageActions } from '../command/pageActions';
+import { ComponentsUtil } from '../utils/ComponentsUtil';
 import { Map, OrderedSet } from 'immutable';
 
 /* tslint:disable:no-console */
@@ -59,6 +60,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         cids.forEach((currId) => {
             currCid += '.' + currId;
             ref = currRefs[`${currCid}`] as any;
+            // TODO Cannot read property 'refs' of undefined，点appGrid中的子组件报错
             currRefs = currRefs[`${currCid}`].refs as any;
         });
 
@@ -337,10 +339,11 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     // 给canvas编辑中的组件设置propertyTool中的属性
     executeProperties(pKey: string, pValue: any) {
         const currentSelectedComponent: Map<string, any> = this.command.getSelectedComponents();
-        const componentList = currentSelectedComponent.toArray();
-        for (let i = 0; i < componentList.length; i++) {
-            componentList[i].setPropertiesFromProperty(pKey, pValue);
-        }
+        currentSelectedComponent.map(
+            (com) => {
+                com.setPropertiesFromProperty(pKey, pValue);
+            }
+        );
     }
 
     // 获取canvas编辑中的组件的属性
@@ -433,8 +436,11 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
 
     /**
      * 画布增加组件
+     * @param data 组件的数据流
+     * @param position 组件在画布上的定位
+     * @param isComments 是否批注
      */
-    addCancasComponent = (data: any, position: IOffset) => {
+    addCancasComponent = (data: any, position: IOffset, isComments = false) => {
         const componentIndex = this.state.componentIndex + 1;
         const componentList = this.state.componentList.add({
             t: data.type,
@@ -449,6 +455,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         // 记录新添加的组件cid
         this.command.setAddComponentCid('cs' + componentIndex);
         this.setState({ componentList, componentIndex });
+        if (isComments === true) {
+            const selectedComponents: Map<string, any> = this.command.getSelectedComponents();
+            ComponentsUtil.updateCommentsMap(selectedComponents, componentIndex);
+        }
     }
 
     /**
