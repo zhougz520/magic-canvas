@@ -253,6 +253,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         const optionProperty: Map<any, any> = properties.toArray()
                 .filter((item) => item.get('pKey') === pKeyContent)[0];
         const optionPropertyValue = optionProperty.get('pValue');
+        // TODO optionPropertyValue.toArray is not a function
         if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
             this.props.onFireProperties(e.target.name.split('*')[0], optionList);
         } else {
