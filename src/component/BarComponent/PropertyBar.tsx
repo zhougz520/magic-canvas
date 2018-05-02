@@ -197,7 +197,6 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         return (
             <React.Fragment>
                 <div
-                    // tslint:disable-next-line:max-line-length
                     className={`props-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}${showProps ? ' props-bar-show' : ' props-bar-hide'}`}
                 >
                     <div className="holder">

@@ -43,7 +43,6 @@ export default class Resource extends React.PureComponent<IResourceProps, IResou
         return (
             <React.Fragment>
                 <div
-                    // tslint:disable-next-line:max-line-length
                     className={`resource-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}`}
                 >
                     <div className="holder">

@@ -16,7 +16,6 @@ export interface IAnchor {
 /**
  * 统计8个定位点
  */
-/* tslint:disable:max-line-length */
 export const countAnchorPoint = (cid: string, type: string, pointX: number, pointY: number, width: number, height: number, offset: number = 4, borderOffset: number = 2) => {
     const anchorList: IAnchor[] = [];
     if (type === BoxType.BarType) {
@@ -35,7 +34,6 @@ export const countAnchorPoint = (cid: string, type: string, pointX: number, poin
 
     return anchorList;
 };
-/* tslint:enable:max-line-length */
 
 /**
  * 计算当前点所在的定位点的方位
