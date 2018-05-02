@@ -43,7 +43,7 @@ export default class Comments extends BaseComponent<IBaseProps, IBaseState> {
                     width="100%"
                     height="100%"
                     pointerEvents="none"
-                    style={{position: 'absolute'}}
+                    style={{position: 'absolute', zIndex: this.getHierarchy()}}
                 >
                     {rectList}
                 </svg>
