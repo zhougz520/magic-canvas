@@ -29,6 +29,25 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         } as Readonly<S>;
     }
 
+    componentWillUnmount() {
+        // TODO Comments优化代码
+        const commentsMap = this.getCommentsMap();
+        if (commentsMap.size > 0) {
+            commentsMap.map(
+                (value, key) => {
+                    const comments = this.props.getComponent(key);
+                    if (comments) {
+                        const oldLineList = comments.getCustomState();
+                        const newLineList: Map<string, any> = oldLineList.delete(
+                            this.getCid()
+                        );
+                        comments.setCustomState(newLineList);
+                    }
+                }
+            );
+        }
+    }
+
     /**
      * 获取组件size
      * 返回：ISize类型的对象{width: 10, height: 10}
@@ -430,6 +449,39 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // 计算边界调整画布的大小
         const boundary = this.getBoundaryPoint();
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
+
+        // TODO Comments优化代码
+        if (this.props.data.name === '批注') {
+            const position = this.getPosition();
+            const oldLineList: Map<string, any> = this.getCustomState();
+            let newLineList: Map<string, any> = Map();
+            oldLineList.map(
+                (value: any, key: string) => {
+                    newLineList = newLineList.set(
+                        key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
+                    );
+                }
+            );
+            this.setCustomState(newLineList);
+        } else {
+            const position = this.getPosition();
+            const size = this.getSize();
+            const commentsMap = this.getCommentsMap();
+            if (commentsMap.size > 0) {
+                commentsMap.map(
+                    (value, key) => {
+                        const comments = this.props.getComponent(key);
+                        if (comments) {
+                            const oldLineList = comments.getCustomState();
+                            const newLineList: Map<string, any> = oldLineList.update(
+                                this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
+                            );
+                            comments.setCustomState(newLineList);
+                        }
+                    }
+                );
+            }
+        }
     }
 
     /**

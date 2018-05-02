@@ -1,5 +1,6 @@
 import { IBoundary } from '../model/types';
 import { ComponentsUtil } from '../utils/ComponentsUtil';
+import { IComponent } from '../../BaseComponent';
 import { Map } from 'immutable';
 
 export const pageActions = {
@@ -28,9 +29,10 @@ export const pageActions = {
         const data = {
             offset: {x: 0, y: 0},
             props: {name: '批注', w: 204, h: 170},
-            type: 'Comments/Comments'
+            type: 'Comments/Comments',
+            lineList: Map()
         };
-        let position: {x: number, y: number} | null = null;
+        let position: {x: number, y: number};
 
         const selectedComponents: Map<string, any> = this.getThis().command.getSelectedComponents();
         if (selectedComponents.size > 0) {
@@ -40,6 +42,20 @@ export const pageActions = {
                 x: componentsRange.endPoint.x + 100,
                 y: Math.ceil((componentsRange.endPoint.y + componentsRange.startPoint.y) / 2 - data.props.h / 2)
             };
+
+            // TODO Comments优化代码
+            let lineList: Map<string, any> = Map();
+            selectedComponents.map(
+                (com: IComponent, key: string) => {
+                    const positionCom = com.getPosition();
+                    const sizeCom = com.getSize();
+
+                    lineList = lineList.set(
+                        key, {x1: positionCom.left + sizeCom.width, y1: positionCom.top, x2: position.x, y2: position.y}
+                    );
+                }
+            );
+            data.lineList = lineList;
         } else {
             // 如果没有选中组件，向画布中央添加批注
             position = {

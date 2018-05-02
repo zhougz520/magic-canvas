@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { IComponent } from './IComponent';
 
 /**
  * 构建BaseComponent的Props
@@ -12,6 +13,7 @@ export interface IBaseProps {
     selectionChanging: (cid: string, isCanCtrl: boolean) => void;
     dbClickToBeginEdit?: () => void;
     clearSelected: () => void;
+    getComponent: (cid: string) => IComponent | null;
 
     componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
 }

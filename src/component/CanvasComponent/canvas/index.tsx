@@ -448,7 +448,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 ...data.props,
                 id: 'cs' + componentIndex,
                 l: position.x - data.offset.x,
-                t: position.y - data.offset.y
+                t: position.y - data.offset.y,
+                lineList: data.lineList
             }
         });
 
@@ -490,7 +491,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     clearSelected: this.clearSelected,
                     repaintSelected: this.repaintSelected,
                     repaintCanvas: this.repaintCanvas,
-                    dbClickToBeginEdit: this.dbClickToBeginEdit
+                    dbClickToBeginEdit: this.dbClickToBeginEdit,
+                    getComponent: this.getComponent
                 })
             );
             zIndex++;

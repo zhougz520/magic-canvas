@@ -41,7 +41,7 @@ export const ComponentsUtil = {
             (com: IComponent) => {
                 const oldCommentsMap = com.getCommentsMap();
                 const newCommentsMap = oldCommentsMap.merge(
-                    Map().set('cs' + componentIndex, Map())
+                    Map().set('cs' + componentIndex, 'Comments')
                 );
                 com.setCommentsMap(newCommentsMap);
             }
