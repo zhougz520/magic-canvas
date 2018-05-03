@@ -1,7 +1,7 @@
 import { Record, List, fromJS } from 'immutable';
 
 export interface ICheckGroupState {
-    defaultValue: List<string>;
+    // defaultValue: List<string>;
     // defaultValue 默认选中的值
     value: List<string>;
     // value 设置group当前选中的值
@@ -14,8 +14,8 @@ const initvalue = ['option1', 'option2'];
 
 const defaultRecord: ICheckGroupState = {
     options: fromJS(initOptions),
-    value:  fromJS(initvalue),
-    defaultValue: fromJS(initvalue)
+    value:  fromJS(initvalue)
+    // defaultValue: fromJS(initvalue)
 
 };
 
@@ -37,9 +37,9 @@ export class CheckGroupState extends CheckGroupRecord {
         return new CheckGroupState(map);
     }
 
-    getDefaultValue(): List<string> {
-        return this.get('defaultValue');
-    }
+    // getDefaultValue(): List<string> {
+    //     return this.get('defaultValue');
+    // }
 
     getValue(): List<string> {
         return this.get('value');

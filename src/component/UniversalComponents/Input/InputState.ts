@@ -7,7 +7,7 @@ export interface IInputState {
 }
 
 const defaultRecord: IInputState = {
-    placeholder: 'init value',
+    placeholder: '输入框',
     value: '',
     defaultvalue: ''
 };

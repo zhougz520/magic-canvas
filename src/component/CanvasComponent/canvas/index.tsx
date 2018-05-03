@@ -134,6 +134,8 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                     // 非多选模式下，清楚所有组件选中状态
                     if (!this.command.isMultiselect()) {
                         this.clearSelected();
+                        // 清除组件选中状态 清除属性工具栏
+                        // this.props.clearSelectedProperty();
                     }
 
                     return this.command.canvasMouseDown(e);
@@ -355,11 +357,16 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
                 if (i === 0) {
                     propertyResult = property;
                 } else {
-                    for (let x = 0; x < propertyResult.length; x++) {
-                        for (let y = 0; y < property.length; y++) {
-                            if (propertyResult[x].pKey !== property[y].pKey) {
-                                propertyResult.splice(x, 1);
+                    for (let x = propertyResult.length - 1; x > -1 ; x--) {
+                        let isNeedDelete: boolean = true;
+                        for (let y = property.length - 1; y > -1; y--) {
+                            if (propertyResult[x].pKey === property[y].pKey
+                                && propertyResult[x].pType === property[y].pType) {
+                                isNeedDelete = false;
                             }
+                        }
+                        if (isNeedDelete) {
+                            propertyResult.splice(x, 1);
                         }
                     }
                 }
@@ -566,6 +573,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             // 向CommandBar传递当前选中的组件集合
             this.props.onCommandProperties(this.command.getSelectedComponents());
             // 向PropertyBar传递当前选中的组件属性
+            this.props.clearSelectedProperty();
             this.props.onPropertyProperties(this.getSelectedProperties(this.command.getSelectedComponents()));
         }
     }
@@ -585,6 +593,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
      */
     repaintSelected = () => {
         this.drawSelected(this.command.getSelectedCids());
+
     }
 
     /**
@@ -606,6 +615,7 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             // 向CommandBar传递当前选中的组件集合
             this.props.onCommandProperties(Map());
             this.props.onPropertyProperties(undefined);
+            this.props.clearSelectedProperty();
 
         }
     }

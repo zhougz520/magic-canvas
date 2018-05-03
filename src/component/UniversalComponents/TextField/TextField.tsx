@@ -65,12 +65,14 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'rowNum',
                     pValue: this.getCustomState().getRowNum(),
                     pType: PropertiesEnum.INPUT_NUMBER
-                }, {
-                    pTitle: '默认值',
-                    pKey: 'defaultvalue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_TEXT
-                }, {
+                },
+                // {
+                //     pTitle: '默认值',
+                //     pKey: 'defaultvalue',
+                //     pValue: this.getCustomState().getDefaultValue(),
+                //     pType: PropertiesEnum.INPUT_TEXT
+                // },
+                {
                     pTitle: '是否自适应行数',
                     pKey: 'autosize',
                     pValue: this.getCustomState().getAutosize(),

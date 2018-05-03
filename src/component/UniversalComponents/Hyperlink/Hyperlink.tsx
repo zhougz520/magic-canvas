@@ -29,29 +29,40 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
-        return (
-            <div
-                onMouseDown={this.fireSelectChange}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                ref={(handler) => this.com = handler}
-            >
-                <a
-                    href={this.getCustomState().getHerf()}
+        if (this.getRichChildNode() === undefined) {
+
+            return (
+                <div
+                    onMouseDown={this.fireSelectChange}
+                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                    ref={(handler) => this.com = handler}
                 >
-                    {this.getRichChildNode() as JSX.Element}
-                </a>
-            </div>
-        );
+                    <a
+                        href={this.getCustomState().getHerf()}
+                    >
+                    {this.getCustomState().getContent()}
+                    </a>
+                </div>
+            );
+        } else {
+            return (
+                <div
+                    onMouseDown={this.fireSelectChange}
+                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                    ref={(handler) => this.com = handler}
+                >
+                    <a
+                        href={this.getCustomState().getHerf()}
+                    >
+                      {this.getRichChildNode() as JSX.Element}
+                    </a>
+                </div>
+            );
+        }
     }
 
     public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
-                // {
-                //     pTitle: '内容',
-                //     pKey: 'content',
-                //     pValue: this.getCustomState().getContent(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // },
                 {
                     pTitle: '地址',
                     pKey: 'herf',
@@ -71,12 +82,6 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
 
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return  [
-                // {
-                //     pTitle: '内容',
-                //     pKey: 'content',
-                //     pValue: this.getCustomState().getContent(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // },
                 {
                     pTitle: '地址',
                     pKey: 'herf',

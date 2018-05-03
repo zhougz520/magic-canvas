@@ -24,22 +24,6 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
-        // const CheckboxList: List<string> = this.getCustomState().getOptions();
-        // tslint:disable-next-line:no-shadowed-variable
-        // const CheckboxElem = (CheckboxsList: List<string>): any => {
-        //     const res = [];
-        //     for (let i = 0; i < CheckboxList.size; i++) {
-        //         res.push(
-        //             <AntCheckbox
-        //                 value={this.getCustomState().getValue()}
-        //                 key={CheckboxList.toArray()[i]}
-        //             >
-        //                 {CheckboxList.toArray()[i]}
-        //             </AntCheckbox>);
-        //     }
-
-        //     return res;
-        // };
 
         return (
 
@@ -49,11 +33,9 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <AntCheckbox.Group
-                    defaultValue={this.getCustomState().getDefaultValue().toArray()}
                     value={this.getCustomState().getValue().toArray()}
                     options={this.getCustomState().getOptions().toArray()}
                     onChange={this.onCheckGroupChange}
-                    // {CheckboxElem(CheckboxList)}
                 />
             </div>
         );
@@ -62,11 +44,6 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '默认选中项',
-                    pKey: 'defaultValue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_LIST
-                }, {
                     pTitle: '选中项',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
@@ -91,11 +68,6 @@ export default class CheckGoup extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '默认选中项',
-                    pKey: 'defaultValue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_LIST
-                }, {
                     pTitle: '选中项',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),

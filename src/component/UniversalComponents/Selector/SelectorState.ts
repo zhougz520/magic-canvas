@@ -8,7 +8,11 @@ export interface ISelectorState {
     defaultValue: string;
 }
 
-const initOptions = [{label: 'option1', value: 1}, {label: 'option2', value: 2}, {label: 'option3', value: 3}];
+const initOptions = [
+    {label: 'option1', value: 'option1'},
+    {label: 'option2', value: 'option2'},
+    {label: 'option3', value: 'option3'}
+];
 
 const defaultRecord: ISelectorState = {
     disable: false,

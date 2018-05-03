@@ -127,10 +127,10 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     // 将输入参数：编辑中的组件属性，传给propertyTool
-    onPropertyProperties = (
-                compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>| undefined
+    onPropertyProperties = (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> | undefined
             ): void => {
                 if (this.barList && compProperty !== undefined) {
+                    console.log(compProperty);
                     this.barList.setPropertyState(compProperty);
                 }
     }
@@ -139,6 +139,13 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     onFireProperties = (pKey: string, pValue: any) => {
         if (this.canvas) {
             this.canvas.executeProperties(pKey, pValue);
+        }
+    }
+
+    // 清除属性工具栏状态
+    clearSelectedProperty = () => {
+        if (this.barList) {
+            this.barList.clearPropertyState();
         }
     }
 
@@ -161,6 +168,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     onCommandEmitted={this.onCommandEmitted}
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
+                    // objectlist={this.props.objectlist}
                 />
                 <div id="stage" ref={(render) => this.stage = render} className="stage" style={stateStyle}>
                     <Draw
@@ -183,6 +191,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                         onCommandProperties={this.onCommandProperties}
                         onPropertyProperties={this.onPropertyProperties}
                         updateCanvasSize={this.updateCanvasSize}
+                        clearSelectedProperty={this.clearSelectedProperty}
                     />
                 </div>
             </div>

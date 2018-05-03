@@ -13,6 +13,7 @@ export interface IBarProps {
     onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
         void;
     onFireProperties: (pKey: string, pValue: any) => void;
+    // objectlist: string;
 }
 
 export interface IBarState {
@@ -26,6 +27,7 @@ export interface IBarState {
 export interface IBarListComponent {
     setPropertyState: (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => void;
     setCommandState: (selectedComs: Map<string, any>) => void;
+    clearPropertyState: () => void;
 }
 
 /* tslint:disable:no-console */
@@ -74,6 +76,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     onPropsBarCollapse={(collapsed) => this.collapseBar(undefined, undefined, collapsed)}
                     onPropertyProperties={this.props.onPropertyProperties}
                     onFireProperties={this.props.onFireProperties}
+                    // objectlist={this.props.objectlist}
                 />
                 <Contributor />
             </React.Fragment>
@@ -101,6 +104,12 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
     setCommandState = (selectedComs: Map<string, any>): void => {
         if (this.toolbar) {
             this.toolbar.setCommandState(selectedComs);
+        }
+    }
+
+    clearPropertyState = (): void => {
+        if (this.propertyTool) {
+            this.propertyTool.clearPropertyState();
         }
     }
 }

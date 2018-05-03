@@ -80,18 +80,6 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'placeholder',
                     pValue: this.getCustomState().getPlaceholder(),
                     pType: PropertiesEnum.INPUT_STRING
-                },
-                // {
-                //     pTitle: '值',
-                //     pKey: 'value',
-                //     pValue: this.getCustomState().getValue(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // },
-                {
-                    pTitle: '默认值',
-                    pKey: 'defaultvalue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_STRING
                 }
             ];
     }
@@ -108,7 +96,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         const newInputState: InputState = InputState.set(
             this.getCustomState(),
             {
-                placeholder: 'this is a new placeholder'
+                placeholder: '这是一个输入框'
             }
         );
 

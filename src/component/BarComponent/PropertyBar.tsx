@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Button, Input, Switch} from 'antd';
 import { PropertiesEnum } from '../config';
 import { List, fromJS, Map } from 'immutable';
+// import Test from '../UniversalComponents/Radio/Test';
 
 import './sass/bar.scss';
 
@@ -25,6 +26,7 @@ export interface IPropertyState {
 
 export interface IPropertyComponent {
     setPropertyState: (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => void;
+    clearPropertyState: () => void;
 }
 
 /* tslint:disable:no-console */
@@ -37,6 +39,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
             showProps: true,
             propsContent: List()
         };
+        this.HandleChangeTextValue = this.HandleChangeTextValue.bind(this);
     }
 
     setPropertyState = (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => {
@@ -49,14 +52,12 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
             });
     }
 
-    onSwitchChange = (checked: boolean) => {
-        // const pPropertyName: string = EventTarget.arguments;
-        // console.log(EventTarget);
-        console.log(this.props.onPropertyProperties);
-        this.props.onFireProperties('', checked);
+    clearPropertyState = () => {
+        console.log('clearclear');
+        this.setState({propsContent:  fromJS([])});
     }
 
-        showProps = () => {
+    showProps = () => {
         this.collapse(false);
         this.setState({
             showProps: true
@@ -72,31 +73,37 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
     }
 
     onBlur = (e: any) => {
+
         this.props.onFireProperties( e.target.name, e.target.value);
+    }
+    onSwitchChange = (e: any) => {
+        const pKey = e.target.parentNode.id;
+        const checkValue = e.target.className.indexOf('checked') === -1 ? true : false;
+        this.props.onFireProperties(pKey, checkValue);
     }
 
     render() {
-
         const { collapsed, titleBarCollapsed } = this.props;
         const { showProps } = this.state;
 
         const propertyElem = (propertiesItem: Map<any, any>) => {
             switch (propertiesItem.get('pType')) {
                 case PropertiesEnum.SWITCH: return (
-
-                    <Switch
-                        defaultChecked={propertiesItem.get('pValue')}
-                        key={propertiesItem.get('pKey')}
-                        onChange={this.onSwitchChange}
-                    />
+                    <div
+                        id={propertiesItem.get('pKey')}
+                        onClick={this.onSwitchChange}
+                    >
+                        <Switch
+                            defaultChecked={propertiesItem.get('pValue')}
+                            key={propertiesItem.get('pKey')}
+                        />
+                    </div>
                 );
                 case PropertiesEnum.INPUT_TEXT: return (
                     <TextArea
                         rows={4}
                         defaultValue={propertiesItem.get('pValue')}
                         autosize={false}
-                        value={''}
-                        // onPressEnter={}
                         key={propertiesItem.get('pKey')}
                     />
                 );
@@ -108,9 +115,10 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                         <div>
                             <TextArea
                                 rows={4}
-                                onBlur={this.setInputList}
-                                defaultValue={valuelist}
+                                onBlur={this.onBlurTextValue}
+                                value={valuelist}
                                 id={propertiesItem.get('pKey')}
+                                onChange={this.HandleChangeTextValue}
                             />
                         </div>
                     );
@@ -121,13 +129,16 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                         <div>
                             <TextArea
                                 rows={4}
-                                onBlur={this.setInputList}
-                                defaultValue={labellist}
+                                onBlur={this.onBlurTextValue}
                                 id={propertiesItem.get('pKey')}
+                                onChange={this.HandleChangeTextValue}
+                                value={labellist}
                             />
                         </div>
                     );
-                case PropertiesEnum.INPUT_NUMBER: return (
+                case PropertiesEnum.INPUT_NUMBER:
+
+                return (
                     <Input
                         type="number"
                         onBlur={this.onBlur}
@@ -138,14 +149,26 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
 
                     />
                 );
+                case PropertiesEnum.INPUT_STRING:
+                const stringValue = propertiesItem.get('pValue');
+
+                return (
+                    <Input
+                        type="text"
+                        onBlur={this.HandleChangeStringValue}
+                        onChange={this.HandleChangeStringValue}
+                        onPressEnter={this.HandleChangeStringValue}
+                        value={stringValue}
+                        id={propertiesItem.get('pKey')}
+                        key={propertiesItem.get('pKey')}
+                    />);
                 default: return (
                 <Input
                     onBlur={this.onBlur}
                     onPressEnter={this.onBlur}
                     defaultValue={propertiesItem.get('pValue')}
-                    name={propertiesItem.get('pKey')}
+                    id={propertiesItem.get('pKey')}
                     key={propertiesItem.get('pKey')}
-                    // value={propertiesItem.pValue}
                 />);
             }
         };
@@ -169,7 +192,9 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         };
 
         const bar = () => {
+
             if (this.state.propsContent !== null && this.state.propsContent.size > 0 ) {
+
                 return (
                     <div className="bar">
                         <div className="panel">
@@ -189,6 +214,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                     return (
                         <div className="bar">
                             <span>没有属性？没有选中控件？</span>
+
                         </div>
                     );
                 }
@@ -238,34 +264,114 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         return labellist;
     }
 
-    private setInputList = (e: any) => {
+    private HandleChangeTextValue = (e: any) => {
+        // 处理文本域输入的换行符
+        let optionsString = e.target.value.replace(/\n/g, '_@').replace(/\r/g, '_#');
+        optionsString = optionsString.replace(/_#_@/g, '<br/>'); // IE7-8
+        optionsString = optionsString.replace(/_@/g, '<br/>'); // IE9、FF、chrome
+        // optionsString = optionsString.replace(/\s/g, '&nbsp;'); // 空格处理
+        optionsString = optionsString.replace(/(<br\/>){2,}/g, '<br/>'); // 如有多个换行符连续相连，则替换成一个换行符
+        // optionsString = optionsString.replace(/<br\/\>$/, ''); // 如末尾有换行符，则替换掉
+        const optionList: string[] = optionsString.split('<br/>');
+        const optionListTemp = optionList;
+        // 去除重复的选项
+        for (let i = optionList.length - 1 ; i > 0; i--) {
+            for (let j = i - 1; 0 < j; j--) {
+                if (optionList[i] === optionList[j]) {
+                    optionListTemp.splice(i, 1);
+                }
+            }
+        }
 
-        let newString = e.target.value.replace(/\n/g, '_@').replace(/\r/g, '_#');
-
-        newString = newString.replace(/_#_@/g, '<br/>'); // IE7-8
-        newString = newString.replace(/_@/g, '<br/>'); // IE9、FF、chrome
-        newString = newString.replace(/\s/g, '&nbsp;'); // 空格处理
-        newString = newString.replace(/\(<br\/\>\)*b/g, '<br/>'); // 如有多个换行符连续相连，则替换成一个换行符
-        newString = newString.replace(/<br\/\>$/, ''); // 如末尾有换行符，则替换掉
-        const optionList = newString.split('<br/>');
-        const properties = this.state.propsContent;
+        let properties = this.state.propsContent;
         const pKeyContent = e.target.id;
         const optionProperty: Map<any, any> = properties.toArray()
                 .filter((item) => item.get('pKey') === pKeyContent)[0];
+        const index = properties.indexOf(optionProperty);
         const optionPropertyValue = optionProperty.get('pValue');
         if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
-            this.props.onFireProperties(e.target.name.split('*')[0], optionList);
+            this.props.onFireProperties(e.target.id.split('*')[0], fromJS(optionList));
+
+            properties = properties.setIn([index, 'pValue'], fromJS(optionList));
+            this.setState({propsContent: properties});
         } else {
             let newOptionPropertyValue = List<Map<any, any>>();
-            for (let i = 0; i < optionList.length; i++) {
+            for (let i = 0; i < optionListTemp.length; i++) {
                 let optionItem =  Map();
-                optionItem = optionItem.set('label', optionList[i]);
-                optionItem = optionItem.set('value', i);
+                optionItem = optionItem.set('label', optionListTemp[i]);
+                optionItem = optionItem.set('value', optionListTemp[i]);
 
                 newOptionPropertyValue = newOptionPropertyValue.push(optionItem);
             }
+            properties = properties.setIn([index, 'pValue'], newOptionPropertyValue);
+            this.setState({propsContent: properties});
+
             this.props.onFireProperties(pKeyContent, newOptionPropertyValue);
         }
+
+    }
+
+    private onBlurTextValue = (e: any) => {
+
+        let optionsString = e.target.value.replace(/\n/g, '_@').replace(/\r/g, '_#');
+
+        optionsString = optionsString.replace(/_#_@/g, '<br/>'); // IE7-8
+        optionsString = optionsString.replace(/_@/g, '<br/>'); // IE9、FF、chrome
+        // optionsString = optionsString.replace(/\s/g, '&nbsp;'); // 空格处理
+        optionsString = optionsString.replace(/(<br\/>){2,}/g, '<br/>'); // 如有多个换行符连续相连，则替换成一个换行符
+        optionsString = optionsString.replace(/<br\/\>$/, ''); // 如末尾有换行符，则替换掉
+        const optionList: string[] = optionsString.split('<br/>');
+        const optionListTemp = optionList;
+        // 去除重复的选项
+        for (let i = optionList.length - 1 ; i > 0; i--) {
+            for (let j = i - 1; 0 < j; j--) {
+                if ( optionList[i] === '' || optionList[i] === optionList[j]) {
+                    optionListTemp.splice(i, 1);
+                }
+            }
+        }
+
+        let properties = this.state.propsContent;
+        const pKeyContent = e.target.id;
+        const optionProperty: Map<any, any> = properties.toArray()
+                .filter((item) => item.get('pKey') === pKeyContent)[0];
+        const index = properties.indexOf(optionProperty);
+        const optionPropertyValue = optionProperty.get('pValue');
+        if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
+            this.props.onFireProperties(e.target.id.split('*')[0], fromJS(optionList));
+
+            properties = properties.setIn([index, 'pValue'], fromJS(optionList));
+            this.setState({propsContent: properties});
+        } else {
+            let newOptionPropertyValue = List<Map<any, any>>();
+            for (let i = 0; i < optionListTemp.length; i++) {
+                let optionItem =  Map();
+                optionItem = optionItem.set('label', optionListTemp[i]);
+                optionItem = optionItem.set('value', optionListTemp[i]);
+
+                newOptionPropertyValue = newOptionPropertyValue.push(optionItem);
+            }
+            properties = properties.setIn([index, 'pValue'], newOptionPropertyValue);
+            this.setState({propsContent: properties});
+
+            this.props.onFireProperties(pKeyContent, newOptionPropertyValue);
+        }
+
+    }
+
+    // setPropertyList = (e: any, isAllowPressEnter: boolean, ) => {
+
+    // }
+
+    private HandleChangeStringValue = (e: any) => {
+        const pKeyContent = e.target.id;
+        let properties = this.state.propsContent;
+        const optionProperty: Map<any, any> = properties.toArray()
+            .filter((item) => item.get('pKey') === pKeyContent)[0];
+        const index = properties.indexOf(optionProperty);
+        properties = properties.setIn([index, 'pValue'], e.target.value);
+        this.setState({propsContent: properties});
+        this.props.onFireProperties(pKeyContent, e.target.value);
 
     }
 

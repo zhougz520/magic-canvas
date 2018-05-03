@@ -73,21 +73,22 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     pValue: this.getCustomState().getOptions(),
                     pType: PropertiesEnum.INPUT_OBJECT_LIST
                 }, {
-                    pTitle: '选中值',
+                    pTitle: '选中项',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
                     pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '默认选中值',
-                    pKey: 'defaultValue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '占位符',
-                    pKey: 'placeholder',
-                    pValue: this.getCustomState().getPlaceholder(),
-                    pType: PropertiesEnum.INPUT_STRING
                 }
+                // , {
+                //     pTitle: '默认选中值',
+                //     pKey: 'defaultValue',
+                //     pValue: this.getCustomState().getDefaultValue(),
+                //     pType: PropertiesEnum.INPUT_STRING
+                // }, {
+                //     pTitle: '占位符',
+                //     pKey: 'placeholder',
+                //     pValue: this.getCustomState().getPlaceholder(),
+                //     pType: PropertiesEnum.INPUT_STRING
+                // }
             ];
     }
 
@@ -130,7 +131,6 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     style={{ width: this.getSizeState().getWidth(), height: this.getSizeState().getHeight() }}
                     value={this.getCustomState().getValue()}
                     defaultValue={this.getCustomState().getDefaultValue()}
-                    // onChange={this.handleChange}
                 >
                     {optionElem(optionsList)}
                 </AntSelector>
@@ -138,20 +138,4 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
             </div>
         );
     }
-
-    // handleChange = (value: any) => {
-    //     console.log(`selected ${value}`);
-    // }
-
-    // private onClick = () => {
-    //     const newSelectorState: SelectorState = SelectorState.set(
-    //         this.getCustomState(),
-    //         {
-    //             placeholder: 'this is a new placeholder'
-    //         }
-    //     );
-
-    //     this.setCustomState(newSelectorState);
-    // }
-
 }

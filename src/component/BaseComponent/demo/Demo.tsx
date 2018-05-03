@@ -72,7 +72,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
         // const baseState: BaseState = this.getBaseState();
 
         // tslint:disable-next-line:no-console
-        console.log(this.getStyle(this.antCom));
     }
 
     /**

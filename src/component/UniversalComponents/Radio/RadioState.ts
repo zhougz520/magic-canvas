@@ -2,9 +2,9 @@ import { Record, List , fromJS} from 'immutable';
 
 export interface IRadioState {
     name: string;
-    defaultValue: number;
+    defaultValue: string;
     // defaultValue 默认选中的值
-    value: number;
+    value: string;
     // value 设置group当前选中的值
     // options: RadioProperties[];
     options: List<Map<any, any>>;
@@ -12,13 +12,17 @@ export interface IRadioState {
     isButton: boolean;
 }
 
-const initOptions = [{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}];
+const initOptions = [
+    {label: 'radio1', value: 'radio1'},
+    {label: 'radio2', value: 'radio2'},
+    {label: 'radio3', value: 'radio3'}
+];
 
 const defaultRecord: IRadioState = {
     name: 'radioName',
     options: fromJS(initOptions),
-    value: 3,
-    defaultValue: 3,
+    value: 'radio1',
+    defaultValue: 'radio1',
     isButton: false
 };
 

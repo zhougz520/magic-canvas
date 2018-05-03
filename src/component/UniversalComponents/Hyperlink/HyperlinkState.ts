@@ -7,7 +7,7 @@ export interface IHyperlinkState {
 
 const defaultRecord: IHyperlinkState = {
     herf: 'https://ps.mingyuanyun.com',
-    content: 'this is a content'
+    content: '这是超链接'
 };
 
 export const HyperlinkRecord: Record.Class = Record(defaultRecord);

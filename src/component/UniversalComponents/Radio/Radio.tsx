@@ -29,6 +29,7 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
 
     render() {
         const radioList: List<Map<any, any>> = this.getCustomState().getOptions();
+
         // tslint:disable-next-line:no-shadowed-variable
         const radioElem = (radiosList: List<Map<any, any>>): any => {
             const res = [];
@@ -81,7 +82,7 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
         return [
                {
-                    pTitle: '选中值',
+                    pTitle: '选中项',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
                     pType: PropertiesEnum.INPUT_STRING

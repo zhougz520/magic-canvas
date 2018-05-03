@@ -24,6 +24,8 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
+        const circle: 'circle' | 'circle-outline' | undefined = this.setCircle();
+
         return (
             <AntButton
                 type={this.getCustomState().getType()}
@@ -31,7 +33,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
                 onClick={this.onClick}
-                shape="circle-outline"
+                shape={circle}
             >
                 {this.getRichChildNode() as JSX.Element}
             </AntButton>
@@ -41,11 +43,6 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '类型',
-                    pKey: 'type',
-                    pValue: this.getCustomState().getType(),
-                    pType: PropertiesEnum.INPUT_LIST
-                }, {
                     pTitle: '是否为圆形按钮',
                     pKey: 'isCircle',
                     pValue: this.getCustomState().getIsCircle(),
@@ -65,11 +62,6 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '类型',
-                    pKey: 'type',
-                    pValue: this.getCustomState().getType(),
-                    pType: PropertiesEnum.INPUT_LIST
-                }, {
                     pTitle: '是否为圆形按钮',
                     pKey: 'isCircle',
                     pValue: this.getCustomState().getIsCircle(),
@@ -97,10 +89,10 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newButtonState);
     }
 
-    // private isCircle: 'circle' | 'circle-outline' | undefined = () => {
-    //     if (this.getCustomState().getIsCircle()) {
-    //         return 'circle';
-    //     } else return undefined;
-    // }
+    private setCircle = (): 'circle' | 'circle-outline' | undefined   => {
+        if (this.getCustomState().getIsCircle()) {
+            return 'circle-outline';
+        } else return undefined;
+    }
 
 }
