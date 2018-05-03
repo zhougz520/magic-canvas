@@ -223,7 +223,6 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         return (
             <React.Fragment>
                 <div
-                    // tslint:disable-next-line:max-line-length
                     className={`props-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}${showProps ? ' props-bar-show' : ' props-bar-hide'}`}
                 >
                     <div className="holder">
@@ -337,6 +336,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                 .filter((item) => item.get('pKey') === pKeyContent)[0];
         const index = properties.indexOf(optionProperty);
         const optionPropertyValue = optionProperty.get('pValue');
+        // TODO optionPropertyValue.toArray is not a function
         if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
             this.props.onFireProperties(e.target.id.split('*')[0], fromJS(optionList));
 

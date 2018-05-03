@@ -15,7 +15,6 @@ const createSelected = (props: ISelectedProps) => {
         pointX, pointY, width, height, undefined, borderOffset);
 
     const rectList: any[] = [];
-    // tslint:disable-next-line:max-line-length
     rectList.push(<rect key="Selected" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth }} />);
     anchorList.map((anchor) => {
         rectList.push(

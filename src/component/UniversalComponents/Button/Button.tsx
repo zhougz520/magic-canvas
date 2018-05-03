@@ -8,14 +8,10 @@ import { ButtonState } from './ButtonState';
 import { PropertiesEnum } from '../../config';
 import { Map } from 'immutable';
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-}
-
-export default class Button extends BaseComponent<IDemoProps, IBaseState> {
+export default class Button extends BaseComponent<IBaseProps, IBaseState> {
     private com: any = null;
 
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -32,8 +28,12 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
                 onMouseDown={this.fireSelectChange}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
+<<<<<<< HEAD
                 onClick={this.onClick}
                 shape={circle}
+=======
+                shape="circle-outline"
+>>>>>>> 51af43d06d51081e5af9ae23a98ef170c76bfaff
             >
                 {this.getRichChildNode() as JSX.Element}
             </AntButton>
@@ -78,6 +78,7 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
+<<<<<<< HEAD
     private onClick = () => {
         const newButtonState: ButtonState = ButtonState.set(
             this.getCustomState(),
@@ -95,4 +96,6 @@ export default class Button extends BaseComponent<IDemoProps, IBaseState> {
         } else return undefined;
     }
 
+=======
+>>>>>>> 51af43d06d51081e5af9ae23a98ef170c76bfaff
 }

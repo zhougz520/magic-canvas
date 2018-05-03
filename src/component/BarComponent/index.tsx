@@ -84,7 +84,6 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
     }
 
     /*折叠面板*/
-    // tslint:disable-next-line:max-line-length
     collapseBar = (tc: boolean | undefined = undefined, rc: boolean | undefined = undefined, pc: boolean | undefined = undefined) => {
         let { titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed } = this.state;
         if (tc !== undefined) titleBarCollapsed = tc;
