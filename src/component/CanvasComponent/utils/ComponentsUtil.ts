@@ -1,5 +1,5 @@
 import { IBoundary, IOffset } from '../model/types';
-import { IComponent } from '../../BaseComponent';
+import { IComponent, ComponentType } from '../../BaseComponent';
 import { Map } from 'immutable';
 
 export const ComponentsUtil = {
@@ -46,5 +46,29 @@ export const ComponentsUtil = {
                 com.setCommentsMap(newCommentsMap);
             }
         );
+    },
+
+    /**
+     * 通过csType获取组件类型
+     * @param csType 组件路径
+     */
+    getComponentType(csType: string): ComponentType | null {
+        let comType: ComponentType | null;
+        switch (csType.split('/')[0]) {
+            case 'MapComponent':
+                comType = 'Map';
+                break;
+            case 'UniversalComponents':
+                comType = 'Universal';
+                break;
+            case 'Comments':
+                comType = 'Comments';
+                break;
+            default:
+                comType = null;
+                break;
+        }
+
+        return comType;
     }
 };

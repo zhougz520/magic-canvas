@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IComponent } from './IComponent';
+import { ComponentType } from './model/ContentState';
 
 /**
  * 构建BaseComponent的Props
@@ -7,6 +8,7 @@ import { IComponent } from './IComponent';
  */
 export interface IBaseProps {
     data: any;
+    comType: ComponentType | null;
     zIndex: number;
     repaintSelected: () => void;
     repaintCanvas: (pointX: number, pointY: number) => void;
