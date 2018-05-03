@@ -28,12 +28,8 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
                 onMouseDown={this.fireSelectChange}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
-<<<<<<< HEAD
                 onClick={this.onClick}
                 shape={circle}
-=======
-                shape="circle-outline"
->>>>>>> 51af43d06d51081e5af9ae23a98ef170c76bfaff
             >
                 {this.getRichChildNode() as JSX.Element}
             </AntButton>
@@ -78,7 +74,6 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
-<<<<<<< HEAD
     private onClick = () => {
         const newButtonState: ButtonState = ButtonState.set(
             this.getCustomState(),
@@ -96,6 +91,4 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         } else return undefined;
     }
 
-=======
->>>>>>> 51af43d06d51081e5af9ae23a98ef170c76bfaff
 }
