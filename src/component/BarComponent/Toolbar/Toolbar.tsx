@@ -79,6 +79,20 @@ export class Toolbar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     <Button
                         type="primary"
                         // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
+                    >
+                        撤销
+                    </Button>&nbsp;&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.CANVAS_REDO)}
+                    >
+                        重做
+                    </Button>&nbsp;&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
                         onClick={() => this.fireCommand(CommandMap.COMMENTS_ADD)}
                     >
                         批注

@@ -65,6 +65,32 @@ export const pageActions = {
         }
 
         this.getThis().addCancasComponent(data, position, true);
+    },
+
+    // 画布撤销
+    undoCanvas() {
+        // tslint:disable-next-line:no-console
+        console.log('画布撤销');
+        const selectedComponents: Map<string, any> = this.getThis().command.getSelectedComponents();
+        selectedComponents.map(
+            (com: IComponent) => {
+                com.undo();
+            }
+        );
+        this.getThis().clearSelected();
+    },
+
+    // 画布重做
+    redoCanvas() {
+        // tslint:disable-next-line:no-console
+        console.log('画布重做');
+        const selectedComponents: Map<string, any> = this.getThis().command.getSelectedComponents();
+        selectedComponents.map(
+            (com: IComponent) => {
+                com.redo();
+            }
+        );
+        this.getThis().clearSelected();
     }
 
 };

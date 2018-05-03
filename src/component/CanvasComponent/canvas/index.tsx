@@ -1,5 +1,4 @@
 import * as React from 'react';
-import CanvasComponent from '../CanvasComponent';
 import { ICanvasComponent, ICanvasProps, ICanvasState, ICanvasCommand } from '../inedx';
 import { Set } from 'immutable';
 import { IComponent, ISize, IPosition } from '../../BaseComponent';
@@ -17,7 +16,7 @@ import { Map, OrderedSet } from 'immutable';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
+export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
     container: HTMLDivElement | null = null;
     canvas: HTMLDivElement | null = null;
     editor: RichEdit | null = null;
