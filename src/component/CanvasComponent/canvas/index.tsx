@@ -483,9 +483,12 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         let zIndex = 0;
         components.map((cs: { [key: string]: any }) => {
             const csType = util.componentsType(cs.t);
+            const comType = ComponentsUtil.getComponentType(cs.t);
+
             array[cs.p.id] = React.createElement(csType,
                 Object.assign({}, { data: cs.p }, {
                     zIndex,
+                    comType,
                     ref: `c.${cs.p.id}`,
                     selectionChanging: this.selectionChanging,
                     clearSelected: this.clearSelected,

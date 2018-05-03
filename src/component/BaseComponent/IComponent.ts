@@ -1,7 +1,8 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
+import { ContentState, ComponentType } from './model/ContentState';
+
 import * as Anchor from '../util/AnchorPoint';
-import { ContentState } from './model/ContentState';
 import { Map } from 'immutable';
 
 /**
@@ -62,6 +63,11 @@ export interface IComponent {
      * 获取组件标识cid
      */
     getCid: () => string;
+
+    /**
+     * 获取组件类型
+     */
+    getComType: () => ComponentType | null;
 
     /**
      * 获取组件类型

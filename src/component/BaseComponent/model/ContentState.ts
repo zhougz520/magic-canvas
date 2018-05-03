@@ -1,12 +1,15 @@
-import { Record } from 'immutable';
-
 import { SizeState } from './SizeState';
 import { PositionState } from './PositionState';
-import { Map } from 'immutable';
+import { Map, Record } from 'immutable';
+
+// 组件类型
+export type ComponentType = 'Map' | 'Universal' | 'Comments';
 
 export interface IContent {
     // 组件ID
     cid: string;
+    // 组件类型
+    comType: ComponentType | null;
     // 组件层级结构
     zIndex: number;
     // 组件大小：width|height
@@ -24,6 +27,7 @@ export interface IContent {
 
 const defaultRecord: IContent = {
     cid: '',
+    comType: null,
     zIndex: 0,
     sizeState: null,
     positionState: null,
@@ -38,6 +42,7 @@ export class ContentState extends ContentStateRecord {
     static createEmpty(): ContentState {
         return ContentState.create({
             cid: '',
+            comType: null,
             zIndex: 0,
             sizeState: SizeState.createEmpty(),
             positionState: PositionState.createEmpty(),
@@ -53,6 +58,10 @@ export class ContentState extends ContentStateRecord {
 
     getCid(): string {
         return this.get('cid');
+    }
+
+    getComType(): ComponentType | null {
+        return this.get('comType');
     }
 
     getZIndex(): number {

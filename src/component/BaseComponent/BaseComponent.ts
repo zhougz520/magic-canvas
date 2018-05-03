@@ -6,11 +6,11 @@ import { IBaseProps } from './IBaseProps';
 import { IBaseState } from './IBaseState';
 
 import { BaseState } from './model/BaseState';
-import { ContentState } from './model/ContentState';
+import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import * as Anchor from '../util/AnchorPoint';
 
+import * as Anchor from '../util/AnchorPoint';
 import { Stack, Map } from 'immutable';
 
 /**
@@ -21,6 +21,7 @@ import { Stack, Map } from 'immutable';
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
+    // TODO 基类中不写构造器
     constructor(props: P, context?: any) {
         super(props, context);
 
@@ -105,6 +106,15 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const baseState: BaseState = this.getBaseState();
 
         return baseState.getCurrentContent().getCid();
+    }
+
+    /**
+     * 获取组件类型
+     */
+    public getComType = (): ComponentType | null => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getCurrentContent().getComType();
     }
 
     /**
@@ -346,6 +356,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     protected initBaseStateWithCustomState(customState: any = null): BaseState {
         const contentState: ContentState = ContentState.create({
             cid: this.props.data.id,
+            comType: this.props.comType,
             zIndex: this.props.zIndex,
             sizeState: SizeState.create({
                 width: this.props.data.w,
