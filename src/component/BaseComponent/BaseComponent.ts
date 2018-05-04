@@ -25,9 +25,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     constructor(props: P, context?: any) {
         super(props, context);
 
-        this.state = {
-            baseState: this.initBaseStateWithCustomState()
-        } as Readonly<S>;
+        // TODO 优化代码
+        const propsBaseState = props.data.baseState;
+        if (propsBaseState !== null && propsBaseState !== undefined) {
+            this.state = {
+                baseState: propsBaseState
+            } as Readonly<S>;
+        } else {
+            this.state = {
+                baseState: this.initBaseStateWithCustomState()
+            } as Readonly<S>;
+        }
+
     }
 
     componentWillUnmount() {

@@ -1,7 +1,9 @@
 import { IBoundary } from '../model/types';
+import { IStack, IComponentList } from '../ICanvasState';
 import { ComponentsUtil } from '../utils/ComponentsUtil';
+import { StackUtil } from '../utils/StackUtil';
 import { IComponent } from '../../BaseComponent';
-import { Map } from 'immutable';
+import { Map, OrderedSet, Stack, Set } from 'immutable';
 
 export const pageActions = {
     bind(ins: any) {
@@ -64,33 +66,87 @@ export const pageActions = {
             };
         }
 
-        this.getThis().addCancasComponent(data, position, true);
+        const componentIndex = this.getThis().state.componentIndex + 1;
+        const comData = ComponentsUtil.getComponentData(data, position, componentIndex);
+        this.getThis().addCancasComponent(comData, componentIndex, true);
+        // 添加批注记栈
+        const comDataList: OrderedSet<any> = OrderedSet().add(comData);
+        const oldUndoStack: Stack<IStack> = this.getThis().state.undoStack;
+        const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this.getThis(), oldUndoStack, 'create', comDataList);
+        this.getThis().setState({
+            undoStack: newUndoStack
+        });
     },
 
     // 画布撤销
     undoCanvas() {
-        // tslint:disable-next-line:no-console
-        console.log('画布撤销');
-        const selectedComponents: Map<string, any> = this.getThis().command.getSelectedComponents();
-        selectedComponents.map(
-            (com: IComponent) => {
-                com.undo();
-            }
-        );
-        this.getThis().clearSelected();
+        const undoStack: Stack<IStack> = this.getThis().state.undoStack;
+        const currentStack: IStack = undoStack.peek();
+        if (!currentStack) {
+            return;
+        }
+
+        const { operationType, componentList } = currentStack;
+
+        switch (operationType) {
+            case 'create':
+                let cids: Set<string> = Set();
+                componentList.map(
+                    (component: IComponentList) => {
+                        component.comData.p.baseState = this.getThis().getComponent(component.cid).getBaseState();
+                        cids = cids.add(component.cid);
+                    }
+                );
+                this.getThis().deleteCanvasComponent(cids, false);
+                break;
+            case 'modify':
+                break;
+            case 'remove':
+                break;
+            default:
+                break;
+        }
+
+        this.getThis().setState({
+            undoStack: undoStack.shift(),
+            redoStack: this.getThis().state.redoStack.push(currentStack)
+        });
     },
 
     // 画布重做
     redoCanvas() {
-        // tslint:disable-next-line:no-console
-        console.log('画布重做');
-        const selectedComponents: Map<string, any> = this.getThis().command.getSelectedComponents();
-        selectedComponents.map(
-            (com: IComponent) => {
-                com.redo();
-            }
-        );
-        this.getThis().clearSelected();
+        const redoStack: Stack<IStack> = this.getThis().state.redoStack;
+        const currentStack: IStack = redoStack.peek();
+        if (!currentStack) {
+            return;
+        }
+
+        const { operationType, componentList } = currentStack;
+
+        switch (operationType) {
+            case 'create':
+                let currentComponentList = this.getThis().state.componentList;
+                componentList.map(
+                    (component: IComponentList) => {
+                        currentComponentList = currentComponentList.add(component.comData);
+                    }
+                );
+                this.getThis().setState({
+                    componentList: currentComponentList
+                });
+                break;
+            case 'modify':
+                break;
+            case 'remove':
+                break;
+            default:
+                break;
+        }
+
+        this.getThis().setState({
+            undoStack: this.getThis().state.redoStack.push(currentStack),
+            redoStack: redoStack.shift()
+        });
     }
 
 };

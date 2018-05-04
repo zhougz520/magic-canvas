@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ICanvasComponent, ICanvasProps, ICanvasState, ICanvasCommand } from '../inedx';
-import { Set } from 'immutable';
 import { IComponent, ISize, IPosition } from '../../BaseComponent';
 import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
 import { CanvasCommand } from '../model/CanvasCommand';
@@ -12,7 +11,9 @@ import { RichEdit } from '../../RichEdit';
 import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
 import { pageActions } from '../command/pageActions';
 import { ComponentsUtil } from '../utils/ComponentsUtil';
-import { Map, OrderedSet } from 'immutable';
+import { StackUtil } from '../utils/StackUtil';
+import { Map, OrderedSet, Stack, Set } from 'immutable';
+import { IStack } from '../ICanvasState';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -28,10 +29,14 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
      */
     constructor(props: ICanvasProps) {
         super(props);
+
+        const componentList: OrderedSet<any> = OrderedSet.of(...this.props.components);
         this.state = {
             anchor: null,
             componentIndex: this.props.components.length,
-            componentList: OrderedSet.of(...this.props.components)
+            componentList,
+            undoStack: Stack(),
+            redoStack: Stack()
         };
         this.command = CanvasCommand;
 
@@ -154,7 +159,7 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
         // 清除选择框
         this.clearChoiceBox(e);
         // 清楚移动框
-        this.clearDragBox(e);
+        this.clearDragBox();
         // 清楚拉伸框
         this.drawStretchBox(e, true);
 
@@ -180,7 +185,7 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
 
     handleMouseLeave = (e: any) => {
         this.clearChoiceBox(e);
-        this.clearDragBox(e);
+        this.clearDragBox();
         this.drawStretchBox(e, true);
         this.command.canvasMouseUp(e);
     }
@@ -201,8 +206,6 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
         if (this.command.getIsRichEditMode() === false) {
             if (key === 'delete') {
                 this.deleteCanvasComponent(this.command.getSelectedCids());
-                this.clearSelected();
-                this.clearDragBox(e);
             }
 
             if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
@@ -293,7 +296,18 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
         if (localStorage.__dnd_type !== 'dragging_cs') return;
         const data = JSON.parse(localStorage.__dnd_value);
         const position = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-        this.addCancasComponent(data, position);
+
+        const componentIndex = this.state.componentIndex + 1;
+        const comData = ComponentsUtil.getComponentData(data, position, componentIndex);
+        this.addCancasComponent(comData, componentIndex);
+
+        // 拖拽添加记栈
+        const comDataList: OrderedSet<any> = OrderedSet().add(comData);
+        const oldUndoStack: Stack<IStack> = this.state.undoStack;
+        const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this, oldUndoStack, 'create', comDataList);
+        this.setState({
+            undoStack: newUndoStack
+        });
     }
 
     handleDragOver = (e: any) => {
@@ -435,26 +449,17 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
 
     /**
      * 画布增加组件
-     * @param data 组件的数据流
+     * @param comData 组件的数据流
      * @param position 组件在画布上的定位
      * @param isComments 是否批注
      */
-    addCancasComponent = (data: any, position: IOffset, isComments = false) => {
-        const componentIndex = this.state.componentIndex + 1;
-        const componentList = this.state.componentList.add({
-            t: data.type,
-            p: {
-                ...data.props,
-                id: 'cs' + componentIndex,
-                l: position.x - data.offset.x,
-                t: position.y - data.offset.y,
-                lineList: data.lineList
-            }
-        });
+    addCancasComponent = (comData: any, componentIndex: number, isComments = false) => {
+        const componentList = this.state.componentList.add(comData);
 
         // 记录新添加的组件cid
         this.command.setAddComponentCid('cs' + componentIndex);
         this.setState({ componentList, componentIndex });
+
         if (isComments === true) {
             const selectedComponents: Map<string, any> = this.command.getSelectedComponents();
             ComponentsUtil.updateCommentsMap(selectedComponents, componentIndex);
@@ -464,14 +469,32 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
     /**
      * 画布删除组件
      */
-    deleteCanvasComponent = (cids: Set<string>) => {
+    deleteCanvasComponent = (cids: Set<string>, isSetStack: boolean = true) => {
         let componentList = this.state.componentList;
+        let comDataList: OrderedSet<any> = OrderedSet();
         componentList.map((cs: any) => {
             if (cs && cs.p && cids.contains(cs.p.id)) {
                 componentList = componentList.delete(cs);
+                comDataList = comDataList.add(cs);
             }
         });
-        this.setState({ componentList });
+
+        let state: any = {
+            componentList
+        };
+        if (isSetStack === true) {
+            // 删除组件记栈
+            const oldUndoStack: Stack<IStack> = this.state.undoStack;
+            const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this, oldUndoStack, 'remove', comDataList);
+            state = {
+                componentList,
+                undoStack: newUndoStack
+            };
+        }
+
+        this.setState(state);
+        this.clearSelected();
+        this.clearDragBox();
     }
 
     /**
@@ -732,7 +755,7 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
     /**
      * 清理组件移动框
      */
-    clearDragBox = (e: any) => {
+    clearDragBox = () => {
         // 清楚移动框
         this.command.clearDragBox(this.getPositionRelativeDocument(0, 0));
     }
