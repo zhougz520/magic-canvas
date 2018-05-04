@@ -144,7 +144,7 @@ export const pageActions = {
         }
 
         this.getThis().setState({
-            undoStack: this.getThis().state.redoStack.push(currentStack),
+            undoStack: this.getThis().state.undoStack.push(currentStack),
             redoStack: redoStack.shift()
         });
     }
