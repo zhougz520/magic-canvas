@@ -9,9 +9,17 @@ export default class Comments extends BaseComponent<IBaseProps, IBaseState> {
     constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
-        this.state = {
-            baseState: this.initBaseStateWithCustomState(props.data.lineList)
-        };
+        // TODO 优化代码
+        const propsBaseState = props.data.baseState;
+        if (propsBaseState !== null && propsBaseState !== undefined) {
+            this.state = {
+                baseState: propsBaseState
+            };
+        } else {
+            this.state = {
+                baseState: this.initBaseStateWithCustomState(props.data.lineList)
+            };
+        }
     }
 
     render() {

@@ -70,5 +70,26 @@ export const ComponentsUtil = {
         }
 
         return comType;
+    },
+
+    /**
+     * 获取ComponentData，给addCancasComponent使用
+     * @param data 组件的数据流
+     * @param position 组件在画布上的定位
+     */
+    getComponentData(data: any, position: IOffset, componentIndex: number): any {
+        const comData = {
+            t: data.type,
+            p: {
+                ...data.props,
+                id: 'cs' + componentIndex,
+                l: position.x - data.offset.x,
+                t: position.y - data.offset.y,
+                lineList: data.lineList,
+                baseState: null
+            }
+        };
+
+        return comData;
     }
 };
