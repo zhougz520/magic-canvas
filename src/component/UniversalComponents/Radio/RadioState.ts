@@ -1,29 +1,42 @@
-import { Record, List , fromJS} from 'immutable';
+import { Record} from 'immutable';
 
-export interface IRadioState {
-    name: string;
-    defaultValue: string;
-    // defaultValue 默认选中的值
-    value: string;
-    // value 设置group当前选中的值
-    // options: RadioProperties[];
-    options: List<Map<any, any>>;
-    // options 以配置的形式设置子元素
-    isButton: boolean;
+export class RadioProperties {
+    [index: string]: any
+    label: string = '';
+    value: number = 1;
+    // disabled?: boolean = false;
 }
 
-const initOptions = [
-    {label: 'radio1', value: 'radio1'},
-    {label: 'radio2', value: 'radio2'},
-    {label: 'radio3', value: 'radio3'}
-];
+export interface IRadioState {
+    value: string;
+    isButton: boolean;
+    disabled: boolean;
+    checked: boolean;
+    textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: string;
+}
 
 const defaultRecord: IRadioState = {
-    name: 'radioName',
-    options: fromJS(initOptions),
-    value: 'radio1',
-    defaultValue: 'radio1',
-    isButton: false
+    value: 'radio',
+    isButton: false,
+    disabled: false,
+    checked: false,
+    fontColor: '#000',
+    fontStyle: 'normal',
+    fontSize: 16,
+    fontWeight: 'normal',
+    textDecoration: 'none',
+    textAlign: 'left',
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    borderWidth: '0'
 };
 
 export const RadioRecord: Record.Class = Record(defaultRecord);
@@ -44,24 +57,56 @@ export class RadioState extends RadioRecord {
         return new RadioState(map);
     }
 
-    getName(): string {
-        return this.get('name');
-    }
-
-    getDefaultValue(): string {
-        return this.get('defaultValue');
-    }
-
     getValue(): string {
         return this.get('value');
     }
 
-    getOptions(): string[] {
-        return this.get('options');
+    getDisabled(): boolean {
+        return this.get('disabled');
+    }
+
+    getChecked(): boolean {
+        return this.get('checked');
     }
 
     getIsButton(): boolean {
         return this.get('isButton');
+    }
+
+    getFontColor(): string {
+        return this.get('fontColor');
+    }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getTextDecoration(): string {
+        return this.get('textDecoration');
+    }
+
+    getTextAlign(): string {
+        return this.get('textAlign');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): string {
+        return this.get('borderWidth');
     }
 
 }

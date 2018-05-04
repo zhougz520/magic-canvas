@@ -23,7 +23,6 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
-
         return (
 
             <div
@@ -31,13 +30,25 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
-                <AntInput
-                    defaultValue={this.getCustomState().getDefaultValue()}
-                    placeholder={this.getCustomState().getPlaceholder()}
-                    onClick={this.onClick}
-                    // value={this.getRichChildNode()}
-                    value={this.getRichChildNode()}
-                />
+                <div
+                    // tslint:disable-next-line:jsx-no-multiline-js
+                    style={{width: '100%', height: '100%', borderStyle: 'solid',
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                    }}
+                >
+                    <AntInput
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                        style={{width: '100%', height: '100%', backgroundColor: this.getCustomState().getBackgroundColor(),
+                            color: this.getCustomState().getFontColor(), fontStyle: this.getCustomState().getFontStyle(),
+                            textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
+                            fontWeight: this.getCustomState().getFontWeight(),
+                            textAlign: this.getCustomState().getTextAlign()
+                        }}
+                        placeholder={this.getCustomState().getPlaceholder()}
+                        onClick={this.onClick}
+                        value={this.getCustomState().getValue()}
+                    />
+                </div>
             </div>
         );
     }
@@ -45,21 +56,9 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '占位符',
+                    pTitle: '输入框提示',
                     pKey: 'placeholder',
                     pValue: this.getCustomState().getPlaceholder(),
-                    pType: PropertiesEnum.INPUT_STRING
-                },
-                // {
-                //     pTitle: '值',
-                //     pKey: 'value',
-                //     pValue: this.getCustomState().getValue(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // },
-                {
-                    pTitle: '默认值',
-                    pKey: 'defaultvalue',
-                    pValue: this.getCustomState().getDefaultValue(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
             ];
@@ -76,9 +75,14 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '占位符',
+                    pTitle: '输入框提示',
                     pKey: 'placeholder',
                     pValue: this.getCustomState().getPlaceholder(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '输入框内容',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
             ];

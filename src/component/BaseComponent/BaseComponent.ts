@@ -349,6 +349,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         });
         this.fireSelectChildChange(null);
     }
+
+    /**
+     * 获取基础组件的可设置文本命令
+     */
+    public getComponentSettableCommands = (): string[] => {
+        return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
+    }
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State

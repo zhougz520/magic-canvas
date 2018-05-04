@@ -5,8 +5,6 @@ import { Select as AntSelector } from 'antd';
 import { BoxType } from '../../util/AnchorPoint';
 import { Map, List } from 'immutable';
 import { PropertiesEnum } from '../../config';
-// import { SelectValue } from 'antd/lib/select';
-// import { ReactElement } from 'react';
 
 const Option = AntSelector.Option;
 // tslint:disable-next-line:no-empty-interface
@@ -24,9 +22,9 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    /**
-     * 重写basecomponent方法, 设置此组件的类型
-     */
+    // /**
+    //  * 重写basecomponent方法, 设置此组件的类型
+    //  */
     public getType(): string {
         return BoxType.BarType;
     }
@@ -42,16 +40,6 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     pTitle: '选中值',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '默认选中值',
-                    pKey: 'defaultValue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '占位符',
-                    pKey: 'placeholder',
-                    pValue: this.getCustomState().getPlaceholder(),
                     pType: PropertiesEnum.INPUT_STRING
                 }
             ];
@@ -77,18 +65,12 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
                     pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '是否禁用',
+                    pKey: 'disabled',
+                    pValue: this.getCustomState().getDisabled(),
+                    pType: PropertiesEnum.SWITCH
                 }
-                // , {
-                //     pTitle: '默认选中值',
-                //     pKey: 'defaultValue',
-                //     pValue: this.getCustomState().getDefaultValue(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // }, {
-                //     pTitle: '占位符',
-                //     pKey: 'placeholder',
-                //     pValue: this.getCustomState().getPlaceholder(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // }
             ];
     }
 
@@ -100,6 +82,10 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
+    public getComponentSettableCommands = (): string[] => {
+        return ['Color', 'fontStyle', 'fontSize', 'fontWeight'];
+    }
+
     render() {
         const optionsList: List<Map<any, any>> = this.getCustomState().getOptions();
         // tslint:disable-next-line:no-shadowed-variable
@@ -108,8 +94,7 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
             for (let i = 0; i < optionsList.size; i++) {
                 res.push(
                     <Option
-                         key={i}
-                        //  value={i}
+                        key={i}
                     >
                          {optionsList.toArray()[i].get('label')}
                     </Option>);
@@ -126,11 +111,14 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                 // onClick={this.onClick}
             >
                 <AntSelector
-                    disabled={this.getCustomState().getDisable()}
-                    placeholder={this.getCustomState().getPlaceholder()}
-                    style={{ width: this.getSizeState().getWidth(), height: this.getSizeState().getHeight() }}
+                    // tslint:disable-next-line:jsx-no-multiline-js
+                    style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                        fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
+                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                    }}
+                    disabled={this.getCustomState().getDisabled()}
                     value={this.getCustomState().getValue()}
-                    defaultValue={this.getCustomState().getDefaultValue()}
                 >
                     {optionElem(optionsList)}
                 </AntSelector>

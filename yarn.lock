@@ -83,6 +83,12 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.30.tgz#dc1e40f7af3b9c815013a7860e6252f6352a84df"
 
+"@types/handsontable@^0.35.0":
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/@types/handsontable/-/handsontable-0.35.0.tgz#b4cbcbb3116ba6a8d66ec7b638de52d80e45acaa"
+  dependencies:
+    handsontable "*"
+
 "@types/immutable@^3.8.7":
   version "3.8.7"
   resolved "https://registry.yarnpkg.com/@types/immutable/-/immutable-3.8.7.tgz#536d33d30f3f3d9a6d4642a219419fd82af633fb"
@@ -3222,7 +3228,7 @@ handsontable-pro@^2.0.0:
     numbro "1.11.0"
     pikaday "1.5.1"
 
-handsontable@2.0.0:
+handsontable@*, handsontable@2.0.0, handsontable@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-2.0.0.tgz#b22fbd61d3193eb63b9c798e73843f55856ef022"
   dependencies:

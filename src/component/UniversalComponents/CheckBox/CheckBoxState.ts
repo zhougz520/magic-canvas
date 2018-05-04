@@ -1,8 +1,9 @@
 import { Record } from 'immutable';
 
-export interface IHyperlinkState {
-    herf: string;
-    content: string;
+export interface ICheckBoxState {
+    isCheck: boolean;
+    option: string;
+    disabled: boolean;
     textAlign: string;
     fontColor: string;
     fontStyle: string;
@@ -14,43 +15,52 @@ export interface IHyperlinkState {
     borderWidth: string;
 }
 
-const defaultRecord: IHyperlinkState = {
-    herf: 'https://ps.mingyuanyun.com',
-    content: '这是超链接',
+const initOptions = 'checkbox';
+
+const defaultRecord: ICheckBoxState = {
+    option: initOptions,
+    isCheck:  false,
+    disabled: false,
     fontColor: '#000',
     fontStyle: 'normal',
     fontSize: 16,
     fontWeight: 'normal',
     textDecoration: 'none',
-    textAlign: 'center',
+    textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
     borderWidth: '0'
+
 };
 
-export const HyperlinkRecord: Record.Class = Record(defaultRecord);
+export const CheckBoxRecord: Record.Class = Record(defaultRecord);
 
-export class HyperlinkState extends HyperlinkRecord {
-    static create(hyperlinkState: IHyperlinkState): HyperlinkState {
-        return new HyperlinkState(hyperlinkState);
+// tslint:disable-next-line:max-classes-per-file
+export class CheckBoxState extends CheckBoxRecord {
+    static create(checkGroupState: ICheckBoxState): CheckBoxState {
+        return new CheckBoxState(checkGroupState);
     }
 
-    static set(hyperlinkState: HyperlinkState, put: any): HyperlinkState {
-        const map: any = hyperlinkState.withMutations(
+    static set(checkGroupState: CheckBoxState, put: any): CheckBoxState {
+        const map: any = checkGroupState.withMutations(
             (state: any) => {
                 state.merge(put);
             }
         );
 
-        return new HyperlinkState(map);
+        return new CheckBoxState(map);
     }
 
-    getHerf(): string {
-        return this.get('herf');
+    getIsCheck(): boolean {
+        return this.get('isCheck');
     }
 
-    getContent(): string {
-        return this.get('content');
+    getDisabled(): boolean {
+        return this.get('disabled');
+    }
+
+    getOption(): string {
+        return this.get('option');
     }
 
     getFontColor(): string {

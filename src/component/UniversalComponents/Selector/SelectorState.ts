@@ -1,11 +1,18 @@
 import { Record, List, fromJS} from 'immutable';
 
 export interface ISelectorState {
-    disable: boolean;
+    disabled: boolean;
     options: List<Map<any, any>>;
-    placeholder: string;
     value: string;
-    defaultValue: string;
+    // textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    // textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: string;
 }
 
 const initOptions = [
@@ -15,11 +22,16 @@ const initOptions = [
 ];
 
 const defaultRecord: ISelectorState = {
-    disable: false,
+    disabled: false,
     options: fromJS(initOptions),
-    placeholder: 'this is a placeholer',
     value: 'option1',
-    defaultValue: 'option2'
+    fontColor: '#000',
+    fontStyle: 'normal',
+    fontSize: 16,
+    fontWeight: 'normal',
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    borderWidth: '0'
 };
 
 export const SelectorRecord: Record.Class = Record(defaultRecord);
@@ -43,19 +55,40 @@ export class SelectorState extends SelectorRecord {
         return this.get('options');
     }
 
-    getDisable(): boolean {
-        return this.get('disable');
-    }
-
-    getPlaceholder(): boolean {
-        return this.get('placeholder');
-    }
-
     getValue(): string {
         return this.get('value');
     }
 
-    getDefaultValue(): string {
-        return this.get('defaultValue');
+    getDisabled(): string {
+        return this.get('disabled');
     }
+
+    getFontColor(): string {
+        return this.get('fontColor');
+    }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): string {
+        return this.get('borderWidth');
+    }
+
 }

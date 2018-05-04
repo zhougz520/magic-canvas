@@ -235,6 +235,18 @@ const detail = {
                     t: 150
                 }
             },
+
+            // {
+            //     t: 'MapComponent/demo/TableDemo',
+            //     p: {
+            //         id: 'cs5',
+            //         txt_v: '我是测试组件5',
+            //         w: 200,
+            //         h: 200,
+            //         l: 150,
+            //         t: 150
+            //     }
+            // },
             {
                 t: 'MapComponent/map/AppGridForm',
                 p: {

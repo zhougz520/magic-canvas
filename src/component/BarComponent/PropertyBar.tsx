@@ -102,6 +102,8 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                 case PropertiesEnum.INPUT_TEXT: return (
                     <TextArea
                         rows={4}
+                        id={propertiesItem.get('pKey')}
+                        onBlur={this.HandleChangeStringValue}
                         defaultValue={propertiesItem.get('pValue')}
                         autosize={false}
                         key={propertiesItem.get('pKey')}

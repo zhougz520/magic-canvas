@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { HyperlinkState } from './HyperlinkState';
-import { BoxType } from '../../util/AnchorPoint';
 import { PropertiesEnum } from '../../config';
 import { Map } from 'immutable';
 
@@ -21,50 +20,40 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    /**
-     * 重写basecomponent方法, 设置此组件的类型
-     */
-    public getType(): string {
-        return BoxType.BarType;
-    }
-
     render() {
-        if (this.getRichChildNode() === undefined) {
-
-            return (
+        return (
+            <div
+                onMouseDown={this.fireSelectChange}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                ref={(handler) => this.com = handler}
+            >
                 <div
-                    onMouseDown={this.fireSelectChange}
-                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                    ref={(handler) => this.com = handler}
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                    style={{
+                        width: '100%', height: '100%',
+                        fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
+                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                    }}
                 >
                     <a
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                            textDecoration: this.getCustomState().getTextDecoration(), display: 'inline-block',
+                            textAlign: this.getCustomState().getTextAlign()}}
                         href={this.getCustomState().getHerf()}
                     >
-                    {this.getCustomState().getContent()}
+                        {this.getCustomState().getContent()}
                     </a>
                 </div>
-            );
-        } else {
-            return (
-                <div
-                    onMouseDown={this.fireSelectChange}
-                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                    ref={(handler) => this.com = handler}
-                >
-                    <a
-                        href={this.getCustomState().getHerf()}
-                    >
-                      {this.getRichChildNode() as JSX.Element}
-                    </a>
-                </div>
-            );
-        }
+            </div>
+        );
     }
 
     public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '地址',
+                    pTitle: '链接地址',
                     pKey: 'herf',
                     pValue: this.getCustomState().getHerf(),
                     pType: PropertiesEnum.INPUT_STRING
@@ -83,10 +72,15 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return  [
                 {
-                    pTitle: '地址',
+                    pTitle: '链接地址',
                     pKey: 'herf',
                     pValue: this.getCustomState().getHerf(),
                     pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '字体',
+                    pKey: 'fontSize',
+                    pValue: this.getCustomState().getFontSize(),
+                    pType: PropertiesEnum.INPUT_NUMBER
                 }
             ];
     }

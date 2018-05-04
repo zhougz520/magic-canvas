@@ -61,22 +61,10 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
-                    pTitle: '行数',
-                    pKey: 'rowNum',
-                    pValue: this.getCustomState().getRowNum(),
-                    pType: PropertiesEnum.INPUT_NUMBER
-                },
-                // {
-                //     pTitle: '默认值',
-                //     pKey: 'defaultvalue',
-                //     pValue: this.getCustomState().getDefaultValue(),
-                //     pType: PropertiesEnum.INPUT_TEXT
-                // },
-                {
-                    pTitle: '是否自适应行数',
-                    pKey: 'autosize',
-                    pValue: this.getCustomState().getAutosize(),
-                    pType: PropertiesEnum.SWITCH
+                    pTitle: '文字内容',
+                    pKey: 'textValue',
+                    pValue: this.getCustomState().getTextValue(),
+                    pType: PropertiesEnum.INPUT_TEXT
                 }
             ];
     }
@@ -89,23 +77,35 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
-    render() {
+    public getComponentSettableCommands = (): string[] => {
+        return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
+    }
 
+    render() {
         return (
             <div
                 onMouseDown={this.fireSelectChange}
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
-                <TextArea
-                    rows={this.getCustomState().getRowNum()}
-                    placeholder={this.getCustomState().getPlaceholder()}
-                    onClick={this.onClick}
-                    onPressEnter={this.onClick}
-                    autosize={false}
-                    value={this.getRichChildNode()}
-                    defaultValue={this.getCustomState().getDefaultValue()}
-                />
+                <div
+                    // tslint:disable-next-line:jsx-no-multiline-js
+                    style={{width: '100%', height: '100%', borderStyle: 'solid',
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                    }}
+                >
+                    <TextArea
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                            fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
+                            fontWeight: this.getCustomState().getFontWeight(), textAlign: this.getCustomState().getTextAlign(), backgroundColor: this.getCustomState().getBackgroundColor()
+                        }}
+                        placeholder={this.getCustomState().getPlaceholder()}
+                        onClick={this.onClick}
+                        onPressEnter={this.onClick}
+                        value={this.getCustomState().getTextValue()}
+                    />
+                </div>
             </div>
         );
     }

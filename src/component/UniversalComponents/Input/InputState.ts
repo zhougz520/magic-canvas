@@ -3,13 +3,29 @@ import { Record } from 'immutable';
 export interface IInputState {
     placeholder: string;
     value: string;
-    defaultvalue: string;
+    textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: string;
 }
 
 const defaultRecord: IInputState = {
-    placeholder: '输入框',
+    placeholder: '这是输入框提示',
     value: '',
-    defaultvalue: ''
+    fontColor: '#000',
+    fontStyle: 'normal',
+    fontSize: 16,
+    fontWeight: 'normal',
+    textDecoration: 'none',
+    textAlign: 'left',
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    borderWidth: '0'
 };
 
 export const InputRecord: Record.Class = Record(defaultRecord);
@@ -37,8 +53,40 @@ export class InputState extends InputRecord {
         return this.get('value');
     }
 
-    getDefaultValue(): string {
-        return this.get('defaultvalue');
+    getFontColor(): string {
+        return this.get('fontColor');
+    }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getTextDecoration(): string {
+        return this.get('textDecoration');
+    }
+
+    getTextAlign(): string {
+        return this.get('textAlign');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): string {
+        return this.get('borderWidth');
     }
 
 }

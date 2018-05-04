@@ -23,16 +23,31 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         const circle: 'circle' | 'circle-outline' | undefined = this.setCircle();
 
         return (
-            <AntButton
-                type={this.getCustomState().getType()}
-                onMouseDown={this.fireSelectChange}
+            <div
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                ref={(handler) => this.com = handler}
-                onClick={this.onClick}
-                shape={circle}
+                onMouseDown={this.fireSelectChange}
             >
-                {this.getRichChildNode() as JSX.Element}
-            </AntButton>
+                <AntButton
+                    // tslint:disable-next-line:jsx-no-multiline-js
+                    style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                        fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
+                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor()
+                        // , borderStyle: 'solid',
+                        // borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                    }}
+                    type={this.getCustomState().getType()}
+                    ref={(handler) => this.com = handler}
+                    // onClick={this.onClick}
+                    shape={circle}
+                    disabled={this.getCustomState().getDisabled()}
+                >
+                    <span
+                        style={{display: 'inline-block', width: '100%', textAlign: this.getCustomState().getTextAlign()}}
+                    >
+                        {this.getCustomState().getTextValue()}
+                    </span>
+                </AntButton>
+            </div>
         );
     }
 
@@ -62,7 +77,19 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
                     pKey: 'isCircle',
                     pValue: this.getCustomState().getIsCircle(),
                     pType: PropertiesEnum.SWITCH
+                }, {
+                    pTitle: '文字内容',
+                    pKey: 'textValue',
+                    pValue: this.getCustomState().getTextValue(),
+                    pType: PropertiesEnum.INPUT_STRING
                 }
+                // , {
+                //     pTitle: '是否禁用',
+                //     pKey: 'disabled',
+                //     pValue: this.getCustomState().getDisabled(),
+                //     pType: PropertiesEnum.SWITCH
+                // }
+                // 禁用后 在画布上点击组件无法选中
             ];
     }
 
@@ -74,16 +101,16 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
-    private onClick = () => {
-        const newButtonState: ButtonState = ButtonState.set(
-            this.getCustomState(),
-            {
-                type: 'danger'
-            }
-        );
+    // private onClick = () => {
+    //     const newButtonState: ButtonState = ButtonState.set(
+    //         this.getCustomState(),
+    //         {
+    //             type: 'danger'
+    //         }
+    //     );
 
-        this.setCustomState(newButtonState);
-    }
+    //     this.setCustomState(newButtonState);
+    // }
 
     private setCircle = (): 'circle' | 'circle-outline' | undefined   => {
         if (this.getCustomState().getIsCircle()) {
