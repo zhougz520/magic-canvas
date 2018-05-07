@@ -102,6 +102,15 @@ export const pageActions = {
             case 'modify':
                 break;
             case 'remove':
+                let currentComponentList = this.getThis().state.componentList;
+                componentList.map(
+                    (component: IComponentList) => {
+                        currentComponentList = currentComponentList.add(component.comData);
+                    }
+                );
+                this.getThis().setState({
+                    componentList: currentComponentList
+                });
                 break;
             default:
                 break;
@@ -138,6 +147,14 @@ export const pageActions = {
             case 'modify':
                 break;
             case 'remove':
+                let cids: Set<string> = Set();
+                componentList.map(
+                    (component: IComponentList) => {
+                        component.comData.p.baseState = this.getThis().getComponent(component.cid).getBaseState();
+                        cids = cids.add(component.cid);
+                    }
+                );
+                this.getThis().deleteCanvasComponent(cids, false);
                 break;
             default:
                 break;
