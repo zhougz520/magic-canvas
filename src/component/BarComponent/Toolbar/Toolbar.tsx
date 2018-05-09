@@ -74,7 +74,39 @@ export class Toolbar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     当前选中组件：{comList.join('|')}
                 </div>
                 <div
-                    style={{marginLeft: 'auto', marginRight: '300px'}}
+                    style={{marginLeft: 'auto', marginRight: '50px'}}
+                >
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
+                    >
+                        顶层
+                    </Button>&nbsp;&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
+                    >
+                        底层
+                    </Button>&nbsp;&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
+                    >
+                        上一层
+                    </Button>&nbsp;&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
+                    >
+                        下一层
+                    </Button>
+                </div>
+                <div
+                    style={{marginRight: '200px'}}
                 >
                     <Button
                         type="primary"
