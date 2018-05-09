@@ -10,7 +10,7 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
 
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
@@ -33,7 +33,7 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                         width: '100%', height: '100%',
                         fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
                         fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
                     <a
@@ -64,9 +64,9 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
+        const newHyperlinkState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newHyperlinkState);
     }
 
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
@@ -81,6 +81,21 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'fontSize',
                     pValue: this.getCustomState().getFontSize(),
                     pType: PropertiesEnum.INPUT_NUMBER
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
                 }
             ];
     }
@@ -88,9 +103,9 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
+        const newHyperlinkState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newHyperlinkState);
     }
 
 }

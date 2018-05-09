@@ -14,7 +14,7 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -37,7 +37,7 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
                     style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                         fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
                         fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
                     <AntCheckbox
@@ -79,9 +79,9 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: CheckBoxState = CheckBoxState.set(this.getCustomState(), properties);
+        const newCheckBoxState: CheckBoxState = CheckBoxState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newCheckBoxState);
     }
 
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
@@ -106,6 +106,21 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'disabled',
                     pValue: this.getCustomState().getDisabled(),
                     pType: PropertiesEnum.SWITCH
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
                 }
             ];
     }
@@ -113,9 +128,9 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: CheckBoxState = CheckBoxState.set(this.getCustomState(), properties);
+        const newCheckBoxState: CheckBoxState = CheckBoxState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newCheckBoxState);
     }
 
     private onCheckGroupChange = (e: any) => {

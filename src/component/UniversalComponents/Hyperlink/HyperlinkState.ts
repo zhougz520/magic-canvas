@@ -11,7 +11,7 @@ export interface IHyperlinkState {
     fontWeight: string;
     backgroundColor: string;
     borderColor: string;
-    borderWidth: string;
+    borderWidth: number;
 }
 
 const defaultRecord: IHyperlinkState = {
@@ -25,7 +25,7 @@ const defaultRecord: IHyperlinkState = {
     textAlign: 'center',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: '0'
+    borderWidth: 0
 };
 
 export const HyperlinkRecord: Record.Class = Record(defaultRecord);
@@ -85,7 +85,7 @@ export class HyperlinkState extends HyperlinkRecord {
         return this.get('borderColor');
     }
 
-    getBorderWidth(): string {
+    getBorderWidth(): number {
         return this.get('borderWidth');
     }
 

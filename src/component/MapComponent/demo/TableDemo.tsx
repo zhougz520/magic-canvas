@@ -8,7 +8,7 @@ export interface IDemoProps {
     // data: any;
 }
 
-export default class BtnDemo extends PureComponent<IDemoProps, any> {
+export default class Table extends PureComponent<IDemoProps, any> {
     static defaultProps = {
         // value: 'test'
     };
@@ -26,21 +26,32 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
     }
 
     componentDidMount() {
-        const data = Handsontable.helper.createSpreadsheetData(100, 100);
+        const data = [
+            ['1.1', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', 'hjldsf', 'euzd', 'asdjfl', 'asdf'],
+            ['1.2', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', 'hjldsf', 'euzd', 'asdjfl', 'asdf'],
+            ['1.3', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', 'hjldsf', 'euzd', 'asdjfl', 'asdf']
+        ];
         this.hotInstance = new Handsontable(this.com, {
             data,
+            // filters: true,
+            colHeaders: [
+                    '序号', '需求主题', '需求提出人', '需求人岗位', '场景', '痛点/价值点', '解决方案', '涉及模块', '期望完成日期', '需求负责人'
+                ],
             rowHeaders: true,
-            colHeaders: true,
-            filters: true,
             // dropdownMenu: true,
-            manualColumnResize: true,
+            // manualColumnResize: true,
             manualRowResize: true,
             manualColumnFreeze: true,
-            fixedColumnsLeft: 2,
-            dropdownMenu: true,
+            bindRowsWithHeaders: true,
+            // fixedColumnsLeft: 2,
+            // dropdownMenu: true,
+            // autoColumnSize : true,
+            wordWrap: true,
+            // stretchH: ,
             mergeCells: [
                 { row: 1, col: 1, rowspan: 1, colspan: 1 }
             ],
+            colWidths: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
             contextMenu: {   // 自定义右键菜单，可汉化，默认布尔值
                 items: {
                     row_above: {
@@ -69,10 +80,22 @@ export default class BtnDemo extends PureComponent<IDemoProps, any> {
 
     public render() {
         return (
-            <div>
-                <button onClick={this.onExportExcelClick} />
+            <div style={{border: 'solid 1px red'}}>
+                <div>
+                    <input readOnly value={'客户'}/>
+                    <input value={'test'} onChange={this.HandleChange}/>
+                    <input readOnly value={'系统版本'}/>
+                    <input value={'test'}  onChange={this.HandleChange}/>
+                    <input value={'test'}  onChange={this.HandleChange}/>
+                </div>
+                {/* <button onClick={this.onExportExcelClick} /> */}
                 <div ref={(handler: HTMLElement | null) => this.com = handler} />
             </div>
         );
+    }
+
+    private HandleChange = (e: any) => {
+        // tslint:disable-next-line:no-console
+        console.log(e);
     }
 }

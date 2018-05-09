@@ -357,6 +357,11 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
         currentSelectedComponent.map(
             (com) => {
                 com.setPropertiesFromProperty(pKey, pValue);
+                if (pKey === 'borderWidth') {
+                    setTimeout(() => {
+                        this.repaintSelected();
+                    }, 0);
+                }
             }
         );
     }

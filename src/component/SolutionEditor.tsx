@@ -202,146 +202,146 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 const detail = {
     content: {
         components: [
-            {
-                t: 'BaseComponent/demo/Demo',
-                p: {
-                    id: 'cs1',
-                    txt_v: '我是测试组件1',
-                    w: 200,
-                    h: 125,
-                    l: 10,
-                    t: 10
-                }
-            },
-            {
-                t: 'BaseComponent/demo/Demo',
-                p: {
-                    id: 'cs2',
-                    txt_v: '我是测试组件2',
-                    w: 300,
-                    h: 200,
-                    l: 300,
-                    t: 10
-                }
-            },
-            {
-                t: 'BaseComponent/demo/Demo',
-                p: {
-                    id: 'cs3',
-                    txt_v: '我是测试组件3',
-                    w: 200,
-                    h: 200,
-                    l: 150,
-                    t: 150
-                }
-            },
-
             // {
-            //     t: 'MapComponent/demo/TableDemo',
+            //     t: 'BaseComponent/demo/Demo',
             //     p: {
-            //         id: 'cs5',
-            //         txt_v: '我是测试组件5',
+            //         id: 'cs1',
+            //         txt_v: '我是测试组件1',
+            //         w: 200,
+            //         h: 125,
+            //         l: 10,
+            //         t: 10
+            //     }
+            // },
+            // {
+            //     t: 'BaseComponent/demo/Demo',
+            //     p: {
+            //         id: 'cs2',
+            //         txt_v: '我是测试组件2',
+            //         w: 300,
+            //         h: 200,
+            //         l: 300,
+            //         t: 10
+            //     }
+            // },
+            // {
+            //     t: 'BaseComponent/demo/Demo',
+            //     p: {
+            //         id: 'cs3',
+            //         txt_v: '我是测试组件3',
             //         w: 200,
             //         h: 200,
             //         l: 150,
             //         t: 150
             //     }
             // },
+
             {
-                t: 'MapComponent/map/AppGridForm',
+                t: 'MapComponent/demo/TableDemo',
                 p: {
-                    id: 'cs4',
-                    txt_v: '编辑页面',
-                    w: 600,
-                    h: 400,
-                    l: 450,
-                    t: 350,
-                    p: {
-                        components: [
-                            {
-                                t: 'MapComponent/map/ProjectDDTree',
-                                p: {
-                                    id: 'cs5.cs1'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppView',
-                                p: {
-                                    id: 'cs5.cs2'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppFind',
-                                p: {
-                                    id: 'cs5.cs3'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppGridMenu',
-                                p: {
-                                    id: 'cs5.cs4',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs5.cs4.cs1',
-                                                    map_mi_txt: '新增'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs5.cs4.cs2',
-                                                    map_mi_txt: '删除'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs5.cs4.cs3',
-                                                    map_mi_sa: true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/AppGrid',
-                                p: {
-                                    id: 'cs5.cs5',
-                                    p: {
-                                        components: [
-                                            {
-                                                t: 'MapComponent/map/AppGridTitle',
-                                                p: {
-                                                    id: 'cs5.cs5.cs1',
-                                                    map_gt_txt: 'AAA'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridTitle',
-                                                p: {
-                                                    id: 'cs5.cs5.cs2',
-                                                    map_gt_txt: 'BBB'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridTitle',
-                                                p: {
-                                                    id: 'cs5.cs5.cs3',
-                                                    map_gt_txt: 'CCC'
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
-                    }
+                    id: 'cs5',
+                    txt_v: '我是测试组件5',
+                    w: 200,
+                    h: 200,
+                    l: 150,
+                    t: 150
                 }
             }
+            // {
+            //     t: 'MapComponent/map/AppGridForm',
+            //     p: {
+            //         id: 'cs4',
+            //         txt_v: '编辑页面',
+            //         w: 600,
+            //         h: 400,
+            //         l: 450,
+            //         t: 350,
+            //         p: {
+            //             components: [
+            //                 {
+            //                     t: 'MapComponent/map/ProjectDDTree',
+            //                     p: {
+            //                         id: 'cs5.cs1'
+            //                     }
+            //                 },
+            //                 {
+            //                     t: 'MapComponent/map/AppView',
+            //                     p: {
+            //                         id: 'cs5.cs2'
+            //                     }
+            //                 },
+            //                 {
+            //                     t: 'MapComponent/map/AppFind',
+            //                     p: {
+            //                         id: 'cs5.cs3'
+            //                     }
+            //                 },
+            //                 {
+            //                     t: 'MapComponent/map/AppGridMenu',
+            //                     p: {
+            //                         id: 'cs5.cs4',
+            //                         p: {
+            //                             components: [
+            //                                 {
+            //                                     t: 'MapComponent/map/AppGridMenuItem',
+            //                                     p: {
+            //                                         id: 'cs5.cs4.cs1',
+            //                                         map_mi_txt: '新增'
+            //                                     }
+            //                                 },
+            //                                 {
+            //                                     t: 'MapComponent/map/AppGridMenuItem',
+            //                                     p: {
+            //                                         id: 'cs5.cs4.cs2',
+            //                                         map_mi_txt: '删除'
+            //                                     }
+            //                                 },
+            //                                 {
+            //                                     t: 'MapComponent/map/AppGridMenuItem',
+            //                                     p: {
+            //                                         id: 'cs5.cs4.cs3',
+            //                                         map_mi_sa: true
+            //                                     }
+            //                                 }
+            //                             ]
+            //                         }
+            //                     }
+            //                 },
+            //                 {
+            //                     t: 'MapComponent/map/AppGrid',
+            //                     p: {
+            //                         id: 'cs5.cs5',
+            //                         p: {
+            //                             components: [
+            //                                 {
+            //                                     t: 'MapComponent/map/AppGridTitle',
+            //                                     p: {
+            //                                         id: 'cs5.cs5.cs1',
+            //                                         map_gt_txt: 'AAA'
+            //                                     }
+            //                                 },
+            //                                 {
+            //                                     t: 'MapComponent/map/AppGridTitle',
+            //                                     p: {
+            //                                         id: 'cs5.cs5.cs2',
+            //                                         map_gt_txt: 'BBB'
+            //                                     }
+            //                                 },
+            //                                 {
+            //                                     t: 'MapComponent/map/AppGridTitle',
+            //                                     p: {
+            //                                         id: 'cs5.cs5.cs3',
+            //                                         map_gt_txt: 'CCC'
+            //                                     }
+            //                                 }
+            //                             ]
+            //                         }
+            //                     }
+            //                 }
+            //             ]
+            //         }
+            //     }
+            // }
         ]
     },
     layout: { mode: 'free' }

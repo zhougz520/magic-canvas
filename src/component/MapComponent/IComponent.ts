@@ -2,6 +2,7 @@
  * BaseComponent提供的方法接口
  */
 export interface IComponent {
+
     /**
      * 添加子控件
      */

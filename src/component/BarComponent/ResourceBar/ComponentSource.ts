@@ -19,6 +19,8 @@ const basePage: IBasePage[] = [
             // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
             { t: 'BaseComponent/demo/Demo', p: { name: 'demo', w: 100, h: 100 } },
             { t: 'Comments/Comments', p: { name: '批注', w: 204, h: 170 } }
+            // { t: 'MapComponent/demo/TableDemo', p: { name: '需求确认单', w: 200, h: 200, l: 150, t: 150 } }
+
         ]
     },
     {
@@ -31,7 +33,7 @@ const basePage: IBasePage[] = [
 
             { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } },
             { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 120, h: 32 } },
-            { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 36 } },
+            { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 32 } },
             { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 33 } },
             { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } }
 

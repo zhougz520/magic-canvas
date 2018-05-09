@@ -13,7 +13,7 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class Input extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -33,7 +33,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                 <div
                     // tslint:disable-next-line:jsx-no-multiline-js
                     style={{width: '100%', height: '100%', borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
                     <AntInput
@@ -84,6 +84,21 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
                     pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
                 }
             ];
     }

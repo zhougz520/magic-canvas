@@ -21,6 +21,8 @@ import { Stack, Map } from 'immutable';
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
+    com: any = null;
+
     // TODO 基类中不写构造器
     constructor(props: P, context?: any) {
         super(props, context);

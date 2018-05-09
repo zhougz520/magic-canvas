@@ -38,11 +38,10 @@ export default class Draw extends DrawComponent<IDrawProps, IDrawState> implemen
 
             const com = this.getComponent(cid);
             if (com === null) return;
-
             const frameData: IReactData = {
                 pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
                 pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
-                width: com.getSize().width + 1,
+                width: com.getSize().width + 1 ,
                 height: com.getSize().height + 1,
                 anchorFill: '#fff',
                 stroke: '#108ee9',
