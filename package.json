@@ -56,7 +56,6 @@
     "drag-on-drop": "^3.2.2",
     "fbjs": "^0.8.16",
     "handsontable": "^2.0.0",
-    "handsontable-pro": "^2.0.0",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "lodash": "^4.17.5",

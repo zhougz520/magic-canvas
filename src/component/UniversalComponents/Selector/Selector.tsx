@@ -130,7 +130,7 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
             for (let i = 0; i < optionsList.size; i++) {
                 res.push(
                     <Option
-                        key={i}
+                        key={optionsList.toArray()[i].get('label')}
                     >
                          {optionsList.toArray()[i].get('label')}
                     </Option>);
