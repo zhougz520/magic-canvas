@@ -15,7 +15,7 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -53,9 +53,9 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
+        const newTextFieldState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newTextFieldState);
     }
 
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
@@ -65,6 +65,21 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'textValue',
                     pValue: this.getCustomState().getTextValue(),
                     pType: PropertiesEnum.INPUT_TEXT
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
                 }
             ];
     }
@@ -72,9 +87,9 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
+        const newTextFieldState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newTextFieldState);
     }
 
     public getComponentSettableCommands = (): string[] => {
@@ -91,7 +106,7 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                 <div
                     // tslint:disable-next-line:jsx-no-multiline-js
                     style={{width: '100%', height: '100%', borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
                     <TextArea

@@ -20,7 +20,7 @@ export interface IRadioState {
     fontWeight: string;
     backgroundColor: string;
     borderColor: string;
-    borderWidth: string;
+    borderWidth: number;
 }
 
 const defaultRecord: IRadioState = {
@@ -36,7 +36,7 @@ const defaultRecord: IRadioState = {
     textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: '0'
+    borderWidth: 0
 };
 
 export const RadioRecord: Record.Class = Record(defaultRecord);
@@ -105,7 +105,7 @@ export class RadioState extends RadioRecord {
         return this.get('borderColor');
     }
 
-    getBorderWidth(): string {
+    getBorderWidth(): number {
         return this.get('borderWidth');
     }
 

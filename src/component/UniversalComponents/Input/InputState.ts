@@ -11,7 +11,7 @@ export interface IInputState {
     fontWeight: string;
     backgroundColor: string;
     borderColor: string;
-    borderWidth: string;
+    borderWidth: number;
 }
 
 const defaultRecord: IInputState = {
@@ -25,7 +25,7 @@ const defaultRecord: IInputState = {
     textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: '0'
+    borderWidth: 0
 };
 
 export const InputRecord: Record.Class = Record(defaultRecord);
@@ -85,7 +85,7 @@ export class InputState extends InputRecord {
         return this.get('borderColor');
     }
 
-    getBorderWidth(): string {
+    getBorderWidth(): number {
         return this.get('borderWidth');
     }
 

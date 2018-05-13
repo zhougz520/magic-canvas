@@ -9,7 +9,7 @@ import { PropertiesEnum } from '../../config';
 import { Map } from 'immutable';
 
 export default class Button extends BaseComponent<IBaseProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
 
     constructor(props: IBaseProps, context?: any) {
         super(props, context);
@@ -31,9 +31,9 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
                     // tslint:disable-next-line:jsx-no-multiline-js
                     style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                         fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
-                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor()
+                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(),
                         // , borderStyle: 'solid',
-                        // borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                     type={this.getCustomState().getType()}
                     ref={(handler) => this.com = handler}
@@ -65,9 +65,9 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
     public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: ButtonState = ButtonState.set(this.getCustomState(), properties);
+        const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newButtonState);
     }
 
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
@@ -82,23 +82,31 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
                     pKey: 'textValue',
                     pValue: this.getCustomState().getTextValue(),
                     pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
                 }
-                // , {
-                //     pTitle: '是否禁用',
-                //     pKey: 'disabled',
-                //     pValue: this.getCustomState().getDisabled(),
-                //     pType: PropertiesEnum.SWITCH
-                // }
-                // 禁用后 在画布上点击组件无法选中
             ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: ButtonState = ButtonState.set(this.getCustomState(), properties);
+        const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newButtonState);
     }
 
     // private onClick = () => {

@@ -10,6 +10,8 @@ import { Map } from 'immutable';
  * BaseComponent提供的方法接口
  */
 export interface IComponent {
+
+    com: any;
     /**
      * 获取、设置组件的baseState
      */

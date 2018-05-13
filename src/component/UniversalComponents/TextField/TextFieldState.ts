@@ -11,7 +11,7 @@ export interface ITextFieldState {
     fontWeight: string;
     backgroundColor: string;
     borderColor: string;
-    borderWidth: string;
+    borderWidth: number;
 }
 
 const defaultRecord: ITextFieldState = {
@@ -25,7 +25,7 @@ const defaultRecord: ITextFieldState = {
     textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: '0'
+    borderWidth: 0
 
 };
 
@@ -94,7 +94,7 @@ export class TextFieldState extends TextFieldRecord {
         return this.get('borderColor');
     }
 
-    getBorderWidth(): string {
+    getBorderWidth(): number {
         return this.get('borderWidth');
     }
 

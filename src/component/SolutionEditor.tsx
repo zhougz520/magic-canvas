@@ -334,6 +334,18 @@ const detail = {
                     }
                 }
             }
+            // {
+            //     t: 'MapComponent/demo/TableDemo',
+            //     p: {
+            //         id: 'cs5',
+            //         txt_v: '我是测试组件5',
+            //         w: 1400,
+            //         h: 200,
+            //         l: 150,
+            //         t: 150,
+            //         zIndex: 5
+            //     }
+            // }
         ]
     },
     layout: { mode: 'free' }

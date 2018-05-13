@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { Button, Input, Switch} from 'antd';
+import 'rc-color-picker/assets/index.css';
+import { Button, Input, Switch, Slider} from 'antd';
 import { PropertiesEnum } from '../config';
 import { List, fromJS, Map } from 'immutable';
-// import Test from '../UniversalComponents/Radio/Test';
+import ColorPicker from 'rc-color-picker';
 
-import './sass/bar.scss';
+// import './sass/bar.scss';
 
 const {TextArea} = Input;
 
@@ -33,6 +34,9 @@ export interface IPropertyComponent {
 /* tslint:disable:jsx-no-string-ref */
 export default class Property extends React.PureComponent<IPropertyProps, IPropertyState>
                             implements IPropertyComponent {
+    activeKey: string = '';
+    activeValue: any = undefined;
+
     constructor(props: IPropertyProps) {
         super(props);
         this.state = {
@@ -53,7 +57,6 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
     }
 
     clearPropertyState = () => {
-        console.log('clearclear');
         this.setState({propsContent:  fromJS([])});
     }
 
@@ -138,6 +141,7 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                             />
                         </div>
                     );
+
                 case PropertiesEnum.INPUT_NUMBER:
 
                 return (
@@ -163,7 +167,40 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
                         value={stringValue}
                         id={propertiesItem.get('pKey')}
                         key={propertiesItem.get('pKey')}
-                    />);
+                    />
+                );
+
+                case PropertiesEnum.COLOR_PICKER:
+
+                return (
+                    <div
+                        id={propertiesItem.get('pKey')}
+                        onClick={this.GetColorKey}
+                        key={propertiesItem.get('pKey')}
+                    >
+                        <ColorPicker
+                            color={propertiesItem.get('pValue')}
+                            onClose={this.SetColorValue}
+                            enableAlpha={false}
+                        />
+                    </div>
+                );
+
+                case PropertiesEnum.SLIDER:
+                return (
+                    <div
+                        onClick={this.GetSliderKey}
+                        id={propertiesItem.get('pKey')}
+                        key={propertiesItem.get('pKey')}
+                    >
+                        <Slider
+                            max={10}
+                            defaultValue={propertiesItem.get('pValue')}
+                            onAfterChange={this.SetSliderValue}
+                        />
+                    </div>
+                );
+
                 default: return (
                 <Input
                     onBlur={this.onBlur}
@@ -361,10 +398,6 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
 
     }
 
-    // setPropertyList = (e: any, isAllowPressEnter: boolean, ) => {
-
-    // }
-
     private HandleChangeStringValue = (e: any) => {
         const pKeyContent = e.target.id;
         let properties = this.state.propsContent;
@@ -375,6 +408,45 @@ export default class Property extends React.PureComponent<IPropertyProps, IPrope
         this.setState({propsContent: properties});
         this.props.onFireProperties(pKeyContent, e.target.value);
 
+    }
+
+    // 获取取色器的id 也就是组件属性对应的pKey
+    private GetColorKey = (e: any) => {
+        this.activeKey = e.target.parentNode.parentNode.id;
+
+    }
+
+    // 获取取色器改变后的颜色 并修改组件属性pKey对应的pValue
+    private SetColorValue = (colorPicker: any) => {
+        if (this.activeKey !== '') {
+            let properties = this.state.propsContent;
+            const optionProperty: Map<any, any> = properties.toArray()
+                .filter((item) => item.get('pKey') === this.activeKey)[0];
+            const index = properties.indexOf(optionProperty);
+            properties = properties.setIn([index, 'pValue'], colorPicker.color);
+            this.setState({propsContent: properties});
+            this.props.onFireProperties(this.activeKey, colorPicker.color);
+            this.activeKey = '';
+        }
+    }
+
+    // 获取边框宽细的id 也就是组件属性对应的pKey
+    private GetSliderKey = (e: any) => {
+        if (this.activeValue !== undefined && this.activeValue !== null) {
+            const pKey = e.target.parentNode.id === undefined || e.target.parentNode.id === '' ? e.target.parentNode.parentNode.id : e.target.parentNode.id;
+            let properties = this.state.propsContent;
+            const optionProperty: Map<any, any> = properties.toArray()
+                .filter((item) => item.get('pKey') === pKey)[0];
+            const index = properties.indexOf(optionProperty);
+            properties = properties.setIn([index, 'pValue'], this.activeValue);
+            this.setState({propsContent: properties});
+            this.props.onFireProperties(pKey, this.activeValue);
+            this.activeValue = undefined;
+        }
+    }
+
+    private SetSliderValue = (inputNum: number) => {
+        this.activeValue = inputNum;
     }
 
 }

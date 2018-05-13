@@ -16,7 +16,7 @@ export interface IButtonState {
     fontWeight: string;
     backgroundColor: string;
     borderColor: string;
-    borderWidth: string;
+    borderWidth: number;
 }
 
 const defaultRecord: IButtonState = {
@@ -32,7 +32,7 @@ const defaultRecord: IButtonState = {
     textDecoration: 'none',
     backgroundColor: '#1890ff',
     borderColor: '#1890ff',
-    borderWidth: '0'
+    borderWidth: 0
 };
 
 export const ButtonStateRecord: Record.Class = Record(defaultRecord);
@@ -113,7 +113,7 @@ export class ButtonState extends ButtonStateRecord {
         return this.get('borderColor');
     }
 
-    getBorderWidth(): string {
+    getBorderWidth(): number {
         return this.get('borderWidth');
     }
 

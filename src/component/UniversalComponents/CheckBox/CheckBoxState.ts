@@ -12,7 +12,7 @@ export interface ICheckBoxState {
     fontWeight: string;
     backgroundColor: string;
     borderColor: string;
-    borderWidth: string;
+    borderWidth: number;
 }
 
 const initOptions = 'checkbox';
@@ -29,7 +29,7 @@ const defaultRecord: ICheckBoxState = {
     textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: '0'
+    borderWidth: 0
 
 };
 
@@ -95,7 +95,7 @@ export class CheckBoxState extends CheckBoxRecord {
         return this.get('borderColor');
     }
 
-    getBorderWidth(): string {
+    getBorderWidth(): number {
         return this.get('borderWidth');
     }
 

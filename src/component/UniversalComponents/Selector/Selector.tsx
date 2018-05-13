@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
+import { BaseComponent, BaseStyle, IBaseProps, IBaseState, SizeState, ISize, BaseState, ContentState } from '../../BaseComponent';
 import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
 import { BoxType } from '../../util/AnchorPoint';
@@ -13,7 +13,8 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    // private com: any = null;
+    com: any = null;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -27,6 +28,11 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
     //  */
     public getType(): string {
         return BoxType.BarType;
+    }
+
+    componentDidUpdate() {
+        // tslint:disable-next-line:no-console
+        console.log(this.getSize());
     }
 
     public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
@@ -48,9 +54,9 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: SelectorState = SelectorState.set(this.getCustomState(), properties);
+        const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newSelectorState);
     }
 
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
@@ -70,16 +76,46 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     pKey: 'disabled',
                     pValue: this.getCustomState().getDisabled(),
                     pType: PropertiesEnum.SWITCH
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
                 }
             ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+
+        const oldBorderWidth = this.getCustomState().getBorderWidth();
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newInputState: SelectorState = SelectorState.set(this.getCustomState(), properties);
+        const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        let sizeState: SizeState = this.getSizeState();
+        if (pKey === 'borderWidth') {
+            const size: ISize = this.getSize();
+            const newSize: ISize = {
+                width: size.width,
+                height: size.height + (pValue - oldBorderWidth) * 2
+            };
+            sizeState = SizeState.create(newSize);
+        }
+
+        const oldContentState: ContentState = this.getBaseState().getCurrentContent();
+        const newContentState: ContentState = oldContentState.merge({
+            sizeState,
+            customState: newSelectorState
+        }) as ContentState;
+
+        const oldBaseState: BaseState = this.getBaseState();
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContentState);
+        this.setBaseState(newBaseState);
     }
 
     public getComponentSettableCommands = (): string[] => {
@@ -94,7 +130,7 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
             for (let i = 0; i < optionsList.size; i++) {
                 res.push(
                     <Option
-                        key={i}
+                        key={optionsList.toArray()[i].get('label')}
                     >
                          {optionsList.toArray()[i].get('label')}
                     </Option>);
@@ -115,7 +151,7 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                         fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
                         fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                     disabled={this.getCustomState().getDisabled()}
                     value={this.getCustomState().getValue()}

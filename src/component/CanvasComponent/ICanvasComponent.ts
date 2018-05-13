@@ -17,5 +17,5 @@ export interface ICanvasComponent {
     executeCommand: (cmd: any) => void;
     executeProperties: (pKey: string, pValue: any) => void;
     getSelectedProperties: (currentSelectedComponents: Map<string, any>) =>
-        Array<{pTitle: string, pKey: string, pValue: any, pType: string}>|undefined;
+        Array<{pTitle: string, pKey: string, pValue: any, pType: string}> | undefined;
 }
