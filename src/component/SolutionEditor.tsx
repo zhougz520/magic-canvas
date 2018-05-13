@@ -1,13 +1,10 @@
 import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarComponent';
-import Draw from './DrawComponent/draw';
-import { Canvas } from './CanvasComponent/canvas';
-import { IDrawComponent } from './DrawComponent';
-import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
+import { Draw, IDrawComponent } from './Draw';
+import { Canvas, ICanvasComponent, IBoundary, IOffset } from './Canvas';
 import './solution.css';
 import { ICompos, config } from './config';
-import { IOffset } from './CanvasComponent/model/types';
 import { Map } from 'immutable';
 
 export interface ISolutionProp {
