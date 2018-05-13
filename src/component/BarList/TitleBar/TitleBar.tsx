@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './sass/bar.scss';
+import '../sass/bar.scss';
 
 export interface ITitleProps {
     collapsed: boolean;
@@ -11,7 +11,7 @@ export interface ITitleState {
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Title extends React.PureComponent<ITitleProps, ITitleState> {
+export class TitleBar extends React.PureComponent<ITitleProps, ITitleState> {
     constructor(props: ITitleProps) {
         super(props);
     }

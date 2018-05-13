@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BarList, IBarListComponent } from './BarComponent';
+import { BarList, IBarListComponent } from './BarList';
 import { Draw, IDrawComponent } from './Draw';
 import { Canvas, ICanvasComponent, IBoundary, IOffset } from './Canvas';
 import './solution.css';

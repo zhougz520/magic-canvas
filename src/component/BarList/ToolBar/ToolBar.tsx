@@ -9,7 +9,7 @@ import { Map } from 'immutable';
 
 import '../sass/bar.scss';
 
-export class Toolbar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
+export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
     constructor(props: IToolbarProps) {
         super(props);
         this.state = {

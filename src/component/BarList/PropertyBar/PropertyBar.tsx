@@ -1,11 +1,9 @@
 import * as React from 'react';
 import 'rc-color-picker/assets/index.css';
 import { Button, Input, Switch, Slider} from 'antd';
-import { PropertiesEnum } from '../config';
+import { PropertiesEnum } from '../../config';
 import { List, fromJS, Map } from 'immutable';
 import ColorPicker from 'rc-color-picker';
-
-// import './sass/bar.scss';
 
 const {TextArea} = Input;
 
@@ -32,7 +30,7 @@ export interface IPropertyComponent {
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Property extends React.PureComponent<IPropertyProps, IPropertyState>
+export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertyState>
                             implements IPropertyComponent {
     activeKey: string = '';
     activeValue: any = undefined;

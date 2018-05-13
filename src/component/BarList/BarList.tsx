@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import Title from './TitleBar';
-import { Toolbar, IToolbarComponent } from './Toolbar';
+import { TitleBar } from './TitleBar';
+import { ToolBar, IToolbarComponent } from './ToolBar';
+import { PropertyBar, IPropertyComponent } from './PropertyBar';
+import { ContributorBar } from './ContributorBar';
 import Resource from './ResourceBar';
-import Property, { IPropertyComponent } from './PropertyBar';
-import Contributor from './ContributorBar';
+
 import { Map } from 'immutable';
 
 export interface IBarProps {
@@ -52,8 +53,8 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
 
         return (
             <React.Fragment>
-                <Title ref="title" collapsed={titleBarCollapsed} />
-                <Toolbar
+                <TitleBar ref="title" collapsed={titleBarCollapsed} />
+                <ToolBar
                     ref={(render) => this.toolbar = render}
                     titleBarCollapsed={titleBarCollapsed}
                     onCommandEmitted={this.props.onCommandEmitted}
@@ -68,7 +69,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     // tslint:disable-next-line:jsx-no-lambda
                     onResourceBarCollapse={(collapsed) => this.collapseBar(undefined, collapsed)}
                 />
-                <Property
+                <PropertyBar
                     ref={(render) => this.propertyTool = render}
                     collapsed={propsBarCollapsed}
                     titleBarCollapsed={titleBarCollapsed}
@@ -78,7 +79,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     onFireProperties={this.props.onFireProperties}
                     // objectlist={this.props.objectlist}
                 />
-                <Contributor />
+                <ContributorBar />
             </React.Fragment>
         );
     }

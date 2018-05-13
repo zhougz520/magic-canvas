@@ -2,7 +2,7 @@ import * as React from 'react';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Contributor<P = {}, S = {}> extends React.PureComponent<P, S> {
+export class ContributorBar<P = {}, S = {}> extends React.PureComponent<P, S> {
     constructor(props: any) {
         super(props);
     }
