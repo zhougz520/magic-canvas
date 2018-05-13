@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarComponent';
 import Draw from './DrawComponent/draw';
-import Canvas from './CanvasComponent/canvas';
+import { Canvas } from './CanvasComponent/canvas';
 import { IDrawComponent } from './DrawComponent';
 import { ICanvasComponent, IBoundary } from './CanvasComponent/inedx';
 import './solution.css';
@@ -210,7 +210,8 @@ const detail = {
                     w: 200,
                     h: 125,
                     l: 10,
-                    t: 10
+                    t: 10,
+                    zIndex: 1
                 }
             },
             {
@@ -221,7 +222,8 @@ const detail = {
                     w: 300,
                     h: 200,
                     l: 300,
-                    t: 10
+                    t: 10,
+                    zIndex: 2
                 }
             },
             {
@@ -232,21 +234,10 @@ const detail = {
                     w: 200,
                     h: 200,
                     l: 150,
-                    t: 150
+                    t: 150,
+                    zIndex: 3
                 }
             },
-
-            // {
-            //     t: 'MapComponent/demo/TableDemo',
-            //     p: {
-            //         id: 'cs5',
-            //         txt_v: '我是测试组件5',
-            //         w: 200,
-            //         h: 200,
-            //         l: 150,
-            //         t: 150
-            //     }
-            // },
             {
                 t: 'MapComponent/map/AppGridForm',
                 p: {
@@ -256,6 +247,7 @@ const detail = {
                     h: 400,
                     l: 450,
                     t: 350,
+                    zIndex: 4,
                     p: {
                         components: [
                             {

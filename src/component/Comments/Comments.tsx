@@ -10,16 +10,16 @@ export default class Comments extends BaseComponent<IBaseProps, IBaseState> {
         super(props, context);
 
         // TODO 优化代码
-        const propsBaseState = props.data.baseState;
-        if (propsBaseState !== null && propsBaseState !== undefined) {
-            this.state = {
-                baseState: propsBaseState
-            };
-        } else {
-            this.state = {
-                baseState: this.initBaseStateWithCustomState(props.data.lineList)
-            };
-        }
+        // const propsBaseState = props.baseState;
+        // if (propsBaseState !== null && propsBaseState !== undefined) {
+        //     this.state = {
+        //         baseState: propsBaseState
+        //     };
+        // } else {
+        //     this.state = {
+        //         baseState: this.initBaseStateWithCustomState(props.data.lineList)
+        //     };
+        // }
     }
 
     render() {

@@ -26,7 +26,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         super(props, context);
 
         // TODO 优化代码
-        const propsBaseState = props.data.baseState;
+        const propsBaseState = props.baseState;
         if (propsBaseState !== null && propsBaseState !== undefined) {
             this.state = {
                 baseState: propsBaseState
@@ -56,6 +56,25 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 }
             );
         }
+    }
+
+    /**
+     * 获取组件的baseState
+     */
+    public getBaseState = (): BaseState => {
+        const baseState: BaseState = this.state.baseState;
+
+        return baseState;
+    }
+
+    /**
+     * 设置组件的baseState
+     * @param newBaseState 构建好的新的baseState
+     */
+    public setBaseState = (newBaseState: BaseState): void => {
+        this.setState({
+            baseState: newBaseState
+        });
     }
 
     /**
@@ -173,7 +192,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             zIndex
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
-        this.setBaseState(newBaseState);
+
+        this.setState({
+            baseState: newBaseState
+        }, this.callBackForZIndex);
     }
 
     /**
@@ -370,47 +392,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param customState 组件自定义State
      */
     protected initBaseStateWithCustomState(customState: any = null): BaseState {
-        const contentState: ContentState = ContentState.create({
-            cid: this.props.data.id,
-            comType: this.props.comType,
-            zIndex: this.props.zIndex,
-            sizeState: SizeState.create({
-                width: this.props.data.w,
-                height: this.props.data.h
-            }),
-            positionState: PositionState.create({
-                left: this.props.data.l,
-                right: this.props.data.r,
-                top: this.props.data.t,
-                bottom: this.props.data.b
-            }),
-            // TODO 带格式的富文本
-            richChildNode: this.props.data.txt_v,
-            customState,
-            // TODO 组件对应的批注集合
-            commentsMap: Map()
-        });
+        const baseState: BaseState = this.props.baseState;
 
-        return BaseState.createWithContent(contentState);
-    }
+        let newBaseState: BaseState = baseState;
+        if (customState !== null) {
+            newBaseState = BaseState.set(baseState, baseState.getCurrentContent().merge(
+                {
+                    customState
+                }
+            ));
+        }
 
-    /**
-     * 获取组件的baseState
-     */
-    protected getBaseState = (): BaseState => {
-        const baseState: BaseState = this.state.baseState;
-
-        return baseState;
-    }
-
-    /**
-     * 设置组件的baseState
-     * @param newBaseState 构建好的新的baseState
-     */
-    protected setBaseState = (newBaseState: BaseState): void => {
-        this.setState({
-            baseState: newBaseState
-        });
+        return newBaseState;
     }
 
     /**
@@ -438,7 +431,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.renderCallback);
+        }, this.callBackForSizeAndPosition);
     }
 
     /**
@@ -466,11 +459,11 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.renderCallback);
+        }, this.callBackForSizeAndPosition);
     }
 
     // render后的回调函数
-    protected renderCallback = (): void => {
+    protected callBackForSizeAndPosition = (): void => {
         // 通知画布重绘组件的选中框
         this.props.repaintSelected();
         // 计算边界调整画布的大小
@@ -478,7 +471,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
 
         // TODO Comments优化代码
-        if (this.props.data.name === '批注') {
+        if (this.getComType() === 'Comments') {
             const position = this.getPosition();
             const oldLineList: Map<string, any> = this.getCustomState();
             let newLineList: Map<string, any> = Map();
@@ -509,6 +502,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 );
             }
         }
+    }
+
+    protected callBackForZIndex = (): void => {
+        this.props.resetMaxAndMinZIndex();
     }
 
     /**

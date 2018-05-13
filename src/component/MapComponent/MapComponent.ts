@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
-import util from '../util';
+import { GlobalUtil } from '../util/GlobalUtil';
 
 /**
  * 基类
@@ -55,7 +55,7 @@ export class MapComponent<P extends IBaseProps, S>
      * 获取添加控件的信息
      */
     protected getAddComponent() {
-        if (util.isEmptyString(localStorage.__dnd_type) || util.isEmptyString(localStorage.__dnd_value)) return;
+        if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) return;
         if (localStorage.__dnd_type !== 'dragging_cs') return;
 
         return JSON.parse(localStorage.__dnd_value);

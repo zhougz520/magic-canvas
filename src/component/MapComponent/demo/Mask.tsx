@@ -3,7 +3,7 @@ import { PureComponent } from 'react';
 import BtnChildDemo from './BtnChildDemo';
 import DragOnDrop from 'drag-on-drop';
 // import Button from '../../UniversalComponents/Button/Button';
-import util from '../../util';
+import { GlobalUtil } from '../../util/GlobalUtil';
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps {
     fireSelect: (cid: string, e: any) => void;
@@ -95,7 +95,7 @@ export default class Mask extends PureComponent<IDemoProps, any> {
     }
 
     public handleDrop = (e: any) => {
-        if (util.isEmptyString(localStorage.__dnd_type) || util.isEmptyString(localStorage.__dnd_value)) return;
+        if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) return;
         if (localStorage.__dnd_type !== 'dragging_cs') return;
         const data = JSON.parse(localStorage.__dnd_value);
         this.addChildComponent(data);

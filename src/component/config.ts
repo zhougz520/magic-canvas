@@ -22,10 +22,6 @@ export const config: IConfig = {
     canvasSize: { width: 2560, height: 1440 }
 };
 
-export const CommandsEnum = {
-    PLACEHOLDER : 'placeholder'
-};
-
 // PropertiesEnum为属性工具的枚举类，包含属性工具子控件的种类和对应的枚举名称
 export const PropertiesEnum = {
     INPUT_STRING: 'input_string',    // 单行输入框

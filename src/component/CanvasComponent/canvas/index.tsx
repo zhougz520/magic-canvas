@@ -1,27 +1,73 @@
 import * as React from 'react';
-import { ICanvasComponent, ICanvasProps, ICanvasState, ICanvasCommand } from '../inedx';
-import { IComponent, ISize, IPosition } from '../../BaseComponent';
-import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
-import { CanvasCommand } from '../model/CanvasCommand';
-import { DragType, IOffset, IPointpos, IPagePos } from '../model/types';
-import util from '../../util';
-import { config } from '../../config';
-import { keyFun } from '../model/CanvasCommand';
 import { RichEdit } from '../../RichEdit';
-import { IKeyArgs, keyArgs } from '../../util/KeyAndPointUtil';
-import { pageActions } from '../command/pageActions';
+
+import { BaseState, IComponent, convertFromDataToBaseState, IComData } from '../../BaseComponent';
+import { ICanvasState, IComponentList } from '../ICanvasState';
+import { ICanvasProps } from '../ICanvasProps';
+import { ICanvasComponent } from '../ICanvasComponent';
+import { CanvasStyle, ContainerStyle } from '../model/CanvasStyle';
+
+import { CanvasUtil } from '../utils/CanvasUtil';
 import { ComponentsUtil } from '../utils/ComponentsUtil';
-import { StackUtil } from '../utils/StackUtil';
-import { Map, OrderedSet, Stack, Set } from 'immutable';
-import { IStack } from '../ICanvasState';
+import { DrawUtil } from '../utils/DrawUtil';
+import { MouseAndKeyUtil } from '../utils/MouseAndKeyUtil';
+import { PositionUtil } from '../utils/PositionUtil';
+import { RichEditUtil } from '../utils/RichEditUtil';
+import { CanvasGlobalParam } from '../utils/CanvasGlobalParam';
+
+import { HandleModes } from '../handlers/HandleModes';
+import { HandlerMap } from '../handlers/canvas/HandlerMap';
+import { pageActions } from '../command/pageActions';
+
+// import { StackUtil } from '../utils/StackUtil';
+import { Map, OrderedSet, Stack } from 'immutable';
+
+/**
+ * 定义一组对象来对应所有可能的'mode'
+ */
+const handlerMap: any = {
+    canvas: HandlerMap
+};
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
+export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
     container: HTMLDivElement | null = null;
     canvas: HTMLDivElement | null = null;
     editor: RichEdit | null = null;
-    command: ICanvasCommand = CanvasCommand;
+
+    /**
+     * 画布的工具包
+     */
+    public _canvasUtil: CanvasUtil;
+    public _componentsUtil: ComponentsUtil;
+    public _drawUtil: DrawUtil;
+    public _mouseAndKeyUtil: MouseAndKeyUtil;
+    public _positionUtil: PositionUtil;
+    public _richEditUtil: RichEditUtil;
+    public _canvasGlobalParam: CanvasGlobalParam;
+
+    /**
+     * 把事件路由到处理程序
+     */
+    public _handler: any;
+    public _onDocMouseMove: any = this._buildHandler('onDocMouseMove');
+    public _onDocMouseUp: any = this._buildHandler('onDocMouseUp');
+    public _onDocMouseLeave: any = this._buildHandler('onDocMouseLeave');
+    public _onConMouseDown: any = this._buildHandler('onConMouseDown');
+    public _onConMouseMove: any = this._buildHandler('onConMouseMove');
+    public _onConKeyDown: any = this._buildHandler('onConKeyDown');
+    public _onConKeyUp: any = this._buildHandler('onConKeyUp');
+    public _onCanDrop: any = this._buildHandler('onCanDrop');
+    public _onCanDragOver: any = this._buildHandler('onCanDragOver');
+
+    /**
+     * 全局变量
+     */
+    public _maxZIndex: number = 0;                          // 当前最大z-Index
+    public _minZIndex: number = 0;                          // 当前最小z-Index
+    public _maxComIndex: number = 0;                        // 当前最大组件index
+    public _newComponentCid: string | null = null;          // 新添加的组件cid，用于选中新添加组件
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -30,18 +76,46 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
     constructor(props: ICanvasProps) {
         super(props);
 
-        const componentList: OrderedSet<any> = OrderedSet.of(...this.props.components);
+        /**
+         * 初始化画布工具包
+         */
+        this._canvasUtil = new CanvasUtil(this);
+        this._componentsUtil = new ComponentsUtil(this);
+        this._drawUtil = new DrawUtil(this);
+        this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
+        this._positionUtil = new PositionUtil(this);
+        this._richEditUtil = new RichEditUtil(this);
+        this._canvasGlobalParam = new CanvasGlobalParam();
+
+        // 把props的components的数据转译为baseState
+        let componentList: OrderedSet<IComponentList> = OrderedSet();
+        this.props.components.map(
+            (component) => {
+                const comData: IComData = this._componentsUtil.convertComponentToData(component);
+                const baseState: BaseState = convertFromDataToBaseState(comData);
+
+                componentList = componentList.add({
+                    cid: comData.id,
+                    comPath: comData.comPath,
+                    baseState,
+                    childData: comData.p
+                });
+            }
+        );
+
         this.state = {
             anchor: null,
-            componentIndex: this.props.components.length,
             componentList,
             undoStack: Stack(),
             redoStack: Stack()
         };
-        this.command = CanvasCommand;
 
         // 绑定操作动作（模仿.net partial）
         pageActions.bind(this);
+    }
+
+    getEditor = (): RichEdit => {
+        return (this.editor as RichEdit);
     }
 
     /**
@@ -71,10 +145,6 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
         return (ref as IComponent) || null;
     }
 
-    getEditor = (): RichEdit => {
-        return (this.editor as RichEdit);
-    }
-
     /**
      * 组件选中，画布不要记录组件的位置与大小信息，否则同步信息很乱
      * @param cid 组件ID
@@ -86,255 +156,16 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
         }
 
         // 如果是编辑模式：切换选中或者点击当前组件，结束编辑状态。
-        if (this.command.getIsRichEditMode() === true) {
-            this.endEdit();
-            this.command.setIsRichEditMode(false);
+        if (this._canvasGlobalParam.getIsRichEditMode() === true) {
+            this._richEditUtil.endEdit();
+            this._canvasGlobalParam.setIsRichEditMode(false);
         }
 
         const com = this.findComponent(cid);
         // 设置当前选中是否能够进行拖拽和拖放操作
-        this.command.setIsCanCtrl(isCanCtrl);
+        this._canvasGlobalParam.setIsCanCtrl(isCanCtrl);
         if (com) {
-            this.selectedComponent(cid, com, false);
-        }
-    }
-
-    /**
-     * 判断鼠标事件作用的范围，component： 组件， canvas： 画布， outside： 外框
-     */
-    onMouseEventType = (e: any): string => {
-        if (e.target) {
-            if (e.target.className.startsWith('canvas') || e.target.className.startsWith('container')) return 'canvas';
-            if (util.containClassName(e.target, 'canvas')) return 'component';
-        }
-
-        return 'outside';
-    }
-
-    handleMouseDown = (e: any) => {
-        if (!this.command.getIsCanCtrl()) return;
-        // 鼠标按下时，计算鼠标位置
-        this.recordPointStart(e);
-
-        // 锚点上点击
-        const anchor = this.command.getCurrentAnchor();
-        if (anchor) {
-            // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
-            e.stopPropagation();
-            e.preventDefault();
-            this.command.anchorMouseDown(e, anchor);
-        } else {
-            switch (this.onMouseEventType(e)) {
-                case 'component': {
-                    // 组件中的点击
-                    return this.command.componentMouseDown(e);
-                }
-                case 'canvas': {
-                    // 画布上的点击
-                    // 如果是编辑模式：结束编辑模式
-                    if (this.command.getIsRichEditMode() === true) {
-                        this.endEdit();
-                        this.command.setIsRichEditMode(false);
-                    }
-
-                    // 非多选模式下，清楚所有组件选中状态
-                    if (!this.command.isMultiselect()) {
-                        this.clearSelected();
-                        // 清除组件选中状态 清除属性工具栏
-                        // this.props.clearSelectedProperty();
-                    }
-
-                    return this.command.canvasMouseDown(e);
-                }
-                // case 'outside': {
-                //     console.log('outside-MouseDown');
-                //     // 外框上
-                //     this.clearSelected();
-
-                //     return this.command.outsideMouseDown(e);
-                // }
-            }
-        }
-    }
-
-    handleMouseUp = (e: any) => {
-        // 清除选择框
-        this.clearChoiceBox(e);
-        // 清楚移动框
-        this.clearDragBox();
-        // 清楚拉伸框
-        this.drawStretchBox(e, true);
-
-        if (this.onMouseEventType(e) === 'component') this.command.componentMouseUp(e);
-        if (this.onMouseEventType(e) === 'canvas') this.command.canvasMouseUp(e);
-        if (this.onMouseEventType(e) === 'outside') this.command.outsizeMouseUp(e);
-    }
-
-    handleMouseMove = (e: any) => {
-        if (this.command.isMouseDown()) {  // 鼠标按下才开始计算
-            switch (this.command.getDragType()) {
-                case DragType.None: return;
-                case DragType.Choice: return this.drawChoiceBox(e);
-                case DragType.Stretch: return this.drawStretchBox(e);
-                case DragType.Shift: return this.moveDragBox(e);
-            }
-        } else {    // 鼠标未按下时，计算鼠标位置
-            const relative = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-            const anchor = this.command.anchorCalc(relative.x, relative.y);
-            this.setState({ anchor });
-        }
-    }
-
-    handleMouseLeave = (e: any) => {
-        this.clearChoiceBox(e);
-        this.clearDragBox();
-        this.drawStretchBox(e, true);
-        this.command.canvasMouseUp(e);
-    }
-
-    handleMouseMoveOnContainer = (e: any) => {
-        // 鼠标在画布上移动的时候判断：
-        // 当前有没有选中组件，如果有选中组件就把焦点设置到editor
-        if (this.command.isSelectedComponent() === true && this.editor) {
-            this.editor.setFocus();
-        }
-    }
-
-    handleKeyDown = (e: any) => {
-        const args = keyArgs(e);
-        const { key, ctrl, alt, keyCode } = args as IKeyArgs;
-
-        // 非编辑模式：执行组件删除、组件移动等操作
-        if (this.command.getIsRichEditMode() === false) {
-            if (key === 'delete') {
-                this.deleteCanvasComponent(this.command.getSelectedCids());
-            }
-
-            if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
-                keyFun[key].press();
-                e.preventDefault();
-            } else if (ctrl) {
-                keyFun.ctrl.press();
-            }
-        }
-
-        // 如果是输入操作，进入输入状态
-        if (!ctrl && !alt) {
-            const TECellEditorActivateKeyRange: any = this.command.getTECellEditorActivateKeyRange();
-            for (let i = 0; i < TECellEditorActivateKeyRange.length; i++) {
-                const { min, max } = TECellEditorActivateKeyRange[i];
-                if (keyCode >= min && keyCode <= max) {
-                    // 非编辑模式且有选中组件，进入编辑状态
-                    if (this.command.getIsRichEditMode() === false && this.command.isSelectedComponent() === true) {
-                        this.command.setIsRichEditMode(true);
-                        this.beginEdit();
-                    }
-                }
-            }
-        }
-    }
-
-    handleKeyUp = (e: any) => {
-        const args = keyArgs(e);
-        const { key, ctrl } = args as IKeyArgs;
-
-        if (this.command.getIsRichEditMode() === false) {
-            if (key === 'up' || key === 'down' || key === 'right' || key === 'left') {
-                e.preventDefault();
-                keyFun[key].release();
-            } else if (!ctrl && this.command.isMultiselect()) {
-                keyFun.ctrl.release();
-            }
-        }
-    }
-
-    // 编辑框开始编辑
-    beginEdit = (isDbClick: boolean = false) => {
-        // 获取最后选中的组件
-        const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
-
-        if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
-            const value = currentSelectedComponent.getRichChildNode();
-            currentSelectedComponent.setRichChildNode(null);
-            const style: CSSStyleDeclaration = currentSelectedComponent.getStyle(currentSelectedComponent);
-            const size: ISize = currentSelectedComponent.getSize();
-            const position: IPosition = currentSelectedComponent.getPosition();
-            const bodyOffset: any = this.getPositionRelativeDocument(position.left, position.top);
-
-            if (isDbClick === true) {
-                this.getEditor().setValue(value);
-            } else {
-                this.getEditor().setValue('');
-            }
-            this.getEditor().setEditComState(
-                size.width,
-                bodyOffset.pageY + size.height / 2,
-                bodyOffset.pageX + size.width / 2,
-                style
-            );
-        }
-    }
-
-    // 编辑框结束编辑
-    endEdit = () => {
-        const currentSelectedComponent: IComponent | null = this.command.getSelectedComponents().last();
-
-        if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
-            const value: string = this.getEditor().getValue();
-            this.getEditor().hiddenEditCom();
-            currentSelectedComponent.setRichChildNode(value);
-        }
-    }
-
-    // 双击编辑
-    dbClickToBeginEdit = () => {
-        this.command.setIsRichEditMode(true);
-        this.beginEdit(true);
-    }
-
-    // 由组件列表拖拽进画布的组件
-    handleDrop = (e: any) => {
-        if (util.isEmptyString(localStorage.__dnd_type) || util.isEmptyString(localStorage.__dnd_value)) return;
-        if (localStorage.__dnd_type !== 'dragging_cs') return;
-        const data = JSON.parse(localStorage.__dnd_value);
-        const position = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-
-        const componentIndex = this.state.componentIndex + 1;
-        const comData = ComponentsUtil.getComponentData(data, position, componentIndex);
-        this.addCancasComponent(comData, componentIndex);
-
-        // 拖拽添加记栈
-        const comDataList: OrderedSet<any> = OrderedSet().add(comData);
-        const oldUndoStack: Stack<IStack> = this.state.undoStack;
-        const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this, oldUndoStack, 'create', comDataList);
-        this.setState({
-            undoStack: newUndoStack
-        });
-    }
-
-    handleDragOver = (e: any) => {
-        e.preventDefault();
-    }
-
-    componentDidMount() {
-        document.addEventListener('mousemove', this.handleMouseMove);
-        document.addEventListener('mouseup', this.handleMouseUp);
-        document.addEventListener('mouseleave', this.handleMouseLeave);
-        if (this.container) {
-            this.container.addEventListener('mousedown', this.handleMouseDown);
-            this.container.addEventListener('mousemove', this.handleMouseMoveOnContainer);
-            this.container.addEventListener('keydown', this.handleKeyDown);
-            this.container.addEventListener('keyup', this.handleKeyUp);
-        }
-    }
-
-    componentDidUpdate() {
-        // 如果有新拖入的组件，选中新组件
-        const newComponentCid: string | null = this.command.getAddComponentCid();
-        if (newComponentCid !== null) {
-            this.selectionChanging(newComponentCid);
-            // 清除新添加组件记录
-            this.command.setAddComponentCid(null);
+            this._drawUtil.selectedComponent(cid, com, false);
         }
     }
 
@@ -353,7 +184,7 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
 
     // 给canvas编辑中的组件设置propertyTool中的属性
     executeProperties(pKey: string, pValue: any) {
-        const currentSelectedComponent: Map<string, any> = this.command.getSelectedComponents();
+        const currentSelectedComponent: Map<string, any> = this._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com) => {
                 com.setPropertiesFromProperty(pKey, pValue);
@@ -398,10 +229,33 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
 
     }
 
+    componentDidMount() {
+        // 设置事件模式
+        this.setMode('canvas');
+        // 初始化事件监听
+        this.initEventListener();
+        // 设置_maxZIndex、_minZIndex
+        this._canvasUtil.resetZIndexAndComIndex(true);
+    }
+
+    componentDidUpdate(prevProps: ICanvasProps, prevState: ICanvasState) {
+        // 如果有新拖入的组件，选中新组件
+        if (this._newComponentCid !== null) {
+            this.selectionChanging(this._newComponentCid);
+            // 清除新添加组件记录
+            this._newComponentCid = null;
+        }
+
+        // 组件有改变时，重新设置_maxZIndex、_minZIndex
+        if (prevState.componentList !== this.state.componentList) {
+            this._canvasUtil.resetZIndexAndComIndex(true);
+        }
+    }
+
     render() {
         const { componentPosition, canvasSize } = this.props;
         const canvasOffset = componentPosition.canvasOffset;
-        const children = this.getChildrenComponent(this.state.componentList);
+        const children = this._componentsUtil.getChildrenComponent(this.state.componentList);
         const cursor = this.state.anchor ? this.state.anchor.cursor : 'default';
 
         return (
@@ -419,8 +273,8 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
                     ref={(handler) => this.canvas = handler}
                     style={CanvasStyle(canvasOffset)}
                     className="canvas"
-                    onDrop={this.handleDrop}
-                    onDragOver={this.handleDragOver}
+                    onDrop={this._onCanDrop}
+                    onDragOver={this._onCanDragOver}
                 >
                     {children}
                 </div>
@@ -429,344 +283,35 @@ export default class Canvas extends React.PureComponent<ICanvasProps, ICanvasSta
     }
 
     /**
-     * 重绘画布的大小
+     * 初始化画布事件监听
      */
-    repaintCanvas = (pointX: number, pointY: number) => {
-        if (pointX > config.canvasSize.width || pointY > config.canvasSize.height) {
-            const pointXList: number[] = [config.canvasSize.width];
-            const pointYList: number[] = [config.canvasSize.height];
-
-            const componentList = this.state.componentList;
-            componentList.map((cs: any) => {
-                if (cs && cs.p) {
-                    const com = this.getComponent(cs.p.id);
-                    if (com) {
-                        const boundary = com.getBoundaryPoint();
-                        pointXList.push(boundary.pointX + 40);
-                        pointYList.push(boundary.pointY + 40);
-                    }
-                }
-            });
-
-            const width = Math.max(...pointXList);
-            const height = Math.max(...pointYList);
-            this.props.updateCanvasSize(width, height);
+    public initEventListener = (): void => {
+        document.addEventListener('mousemove', this._onDocMouseMove);
+        document.addEventListener('mouseup', this._onDocMouseUp);
+        document.addEventListener('mouseleave', this._onDocMouseLeave);
+        if (this.container) {
+            this.container.addEventListener('mousedown', this._onConMouseDown);
+            this.container.addEventListener('mousemove', this._onConMouseMove);
+            this.container.addEventListener('keydown', this._onConKeyDown);
+            this.container.addEventListener('keyup', this._onConKeyUp);
         }
     }
 
     /**
-     * 画布增加组件
-     * @param comData 组件的数据流
-     * @param position 组件在画布上的定位
-     * @param isComments 是否批注
+     * 设置事件模式
      */
-    addCancasComponent = (comData: any, componentIndex: number, isComments = false) => {
-        const componentList = this.state.componentList.add(comData);
-
-        // 记录新添加的组件cid
-        this.command.setAddComponentCid('cs' + componentIndex);
-        this.setState({ componentList, componentIndex });
-
-        if (isComments === true) {
-            const selectedComponents: Map<string, any> = this.command.getSelectedComponents();
-            ComponentsUtil.updateCommentsMap(selectedComponents, componentIndex);
-        }
+    public setMode = (mode: HandleModes): void => {
+        this._handler = handlerMap[mode];
     }
 
     /**
-     * 画布删除组件
+     * 构建一个将事件传递给指定程序的方法
+     * @param eventName 事件名称
      */
-    deleteCanvasComponent = (cids: Set<string>, isSetStack: boolean = true) => {
-        let componentList = this.state.componentList;
-        let comDataList: OrderedSet<any> = OrderedSet();
-        componentList.map((cs: any) => {
-            if (cs && cs.p && cids.contains(cs.p.id)) {
-                componentList = componentList.delete(cs);
-                comDataList = comDataList.add(cs);
-            }
-        });
-
-        let state: any = {
-            componentList
+    private _buildHandler(eventName: string): any {
+        return (e: any) => {
+            const method = this._handler && this._handler[eventName];
+            method && method(this, e);
         };
-        if (isSetStack === true) {
-            // 删除组件记栈
-            const oldUndoStack: Stack<IStack> = this.state.undoStack;
-            const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this, oldUndoStack, 'remove', comDataList);
-            state = {
-                componentList,
-                undoStack: newUndoStack
-            };
-        }
-
-        this.setState(state);
-        this.clearSelected();
-        this.clearDragBox();
-    }
-
-    /**
-     * 根据component数据创建画布上的组件
-     */
-    getChildrenComponent = (components: { [key: string]: any }): React.ReactFragment => {
-        const array: { [key: string]: React.ReactElement<any> } = {};
-        let zIndex = 0;
-        components.map((cs: { [key: string]: any }) => {
-            const csType = util.componentsType(cs.t);
-            const comType = ComponentsUtil.getComponentType(cs.t);
-
-            array[cs.p.id] = React.createElement(csType,
-                Object.assign({}, { data: cs.p }, {
-                    zIndex,
-                    comType,
-                    ref: `c.${cs.p.id}`,
-                    selectionChanging: this.selectionChanging,
-                    clearSelected: this.clearSelected,
-                    repaintSelected: this.repaintSelected,
-                    repaintCanvas: this.repaintCanvas,
-                    dbClickToBeginEdit: this.dbClickToBeginEdit,
-                    getComponent: this.getComponent
-                })
-            );
-            zIndex++;
-        });
-        const createFragment = require('react-addons-create-fragment');
-
-        return createFragment(array);
-    }
-
-    /**
-     * 将document的坐标转换为相对Canvas的坐标
-     */
-    getPositionRelativeCanvas = (pageX: number, pageY: number): IOffset => {
-        const pos = this.props.componentPosition;
-        const scroll = this.props.getStageScroll();
-
-        return {
-            x: pageX - pos.stageOffset.left - pos.canvasOffset.left + scroll.scrollLeft,
-            y: pageY - pos.stageOffset.top - pos.canvasOffset.top + scroll.scrollTop
-        };
-    }
-
-    /**
-     * 将document的坐标转换为相对Stage的坐标
-     */
-    getPositionRelativeStage = (pageX: number, pageY: number): IPointpos => {
-        const pos = this.props.componentPosition;
-        const scroll = this.props.getStageScroll();
-
-        return {
-            pointX: pageX - pos.stageOffset.left + scroll.scrollLeft,
-            pointY: pageY - pos.stageOffset.top + scroll.scrollTop
-        };
-    }
-
-    /**
-     * 将canvas的坐标转换为相对document的坐标
-     */
-    getPositionRelativeDocument = (pointX: number, pointY: number): IPagePos => {
-        const pos = this.props.componentPosition;
-        const scroll = this.props.getStageScroll();
-
-        return {
-            pageX: pointX + pos.stageOffset.left + pos.canvasOffset.left - scroll.scrollLeft,
-            pageY: pointY + pos.stageOffset.top + pos.canvasOffset.top - scroll.scrollTop
-        };
-    }
-
-    /**
-     * 记录鼠标按下时的坐标
-     */
-    recordPointStart = (e: any) => {
-        const stagePos = this.getPositionRelativeStage(e.pageX, e.pageY);
-        this.command.setPointStart(stagePos.pointX, stagePos.pointY, 'stage');
-        const canvasPos = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-        this.command.setPointStart(canvasPos.x, canvasPos.y, 'canvas');
-        this.command.setPointStart(e.pageX, e.pageY, 'dom');
-    }
-
-    /**
-     * 组件选择
-     */
-    selectedComponent = (cid: string, com: IComponent, multiselect: boolean = false, isCanCtrl: boolean = true) => {
-        // 组件选择
-        if (this.command.getIsCanCtrl()) {
-            this.command.addSelectedComponent(cid, com, multiselect);
-            this.repaintSelected();
-            this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
-        } else {
-            const arrCid: string[] = cid.split('.');
-            const bsCom = this.findComponent(arrCid[0]);
-            // 顶级父控件选择
-            if (bsCom) {
-                this.command.addSelectedComponent(arrCid[0], bsCom, false);
-                this.repaintSelected();
-                this.command.drawDragBox(this.getPositionRelativeDocument(0, 0));
-            }
-        }
-        // this.props.onPropertyProperties();
-
-        // 单选的时候一个个传递
-        if (multiselect === false) {
-            // 向CommandBar传递当前选中的组件集合
-            this.props.onCommandProperties(this.command.getSelectedComponents());
-            // 向PropertyBar传递当前选中的组件属性
-            this.props.clearSelectedProperty();
-            this.props.onPropertyProperties(this.getSelectedProperties(this.command.getSelectedComponents()));
-        }
-    }
-
-    /**
-     * 绘制组件选中框
-     */
-    drawSelected = (cids: Set<string>) => {
-        const draw = this.props.getDraw();
-        if (draw !== null) {
-            draw.drawSelectedBox(cids);
-        }
-    }
-
-    /**
-     * 重新绘制组件选中框
-     */
-    repaintSelected = () => {
-        this.drawSelected(this.command.getSelectedCids());
-
-    }
-
-    /**
-     * 隐藏组件选中框
-     */
-    hideSelected = () => {
-        this.drawSelected(Set<string>());
-    }
-
-    /**
-     * 清除组件选中框
-     */
-    clearSelected = () => {
-        const selectedComponents = this.command.getSelectedComponents();
-        // 当选中组件不为空时才进行清空操作
-        if (selectedComponents.size > 0) {
-            this.command.clearSelectedComponent();
-            this.hideSelected();
-            // 向CommandBar传递当前选中的组件集合
-            this.props.onCommandProperties(Map());
-            this.props.onPropertyProperties(undefined);
-            this.props.clearSelectedProperty();
-
-        }
-    }
-
-    /**
-     * 绘制鼠标选择框
-     */
-    drawChoiceBox = (e: any) => {
-        // 通知绘画层出现选择框
-        const pointStart = this.command.getPointerStart('stage');
-        const stagePos = this.getPositionRelativeStage(e.pageX, e.pageY);
-        const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
-        const draw = this.props.getDraw();
-        if (draw !== null) {
-            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset });
-        }
-    }
-
-    /**
-     * 清理鼠标选择框
-     */
-    clearChoiceBox = (e: any) => {
-        if (this.command.getDragType() === DragType.Choice) {
-            const pointStart = this.command.getPointerStart('dom');
-            const pointA = this.getPositionRelativeCanvas(pointStart.x, pointStart.y);
-            const pointB = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-            const start = {
-                x: Math.min(pointA.x, pointB.x),
-                y: Math.min(pointA.y, pointB.y)
-            };
-            const end = {
-                x: Math.max(pointA.x, pointB.x),
-                y: Math.max(pointA.y, pointB.y)
-            };
-
-            const components = this.state.componentList;
-            components.map((cs: { [key: string]: any } | undefined) => {
-                if (cs === undefined) return;
-                const com = this.getComponent(cs.p.id);
-                if (com !== null) {
-                    const pos = com.getPosition();
-                    const size = com.getSize();
-                    if (pos.left > start.x && pos.top > start.y &&
-                        pos.left + size.width < end.x && pos.top + size.height < end.y) {
-                        this.selectedComponent(cs.p.id, com, true);
-                    }
-                }
-            });
-
-            // 框选的时候：有选中组件才做提交
-            const selectedComponents = this.command.getSelectedComponents();
-            if (selectedComponents.size > 0) {
-                this.props.onCommandProperties(selectedComponents);
-                this.props.onPropertyProperties(this.getSelectedProperties(selectedComponents));
-            }
-
-            // 通知绘画层清理选择框
-            const draw = this.props.getDraw();
-            if (draw !== null) {
-                draw.drawChoiceBox(null);
-            }
-        }
-    }
-
-    /**
-     * 绘制组件大小延伸框
-     */
-    drawStretchBox = (e: any, endStretch: boolean = false) => {
-        if (this.command.getDragType() === DragType.Stretch) {
-            const pointStart = this.command.getPointerStart('canvas');
-            const canvasPos = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-            const offset: IOffset = { x: canvasPos.x - pointStart.x, y: canvasPos.y - pointStart.y };
-            const draw = this.props.getDraw();
-            if (draw !== null) {
-                this.command.anchorMove(offset, endStretch, (data: any) => {
-                    draw.drawStretchBox(data);
-                });
-            }
-        }
-    }
-
-    /**
-     * 拖动组件移动框
-     */
-    moveDragBox = (e: any) => {
-        let stageBoundary = this.props.getStageBoundary();
-        // 低性能模式，创建拖动框并拖动
-        let start = this.command.getPointerStart('dom');
-        let offset = { x: e.pageX - start.x, y: e.pageY - start.y };
-        if (stageBoundary) {
-            stageBoundary = {
-                startPoint: { x: stageBoundary.startPoint.x - offset.x, y: stageBoundary.startPoint.y - offset.y },
-                endPoint: { x: stageBoundary.endPoint.x - offset.x, y: stageBoundary.endPoint.y - offset.y }
-            };
-        }
-        if (config.highPerformance) {
-            // 高性能模式，直接拖动组件
-            start = this.command.getPointerStart('canvas');
-            const end = this.getPositionRelativeCanvas(e.pageX, e.pageY);
-            offset = { x: end.x - start.x, y: end.y - start.y };
-        }
-
-        // 档偏移量超过10后才开始处理拖拽事件，并隐藏选中框
-        if (!this.command.isDargging() && Math.abs(offset.x) < 10 && Math.abs(offset.y) < 10) return;
-
-        this.command.darggingStart();
-        this.command.moveDragBox(offset, stageBoundary, this.props.setStageScroll);
-    }
-
-    /**
-     * 清理组件移动框
-     */
-    clearDragBox = () => {
-        // 清楚移动框
-        this.command.clearDragBox(this.getPositionRelativeDocument(0, 0));
     }
 }

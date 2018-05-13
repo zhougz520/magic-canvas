@@ -35,11 +35,11 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
     private grid: any = '';
 
     public render() {
-        const { data, showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
+        const { childData, showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
         const { title } = this.state;
         // const { p, w, h, map_sm } = data;
-        if (data.p !== undefined && data.p.components.length > 0) {
-            this.initCom(data.p.components);
+        if (childData !== undefined && childData.components.length > 0) {
+            this.initCom(childData.components);
         }
 
         // 汇总style
@@ -120,7 +120,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={this.props.data.updateProps}
+                            updateProps={undefined}
                         />
                     );
                     break;
@@ -133,7 +133,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={this.props.data.updateProps}
+                            updateProps={undefined}
                         />
                     );
                     break;
@@ -146,7 +146,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={this.props.data.updateProps}
+                            updateProps={undefined}
                         />
                     );
                     break;
@@ -159,7 +159,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={this.props.data.updateProps}
+                            updateProps={undefined}
                         />
                     );
                     break;
@@ -173,7 +173,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             w={this.getSizeState().getWidth()}
-                            updateProps={this.props.data.updateProps}
+                            updateProps={undefined}
                         />
                     );
                     break;

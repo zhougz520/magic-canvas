@@ -1,29 +1,16 @@
-export interface IUtil {
-    componentsType: (csType: string) => any;
-    isUndefined: (variable: any) => boolean;
-    isEmptyString: (variable: any) => boolean;
-    getDomLocation: (dom: HTMLElement) => any;
-    containClassName: (dom: HTMLElement, target: string) => boolean;
-    debugLog: (e: any, title: string) => void;
-}
-
 /* tslint:disable:no-console */
-const util: IUtil = {
-    componentsType: (csType: string) => {
-        return require(`../${csType}`).default;
-        // return require(`../BaseComponent/demo/${csType}`).default;
-    },
-    isUndefined: (variable: any) => {
+export const GlobalUtil = {
+    isUndefined: (variable: any): boolean => {
         if (variable === undefined || variable == null) return true;
 
         return false;
     },
-    isEmptyString: (variable: any) => {
+    isEmptyString: (variable: any): boolean => {
         if (variable === undefined || variable == null) return true;
 
         return (variable.length === 0);
     },
-    getDomLocation: (dom: HTMLElement) => {
+    getDomLocation: (dom: HTMLElement): any => {
         if (dom === undefined || dom == null) return undefined;
         let offsetTop = dom.offsetTop;
         let offsetLeft = dom.offsetLeft;
@@ -49,20 +36,8 @@ const util: IUtil = {
             scrollHeight: dom.scrollHeight  // 有滚动条时的实际高度
         };
     },
-    containClassName: (dom: HTMLElement, target: string) => {
-        let hasFind = dom.className === target;
-        let offsetParent = dom.offsetParent as HTMLElement;
-        while (!hasFind && offsetParent !== undefined && offsetParent !== null) {
-            hasFind = offsetParent.className === target;
-            offsetParent = offsetParent.offsetParent as HTMLElement;
-        }
-
-        return hasFind;
-    },
-    debugLog: (e: any, title: string) => {
+    debugLog: (e: any, title: string): void => {
         console.log(title);
         console.log(e);
     }
 };
-
-export default util;

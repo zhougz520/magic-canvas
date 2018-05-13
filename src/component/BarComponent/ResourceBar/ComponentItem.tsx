@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Icon } from 'antd';
-import util from '../../util';
+import { GlobalUtil } from '../../util/GlobalUtil';
 
 export interface IComItemProps {
     componentType: string;
@@ -31,7 +31,7 @@ export default class ComponentItem extends React.PureComponent<IComItemProps, IC
     render() {
         const { componentProps } = this.props;
         let component = null;
-        if (!util.isUndefined(componentProps) && !util.isUndefined(componentProps.name)) {
+        if (!GlobalUtil.isUndefined(componentProps) && !GlobalUtil.isUndefined(componentProps.name)) {
             component = (
                 <div className="cs-pc-map">
                     <div className="cs-ico"><Icon type="menu-unfold" /></div>
@@ -61,14 +61,14 @@ export default class ComponentItem extends React.PureComponent<IComItemProps, IC
         // 计算鼠标开始拖拽时的偏移量(鼠标落点与item左上角的偏移量)
         let offset = { x: 0, y: 0 } as { x: number, y: number };
         if (this.dragElement !== null) {
-            const itemPos = util.getDomLocation(this.dragElement);
+            const itemPos = GlobalUtil.getDomLocation(this.dragElement);
             offset = { x: evt.pageX - itemPos.leftWithScroll, y: evt.pageY - itemPos.topWithScroll };
         }
         localStorage.__dnd_type = 'dragging_cs';
         localStorage.__dnd_value = JSON.stringify({
             offset,
-            type: this.props.componentType,
-            props: this.props.componentProps
+            t: this.props.componentType,
+            p: this.props.componentProps
         });
     }
 

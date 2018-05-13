@@ -1,9 +1,8 @@
+import { Canvas } from '../canvas';
 import { IBoundary } from '../model/types';
-import { IStack, IComponentList } from '../ICanvasState';
-import { ComponentsUtil } from '../utils/ComponentsUtil';
-import { StackUtil } from '../utils/StackUtil';
+import { IStack, ISComponentList } from '../ICanvasState';
 import { IComponent } from '../../BaseComponent';
-import { Map, OrderedSet, Stack, Set } from 'immutable';
+import { Map, Stack, Set } from 'immutable';
 
 export const pageActions = {
     bind(ins: any) {
@@ -15,7 +14,7 @@ export const pageActions = {
     },
 
     // 获得当前绑定的this
-    getThis() {
+    getThis(): Canvas {
         return (this as any);
     },
 
@@ -36,10 +35,10 @@ export const pageActions = {
         };
         let position: {x: number, y: number};
 
-        const selectedComponents: Map<string, any> = this.getThis().command.getSelectedComponents();
+        const selectedComponents: Map<string, IComponent> = this.getThis()._canvasGlobalParam.getSelectedComponents();
         if (selectedComponents.size > 0) {
             // 如果选中组件，向所有选中组件的最右侧距离100px添加批注,组件范围的中心与批注的中心相对
-            const componentsRange: IBoundary = ComponentsUtil.getComponentsRange(selectedComponents);
+            const componentsRange: IBoundary = this.getThis()._componentsUtil.getComponentsRange(selectedComponents);
             position = {
                 x: componentsRange.endPoint.x + 100,
                 y: Math.ceil((componentsRange.endPoint.y + componentsRange.startPoint.y) / 2 - data.props.h / 2)
@@ -66,16 +65,14 @@ export const pageActions = {
             };
         }
 
-        const componentIndex = this.getThis().state.componentIndex + 1;
-        const comData = ComponentsUtil.getComponentData(data, position, componentIndex);
-        this.getThis().addCancasComponent(comData, componentIndex, true);
+        this.getThis()._componentsUtil.addCancasComponent(data, position);
         // 添加批注记栈
-        const comDataList: OrderedSet<any> = OrderedSet().add(comData);
-        const oldUndoStack: Stack<IStack> = this.getThis().state.undoStack;
-        const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this.getThis(), oldUndoStack, 'create', comDataList);
-        this.getThis().setState({
-            undoStack: newUndoStack
-        });
+        // const comDataList: OrderedSet<any> = OrderedSet().add(comData);
+        // const oldUndoStack: Stack<IStack> = this.getThis().state.undoStack;
+        // const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this.getThis(), oldUndoStack, 'create', comDataList);
+        // this.getThis().setState({
+        //     undoStack: newUndoStack
+        // });
     },
 
     // 画布撤销
@@ -92,19 +89,23 @@ export const pageActions = {
             case 'create':
                 let cids: Set<string> = Set();
                 componentList.map(
-                    (component: IComponentList) => {
-                        component.comData.p.baseState = this.getThis().getComponent(component.cid).getBaseState();
+                    (component: ISComponentList) => {
+                        const com = this.getThis().getComponent(component.cid);
+                        if (com) {
+                            component.comData.p.baseState = com.getBaseState();
+                        }
+
                         cids = cids.add(component.cid);
                     }
                 );
-                this.getThis().deleteCanvasComponent(cids, false);
+                this.getThis()._componentsUtil.deleteCanvasComponent(cids, false);
                 break;
             case 'modify':
                 break;
             case 'remove':
                 let currentComponentList = this.getThis().state.componentList;
                 componentList.map(
-                    (component: IComponentList) => {
+                    (component: ISComponentList) => {
                         currentComponentList = currentComponentList.add(component.comData);
                     }
                 );
@@ -136,7 +137,7 @@ export const pageActions = {
             case 'create':
                 let currentComponentList = this.getThis().state.componentList;
                 componentList.map(
-                    (component: IComponentList) => {
+                    (component: ISComponentList) => {
                         currentComponentList = currentComponentList.add(component.comData);
                     }
                 );
@@ -149,12 +150,16 @@ export const pageActions = {
             case 'remove':
                 let cids: Set<string> = Set();
                 componentList.map(
-                    (component: IComponentList) => {
-                        component.comData.p.baseState = this.getThis().getComponent(component.cid).getBaseState();
+                    (component: ISComponentList) => {
+                        const com = this.getThis().getComponent(component.cid);
+                        if (com) {
+                            component.comData.p.baseState = com.getBaseState();
+                        }
+
                         cids = cids.add(component.cid);
                     }
                 );
-                this.getThis().deleteCanvasComponent(cids, false);
+                this.getThis()._componentsUtil.deleteCanvasComponent(cids, false);
                 break;
             default:
                 break;
@@ -164,6 +169,30 @@ export const pageActions = {
             undoStack: this.getThis().state.undoStack.push(currentStack),
             redoStack: redoStack.shift()
         });
+    },
+
+    // 上移一层
+    upperCom() {
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(1);
+    },
+
+    // 下移一层
+    lowerCom() {
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(-1);
+    },
+
+    // 置于顶层
+    frontCom() {
+        const selectedComponentZIndexMin: number = this.getThis()._componentsUtil.getSelectedComponentZIndexRange().minZIndex;
+        const maxZIndex: number = this.getThis()._maxZIndex + 1;
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin);
+    },
+
+    // 置于底层
+    backCom() {
+        const selectedComponentZIndexMax: number = this.getThis()._componentsUtil.getSelectedComponentZIndexRange().maxZIndex;
+        const minZIndex: number = this.getThis()._minZIndex - 1;
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax);
     }
 
 };

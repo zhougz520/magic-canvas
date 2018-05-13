@@ -1,6 +1,7 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import { ContentState, ComponentType } from './model/ContentState';
+import { BaseState } from './model/BaseState';
 
 import * as Anchor from '../util/AnchorPoint';
 import { Map } from 'immutable';
@@ -9,6 +10,12 @@ import { Map } from 'immutable';
  * BaseComponent提供的方法接口
  */
 export interface IComponent {
+    /**
+     * 获取、设置组件的baseState
+     */
+    getBaseState: () => BaseState;
+    setBaseState: (baseState: BaseState) => void;
+
     /**
      * 获取、设置size属性
      */
