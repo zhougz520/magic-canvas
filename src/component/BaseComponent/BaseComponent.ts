@@ -398,11 +398,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         let newBaseState: BaseState = baseState;
         if (customState !== null) {
-            newBaseState = BaseState.set(baseState, baseState.getCurrentContent().merge(
+            const contentState: ContentState = baseState.getCurrentContent().merge(
                 {
                     customState
                 }
-            ));
+            ) as ContentState;
+            newBaseState = BaseState.createWithContent(contentState);
         }
 
         return newBaseState;
