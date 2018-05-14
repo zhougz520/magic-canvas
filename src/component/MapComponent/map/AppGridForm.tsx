@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
 import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './index';
-import { fromJS } from 'immutable';
+// import { fromJS } from 'immutable';
 
 import '../sass/Map.scss';
 
@@ -37,7 +37,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(fromJS(this.props.data))
+            baseState: this.initBaseStateWithCustomState()
         };
     }
     public render() {

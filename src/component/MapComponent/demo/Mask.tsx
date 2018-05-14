@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import BtnChildDemo from './BtnChildDemo';
+// import BtnChildDemo from './BtnChildDemo';
 import DragOnDrop from 'drag-on-drop';
 // import Button from '../../UniversalComponents/Button/Button';
 import { GlobalUtil } from '../../util/GlobalUtil';
@@ -59,13 +59,14 @@ export default class Mask extends PureComponent<IDemoProps, any> {
                 switch (com.t) {
                     case 'MapComponent/demo/BtnChildDemo':
                         children.push(
-                            <BtnChildDemo
-                                key={`c.${com.p.id}`}
-                                data={com.p}
-                                // tslint:disable-next-line:jsx-no-string-ref
-                                ref={`c.${com.p.id}`}
-                                // fireSelect={fireSelect}
-                            />);
+                            // <BtnChildDemo
+                            //     key={`c.${com.p.id}`}
+                            //     data={com.p}
+                            //     // tslint:disable-next-line:jsx-no-string-ref
+                            //     ref={`c.${com.p.id}`}
+                            //     updateProps={fireSelect}
+                            // />
+                        );
                         break;
                     // case 'UniversalComponents/Button/Button':
                     //     children.push(
@@ -89,7 +90,7 @@ export default class Mask extends PureComponent<IDemoProps, any> {
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-            {children}
+                {children}
             </div>
         );
     }
@@ -121,7 +122,7 @@ export default class Mask extends PureComponent<IDemoProps, any> {
         const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
         data.p.components.push({
             t: addData.type,
-            p: Object.assign({}, addData.props, { id: childId, txt_v: 'test'})
+            p: Object.assign({}, addData.props, { id: childId, txt_v: 'test' })
         });
         this.setState({
             data

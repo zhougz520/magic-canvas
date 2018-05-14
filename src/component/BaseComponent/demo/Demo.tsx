@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle, MaskLayer } from '../index';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
 import { Button, Icon, Radio } from 'antd';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -40,7 +40,7 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 onDoubleClick={this.doDbClickToEdit}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
-                <MaskLayer />
+                {/* <MaskLayer /> */}
                 <div
                     id="demoSass"
                 >

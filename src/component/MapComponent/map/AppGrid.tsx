@@ -3,7 +3,7 @@ import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox } from 'antd';
 import { AppGridTitle } from './index';
 import DragOnDrop from 'drag-on-drop';
-import util from '../../util';
+import { GlobalUtil } from '../../util/GlobalUtil';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -51,16 +51,16 @@ export class AppGrid extends MapComponent<IMapProps, IMapState> {
             handle: 'div.title-content',
             announcement: {
                 grabbed: (el: any, items: any) => {
-                    util.debugLog(el, '1');
-                    util.debugLog(items, 'list');
+                    GlobalUtil.debugLog(el, '1');
+                    GlobalUtil.debugLog(items, 'list');
 
                     return `The rankings have been updated`;
                 },
                 dropped: (el: any, items: any) => {
-                    util.debugLog(el, '2');
-                    util.debugLog(items, 'list');
-                    util.debugLog(dragonDrop, 'dragonDrop');
-                    util.debugLog(this.title, 'ref');
+                    GlobalUtil.debugLog(el, '2');
+                    GlobalUtil.debugLog(items, 'list');
+                    GlobalUtil.debugLog(dragonDrop, 'dragonDrop');
+                    GlobalUtil.debugLog(this.title, 'ref');
 
                     return `The rankings have been updated`;
                 }
