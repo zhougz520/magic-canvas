@@ -18,14 +18,8 @@ export class AppView extends MapComponent<IMapProps, any> {
         selectedId: undefined
     };
 
-    public com: HTMLElement | null = null;
-
     constructor(props: any, context?: any) {
         super(props, context);
-
-        this.state = {
-            ...props
-        };
     }
 
     public render() {

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import BtnChildDemo from './BtnChildDemo';
-import DragOnDrop from 'drag-on-drop';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import util from '../../util';
 
-export interface IMapProps extends IBaseProps  {
+export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
     value?: string;
 }
@@ -15,7 +15,7 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
     };
 
     public com: HTMLElement | null = null;
-
+    public grid = 8;
     constructor(props: any, context?: any) {
         super(props, context);
 
@@ -25,41 +25,41 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
         };
     }
 
-    componentDidMount() {
-        if (this.com != null) {
-            this.com.addEventListener('drop', this.handleDrop);
-            this.com.addEventListener('mouseover', this.handleOver);
-            this.com.addEventListener('mouseleave', this.handleLeave);
-            this.com.addEventListener('mousemove', this.handleLeave);
+    shouldComponentUpdate(np: any, ns: any) {
+        if (JSON.stringify(ns.data) !== this.state.data) {
+            ns.data = this.state.data;
         }
 
-        const dragonDrop = new DragOnDrop(this.com);
-
-        this.setState({ dragonDrop });
-    }
-
-    componentDidUpdate() {
-        const { dragonDrop } = this.state;
-        // this public method allows dragon drop to
-        // reassess the updated items and handles
-        dragonDrop.initElements();
+        return true;
     }
 
     public render() {
+        const {
+            updateProps,
+            selectedId,
+            selectComChange,
+            fireSelectChildChange
+        } = this.props;
         const { hover, data } = this.state;
         const children: any = [];
         if (data.p.components.length > 0) {
             const currCom: any = null;
-            data.p.components.forEach((com: any) => {
+            data.p.components.forEach((com: any, index: number) => {
                 switch (com.t) {
                     case 'MapComponent/demo/BtnChildDemo':
                         children.push(
                             <BtnChildDemo
                                 key={`c.${com.p.id}`}
-                                data={com.p}
+                                selectedId={selectedId}
                                 // tslint:disable-next-line:jsx-no-string-ref
                                 ref={`c.${com.p.id}`}
-                            />);
+                                selectComChange={selectComChange}
+                                fireSelectChildChange={fireSelectChildChange}
+                                {...com.p}
+                                updateProps={updateProps}
+                                index={index}
+                            />
+                        );
                         break;
                     // case 'UniversalComponents/Button/Button':
                     //     children.push(
@@ -83,7 +83,11 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-                {children}
+                <DragDropContext onDragEnd={this.handleOver}>
+                    <Droppable droppableId="droppable" direction="horizontal">
+                        {(provided, snapshot) => (<div ref={provided.innerRef}>{children}</div>)}
+                    </Droppable>
+                </DragDropContext>
             </div>
         );
     }
@@ -96,17 +100,29 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
         e.stopPropagation();
     }
 
-    public handleOver = (e: any) => {
+    public handleOver = (result: any) => {
+        const { data } = this.state;
+        // dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        const components = this.reorder(
+            this.state.data.p.components,
+            result.source.index,
+            result.destination.index
+        );
+        data.p.components = components;
         this.setState({
-            hover: true
+            data
         });
-        e.preventDefault();
     }
 
-    public handleLeave = (e: any) => {
-        this.setState({
-            hover: false
-        });
-        e.preventDefault();
+    public reorder = (list: any, startIndex: any, endIndex: any) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        return result;
     }
 }

@@ -94,8 +94,8 @@ table {
             height: 100%;
             margin: 10px;
         }
-        .app-find-text-td{
-            padding-left: 8px; 
+        .app-find-text-td {
+            padding-left: 8px;
         }
         .ant-btn {
             width: 70px;
@@ -145,34 +145,35 @@ table {
         }
     }
     .csr-pc-map-app-grid {
-        min-width: 100px;       //这里需要再斟酌一下
+        min-width: 100px; //这里需要再斟酌一下
         border: 1px solid #e6e6e6;
         border-top: 0;
         height: 100%;
         overflow-x: auto;
-        .grid-title{
+        .grid-title {
             white-space: nowrap;
-            .grid-title-index{
+            .grid-title-index {
                 width: 40px;
                 height: 22px;
                 display: inline-block;
                 text-align: center;
                 border-bottom: 1px solid #e6e6e6;
             }
-            .grid-title-content{
+            .grid-title-content {
                 display: inline-block;
                 border-bottom: 1px solid #e6e6e6;
             }
-            .title{
-                min-width: 50px;    
+            .title,
+            .gu-mirror {
+                min-width: 50px;
                 text-align: center;
                 display: inline-block;
                 white-space: nowrap;
-                .title-content{
+                .title-content {
                     display: inline-block;
                 }
             }
-            .title-split{
+            .title-split {
                 width: 4px;
                 height: 14px;
                 margin-top: 4px;
@@ -180,7 +181,7 @@ table {
                 float: right;
                 background: url('../../../images/map/bar_line.gif') left no-repeat;
                 cursor: col-resize;
-                &.no-ctrl{
+                &.no-ctrl {
                     cursor: default;
                     display: inline-block;
                     float: none;
@@ -234,5 +235,27 @@ table {
         margin-top: -1px !important;
         top: 0px !important;
         right: -1px !important;
+    }
+    .gu-mirror {
+        box-sizing: border-box;
+        position: fixed !important;
+        margin: 0 !important;
+        z-index: 9999 !important;
+        opacity: 0.8;
+    }
+    .gu-hide {
+        display: none !important;
+    }
+    .gu-unselectable {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+    }
+    .gu-transit {
+        opacity: 0.2;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+        filter: alpha(opacity=20);
+        list-style: none;
     }
 }

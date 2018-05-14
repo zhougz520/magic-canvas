@@ -22,12 +22,14 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
                     <BtnDemo
                         key={`c.${com.p.id}`}
                         {...com.p}
+                        selectComChange={this.selectComChange}
                         selectCom={this.selectComChange}
                         selectedId={com.p.id}
                         data={com.p}
                         // tslint:disable-next-line:jsx-no-string-ref
                         ref={`c.${com.p.id}`}
                         updateProps={this.fireSelectChange}
+                        fireSelectChildChange={this.fireSelectChildChange}
                     />);
             });
         }
@@ -48,9 +50,9 @@ export default class Container extends BaseComponent<IDemoProps, IDemoState> {
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={currStyle}
-            // onMouseDown={this.fireSelectChange}
             >
                 <div
+                    onMouseDown={this.fireSelectChange}
                     style={{ backgroundColor: '#F0F0FF' }}
                 >
                     {this.getCid() + '.'} - {richChildNode}

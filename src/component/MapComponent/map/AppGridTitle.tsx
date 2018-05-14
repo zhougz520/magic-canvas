@@ -14,7 +14,6 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         w: 50
     };
 
-    public com: HTMLElement | null = null;
     public dragWidth: HTMLElement | null = null;
 
     constructor(props: any, context?: any) {
@@ -40,9 +39,9 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
                 onMouseMove={this.mouseMove}
                 onMouseUp={this.mouseUp}
             >
-                <button className={`title-content `}>
+                <div className={`title-content `}>
                     {map_gt_txt}
-                </button>
+                </div>
                 <div
                     className="title-split"
                     draggable

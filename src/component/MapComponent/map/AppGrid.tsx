@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox } from 'antd';
 import { AppGridTitle } from './index';
 import DragOnDrop from 'drag-on-drop';
+import util from '../../util';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -16,8 +17,11 @@ export interface IMapProps extends IBaseProps {
     w: number;   // 宽度 (用于列表横向滚动条)
     h: number;   // 高度 (用于列表数据竖向滚动条)
 }
-
-export class AppGrid extends MapComponent<IMapProps, any> {
+export interface IMapState extends IBaseState {
+    dragonDrop?: any;
+    // map_af_se: boolean;
+}
+export class AppGrid extends MapComponent<IMapProps, IMapState> {
     static defaultProps = {
         map_g_mc: false,
         map_g_sl: false,
@@ -27,31 +31,48 @@ export class AppGrid extends MapComponent<IMapProps, any> {
         map_g_tree: false
     };
 
-    public com: HTMLElement | null = null;
     public title: HTMLElement | null = null;
     public titles: JSX.Element[] = [];
 
     constructor(props: any, context?: any) {
         super(props, context);
-
         this.state = {
-            ...props
+            dragonDrop: null,
+            hover: {}
         };
     }
     componentDidMount() {
         if (this.com != null) {
-            this.com.addEventListener('mouseover', this.handleOver);
-            this.com.addEventListener('mouseleave', this.handleLeave);
-            this.com.addEventListener('mousemove', this.handleLeave);
+            this.com.addEventListener('drop', this.handleDropAddComponent);
         }
 
-        const dragonDrop = new DragOnDrop(this.title);
+        const dragonDrop = new DragOnDrop(this.title, {
+            item: 'div.title',
+            handle: 'div.title-content',
+            announcement: {
+                grabbed: (el: any, items: any) => {
+                    util.debugLog(el, '1');
+                    util.debugLog(items, 'list');
+
+                    return `The rankings have been updated`;
+                },
+                dropped: (el: any, items: any) => {
+                    util.debugLog(el, '2');
+                    util.debugLog(items, 'list');
+                    util.debugLog(dragonDrop, 'dragonDrop');
+                    util.debugLog(this.title, 'ref');
+
+                    return `The rankings have been updated`;
+                }
+            }
+        });
 
         this.setState({ dragonDrop });
     }
     public render() {
         // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
         const { map_g_mc, map_g_tree, map_sm, selectedId, id, w, p } = this.props;
+        const { hover } = this.state;
         // 加载 GridTitle
         this.initTitle(p);
 
@@ -60,6 +81,9 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                 onMouseDown={this.selectedCom}
                 ref={(ref) => this.com = ref}
                 className={`csr-pc-map-app-grid ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+                style={Object.assign({}, hover)}
             >
                 <div className={`grid-title`} style={{ width: w - 10 }}>
                     <div className={`grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
@@ -72,20 +96,6 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                 </div>
             </div>
         );
-    }
-
-    public handleOver = (e: any) => {
-        this.setState({
-            hover: true
-        });
-        e.preventDefault();
-    }
-
-    public handleLeave = (e: any) => {
-        this.setState({
-            hover: false
-        });
-        e.preventDefault();
     }
     // 初始化标题
     protected initTitle = (p: any) => {
@@ -108,5 +118,9 @@ export class AppGrid extends MapComponent<IMapProps, any> {
             });
             this.titles = currTitles;
         }
+    }
+    /*重载添加组件*/
+    protected componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/map/AppGridTitle');
     }
 }

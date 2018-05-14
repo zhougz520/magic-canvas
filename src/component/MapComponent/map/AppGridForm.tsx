@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
 import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './index';
+import { fromJS } from 'immutable';
 
 import '../sass/Map.scss';
 
@@ -14,9 +15,8 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export interface IDemoState extends IBaseState {
-    demoState: string;
-    selectedId: string;  // 先...只能单选，后面看情况在调整
-    title: string;
+    selectedId?: string;  // 先...只能单选，后面看情况在调整
+    title?: string;
 }
 export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
     static defaultProps = {
@@ -33,7 +33,13 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
     private find: any = '';
     private menu: any = '';
     private grid: any = '';
+    constructor(props: IDemoProps, context?: any) {
+        super(props, context);
 
+        this.state = {
+            baseState: this.initBaseStateWithCustomState(fromJS(this.props.data))
+        };
+    }
     public render() {
         const { data, showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
         const { title } = this.state;

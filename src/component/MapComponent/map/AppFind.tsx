@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox, Select, Input, Button } from 'antd';
 const Option = Select.Option;
 
@@ -12,7 +12,10 @@ export interface IMapProps extends IBaseProps {
     id: string;
     map_form_ss_unit?: number;
 }
-
+export interface IMapState extends IBaseState {
+    dragonDrop?: any;
+    // map_af_se: boolean;
+}
 export class AppFind extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_af_se: false,
@@ -21,13 +24,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
         map_form_ss_unit: 2
     };
 
-    public com: HTMLElement | null = null;
-
     constructor(props: any, context?: any) {
         super(props, context);
 
         this.state = {
-            map_af_se: props.map_af_se
+            map_af_se: props.map_af_se,
+            dragonDrop: null,
+            hover: {}
         };
     }
 

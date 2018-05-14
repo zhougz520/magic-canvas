@@ -285,7 +285,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * map控件选中
      * @param id 组件id
      */
-    public selectComChange = (id: string, cancelBsSelect: boolean = true) => {
+    public selectComChange = (id: string) => {
         this.setState({
             selectedId: id
         });
@@ -407,11 +407,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param cid 组件ref标识
      */
     protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
+        // e.stopPropagation();
         if (this.props.selectionChanging) {
             this.props.selectionChanging(cid, true);
         }
         // 取消子控件选中
-        this.selectComChange('', false);
+        this.selectComChange('');
         e.preventDefault();
     }
 

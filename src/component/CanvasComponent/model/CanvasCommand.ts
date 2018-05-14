@@ -359,6 +359,14 @@ export const CanvasCommand: ICanvasCommand = {
 
     // 清空选中组件
     clearSelectedComponent() {
+        // 清空子控件选中状态
+        globalVar.selectedComponents.map((com, cid) => {
+            if (com && cid) {
+                if (com.selectComChange) {
+                    com.selectComChange('');
+                }
+            }
+        });
         globalVar.selectedComponents = globalVar.selectedComponents.clear();
     },
 

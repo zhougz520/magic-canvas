@@ -84,6 +84,10 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
         const com = this.findComponent(cid);
         // 设置当前选中是否能够进行拖拽和拖放操作
         this.command.setIsCanCtrl(isCanCtrl);
+        // 非多选模式下，清楚所有组件选中状态
+        if (isCanCtrl && !this.command.isMultiselect()) {
+            this.clearSelected();
+        }
         if (com) {
             this.selectedComponent(cid, com, false);
         }
@@ -102,7 +106,6 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
     }
 
     handleMouseDown = (e: any) => {
-        if (!this.command.getIsCanCtrl()) return;
         // 鼠标按下时，计算鼠标位置
         this.recordPointStart(e);
 
@@ -114,8 +117,13 @@ export default class Canvas extends CanvasComponent<ICanvasProps, ICanvasState> 
             e.preventDefault();
             this.command.anchorMouseDown(e, anchor);
         } else {
+            // // 如果不能操作，则直接返回
+            // if (!this.command.getIsCanCtrl()) return;
             switch (this.onMouseEventType(e)) {
                 case 'component': {
+                    // 如果不能操作，则直接返回
+                    if (!this.command.getIsCanCtrl()) return;
+
                     // 组件中的点击
                     return this.command.componentMouseDown(e);
                 }
