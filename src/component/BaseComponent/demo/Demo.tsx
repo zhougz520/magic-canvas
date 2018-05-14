@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle, MaskLayer } from '../index';
 import { Button, Icon, Radio } from 'antd';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -37,9 +37,10 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 onMouseDown={this.fireSelectChange}
                 onMouseUp={this.onMouseUp}
-                // onDoubleClick={this.doDbClickToEdit}
+                onDoubleClick={this.doDbClickToEdit}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
+                <MaskLayer />
                 <div
                     id="demoSass"
                 >
@@ -72,7 +73,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
         // const baseState: BaseState = this.getBaseState();
 
         // tslint:disable-next-line:no-console
-        console.log(this.getStyle(this.antCom));
     }
 
     /**

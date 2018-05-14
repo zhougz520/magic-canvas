@@ -5,7 +5,7 @@ import {
 import { InputState } from './InputState';
 import { Input  as AntInput } from 'antd';
 import { Map } from 'immutable';
-import { ComponentProperty } from '../../config';
+import { PropertiesEnum } from '../../config';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -13,7 +13,7 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class Input extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -23,7 +23,6 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
     }
 
     render() {
-
         return (
 
             <div
@@ -31,51 +30,82 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
-                <AntInput
-
-                    placeholder={this.getCustomState().getPlaceholder()}
-                    onClick={this.onClick}
-                    value={this.getRichChildNode()}
-                />
+                <div
+                    // tslint:disable-next-line:jsx-no-multiline-js
+                    style={{width: '100%', height: '100%', borderStyle: 'solid',
+                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
+                    }}
+                >
+                    <AntInput
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                        style={{width: '100%', height: '100%', backgroundColor: this.getCustomState().getBackgroundColor(),
+                            color: this.getCustomState().getFontColor(), fontStyle: this.getCustomState().getFontStyle(),
+                            textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
+                            fontWeight: this.getCustomState().getFontWeight(),
+                            textAlign: this.getCustomState().getTextAlign()
+                        }}
+                        placeholder={this.getCustomState().getPlaceholder()}
+                        onClick={this.onClick}
+                        value={this.getCustomState().getValue()}
+                    />
+                </div>
             </div>
         );
     }
 
-    public getPropertiesToCommand = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
-                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
-            ]
-        };
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
+                {
+                    pTitle: '输入框提示',
+                    pKey: 'placeholder',
+                    pValue: this.getCustomState().getPlaceholder(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }
+            ];
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: InputState = InputState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);
     }
 
-    public getPropertiesToProperty = (): ComponentProperty  => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
-                {pTitle: '占位符', pKey: 'placeholder', pValue: this.getCustomState().getPlaceholder(), pType: 'text'},
-                {pTitle: '值', pKey: 'value', pValue: this.getCustomState().getValue(), pType: 'text'},
-                {pTitle: '默认值', pKey: 'defaultvalue', pValue: this.getCustomState().getDefaultValue(), pType: 'text'}
-            ]
-        };
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+        return [
+                {
+                    pTitle: '输入框提示',
+                    pKey: 'placeholder',
+                    pValue: this.getCustomState().getPlaceholder(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '输入框内容',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
+                }
+            ];
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
-        properties = properties.set(pProperty.pKey, pProperty.pValue);
-        properties = properties.set('selectedCid', cid);
+        properties = properties.set(pKey, pValue);
         const newInputState: InputState = InputState.set(this.getCustomState(), properties);
 
         this.setCustomState(newInputState);
@@ -85,7 +115,7 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         const newInputState: InputState = InputState.set(
             this.getCustomState(),
             {
-                placeholder: 'this is a new placeholder'
+                placeholder: '这是一个输入框'
             }
         );
 

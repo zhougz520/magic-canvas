@@ -1,5 +1,5 @@
-import { Record, Stack } from 'immutable';
 import { ContentState } from './ContentState';
+import { Record, Stack } from 'immutable';
 
 /**
  * BaseState的属性

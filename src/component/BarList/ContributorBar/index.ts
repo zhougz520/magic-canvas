@@ -1,0 +1,1 @@
+export { ContributorBar } from './ContributorBar';

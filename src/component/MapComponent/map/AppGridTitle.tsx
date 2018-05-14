@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import util from '../../util/index';
+import { GlobalUtil } from '../../util/GlobalUtil';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -68,7 +68,7 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
     public handleMouseup = (e: any) => {
         e.preventDefault();
         e.target;
-        util.debugLog(e.target, 'e.target');
-        util.debugLog('11111', '11111');
+        GlobalUtil.debugLog(e.target, 'e.target');
+        GlobalUtil.debugLog('11111', '11111');
     }
 }

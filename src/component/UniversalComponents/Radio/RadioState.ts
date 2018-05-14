@@ -1,32 +1,42 @@
-import { Record } from 'immutable';
+import { Record} from 'immutable';
 
 export class RadioProperties {
     [index: string]: any
     label: string = '';
     value: number = 1;
-    // value 设置单个radio的值
-    disabled?: boolean = false;
+    // disabled?: boolean = false;
 }
 
 export interface IRadioState {
-    name: string;
-    defaultValue: number;
-    // defaultValue 默认选中的值
-    value: number;
-    // value 设置group当前选中的值
-    options: RadioProperties[];
-    // options 以配置的形式设置子元素
+    value: string;
     isButton: boolean;
-    selectedCid: string;
+    disabled: boolean;
+    checked: boolean;
+    textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
 }
 
 const defaultRecord: IRadioState = {
-    name: 'radioName',
-    options: [{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}],
-    value: 3,
-    defaultValue: 3,
+    value: 'radio',
     isButton: false,
-    selectedCid: ''
+    disabled: false,
+    checked: false,
+    fontColor: '#000',
+    fontStyle: 'normal',
+    fontSize: 16,
+    fontWeight: 'normal',
+    textDecoration: 'none',
+    textAlign: 'left',
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    borderWidth: 0
 };
 
 export const RadioRecord: Record.Class = Record(defaultRecord);
@@ -47,28 +57,56 @@ export class RadioState extends RadioRecord {
         return new RadioState(map);
     }
 
-    getName(): string {
-        return this.get('name');
-    }
-
-    getDefaultValue(): string {
-        return this.get('defaultValue');
-    }
-
     getValue(): string {
         return this.get('value');
     }
 
-    getOptions(): string[] {
-        return this.get('options');
+    getDisabled(): boolean {
+        return this.get('disabled');
+    }
+
+    getChecked(): boolean {
+        return this.get('checked');
     }
 
     getIsButton(): boolean {
         return this.get('isButton');
     }
 
-    getSelectedCid(): string {
-        return this.get('selectedCid');
+    getFontColor(): string {
+        return this.get('fontColor');
+    }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getTextDecoration(): string {
+        return this.get('textDecoration');
+    }
+
+    getTextAlign(): string {
+        return this.get('textAlign');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
     }
 
 }

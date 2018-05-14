@@ -2,20 +2,30 @@ import { Record } from 'immutable';
 
 export interface ITextFieldState {
     placeholder: string;
-    rowNum: number;
-    defaultValue: string;
-    value: string;
-    autosize: boolean;
-    selectedCid: string;
+    textValue: string;
+    textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
 }
 
 const defaultRecord: ITextFieldState = {
-    placeholder: 'init value',
-    rowNum: 3,
-    defaultValue: '',
-    value: '',
-    autosize: false,
-    selectedCid: ''
+    placeholder: '这是文本框',
+    textValue: '',
+    fontColor: '#000',
+    fontStyle: 'normal',
+    fontSize: 16,
+    fontWeight: 'normal',
+    textDecoration: 'none',
+    textAlign: 'left',
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    borderWidth: 0
 
 };
 
@@ -44,19 +54,48 @@ export class TextFieldState extends TextFieldRecord {
         return this.get('rowNum');
     }
 
-    getDefaultValue(): string {
-        return this.get('defaultValue');
-    }
-
-    getValue(): string {
-        return this.get('value');
+    getTextValue(): string {
+        return this.get('textValue');
     }
 
     getAutosize(): boolean {
         return this.get('autosize');
     }
 
-    getSelectedCid(): string {
-        return this.get('selectedCid');
+    getFontColor(): string {
+        return this.get('fontColor');
     }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getTextDecoration(): string {
+        return this.get('textDecoration');
+    }
+
+    getTextAlign(): string {
+        return this.get('textAlign');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
+    }
+
 }

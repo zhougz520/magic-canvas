@@ -5,10 +5,34 @@ import { Record } from 'immutable';
  */
 export interface IButtonState {
     type: string;
+    isCircle: boolean;
+    disabled: boolean;
+    textValue: string;
+    textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
 }
 
 const defaultRecord: IButtonState = {
-    type: 'primary'
+    type: 'primary',
+    isCircle: false,
+    disabled: false,
+    textValue: '按钮',
+    textAlign: 'center',
+    fontColor: '#FFF',
+    fontStyle: 'normal',
+    fontSize: 14,
+    fontWeight: 'normal',
+    textDecoration: 'none',
+    backgroundColor: '#1890ff',
+    borderColor: '#1890ff',
+    borderWidth: 0
 };
 
 export const ButtonStateRecord: Record.Class = Record(defaultRecord);
@@ -44,4 +68,53 @@ export class ButtonState extends ButtonStateRecord {
     getType(): string {
         return this.get('type');
     }
+
+    getIsCircle(): boolean {
+        return this.get('isCircle');
+    }
+
+    getDisabled(): boolean {
+        return this.get('disabled');
+    }
+
+    getTextValue(): string {
+        return this.get('textValue');
+    }
+
+    getTextAlign(): string {
+        return this.get('textAlign');
+    }
+
+    getFontColor(): string {
+        return this.get('fontColor');
+    }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getTextDecoration(): string {
+        return this.get('textDecoration');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
+    }
+
 }

@@ -1,11 +1,15 @@
-import { Record } from 'immutable';
-
 import { SizeState } from './SizeState';
 import { PositionState } from './PositionState';
+import { Map, Record } from 'immutable';
+
+// 组件类型
+export type ComponentType = 'Map' | 'Universal' | 'Comments';
 
 export interface IContent {
     // 组件ID
     cid: string;
+    // 组件类型
+    comType: ComponentType | null;
     // 组件层级结构
     zIndex: number;
     // 组件大小：width|height
@@ -13,19 +17,23 @@ export interface IContent {
     // 组件位置：left|right|top|bottom
     positionState: PositionState | null;
     // TODO 形状属性
-    // 组件中带格式的富文本内容
+    // TODO 组件中带格式的富文本内容
     richChildNode: any;
-    // TODO 组件个性化属性
+    // 组件个性化属性
     customState: any;
+    // TODO 组件对应的批注集合
+    commentsMap: Map<any, any>;
 }
 
 const defaultRecord: IContent = {
     cid: '',
+    comType: null,
     zIndex: 0,
     sizeState: null,
     positionState: null,
     richChildNode: null,
-    customState: null
+    customState: null ,
+    commentsMap: Map()
 };
 
 export const ContentStateRecord: Record.Class = Record(defaultRecord);
@@ -34,11 +42,13 @@ export class ContentState extends ContentStateRecord {
     static createEmpty(): ContentState {
         return ContentState.create({
             cid: '',
+            comType: null,
             zIndex: 0,
             sizeState: SizeState.createEmpty(),
             positionState: PositionState.createEmpty(),
             richChildNode: null,
-            customState: null
+            customState: null,
+            commentsMap: Map()
         });
     }
 
@@ -48,6 +58,10 @@ export class ContentState extends ContentStateRecord {
 
     getCid(): string {
         return this.get('cid');
+    }
+
+    getComType(): ComponentType | null {
+        return this.get('comType');
     }
 
     getZIndex(): number {
@@ -68,5 +82,9 @@ export class ContentState extends ContentStateRecord {
 
     getCustomState(): any {
         return this.get('customState');
+    }
+
+    getCommentsMap(): Map<any, any> {
+        return this.get('commentsMap');
     }
 }

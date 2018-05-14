@@ -4,12 +4,10 @@ import {
 } from '../../BaseComponent';
 import { Radio as AntRadio } from 'antd';
 
-import { RadioState, RadioProperties } from './RadioState';
-import { RadioChangeEvent } from 'antd/lib/radio';
+import { RadioState } from './RadioState';
 import { Map } from 'immutable';
-import { PropertiesEnum, ComponentProperty } from '../../config';
+import { PropertiesEnum } from '../../config';
 
-const RadioGroup = AntRadio.Group;
 const AntRadioButton = AntRadio.Button;
 
 // tslint:disable-next-line:no-empty-interface
@@ -18,7 +16,7 @@ export interface IDemoProps extends IBaseProps {
 }
 
 export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
-    private com: any = null;
+    com: any = null;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -27,86 +25,134 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
+    // public getType(): string {
+    //     return BoxType.BarType;
+    // }
+
     render() {
-        const radioList: RadioProperties[] = this.getCustomState().getOptions();
-        // tslint:disable-next-line:no-shadowed-variable
-        const radioElem = (radiosList: RadioProperties[]): any => {
-            const res = [];
-            if (this.getCustomState().getIsButton()) {
-                for (let i = 0; i < radioList.length; i++) {
-                    res.push(
-                        <AntRadioButton
-                            value={radiosList[i].value}
-                            disabled={radioList[i].disabled}
-                            key={radiosList[i].value}
-                        >
-                            {radiosList[i].label}
-                        </AntRadioButton>
-                    );
-                }
-            } else {
-                for (let i = 0; i < radioList.length; i++) {
-                    res.push(
-                        <AntRadio
-                            value={radiosList[i].value}
-                            disabled={radioList[i].disabled}
-                            key={radiosList[i].value}
-                        >
-                            {radiosList[i].label}
-                        </AntRadio>);
-                }
-            }
+        if (this.getCustomState().getIsButton()) {
+            return (
 
-            return res;
-        };
-
-        return (
-
-            <div
-                onMouseDown={this.fireSelectChange}
-                ref={(handler: HTMLElement | null) => this.com = handler}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-            >
-                <RadioGroup
-                    value={this.getCustomState().getValue()}
-                    // tslint:disable-next-line:jsx-no-lambda
-                    onChange={this.onChange}
+                <div
+                    onMouseDown={this.fireSelectChange}
+                    ref={(handler: HTMLElement | null) => this.com = handler}
+                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 >
-                    {radioElem(radioList)}
-                </RadioGroup>
-            </div>
-        );
+                    <AntRadioButton
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                            fontSize: this.getCustomState().getFontSize() + 'px',
+                            fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
+                            borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
+                        }}
+                        checked={this.getCustomState().getChecked()}
+                        disabled={this.getCustomState().getDisabled()}
+                    >
+                        <span
+                            style={{display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration(), fontStyle: this.getCustomState().getFontStyle()}}
+                        >
+                            {this.getCustomState().getValue()}
+                        </span>
+                    </AntRadioButton>
+                </div>
+            );
+        } else {
+            return (
+                <div
+                    onMouseDown={this.fireSelectChange}
+                    ref={(handler: HTMLElement | null) => this.com = handler}
+                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                >
+                    <AntRadio
+                        // tslint:disable-next-line:jsx-no-multiline-js
+                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                            fontSize: this.getCustomState().getFontSize() + 'px',
+                            fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
+                            borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px',
+                            fontStyle: this.getCustomState().getFontStyle()
+                        }}
+                        checked={this.getCustomState().getChecked()}
+                        disabled={this.getCustomState().getDisabled()}
+
+                    >
+                        <span
+                            style={{display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration()}}
+                        >
+                            {this.getCustomState().getValue()}
+                        </span>
+                    </AntRadio>
+                </div>
+            );
+        }
     }
 
-    public getComponentProperties = (): ComponentProperty => {
-        return {
-            componentCid: this.getCustomState().getSelectedCid(),
-            componentProperties: [
-                {
-                    pTitle: '',
-                    pKey: 'name',
-                    pValue: this.getCustomState().getName(),
-                    pType: 'text'
-                }, {
-                    pTitle: '',
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return  [
+               {
+                    pTitle: '选项',
                     pKey: 'value',
                     pValue: this.getCustomState().getValue(),
-                    pType: 'text'
+                    pType: PropertiesEnum.INPUT_STRING
                 }, {
-                    pTitle: '',
-                    pKey: 'options',
-                    pValue: this.getCustomState().getOptions(),
-                    pType: 'text'
+                    pTitle: '是否选中',
+                    pKey: 'checked',
+                    pValue: this.getCustomState().getChecked(),
+                    pType: PropertiesEnum.SWITCH
                 }, {
-                    pTitle: '',
+                    pTitle: '是否为方形按钮',
                     pKey: 'isButton',
                     pValue: this.getCustomState().getIsButton(),
                     pType: PropertiesEnum.SWITCH
-                }]
-        };
+                }, {
+                    pTitle: '背景颜色',
+                    pKey: 'backgroundColor',
+                    pValue: this.getCustomState().getBackgroundColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框颜色',
+                    pKey: 'borderColor',
+                    pValue: this.getCustomState().getBorderColor(),
+                    pType: PropertiesEnum.COLOR_PICKER
+                }, {
+                    pTitle: '边框宽度',
+                    pKey: 'borderWidth',
+                    pValue: this.getCustomState().getBorderWidth(),
+                    pType: PropertiesEnum.SLIDER
+                }
+            ];
     }
 
-    public setComponentProperties = (cid: string, pProperty: {pKey: string, pValue: any}) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+        let propertiesMap = Map();
+        propertiesMap = propertiesMap.set(pKey, pValue);
+        const newRadioState: RadioState = RadioState.set(
+            this.getCustomState(), propertiesMap
+        );
+        this.setCustomState(newRadioState);
+    }
+
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return [
+                {
+                    pTitle: '选中值',
+                    pKey: 'value',
+                    pValue: this.getCustomState().getValue(),
+                    pType: PropertiesEnum.INPUT_STRING
+                }, {
+                    pTitle: '选项',
+                    pKey: 'options',
+                    pValue: this.getCustomState().getOptions(),
+                    pType: PropertiesEnum.INPUT_OBJECT_LIST
+                }, {
+                    pTitle: '是否为方形按钮',
+                    pKey: 'isButton',
+                    pValue: this.getCustomState().getIsButton(),
+                    pType: PropertiesEnum.SWITCH
+                }
+            ];
+    }
+
+    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
         let propertiesMap = Map();
         propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
         propertiesMap = propertiesMap.set('selectedCid', cid);
@@ -117,14 +163,14 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newRadioState);
     }
 
-    private onChange = (event: RadioChangeEvent) => {
-        const newRadioState: RadioState = RadioState.set(
-            this.getCustomState(),
-            {
-                value: event.target.value
-            }
-        );
-        this.setCustomState(newRadioState);
-    }
+    // private onChange = (event: RadioChangeEvent) => {
+    //     const newRadioState: RadioState = RadioState.set(
+    //         this.getCustomState(),
+    //         {
+    //             value: event.target.value
+    //         }
+    //     );
+    //     this.setCustomState(newRadioState);
+    // }
 
 }

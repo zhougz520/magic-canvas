@@ -1,13 +1,23 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
+import { ContentState, ComponentType } from './model/ContentState';
+import { BaseState } from './model/BaseState';
+
 import * as Anchor from '../util/AnchorPoint';
-import { ContentState } from '.';
-import { ComponentProperty } from '../config';
+import { Map } from 'immutable';
 
 /**
  * BaseComponent提供的方法接口
  */
 export interface IComponent {
+
+    com: any;
+    /**
+     * 获取、设置组件的baseState
+     */
+    getBaseState: () => BaseState;
+    setBaseState: (baseState: BaseState) => void;
+
     /**
      * 获取、设置size属性
      */
@@ -26,8 +36,14 @@ export interface IComponent {
     getRichChildNode: () => any;
     setRichChildNode: (richChildNode: any) => void;
 
+    /**
+     * 获取、设置customState
+     */
     getCustomState: () => any;
     setCustomState: (newCustomState: any) => void;
+
+    getCommentsMap: () => Map<any, any>;
+    setCommentsMap: (newCommentsMap: Map<any, any>) => void;
 
     /**
      * 重做、撤销
@@ -60,6 +76,11 @@ export interface IComponent {
     /**
      * 获取组件类型
      */
+    getComType: () => ComponentType | null;
+
+    /**
+     * 获取组件类型
+     */
     getType: () => string;
 
     /**
@@ -72,12 +93,14 @@ export interface IComponent {
      */
     getStyle: (com: any) => CSSStyleDeclaration;
 
-    getPropertiesToProperty: () =>  ComponentProperty;
+    getPropertiesToProperty: () =>  Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 
-    setPropertiesFromProperty: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
+    setPropertiesFromProperty: (pKey: string, pValue: any) => void;
 
-    getPropertiesToCommand: () => ComponentProperty;
+    getPropertiesToCommand: () => Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 
-    setPropertiesFromCommand: (cId: string, pProperty: {pKey: string, pValue: any}) => void;
+    setPropertiesFromCommand: (pKey: string, pValue: any) => void;
+
+    getComponentSettableCommands: () => string[];
 
 }

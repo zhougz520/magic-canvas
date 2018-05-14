@@ -1,15 +1,37 @@
-import { Record } from 'immutable';
+import { Record, List, fromJS} from 'immutable';
 
 export interface ISelectorState {
-    disable: boolean;
-    data: string[];
-    placeholder: string;
+    disabled: boolean;
+    options: List<Map<any, any>>;
+    value: string;
+    // textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    // textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
+    backgroundColor: string;
+    borderColor: string;
+    borderWidth: number;
 }
 
+const initOptions = [
+    {label: 'option1', value: 'option1'},
+    {label: 'option2', value: 'option2'},
+    {label: 'option3', value: 'option3'}
+];
+
 const defaultRecord: ISelectorState = {
-    disable: false,
-    data: ['option1', 'option2', 'option3'],
-    placeholder: 'this is a placeholer'
+    disabled: false,
+    options: fromJS(initOptions),
+    value: 'option1',
+    fontColor: '#000',
+    fontStyle: 'normal',
+    fontSize: 16,
+    fontWeight: 'normal',
+    backgroundColor: '#FFF',
+    borderColor: '#FFF',
+    borderWidth: 0
 };
 
 export const SelectorRecord: Record.Class = Record(defaultRecord);
@@ -29,15 +51,44 @@ export class SelectorState extends SelectorRecord {
         return new SelectorState(map);
     }
 
-    getData(): string[] {
-        return this.get('data');
+    getOptions(): List<Map<any, any>> {
+        return this.get('options');
     }
 
-    getDisable(): boolean {
-        return this.get('disable');
+    getValue(): string {
+        return this.get('value');
     }
 
-    getPlaceholder(): boolean {
-        return this.get('placeholder');
+    getDisabled(): string {
+        return this.get('disabled');
     }
+
+    getFontColor(): string {
+        return this.get('fontColor');
+    }
+
+    getFontStyle(): string {
+        return this.get('fontStyle');
+    }
+
+    getFontSize(): string {
+        return this.get('fontSize');
+    }
+
+    getFontWeight(): string {
+        return this.get('fontWeight');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
+    }
+
 }

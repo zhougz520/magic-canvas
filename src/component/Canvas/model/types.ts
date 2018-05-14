@@ -1,0 +1,40 @@
+import { IComponent } from '../../BaseComponent';
+
+// 鼠标拖拽类型
+export enum DragType {
+    None = 'none',
+    Choice = 'choice',  // 鼠标拉选框
+    Shift = 'shift',    //  组件位移框
+    Stretch = 'stretch' // 组件缩放框
+}
+
+export interface IDragDiv {
+    component: IComponent;
+    documentDiv: HTMLDivElement;
+    hasChange: boolean;
+}
+
+export interface IKeyFun {
+    [key: string]: any;
+    ctrl: any;
+}
+
+export interface IBoundary {
+    startPoint: IOffset;
+    endPoint: IOffset;
+}
+
+export interface IOffset {
+    x: number;
+    y: number;
+}
+
+export interface IPointpos {
+    pointX: number;
+    pointY: number;
+}
+
+export interface IPagePos {
+    pageX: number;
+    pageY: number;
+}

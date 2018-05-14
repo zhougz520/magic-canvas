@@ -6,13 +6,12 @@ import { IBaseProps } from './IBaseProps';
 import { IBaseState } from './IBaseState';
 
 import { BaseState } from './model/BaseState';
-import { ContentState } from './model/ContentState';
+import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import * as Anchor from '../util/AnchorPoint';
 
-import { Stack } from 'immutable';
-import { ComponentProperty } from '../config';
+import * as Anchor from '../util/AnchorPoint';
+import { Stack, Map } from 'immutable';
 
 /**
  * 基类
@@ -22,12 +21,62 @@ import { ComponentProperty } from '../config';
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
+    com: any = null;
+
+    // TODO 基类中不写构造器
     constructor(props: P, context?: any) {
         super(props, context);
 
-        this.state = {
-            baseState: this.initBaseStateWithCustomState()
-        } as Readonly<S>;
+        // TODO 优化代码
+        const propsBaseState = props.baseState;
+        if (propsBaseState !== null && propsBaseState !== undefined) {
+            this.state = {
+                baseState: propsBaseState
+            } as Readonly<S>;
+        } else {
+            this.state = {
+                baseState: this.initBaseStateWithCustomState()
+            } as Readonly<S>;
+        }
+
+    }
+
+    componentWillUnmount() {
+        // TODO Comments优化代码
+        const commentsMap = this.getCommentsMap();
+        if (commentsMap.size > 0) {
+            commentsMap.map(
+                (value, key) => {
+                    const comments = this.props.getComponent(key);
+                    if (comments) {
+                        const oldLineList = comments.getCustomState();
+                        const newLineList: Map<string, any> = oldLineList.delete(
+                            this.getCid()
+                        );
+                        comments.setCustomState(newLineList);
+                    }
+                }
+            );
+        }
+    }
+
+    /**
+     * 获取组件的baseState
+     */
+    public getBaseState = (): BaseState => {
+        const baseState: BaseState = this.state.baseState;
+
+        return baseState;
+    }
+
+    /**
+     * 设置组件的baseState
+     * @param newBaseState 构建好的新的baseState
+     */
+    public setBaseState = (newBaseState: BaseState): void => {
+        this.setState({
+            baseState: newBaseState
+        });
     }
 
     /**
@@ -90,6 +139,15 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件类型
+     */
+    public getComType = (): ComponentType | null => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getCurrentContent().getComType();
+    }
+
+    /**
      * 获取组件的选中框类型，成员函数
      */
     public getType(): string {
@@ -136,7 +194,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             zIndex
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
-        this.setBaseState(newBaseState);
+
+        this.setState({
+            baseState: newBaseState
+        }, this.callBackForZIndex);
     }
 
     /**
@@ -180,6 +241,30 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             customState: newCustomState
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setBaseState(newBaseState);
+    }
+
+    /**
+     * 获取组件的批注集合
+     */
+    public getCommentsMap = (): Map<any, any> => {
+        const baseState: BaseState = this.getBaseState();
+        const commentsMap: Map<any, any> = baseState.getCurrentContent().getCommentsMap();
+
+        return commentsMap;
+    }
+
+    /**
+     * 设置组件的批注集合
+     * @param newCommentsMap 新的批注集合
+     */
+    public setCommentsMap = (newCommentsMap: Map<any, any>): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            commentsMap: newCommentsMap
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
@@ -249,35 +334,41 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return style;
     }
 
-    public getPropertiesToProperty = (): ComponentProperty => {
-        return {
-            componentCid: '', componentProperties:
-                [{
+    /**
+     * 获取组件的属性，传给属性工具条
+     */
+    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return [{
                     pTitle: '',
                     pKey: '',
                     pValue: '',
                     pType: 'text'
-                }]
-        };
+                }];
     }
 
-    public setPropertiesFromProperty = (cid: string, pProperty: { pKey: string, pValue: any }) => {
+    /**
+     * 获取属性工具条的单条属性，传给组件并设置组件
+     */
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         // const num: number = 1 + 1;
     }
 
-    public getPropertiesToCommand = (): ComponentProperty => {
-        return {
-            componentCid: '', componentProperties:
-                [{
+    /**
+     * 获取组件的属性，传给命令工具条
+     */
+    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+        return  [{
                     pTitle: '',
                     pKey: '',
                     pValue: '',
                     pType: 'text'
-                }]
-        };
+                }];
     }
 
-    public setPropertiesFromCommand = (cid: string, pProperty: { pKey: string, pValue: any }) => {
+    /**
+     * 获取命令工具条的单条属性，传给组件并设置组件
+     */
+    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
         // const num: number = 1 + 1;
     }
 
@@ -291,49 +382,30 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         });
         this.fireSelectChildChange(null);
     }
+
+    /**
+     * 获取基础组件的可设置文本命令
+     */
+    public getComponentSettableCommands = (): string[] => {
+        return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
+    }
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State
      */
     protected initBaseStateWithCustomState(customState: any = null): BaseState {
-        const contentState: ContentState = ContentState.create({
-            cid: this.props.data.id,
-            zIndex: this.props.zIndex,
-            sizeState: SizeState.create({
-                width: this.props.data.w,
-                height: this.props.data.h
-            }),
-            positionState: PositionState.create({
-                left: this.props.data.l,
-                right: this.props.data.r,
-                top: this.props.data.t,
-                bottom: this.props.data.b
-            }),
-            // TODO 带格式的富文本
-            richChildNode: this.props.data.txt_v,
-            customState
-        });
+        const baseState: BaseState = this.props.baseState;
 
-        return BaseState.createWithContent(contentState);
-    }
+        let newBaseState: BaseState = baseState;
+        if (customState !== null) {
+            newBaseState = BaseState.set(baseState, baseState.getCurrentContent().merge(
+                {
+                    customState
+                }
+            ));
+        }
 
-    /**
-     * 获取组件的baseState
-     */
-    protected getBaseState = (): BaseState => {
-        const baseState: BaseState = this.state.baseState;
-
-        return baseState;
-    }
-
-    /**
-     * 设置组件的baseState
-     * @param newBaseState 构建好的新的baseState
-     */
-    protected setBaseState = (newBaseState: BaseState): void => {
-        this.setState({
-            baseState: newBaseState
-        });
+        return newBaseState;
     }
 
     /**
@@ -361,7 +433,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.renderCallback);
+        }, this.callBackForSizeAndPosition);
     }
 
     /**
@@ -389,16 +461,53 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.renderCallback);
+        }, this.callBackForSizeAndPosition);
     }
 
     // render后的回调函数
-    protected renderCallback = (): void => {
+    protected callBackForSizeAndPosition = (): void => {
         // 通知画布重绘组件的选中框
         this.props.repaintSelected();
         // 计算边界调整画布的大小
         const boundary = this.getBoundaryPoint();
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
+
+        // TODO Comments优化代码
+        if (this.getComType() === 'Comments') {
+            const position = this.getPosition();
+            const oldLineList: Map<string, any> = this.getCustomState();
+            let newLineList: Map<string, any> = Map();
+            oldLineList.map(
+                (value: any, key: string) => {
+                    newLineList = newLineList.set(
+                        key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
+                    );
+                }
+            );
+            this.setCustomState(newLineList);
+        } else {
+            const position = this.getPosition();
+            const size = this.getSize();
+            const commentsMap = this.getCommentsMap();
+            if (commentsMap.size > 0) {
+                commentsMap.map(
+                    (value, key) => {
+                        const comments = this.props.getComponent(key);
+                        if (comments) {
+                            const oldLineList = comments.getCustomState();
+                            const newLineList: Map<string, any> = oldLineList.update(
+                                this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
+                            );
+                            comments.setCustomState(newLineList);
+                        }
+                    }
+                );
+            }
+        }
+    }
+
+    protected callBackForZIndex = (): void => {
+        this.props.resetMaxAndMinZIndex();
     }
 
     /**
@@ -426,6 +535,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 this.props.selectionChanging(cid, false);
             }
             e.preventDefault();
+        }
+    }
+
+    protected doDbClickToEdit = (): void => {
+        if (this.props.dbClickToBeginEdit) {
+            this.props.dbClickToBeginEdit();
         }
     }
 
