@@ -239,7 +239,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this.setMode('canvas');
         // 初始化事件监听
         this.initEventListener();
-        // 设置_maxZIndex、_minZIndex
+        // 设置_maxZIndex、_minZIndex、_maxComIndex
         this._canvasUtil.resetZIndexAndComIndex(true);
     }
 
@@ -251,7 +251,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             this._newComponentCid = null;
         }
 
-        // 组件有改变时，重新设置_maxZIndex、_minZIndex
+        // 组件有改变时，重新设置_maxZIndex、_minZIndex、_maxComIndex
         if (prevState.componentList !== this.state.componentList) {
             this._canvasUtil.resetZIndexAndComIndex(true);
         }

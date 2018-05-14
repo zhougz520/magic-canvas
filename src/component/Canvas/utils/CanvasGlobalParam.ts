@@ -312,7 +312,7 @@ export class CanvasGlobalParam {
                     value.position.top + value.size.height - 10 : value.position.top + y;
                 const width = value.size.width + w < 10 ? 10 : value.size.width + w;
                 const height = value.size.height + h < 10 ? 10 : value.size.height + h;
-                const position = { left, right: value.position.right, top, bottom: value.position.bottom };
+                const position = { top, left };
                 const size = { width, height };
                 if (end || config.highPerformance) {
                     // 高性能模式，组件立即变化
@@ -365,10 +365,8 @@ export class CanvasGlobalParam {
             if (component) {
                 const position = component.getPosition();
                 component.setPosition({
-                    left: axis === 'y' ? position.left : position.left + distance,
-                    right: position.right,
                     top: axis === 'x' ? position.top : position.top + distance,
-                    bottom: position.bottom
+                    left: axis === 'y' ? position.left : position.left + distance
                 });
             }
         });
@@ -420,11 +418,9 @@ export class CanvasGlobalParam {
             this.selectedComponents.map((component, cid) => {
                 if (component && cid) {
                     const value = this.currentComponentSize.getValue(cid);
-                    const left = value.position.left + offset.x;
                     const top = value.position.top + offset.y;
-                    const right = value.position.right;
-                    const bottom = value.position.bottom;
-                    component.setPosition({ left, right, top, bottom });
+                    const left = value.position.left + offset.x;
+                    component.setPosition({ top, left });
                 }
             });
         } else {
@@ -473,12 +469,9 @@ export class CanvasGlobalParam {
             if (value !== undefined) {
                 const div = value.documentDiv;
                 if (div.style.left && div.style.top && value.hasChange) {
-                    const pos = value.component.getPosition();
                     value.component.setPosition({
-                        left: parseInt(div.style.left, 10) - offset.pageX,
-                        right: pos.right,
                         top: parseInt(div.style.top, 10) - offset.pageY,
-                        bottom: pos.bottom
+                        left: parseInt(div.style.left, 10) - offset.pageX
                     });
                 }
                 this.body.removeChild(div);

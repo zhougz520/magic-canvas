@@ -111,10 +111,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const positionState: PositionState = this.getPositionState();
 
         return {
-            left: positionState.getLeft(),
-            right: positionState.getRight(),
             top: positionState.getTop(),
-            bottom: positionState.getBottom()
+            left: positionState.getLeft()
         };
     }
 

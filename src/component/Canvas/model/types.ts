@@ -38,3 +38,15 @@ export interface IPagePos {
     pageX: number;
     pageY: number;
 }
+
+export interface IRange {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+    comNum: number;
+    sumComWidth: number;
+    sumComHeight: number;
+}
+
+export type AlignType = 'Left' | 'Center' | 'Right' | 'Top' | 'Middle' | 'Bottom' | 'Horizontal' | 'Vertical';

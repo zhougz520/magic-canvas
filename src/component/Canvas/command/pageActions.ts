@@ -1,5 +1,5 @@
 import { Canvas } from '../Canvas';
-import { IBoundary } from '../model/types';
+import { IBoundary, IRange } from '../model/types';
 import { IStack, ISComponentList } from '../ICanvasState';
 import { IComponent } from '../../BaseComponent';
 import { Map, Stack, Set } from 'immutable';
@@ -183,16 +183,63 @@ export const pageActions = {
 
     // 置于顶层
     frontCom() {
-        const selectedComponentZIndexMin: number = this.getThis()._componentsUtil.getSelectedComponentZIndexRange().minZIndex;
+        const selectedComponentZIndexMin: number = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange().minZIndex;
         const maxZIndex: number = this.getThis()._maxZIndex + 1;
         this.getThis()._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin);
     },
 
     // 置于底层
     backCom() {
-        const selectedComponentZIndexMax: number = this.getThis()._componentsUtil.getSelectedComponentZIndexRange().maxZIndex;
+        const selectedComponentZIndexMax: number = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange().maxZIndex;
         const minZIndex: number = this.getThis()._minZIndex - 1;
         this.getThis()._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax);
-    }
+    },
 
+    // 左对齐
+    leftCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Left');
+    },
+
+    // 水平居中
+    centerCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Center');
+    },
+
+    // 右对齐
+    rightCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Right');
+    },
+
+    // 顶对齐
+    topCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Top');
+    },
+
+    // 垂直居中
+    middleCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Middle');
+    },
+
+    // 底对齐
+    bottomCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Bottom');
+    },
+
+    // 水平等间距
+    horizontalCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Horizontal');
+    },
+
+    // 垂直等间距
+    verticalCom() {
+        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
+        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Vertical');
+    }
 };

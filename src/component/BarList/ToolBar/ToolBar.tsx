@@ -59,6 +59,36 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
         }
     }
 
+    handleAlignMenuClick = (e: any) => {
+        const { key } = e;
+        switch (key) {
+            case 'leftCom':
+                this.fireCommand(CommandMap.COM_LEFT);
+                break;
+            case 'centerCom':
+                this.fireCommand(CommandMap.COM_CENTER);
+                break;
+            case 'rightCom':
+                this.fireCommand(CommandMap.COM_RIGHT);
+                break;
+            case 'topCom':
+                this.fireCommand(CommandMap.COM_TOP);
+                break;
+            case 'middleCom':
+                this.fireCommand(CommandMap.COM_MIDDLE);
+                break;
+            case 'bottomCom':
+                this.fireCommand(CommandMap.COM_BOTTOM);
+                break;
+            case 'horizontalCom':
+                this.fireCommand(CommandMap.COM_HORIZONTAL);
+                break;
+            case 'verticalCom':
+                this.fireCommand(CommandMap.COM_VERTICAL);
+                break;
+        }
+    }
+
     /**
      * 设置选中组件，由画布调用
      * @param selectedComs 选中的组件集合
@@ -90,6 +120,19 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
             </Menu>
         );
 
+        const menuAlign = (
+            <Menu onClick={this.handleAlignMenuClick}>
+                <Menu.Item key="leftCom">左对齐</Menu.Item>
+                <Menu.Item key="centerCom">水平居中</Menu.Item>
+                <Menu.Item key="rightCom">右对齐</Menu.Item>
+                <Menu.Item key="topCom">顶对齐</Menu.Item>
+                <Menu.Item key="middleCom">垂直居中</Menu.Item>
+                <Menu.Item key="bottomCom">底对齐</Menu.Item>
+                <Menu.Item key="horizontalCom">水平等间距</Menu.Item>
+                <Menu.Item key="verticalCom">垂直等间距</Menu.Item>
+            </Menu>
+        );
+
         return (
             <div className={`command-bar ${titleBarCollapsed ? 'title-bar-collapsed' : ''}`}>
                 <div onClick={this.onClick}>折叠</div>
@@ -102,6 +145,15 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 </div>
                 <div
                     style={{marginLeft: 'auto', marginRight: '50px'}}
+                >
+                    <Dropdown overlay={menuAlign}>
+                        <Button>
+                            对齐 <Icon type="down" />
+                        </Button>
+                    </Dropdown>
+                </div>
+                <div
+                    style={{marginRight: '50px'}}
                 >
                     <Dropdown overlay={menuZIndex}>
                         <Button>
