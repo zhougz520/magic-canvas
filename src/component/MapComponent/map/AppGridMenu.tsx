@@ -74,7 +74,7 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         const initMenus = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
             (
                 <div
-                    style={{ float: 'right' }}
+                    className="menu-list"
                     ref={provided.innerRef}
                 >
                     {menus}

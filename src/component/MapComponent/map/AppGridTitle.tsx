@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import { GlobalUtil } from '../../util/GlobalUtil';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
     map_gt_txt?: string;
     w: number;
+    index: number;
 }
 
 export class AppGridTitle extends MapComponent<IMapProps, any> {
@@ -14,12 +16,29 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         w: 50
     };
 
+    public resizing = false;
+    public startW = 0;
     public dragWidth: HTMLElement | null = null;
 
     constructor(props: any, context?: any) {
         super(props, context);
-    }
 
+        this.state = {
+            w: this.props.w
+        };
+    }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+        // some basic styles to make the items look a bit nicer
+        // userSelect: 'none',
+        // paddingRight: 5,
+        // paddingLeft: 5,
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
     componentWillMount() {
         if (this.com !== null) {
             // this.com.addEventListener('dragstart', this.dragStart);
@@ -28,42 +47,59 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
     }
 
     public render() {
-        const { map_sm, w, map_gt_txt, selectedId, id } = this.props;
+        const { map_sm, map_gt_txt, selectedId, id, index } = this.props;
+        const { w } = this.state;
+        const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+            <div
+                ref={provided.innerRef}
+                {...provided.dragHandleProps}
+                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+            >
+                <div
+                    className={`title ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+                    ref={(ref) => this.com = ref}
+                    style={{ width: w }}
+                    onMouseDown={this.selectedCom}
+                >
+                    <div className={`title-content `}>
+                        {map_gt_txt}
+                    </div>
+                </div>
+                {provided.placeholder}
+            </div>
+        );
 
         return (
-            <div
-                className={`title ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
-                ref={(ref) => this.com = ref}
-                style={{ width: w }}
-                onMouseDown={this.selectedCom}
-                onMouseMove={this.mouseMove}
-                onMouseUp={this.mouseUp}
-            >
-                <div className={`title-content `}>
-                    {map_gt_txt}
-                </div>
+            <div className={`app-grid-title-item`} style={{ width: w }}>
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {initDrag}
+                </Draggable>
                 <div
                     className="title-split"
-                    draggable
-                // onClick={this.handleMouseup}
+                    onMouseDown={this.onDragStart}
+                    onMouseMove={this.onDrag}
+                    onMouseUp={this.onDragEnd}
                 />
             </div>
         );
     }
+    public onDragStart = (evt: any) => {
+        this.resizing = true;
+        this.startW = this.state.w;
+    }
+    public onDrag = (evt: any) => {
+        if (this.resizing) {
+            this.setState({
+                w: this.startW + evt.target.offsetLeft
+            });
 
-    public mouseMove = (evt: any) => {
-        // evt.dataTransfer.effectAllowed = 'move';
-        // evt.dataTransfer.setData('text', evt.target.outerHTML);
-
-        // 计算鼠标开始拖拽时的偏移量(鼠标落点与item左上角的偏移量)
-        // let offset = { x: 0, y: 0 } as { x: number, y: number };
-
+        }
+    }
+    public onDragEnd = (evt: any) => {
+        this.resizing = false;
+        this.startW = 0;
     }
 
-    public mouseUp = (evt: any) => {
-        // delete localStorage.__dnd_type;
-        // delete localStorage.__dnd_value;
-    }
     // 鼠标松开时，计算title宽度
     public handleMouseup = (e: any) => {
         e.preventDefault();

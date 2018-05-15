@@ -26,7 +26,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         // 获取新id
         const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
         data.p.components.push({
-            t: addData.type,
+            t: addData.t,
             p: Object.assign({}, addData.props, { id: childId, txt_v: 'test' })
         });
 
@@ -84,7 +84,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     protected handleOver = (e: any) => {
         const data: any = this.getAddComponent();
         if (data === undefined) return;
-        if (!this.componentCanBeAdded(data.type)) return;
+        if (!this.componentCanBeAdded(data.t)) return;
         this.setState({
             hover: { backgroundColor: '#007ACC' }
         });
@@ -110,7 +110,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             hover: {}
         });
         // 校验是否能被添加
-        if (!this.componentCanBeAdded(data.type)) {
+        if (!this.componentCanBeAdded(data.t)) {
             e.stopPropagation();
 
             return;
