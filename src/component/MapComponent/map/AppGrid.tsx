@@ -3,7 +3,6 @@ import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox } from 'antd';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { AppGridTitle } from './index';
-import { fromJS } from 'immutable';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -43,18 +42,12 @@ export class AppGrid extends MapComponent<IMapProps, any> {
             ...props
         };
     }
-    shouldComponentUpdate(np: any, ns: any) {
-        if (fromJS(ns.p) !== fromJS(this.state.p)) {
-            ns.p = this.state.p;
-        }
-
-        return true;
-    }
-    componentDidMount() {
-        if (this.com != null) {
-            this.com.addEventListener('drop', this.handleDropAddComponent);
-        }
-    }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+        background: isDragging ? 'lightblue' : 'lightgrey',
+        display: 'flex',
+        // padding: grid,
+        overflow: 'auto'
+    })
     public render() {
         // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
         const { map_g_mc, map_g_tree, map_sm, selectedId, id, w, p } = this.props;
@@ -79,7 +72,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                         <div className="title-split no-ctrl" />
                     </div>
                     <div className={`grid-title-content`} ref={(ref) => this.title = ref}>
-                        <DragDropContext onDragEnd={this.handleEnd} >
+                        <DragDropContext onDragEnd={this.onDragEnd} >
                             <Droppable droppableId="droppable" direction="horizontal">
                                 {this.titles}
                             </Droppable>
@@ -99,6 +92,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
         if (p !== undefined) {
             const currTitles: JSX.Element[] = [];
             p.components.forEach((com: any, index: number) => {
+                // 如果当前正在拖拽title, 则更新推拽title的宽度
                 currTitles.push(
                     <AppGridTitle
                         key={`c.${com.p.id}`}
@@ -124,22 +118,21 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                 );
         }
     }
-    protected handleEnd = (result: any) => {
-        const { p } = this.state;
+    protected onDragEnd = (result: any) => {
+        const { p, id } = this.props;
         // dropped outside the list
         if (!result.destination) {
             return;
         }
 
         const components = this.reorder(
-            this.state.p.components,
+            p.components,
             result.source.index,
             result.destination.index
         );
+
         p.components = components;
-        this.setState({
-            p
-        });
+        this.props.updateProps(id, { p });
     }
 
     protected reorder = (list: any, startIndex: any, endIndex: any) => {

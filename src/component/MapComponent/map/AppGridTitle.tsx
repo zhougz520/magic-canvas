@@ -17,6 +17,9 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
     };
 
     public resizing = false;
+    public mousePosition = {
+        x: 0
+    };
     public startW = 0;
     public dragWidth: HTMLElement | null = null;
 
@@ -24,15 +27,11 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         super(props, context);
 
         this.state = {
-            w: this.props.w
+            currX: 0,
+            resizing: false
         };
     }
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-        // some basic styles to make the items look a bit nicer
-        // userSelect: 'none',
-        // paddingRight: 5,
-        // paddingLeft: 5,
-
         // change background colour if dragging
         background: isDragging ? 'blue' : '',
 
@@ -40,15 +39,13 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         ...draggableStyle
     })
     componentWillMount() {
-        if (this.com !== null) {
-            // this.com.addEventListener('dragstart', this.dragStart);
-            // this.com.addEventListener('dragend', this.dragEnd);
-        }
+        // document.addEventListener('mousedown', this.onMouseDown);
+        document.addEventListener('mousemove', this.onResizingTitle);
+        document.addEventListener('mouseup', this.onMouseUp);
     }
 
     public render() {
-        const { map_sm, map_gt_txt, selectedId, id, index } = this.props;
-        const { w } = this.state;
+        const { map_sm, map_gt_txt, selectedId, w, id, index } = this.props;
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
                 ref={provided.innerRef}
@@ -76,28 +73,38 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
                 </Draggable>
                 <div
                     className="title-split"
-                    onMouseDown={this.onDragStart}
-                    onMouseMove={this.onDrag}
-                    onMouseUp={this.onDragEnd}
+                    onMouseDown={this.onMouseDown}
+                    // // onMouseMove={this.onMouseMove}
+                    onMouseUp={this.onMouseUp}
                 />
             </div>
         );
     }
-    public onDragStart = (evt: any) => {
-        this.resizing = true;
-        this.startW = this.state.w;
+    public onMouseDown = (evt: any) => {
+        this.setState({
+            resizing: true,
+            currX: evt.clientX
+            // width: newWidth <= 400 ? 400 : newWidth
+        });
     }
-    public onDrag = (evt: any) => {
-        if (this.resizing) {
+    public onMouseUp = (evt: any) => {
+        this.setState({
+            resizing: false,
+            currX: 0
+            // width: newWidth <= 400 ? 400 : newWidth
+        });
+        evt.stopPropagation();
+    }
+    public onResizingTitle = (evt: any) => {
+        const { id, w } = this.props;
+        const { currX, resizing } = this.state;
+        if (resizing) {
             this.setState({
-                w: this.startW + evt.target.offsetLeft
+                currX: evt.clientX
             });
-
+            const newWidth = w + (evt.clientX - currX);
+            this.props.updateProps(id, { w: newWidth < 50 ? 50 : newWidth });
         }
-    }
-    public onDragEnd = (evt: any) => {
-        this.resizing = false;
-        this.startW = 0;
     }
 
     // 鼠标松开时，计算title宽度

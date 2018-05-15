@@ -2,8 +2,10 @@ import * as React from 'react';
 import '../sass/Component.scss';
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps {
-    w: any;              // 显示 项目控件
-    h: any;              // 显示 视图
+    w?: any;              // 宽
+    h?: any;              // 高
+    l?: any;              // left
+    t?: any;              // top
 }
 export class MaskLayer extends React.PureComponent<IDemoProps, any> {
 
@@ -17,13 +19,13 @@ export class MaskLayer extends React.PureComponent<IDemoProps, any> {
     }
 
     public render() {
-        const { w, h } = this.props;
+        const { w, h, l, t } = this.props;
 
         return (
             <div
-                style={{ width: w, height: h }}
-                ref={(handler: HTMLElement | null) => this.com = handler}
                 className="mask-layer"
+                style={{ width: w, height: h, left: l, top: t }}
+                ref={(handler: HTMLElement | null) => this.com = handler}
             />
         );
     }

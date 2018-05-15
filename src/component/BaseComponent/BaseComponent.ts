@@ -337,13 +337,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给属性工具条
      */
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }];
+            pTitle: '',
+            pKey: '',
+            pValue: '',
+            pType: 'text'
+        }];
     }
 
     /**
@@ -356,13 +356,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给命令工具条
      */
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
-        return  [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }];
+    public getPropertiesToCommand = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+        return [{
+            pTitle: '',
+            pKey: '',
+            pValue: '',
+            pType: 'text'
+        }];
     }
 
     /**
@@ -481,7 +481,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             oldLineList.map(
                 (value: any, key: string) => {
                     newLineList = newLineList.set(
-                        key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
+                        key, { x1: value.x1, y1: value.y1, x2: position.left, y2: position.top }
                     );
                 }
             );
@@ -497,7 +497,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                         if (comments) {
                             const oldLineList = comments.getCustomState();
                             const newLineList: Map<string, any> = oldLineList.update(
-                                this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
+                                this.getCid(), (val: any) => ({ x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2 })
                             );
                             comments.setCustomState(newLineList);
                         }
@@ -544,5 +544,4 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             this.props.dbClickToBeginEdit();
         }
     }
-
 }

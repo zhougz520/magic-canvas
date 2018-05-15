@@ -14,8 +14,9 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     public com: HTMLElement | null = null;
-    componentDidUpdate() {
-        if (this.com) {
+    componentDidMount() {
+        if (this.com != null) {
+            this.com.addEventListener('drop', this.handleDropAddComponent);
             this.com.addEventListener('mousedown', this.selectedCom);
         }
     }
@@ -27,12 +28,12 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
         data.p.components.push({
             t: addData.t,
-            p: Object.assign({}, addData.props, { id: childId, txt_v: 'test' })
+            p: Object.assign({}, addData.props, { id: childId })
         });
+        this.props.updateProps(data.id, { p: data.p });
 
         return data;
     }
-
     /**
      * 删除控件
      */
