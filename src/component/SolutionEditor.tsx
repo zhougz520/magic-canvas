@@ -127,7 +127,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     onPropertyProperties = (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> | undefined
             ): void => {
                 if (this.barList && compProperty !== undefined) {
-                    console.log(compProperty);
                     this.barList.setPropertyState(compProperty);
                 }
     }
