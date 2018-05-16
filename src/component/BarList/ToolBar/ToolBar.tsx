@@ -146,6 +146,24 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 <div
                     style={{marginLeft: 'auto', marginRight: '50px'}}
                 >
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.EDITOR_BOLD)}
+                    >
+                        加粗
+                    </Button>&nbsp;&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.EDITOR_ITALIC)}
+                    >
+                        斜体
+                    </Button>
+                </div>
+                <div
+                    style={{marginRight: '50px'}}
+                >
                     <Dropdown overlay={menuAlign}>
                         <Button>
                             对齐 <Icon type="down" />

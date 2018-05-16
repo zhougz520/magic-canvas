@@ -1,3 +1,4 @@
+import { Canvas } from '../Canvas';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
 import { config } from '../../config';
@@ -49,7 +50,6 @@ export class CanvasGlobalParam {
     public currentAnchor: Anchor.IAnchor | null;                // 当前触发的锚点
     public dragType: string;                                    // 当前鼠标移动的类型
     public dragDivList: Map<string, IDragDiv>;                  // 当前生成的组件位移框
-    public isRichEditMode: boolean;                             // 是否富文本编辑状态
     public TECellEditorActivateKeyRange: Array<{
         min: number;
         max: number;
@@ -63,10 +63,13 @@ export class CanvasGlobalParam {
     public scrollTimer: NodeJS.Timer | null;                    // stage的滚动定时器
     public isCanCtrl: boolean;                                  // 选中时是否可操作
 
+    private _canvas: Canvas;
     /**
      * 构造函数，初始化全局变量
      */
-    public constructor() {
+    public constructor(canvas: Canvas) {
+        this._canvas = canvas;
+
         this.body = document.getElementsByTagName('body')[0];
         this.timer = null;
         this.ctrlPress = false;
@@ -113,7 +116,6 @@ export class CanvasGlobalParam {
         this.currentAnchor = null;
         this.dragType = 'none';
         this.dragDivList = Map<string, IDragDiv>();
-        this.isRichEditMode = false;
         this.TECellEditorActivateKeyRange = [
             { min: 229, max: 229 }, // 中文输入法
             { min: 13, max: 13 },   // 回车
@@ -497,14 +499,6 @@ export class CanvasGlobalParam {
         }
     }
 
-    getIsRichEditMode(): boolean {
-        return this.isRichEditMode;
-    }
-
-    setIsRichEditMode(mode: boolean): void {
-        this.isRichEditMode = mode;
-    }
-
     getTECellEditorActivateKeyRange(): any {
         return this.TECellEditorActivateKeyRange;
     }
@@ -524,5 +518,15 @@ export class CanvasGlobalParam {
 
     setIsCanCtrl(isCanCtrl: boolean): void {
         this.isCanCtrl = isCanCtrl;
+    }
+
+    setIsWingmanFocus = (value: boolean): void => {
+        this._canvas._isWingmanFocus = value;
+    }
+
+    setIsRichEditMode = (value: boolean): void => {
+        this._canvas._isRichEditMode = value;
+        // tslint:disable-next-line:no-console
+        console.log('编辑模式：' + value);
     }
 }

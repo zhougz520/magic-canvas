@@ -10,7 +10,7 @@ export function docMouseDown(canvas: Canvas, e: any): void {
     if (anchor) {
         // 如果是编辑模式：结束编辑模式
         if (canvas._isRichEditMode === true) {
-            // canvas._richEditUtil.endEdit();
+            canvas._richEditUtil.endEdit();
             canvas._canvasGlobalParam.setIsRichEditMode(false);
         }
         // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
@@ -27,7 +27,7 @@ export function docMouseDown(canvas: Canvas, e: any): void {
                 // 画布上的点击
                 // 如果是编辑模式：结束编辑模式
                 if (canvas._isRichEditMode === true) {
-                    // canvas._richEditUtil.endEdit();
+                    canvas._richEditUtil.endEdit();
                     canvas._canvasGlobalParam.setIsRichEditMode(false);
                 }
 

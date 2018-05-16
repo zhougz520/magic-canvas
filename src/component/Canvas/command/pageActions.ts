@@ -241,5 +241,21 @@ export const pageActions = {
     verticalCom() {
         const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
         this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Vertical');
+    },
+
+    // 加粗
+    boldEditor() {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleInlineStyle('BOLD');
+        }
+    },
+
+    // 斜体
+    italicEditor() {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleInlineStyle('ITALIC');
+        }
     }
 };

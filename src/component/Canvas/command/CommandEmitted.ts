@@ -32,5 +32,10 @@ export const CommandMap = {
     // 水平等间距
     COM_HORIZONTAL: 'e.horizontalCom',
     // 垂直等间距
-    COM_VERTICAL: 'e.verticalCom'
+    COM_VERTICAL: 'e.verticalCom',
+
+    // 加粗
+    EDITOR_BOLD: 'e.boldEditor',
+    // 斜体
+    EDITOR_ITALIC: 'e.italicEditor'
 };

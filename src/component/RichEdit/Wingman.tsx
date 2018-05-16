@@ -2,22 +2,26 @@ import * as React from 'react';
 import './sass/RichEdit.scss';
 
 export class Wingman extends React.PureComponent<any, any> {
+    docWingman = (): HTMLTextAreaElement => {
+        return (document.getElementById('wingman') as HTMLTextAreaElement);
+    }
+
     setFocus = (isOnFocus: boolean = true) => {
         if (isOnFocus) {
-            (document.getElementById('wingman') as HTMLTextAreaElement).focus();
+            this.docWingman().focus();
         } else {
-            (document.getElementById('wingman') as HTMLTextAreaElement).blur();
+            this.docWingman().blur();
         }
     }
 
     clearValue = () => {
-        (document.getElementById('wingman') as HTMLTextAreaElement).value = '';
+        this.docWingman().value = '';
     }
 
     componentDidMount() {
         const { setIsWingmanFocus } = this.props;
-        (document.getElementById('wingman') as HTMLTextAreaElement).addEventListener('focus', () => { setIsWingmanFocus(true); });
-        (document.getElementById('wingman') as HTMLTextAreaElement).addEventListener('blur', () => { setIsWingmanFocus(false); });
+        this.docWingman().addEventListener('focus', () => { setIsWingmanFocus(true); });
+        this.docWingman().addEventListener('blur', () => { setIsWingmanFocus(false); });
     }
 
     render() {

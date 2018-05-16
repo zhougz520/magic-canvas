@@ -391,18 +391,26 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 初始化BaseSate
      * @param customState 组件自定义State
      */
-    protected initBaseStateWithCustomState(customState: any = null): BaseState {
+    protected initBaseStateWithCustomState(customState: any = null, richChildNode: any = null): BaseState {
         const baseState: BaseState = this.props.baseState;
 
         let newBaseState: BaseState = baseState;
+        let newContentState: ContentState = baseState.getCurrentContent();
         if (customState !== null) {
-            const contentState: ContentState = baseState.getCurrentContent().merge(
+            newContentState = newContentState.merge(
                 {
                     customState
                 }
             ) as ContentState;
-            newBaseState = BaseState.createWithContent(contentState);
         }
+        if (richChildNode !== null) {
+            newContentState = newContentState.merge(
+                {
+                    richChildNode
+                }
+            ) as ContentState;
+        }
+        newBaseState = BaseState.createWithContent(newContentState);
 
         return newBaseState;
     }
@@ -472,37 +480,37 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
 
         // TODO Comments优化代码
-        if (this.getComType() === 'Comments') {
-            const position = this.getPosition();
-            const oldLineList: Map<string, any> = this.getCustomState();
-            let newLineList: Map<string, any> = Map();
-            oldLineList.map(
-                (value: any, key: string) => {
-                    newLineList = newLineList.set(
-                        key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
-                    );
-                }
-            );
-            this.setCustomState(newLineList);
-        } else {
-            const position = this.getPosition();
-            const size = this.getSize();
-            const commentsMap = this.getCommentsMap();
-            if (commentsMap.size > 0) {
-                commentsMap.map(
-                    (value, key) => {
-                        const comments = this.props.getComponent(key);
-                        if (comments) {
-                            const oldLineList = comments.getCustomState();
-                            const newLineList: Map<string, any> = oldLineList.update(
-                                this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
-                            );
-                            comments.setCustomState(newLineList);
-                        }
-                    }
-                );
-            }
-        }
+        // if (this.getComType() === 'Comments') {
+        //     const position = this.getPosition();
+        //     const oldLineList: Map<string, any> = this.getCustomState();
+        //     let newLineList: Map<string, any> = Map();
+        //     oldLineList.map(
+        //         (value: any, key: string) => {
+        //             newLineList = newLineList.set(
+        //                 key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
+        //             );
+        //         }
+        //     );
+        //     this.setCustomState(newLineList);
+        // } else {
+        //     const position = this.getPosition();
+        //     const size = this.getSize();
+        //     const commentsMap = this.getCommentsMap();
+        //     if (commentsMap.size > 0) {
+        //         commentsMap.map(
+        //             (value, key) => {
+        //                 const comments = this.props.getComponent(key);
+        //                 if (comments) {
+        //                     const oldLineList = comments.getCustomState();
+        //                     const newLineList: Map<string, any> = oldLineList.update(
+        //                         this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
+        //                     );
+        //                     comments.setCustomState(newLineList);
+        //                 }
+        //             }
+        //         );
+        //     }
+        // }
     }
 
     protected callBackForZIndex = (): void => {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RichEdit } from '../RichEdit';
+import { RichEdit, Wingman } from '../RichEdit';
 
 import { BaseState, IComponent, convertFromDataToBaseState, IComData } from '../BaseComponent';
 import { ICanvasState, IComponentList } from './ICanvasState';
@@ -35,6 +35,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     container: HTMLDivElement | null = null;
     canvas: HTMLDivElement | null = null;
     editor: RichEdit | null = null;
+    wingman: Wingman | null = null;
 
     /**
      * 画布的工具包
@@ -52,12 +53,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      */
     public _handler: any;
     public _onDocMouseMove: any = this._buildHandler('onDocMouseMove');
-    public _onDocMouseUp: any = this._buildHandler('onDocMouseUp');
     public _onDocMouseLeave: any = this._buildHandler('onDocMouseLeave');
-    public _onConMouseDown: any = this._buildHandler('onConMouseDown');
-    public _onConMouseMove: any = this._buildHandler('onConMouseMove');
-    public _onConKeyDown: any = this._buildHandler('onConKeyDown');
-    public _onConKeyUp: any = this._buildHandler('onConKeyUp');
+    public _onDocMouseDown: any = this._buildHandler('onDocMouseDown');
+    public _onDocMouseUp: any = this._buildHandler('onDocMouseUp');
+    public _onDocKeyDown: any = this._buildHandler('onDocKeyDown');
+    public _onDocKeyUp: any = this._buildHandler('onDocKeyUp');
     public _onCanDrop: any = this._buildHandler('onCanDrop');
     public _onCanDragOver: any = this._buildHandler('onCanDragOver');
 
@@ -68,6 +68,8 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _minZIndex: number = 0;                          // 当前最小z-Index
     public _maxComIndex: number = 0;                        // 当前最大组件index
     public _newComponentCid: string | null = null;          // 新添加的组件cid，用于选中新添加组件
+    public _isWingmanFocus: boolean = false;                // 僚机是否获取到焦点
+    public _isRichEditMode: boolean = false;                // 是否富文本编辑模式
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -85,7 +87,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
         this._positionUtil = new PositionUtil(this);
         this._richEditUtil = new RichEditUtil(this);
-        this._canvasGlobalParam = new CanvasGlobalParam();
+        this._canvasGlobalParam = new CanvasGlobalParam(this);
 
         // 把props的components的数据转译为baseState
         let componentList: OrderedSet<IComponentList> = OrderedSet();
@@ -116,6 +118,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
 
     getEditor = (): RichEdit => {
         return (this.editor as RichEdit);
+    }
+
+    getWingman = (): Wingman => {
+        return (this.wingman as Wingman);
     }
 
     /**
@@ -151,12 +157,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      */
     selectionChanging = (cid: string, isCanCtrl: boolean = true): void => {
         // 选中组件就把焦点给到编辑框，随时准备输入
-        if (this.editor) {
-            this.editor.setFocus();
-        }
+        this.getWingman().setFocus();
 
         // 如果是编辑模式：切换选中或者点击当前组件，结束编辑状态。
-        if (this._canvasGlobalParam.getIsRichEditMode() === true) {
+        if (this._isRichEditMode === true) {
             this._richEditUtil.endEdit();
             this._canvasGlobalParam.setIsRichEditMode(false);
         }
@@ -173,7 +177,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 执行命令
      * @param cmd 命令参数：{ t: e.addComments, d: {key: xxx, value: xxx, type: xxx, name: xxx} }
      */
-    executeCommand(cmd: any) {
+    executeCommand = (cmd: any) => {
         // 解析命令来源
         // eg：e.addComments
         const cmdParams = cmd.t.split('.');
@@ -183,7 +187,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     // 给canvas编辑中的组件设置propertyTool中的属性
-    executeProperties(pKey: string, pValue: any) {
+    executeProperties = (pKey: string, pValue: any) => {
         const currentSelectedComponent: Map<string, any> = this._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com) => {
@@ -198,9 +202,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     // 获取canvas编辑中的组件的属性
-    getSelectedProperties(currentSelectedComponents: Map<string, any>)
-        : Array<{pTitle: string, pKey: string, pValue: any, pType: string}> | undefined {
-        let propertyResult: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> = [];
+    getSelectedProperties = (currentSelectedComponents: Map<string, any>)
+        : Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> | undefined => {
+        let propertyResult: Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> = [];
         // 多个选中的组件 则获取共同的属性
         if (currentSelectedComponents.size > 1) {
             const components = currentSelectedComponents.toArray();
@@ -209,7 +213,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 if (i === 0) {
                     propertyResult = property;
                 } else {
-                    for (let x = propertyResult.length - 1; x > -1 ; x--) {
+                    for (let x = propertyResult.length - 1; x > -1; x--) {
                         let isNeedDelete: boolean = true;
                         for (let y = property.length - 1; y > -1; y--) {
                             if (propertyResult[x].pKey === property[y].pKey
@@ -269,10 +273,6 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 className="container"
                 style={{ ...ContainerStyle(canvasSize), cursor }}
             >
-                <RichEdit
-                    ref={(handler) => this.editor = handler}
-                    componentPosition
-                />
                 <div
                     // tslint:disable-next-line:jsx-no-lambda
                     ref={(handler) => this.canvas = handler}
@@ -283,6 +283,13 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 >
                     {children}
                 </div>
+                <RichEdit
+                    ref={(handler) => this.editor = handler}
+                />
+                <Wingman
+                    ref={(handler) => this.wingman = handler}
+                    setIsWingmanFocus={this._canvasGlobalParam.setIsWingmanFocus}
+                />
             </div>
         );
     }
@@ -292,14 +299,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      */
     public initEventListener = (): void => {
         document.addEventListener('mousemove', this._onDocMouseMove);
-        document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('mouseleave', this._onDocMouseLeave);
-        if (this.container) {
-            this.container.addEventListener('mousedown', this._onConMouseDown);
-            this.container.addEventListener('mousemove', this._onConMouseMove);
-            this.container.addEventListener('keydown', this._onConKeyDown);
-            this.container.addEventListener('keyup', this._onConKeyUp);
-        }
+        document.addEventListener('mousedown', this._onDocMouseDown);
+        document.addEventListener('mouseup', this._onDocMouseUp);
+        document.addEventListener('keydown', this._onDocKeyDown);
+        document.addEventListener('keyup', this._onDocKeyUp);
     }
 
     /**

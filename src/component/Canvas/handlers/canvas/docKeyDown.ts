@@ -51,7 +51,7 @@ export function docKeyDown(canvas: Canvas, e: any): void {
                     // 非编辑模式且有选中组件且焦点在僚机上，进入编辑状态
                     if (canvas._canvasGlobalParam.isSelectedComponent() === true && canvas._isWingmanFocus === true) {
                         canvas._canvasGlobalParam.setIsRichEditMode(true);
-                        // canvas._richEditUtil.beginEdit();
+                        canvas._richEditUtil.beginEdit();
                     }
                 }
             }
