@@ -3,10 +3,11 @@ export interface IEditState {
     top: number;
     left: number;
     style: CSSStyleDeclaration | null;
+    editorState: any;
 }
 
 export interface IEditProps {
-    componentPosition: any;
+    componentPosition?: any;
 }
 
 export interface IEditStyle {
