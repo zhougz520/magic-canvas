@@ -10,7 +10,7 @@ import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
 
-import * as Anchor from '../util/AnchorPoint';
+import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { Stack, Map } from 'immutable';
 
 /**
@@ -111,10 +111,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const positionState: PositionState = this.getPositionState();
 
         return {
-            left: positionState.getLeft(),
-            right: positionState.getRight(),
             top: positionState.getTop(),
-            bottom: positionState.getBottom()
+            left: positionState.getLeft()
         };
     }
 
@@ -151,7 +149,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 获取组件的选中框类型，成员函数
      */
     public getType(): string {
-        return Anchor.BoxType.Base;
+        return BoxType.Base;
     }
 
     /**
@@ -314,14 +312,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取鼠标处于该组件8个点的具体方位
      */
-    public getPointerAnchor = (currentX: number, currentY: number): Anchor.IAnchor | null => {
+    public getPointerAnchor = (currentX: number, currentY: number): IAnchor | null => {
         // 计算当前点击事件的触发位置
         const positionState = this.getPositionState();
         const sizeState = this.getSizeState();
-        const anchorList = Anchor.countAnchorPoint(this.getCid(), this.getType(),
+        const anchorList = countAnchorPoint(this.getCid(), this.getType(),
             positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
-        return Anchor.findAnchorPoint(currentX, currentY, anchorList);
+        return findAnchorPoint(currentX, currentY, anchorList);
     }
 
     /**
@@ -337,13 +335,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给属性工具条
      */
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }];
+            pTitle: '',
+            pKey: '',
+            pValue: '',
+            pType: 'text'
+        }];
     }
 
     /**
@@ -356,13 +354,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给命令工具条
      */
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
-        return  [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }];
+    public getPropertiesToCommand = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+        return [{
+            pTitle: '',
+            pKey: '',
+            pValue: '',
+            pType: 'text'
+        }];
     }
 
     /**
@@ -393,18 +391,26 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 初始化BaseSate
      * @param customState 组件自定义State
      */
-    protected initBaseStateWithCustomState(customState: any = null): BaseState {
+    protected initBaseStateWithCustomState(customState: any = null, richChildNode: any = null): BaseState {
         const baseState: BaseState = this.props.baseState;
 
         let newBaseState: BaseState = baseState;
+        let newContentState: ContentState = baseState.getCurrentContent();
         if (customState !== null) {
-            const contentState: ContentState = baseState.getCurrentContent().merge(
+            newContentState = newContentState.merge(
                 {
                     customState
                 }
             ) as ContentState;
-            newBaseState = BaseState.createWithContent(contentState);
         }
+        if (richChildNode !== null) {
+            newContentState = newContentState.merge(
+                {
+                    richChildNode
+                }
+            ) as ContentState;
+        }
+        newBaseState = BaseState.createWithContent(newContentState);
 
         return newBaseState;
     }
@@ -474,37 +480,37 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
 
         // TODO Comments优化代码
-        if (this.getComType() === 'Comments') {
-            const position = this.getPosition();
-            const oldLineList: Map<string, any> = this.getCustomState();
-            let newLineList: Map<string, any> = Map();
-            oldLineList.map(
-                (value: any, key: string) => {
-                    newLineList = newLineList.set(
-                        key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
-                    );
-                }
-            );
-            this.setCustomState(newLineList);
-        } else {
-            const position = this.getPosition();
-            const size = this.getSize();
-            const commentsMap = this.getCommentsMap();
-            if (commentsMap.size > 0) {
-                commentsMap.map(
-                    (value, key) => {
-                        const comments = this.props.getComponent(key);
-                        if (comments) {
-                            const oldLineList = comments.getCustomState();
-                            const newLineList: Map<string, any> = oldLineList.update(
-                                this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
-                            );
-                            comments.setCustomState(newLineList);
-                        }
-                    }
-                );
-            }
-        }
+        // if (this.getComType() === 'Comments') {
+        //     const position = this.getPosition();
+        //     const oldLineList: Map<string, any> = this.getCustomState();
+        //     let newLineList: Map<string, any> = Map();
+        //     oldLineList.map(
+        //         (value: any, key: string) => {
+        //             newLineList = newLineList.set(
+        //                 key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
+        //             );
+        //         }
+        //     );
+        //     this.setCustomState(newLineList);
+        // } else {
+        //     const position = this.getPosition();
+        //     const size = this.getSize();
+        //     const commentsMap = this.getCommentsMap();
+        //     if (commentsMap.size > 0) {
+        //         commentsMap.map(
+        //             (value, key) => {
+        //                 const comments = this.props.getComponent(key);
+        //                 if (comments) {
+        //                     const oldLineList = comments.getCustomState();
+        //                     const newLineList: Map<string, any> = oldLineList.update(
+        //                         this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
+        //                     );
+        //                     comments.setCustomState(newLineList);
+        //                 }
+        //             }
+        //         );
+        //     }
+        // }
     }
 
     protected callBackForZIndex = (): void => {
@@ -544,5 +550,4 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             this.props.dbClickToBeginEdit();
         }
     }
-
 }

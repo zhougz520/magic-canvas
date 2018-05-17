@@ -2,7 +2,6 @@ import { Canvas } from '../Canvas';
 import { IComponentList } from '../ICanvasState';
 import { DragType, IOffset } from '../model/types';
 import { IComponent } from '../../BaseComponent';
-import { config } from '../../config';
 
 import { Map, OrderedSet, Set } from 'immutable';
 
@@ -174,7 +173,7 @@ export class DrawUtil {
                 endPoint: { x: stageBoundary.endPoint.x - offset.x, y: stageBoundary.endPoint.y - offset.y }
             };
         }
-        if (config.highPerformance) {
+        if (this._canvas.props.highPerformance) {
             // 高性能模式，直接拖动组件
             start = this._canvas._canvasGlobalParam.getPointerStart('canvas');
             const end = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);

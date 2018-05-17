@@ -1,5 +1,5 @@
 import { Canvas } from '../../Canvas';
-import { GlobalUtil } from '../../../util/GlobalUtil';
+import { GlobalUtil } from '../../../util';
 
 export function canDrop(canvas: Canvas, e: any): void {
     if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) {

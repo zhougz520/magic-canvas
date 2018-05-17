@@ -34,10 +34,8 @@ export const convertFromDataToBaseState = (data: IComData): BaseState => {
             height: data.h
         }),
         positionState: PositionState.create({
-            left: data.l,
-            right: 0,
             top: data.t,
-            bottom: 0
+            left: data.l
         }),
         // TODO 带格式的富文本
         richChildNode: data.txt_v,

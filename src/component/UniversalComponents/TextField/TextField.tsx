@@ -6,7 +6,7 @@ import { Input } from 'antd';
 import { Map } from 'immutable';
 
 import { TextFieldState } from './TextFieldState';
-import {  PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 
 const { TextArea } = Input;
 // tslint:disable-next-line:no-empty-interface

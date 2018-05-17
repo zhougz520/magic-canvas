@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import BtnChildDemo from './BtnChildDemo';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { GlobalUtil } from '../../util/GlobalUtil';
+import { GlobalUtil } from '../../util';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;

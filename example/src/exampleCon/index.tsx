@@ -49,7 +49,7 @@ export default class Example extends React.PureComponent<any, any> {
             BlockUtils.setListBlockStyleData(
                 this.state.editorState,
                 'unordered-list-item',
-                e.key === undefined ? 'disc' : e.key
+                e.key === undefined ? 'image' : e.key
             )
         );
     }
@@ -147,6 +147,7 @@ export default class Example extends React.PureComponent<any, any> {
             'block-aligned-justify': align === 'justify',
             'block-aligned-right': align === 'right',
             'block-aligned-left': align === 'left',
+            'unordered-list-item-image': styleType === 'image',
             'unordered-list-item-disc': styleType === 'disc',
             'unordered-list-item-circle': styleType === 'circle',
             'unordered-list-item-square': styleType === 'square',
@@ -162,9 +163,6 @@ export default class Example extends React.PureComponent<any, any> {
 
         return (
             <div className="RichEditor-root">
-                <div id="msGrid" style={{ height: '24px', width: '100%' }}>
-                    Sass Test
-                </div>
                 <BlockStyleControls
                     editorState={editorState}
                     onToggle={this.toggleBlockType}

@@ -1,13 +1,17 @@
 import { IDrawComponent } from '../Draw';
 
-import { ICompos } from '../config';
+import { ICompos, ComponentsType } from '../Stage/types';
 import { IBoundary, IOffset } from './model/types';
 import { Map } from 'immutable';
 
 export interface ICanvasProps {
-    components: any[];
+    // 组件数据
+    components: ComponentsType;
+    // 高性能模式
+    highPerformance: boolean;
+    // 画布偏移量
     componentPosition: ICompos;
-    // canvas默认的宽高百分百
+    // canvas默认的宽高
     canvasSize: { width: number, height: number };
 
     getDraw: () => IDrawComponent | null;

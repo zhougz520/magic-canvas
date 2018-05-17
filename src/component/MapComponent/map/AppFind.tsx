@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox, Select, Input, Button } from 'antd';
+// import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 const Option = Select.Option;
 
 export interface IMapProps extends IBaseProps {
@@ -14,6 +15,10 @@ export interface IMapProps extends IBaseProps {
 }
 export interface IMapState extends IBaseState {
     dragonDrop?: any;
+    l: number;
+    f: number;
+    w: number;
+    h: number;
     // map_af_se: boolean;
 }
 export class AppFind extends MapComponent<IMapProps, any> {
@@ -33,6 +38,14 @@ export class AppFind extends MapComponent<IMapProps, any> {
             hover: {}
         };
     }
+    // componentWillMount() {
+    //     console.log(this.com);
+    // }
+    // componentDidMount() {
+    //     if (this.com) {
+    //         console.log(this.com);
+    //     }
+    // }
 
     public render() {
         const { map_sm, map_af_o, p } = this.props;
@@ -162,6 +175,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
         return (
             <div>
                 {!map_af_se ? normalFind : extendFind}
+                {/* <MaskLayer /> */}
             </div>);
     }
 
@@ -264,7 +278,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
                         >
                             {field}
                         </td>);
-                    rowNum =  - p.map_form_f_cols;
+                    rowNum = - p.map_form_f_cols;
                 } else {
                     fieldRow.push(
                         <td

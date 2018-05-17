@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Example from './example/index';
+import Example from './exampleCon/index';
 
 // React Render
 const MOUNT_NODE = document.getElementById('root');

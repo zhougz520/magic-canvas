@@ -7,6 +7,8 @@ export function docMouseUp(canvas: Canvas, e: any): void {
     canvas._drawUtil.clearDragBox();
     // 清楚拉伸框
     canvas._drawUtil.drawStretchBox(e, true);
+    // 保持僚机的焦点
+    canvas._richEditUtil.keepWingmanFocus();
 
     switch (canvas._mouseAndKeyUtil.onMouseEventType(e)) {
         case 'component':

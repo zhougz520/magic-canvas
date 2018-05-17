@@ -1,6 +1,6 @@
 
 import { BaseState } from '../BaseComponent';
-import { IAnchor } from '../util/AnchorPoint';
+import { IAnchor } from '../util';
 import { OrderedSet, List, Stack } from 'immutable';
 
 export type OperationType = 'create' | 'modify' | 'remove';

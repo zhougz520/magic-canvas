@@ -5,7 +5,7 @@ import {
 import { Checkbox as AntCheckbox} from 'antd';
 
 import { CheckBoxState } from './CheckBoxState';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 
 // tslint:disable-next-line:no-empty-interface

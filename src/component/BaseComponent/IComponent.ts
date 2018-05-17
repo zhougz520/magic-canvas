@@ -3,7 +3,7 @@ import { IPosition } from './model/PositionState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { BaseState } from './model/BaseState';
 
-import * as Anchor from '../util/AnchorPoint';
+import { IAnchor } from '../util';
 import { Map } from 'immutable';
 
 /**
@@ -65,7 +65,7 @@ export interface IComponent {
     /**
      * 定位鼠标点击的部位
      */
-    getPointerAnchor: (currentX: number, currentY: number) => Anchor.IAnchor | null;
+    getPointerAnchor: (currentX: number, currentY: number) => IAnchor | null;
     getBoundaryPoint: () => { pointX: number, pointY: number };
 
     /**

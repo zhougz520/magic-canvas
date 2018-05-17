@@ -1,17 +1,20 @@
+import { IPosition, ISize } from '../BaseComponent';
+
 export interface IEditState {
-    maxWidth: number;
-    top: number;
-    left: number;
+    position: IPosition;
+    size: ISize;
     style: CSSStyleDeclaration | null;
+    editorState: any;
 }
 
+// tslint:disable-next-line:no-empty-interface
 export interface IEditProps {
-    componentPosition: any;
 }
 
 export interface IEditStyle {
-    maxWidth: number;
     top: number;
     left: number;
+    width: number;
+    height: number;
     style: CSSStyleDeclaration | null;
 }

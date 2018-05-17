@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import SolutionEditor from '../../src/component/SolutionEditor';
+import SolutionEditor from './example/SolutionEditor';
 
 // React Render
 const MOUNT_NODE = document.getElementById('root');

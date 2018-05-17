@@ -2,7 +2,6 @@ import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { AppGridMenuItem } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { fromJS } from 'immutable';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -27,21 +26,14 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
             ...props
         };
     }
-    shouldComponentUpdate(np: any, ns: any) {
-        if (fromJS(ns.p) !== fromJS(this.state.p)) {
-            ns.p = this.state.p;
-        }
-
-        return true;
-    }
     render() {
-        const { hover, p } = this.state;
+        const { hover } = this.state;
 
         const {
             updateProps,
             map_gm_txt,
             map_sm,
-            // p,
+            p,
             id,
             selectedId,
             selectComChange,
@@ -74,7 +66,7 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         const initMenus = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
             (
                 <div
-                    style={{ float: 'right' }}
+                    className="menu-list"
                     ref={provided.innerRef}
                 >
                     {menus}
@@ -92,7 +84,7 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
                 <div className="app-grid-menu-title" >
                     <b>{map_gm_txt}</b>
                 </div>
-                <DragDropContext onDragEnd={this.handleOver} >
+                <DragDropContext onDragEnd={this.onDragEnd} >
                     <Droppable droppableId="droppable" direction="horizontal">
                         {initMenus}
                     </Droppable>
@@ -105,22 +97,21 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         return (t === 'MapComponent/map/AppGridMenuItem');
     }
 
-    public handleOver = (result: any) => {
-        const { p } = this.state;
+    public onDragEnd = (result: any) => {
+        const { p, id } = this.props;
         // dropped outside the list
         if (!result.destination) {
             return;
         }
 
         const components = this.reorder(
-            this.state.p.components,
+            p.components,
             result.source.index,
             result.destination.index
         );
+
         p.components = components;
-        this.setState({
-            p
-        });
+        this.props.updateProps(id, { p });
     }
 
     public reorder = (list: any, startIndex: any, endIndex: any) => {

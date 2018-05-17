@@ -6,7 +6,7 @@ import { Radio as AntRadio } from 'antd';
 
 import { RadioState } from './RadioState';
 import { Map } from 'immutable';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 
 const AntRadioButton = AntRadio.Button;
 

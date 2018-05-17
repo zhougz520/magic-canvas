@@ -3,7 +3,7 @@ import * as React from 'react';
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
 import { IBaseState } from './IBaseState';
-import { GlobalUtil } from '../util/GlobalUtil';
+import { GlobalUtil } from '../util';
 
 /**
  * 基类
@@ -14,8 +14,9 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     public com: HTMLElement | null = null;
-    componentDidUpdate() {
-        if (this.com) {
+    componentDidMount() {
+        if (this.com != null) {
+            this.com.addEventListener('drop', this.handleDropAddComponent);
             this.com.addEventListener('mousedown', this.selectedCom);
         }
     }
@@ -26,13 +27,13 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         // 获取新id
         const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
         data.p.components.push({
-            t: addData.type,
-            p: Object.assign({}, addData.props, { id: childId, txt_v: 'test' })
+            t: addData.t,
+            p: Object.assign({}, addData.props, { id: childId })
         });
+        this.props.updateProps(data.id, { p: data.p });
 
         return data;
     }
-
     /**
      * 删除控件
      */
@@ -84,7 +85,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     protected handleOver = (e: any) => {
         const data: any = this.getAddComponent();
         if (data === undefined) return;
-        if (!this.componentCanBeAdded(data.type)) return;
+        if (!this.componentCanBeAdded(data.t)) return;
         this.setState({
             hover: { backgroundColor: '#007ACC' }
         });
@@ -110,7 +111,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             hover: {}
         });
         // 校验是否能被添加
-        if (!this.componentCanBeAdded(data.type)) {
+        if (!this.componentCanBeAdded(data.t)) {
             e.stopPropagation();
 
             return;
