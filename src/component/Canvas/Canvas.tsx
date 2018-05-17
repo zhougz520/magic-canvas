@@ -300,7 +300,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public initEventListener = (): void => {
         document.addEventListener('mousemove', this._onDocMouseMove);
         document.addEventListener('mouseleave', this._onDocMouseLeave);
-        document.addEventListener('mousedown', this._onDocMouseDown);
+        document.addEventListener('mousedown', this._onDocMouseDown, true);
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);
