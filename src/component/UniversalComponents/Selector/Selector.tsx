@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState, SizeState, ISize, BaseState, ContentState } from '../../BaseComponent';
 import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
-import { BoxType } from '../../util/AnchorPoint';
+import { BoxType } from '../../util';
 import { Map, List } from 'immutable';
 import { PropertiesEnum } from '../types';
 

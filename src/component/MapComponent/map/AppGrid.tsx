@@ -3,7 +3,7 @@ import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox } from 'antd';
 import { AppGridTitle } from './index';
 import DragOnDrop from 'drag-on-drop';
-import { GlobalUtil } from '../../util/GlobalUtil';
+import { GlobalUtil } from '../../util';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;

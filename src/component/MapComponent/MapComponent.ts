@@ -3,7 +3,7 @@ import * as React from 'react';
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
 import { IBaseState } from './IBaseState';
-import { GlobalUtil } from '../util/GlobalUtil';
+import { GlobalUtil } from '../util';
 
 /**
  * 基类

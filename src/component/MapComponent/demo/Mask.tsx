@@ -3,7 +3,7 @@ import { PureComponent } from 'react';
 // import BtnChildDemo from './BtnChildDemo';
 import DragOnDrop from 'drag-on-drop';
 // import Button from '../../UniversalComponents/Button/Button';
-import { GlobalUtil } from '../../util/GlobalUtil';
+import { GlobalUtil } from '../../util';
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps {
     fireSelect: (cid: string, e: any) => void;

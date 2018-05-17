@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
-import { CommandMap } from '../../Canvas';
+import { CommandMap } from '../../../../../src';
 
 import { Switch, Button, Dropdown, Menu, Icon } from 'antd';
 import { Map } from 'immutable';

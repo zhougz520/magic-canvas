@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Icon } from 'antd';
-import { GlobalUtil } from '../../util/GlobalUtil';
+import { GlobalUtil } from '../../../../../src';
 
 export interface IComItemProps {
     componentType: string;

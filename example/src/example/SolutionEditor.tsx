@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarList';
-import { Stage, ComponentsType } from './Stage';
+import { Stage, ComponentsType, ICompos } from '../../../src';
 import './solution.css';
-import { ICompos, config } from './config';
+import { config } from './config';
 import { Map } from 'immutable';
 
 export interface ISolutionProp {

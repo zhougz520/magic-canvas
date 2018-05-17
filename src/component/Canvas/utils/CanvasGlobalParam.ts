@@ -2,7 +2,7 @@ import { Canvas } from '../Canvas';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
 import { IBaseData } from '../../Draw/model/types';
-import * as Anchor from '../../util/AnchorPoint';
+import { IAnchor } from '../../util';
 
 import { Map, Set } from 'immutable';
 
@@ -46,7 +46,7 @@ export class CanvasGlobalParam {
             offsetY: number;
         }): void;
     };                                                          // 当前画布canvas相对document的偏移量
-    public currentAnchor: Anchor.IAnchor | null;                // 当前触发的锚点
+    public currentAnchor: IAnchor | null;                // 当前触发的锚点
     public dragType: string;                                    // 当前鼠标移动的类型
     public dragDivList: Map<string, IDragDiv>;                  // 当前生成的组件位移框
     public TECellEditorActivateKeyRange: Array<{
@@ -243,7 +243,7 @@ export class CanvasGlobalParam {
 
     // 鼠标移动时计算组件锚点位置
     anchorCalc(currentX: number, currentY: number) {
-        let anchor: Anchor.IAnchor | null = null;
+        let anchor: IAnchor | null = null;
         let find = false;
         this.selectedComponents.map((com, cid) => {
             if (com && !find) {
@@ -259,7 +259,7 @@ export class CanvasGlobalParam {
     }
 
     // 组件上锚点触发的鼠标点击事件
-    anchorMouseDown(e: any, anchor: Anchor.IAnchor) {
+    anchorMouseDown(e: any, anchor: IAnchor) {
         this.mouseDown = true;
         this.dragType = DragType.Stretch;
         this.currentComponentSize.setValue(this.selectedComponents);

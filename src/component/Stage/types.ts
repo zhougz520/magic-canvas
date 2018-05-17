@@ -26,3 +26,16 @@ export type ComponentsType = Array<{
         p: any;
     };
 }>;
+
+export const ComponentsMap = {
+    Demo: { t: 'BaseComponent/demo/Demo', p: { name: 'demo', w: 100, h: 100 } },
+    Comments: { t: 'Comments/Comments', p: { name: '批注', w: 204, h: 170 } },
+
+    Universal_CheckBox: { t: 'UniversalComponents/CheckBox/CheckBox', p: { name: 'checkbox', w: 160, h: 32 } },
+    Universal_Radio: { t: 'UniversalComponents/Radio/Radio', p: { name: 'radio', w: 260, h: 40 } },
+    Universal_Button: { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } },
+    Universal_Hyperlink: { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 120, h: 32 } },
+    Universal_Selector: { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 32 } },
+    Universal_Input: { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 33 } },
+    Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } }
+};

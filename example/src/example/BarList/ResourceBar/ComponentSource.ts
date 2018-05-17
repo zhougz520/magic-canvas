@@ -1,3 +1,16 @@
+import { ComponentsMap } from '../../../../../src';
+const {
+    Demo,
+    Comments,
+    Universal_Button,
+    Universal_CheckBox,
+    Universal_Hyperlink,
+    Universal_Input,
+    Universal_Radio,
+    Universal_Selector,
+    Universal_TextField
+ } = ComponentsMap;
+
 export interface IBasePage {
     category: string;
     categoryKey: string;
@@ -17,8 +30,8 @@ const basePage: IBasePage[] = [
         expanded: true,
         components: [
             // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
-            { t: 'BaseComponent/demo/Demo', p: { name: 'demo', w: 100, h: 100 } },
-            { t: 'Comments/Comments', p: { name: '批注', w: 204, h: 170 } }
+            Demo,
+            Comments
         ]
     },
     {
@@ -26,15 +39,13 @@ const basePage: IBasePage[] = [
         categoryKey: 'basic',
         expanded: false,
         components: [
-            { t: 'UniversalComponents/CheckBox/CheckBox', p: { name: 'checkbox', w: 160, h: 32 } },
-            { t: 'UniversalComponents/Radio/Radio', p: { name: 'radio', w: 260, h: 40 } },
-
-            { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 80, h: 22 } },
-            { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 120, h: 32 } },
-            { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 32 } },
-            { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 180, h: 33 } },
-            { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } }
-
+            Universal_Button,
+            Universal_CheckBox,
+            Universal_Hyperlink,
+            Universal_Input,
+            Universal_Radio,
+            Universal_Selector,
+            Universal_TextField
         ]
     },
     {

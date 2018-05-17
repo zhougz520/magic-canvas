@@ -1,2 +1,2 @@
 export { Stage } from './Stage';
-export { ICompos, IConfig, ComponentsType } from './types';
+export { ICompos, IConfig, ComponentsType, ComponentsMap } from './types';

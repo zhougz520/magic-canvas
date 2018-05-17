@@ -10,7 +10,7 @@ import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
 
-import * as Anchor from '../util/AnchorPoint';
+import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { Stack, Map } from 'immutable';
 
 /**
@@ -149,7 +149,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 获取组件的选中框类型，成员函数
      */
     public getType(): string {
-        return Anchor.BoxType.Base;
+        return BoxType.Base;
     }
 
     /**
@@ -312,14 +312,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取鼠标处于该组件8个点的具体方位
      */
-    public getPointerAnchor = (currentX: number, currentY: number): Anchor.IAnchor | null => {
+    public getPointerAnchor = (currentX: number, currentY: number): IAnchor | null => {
         // 计算当前点击事件的触发位置
         const positionState = this.getPositionState();
         const sizeState = this.getSizeState();
-        const anchorList = Anchor.countAnchorPoint(this.getCid(), this.getType(),
+        const anchorList = countAnchorPoint(this.getCid(), this.getType(),
             positionState.getLeft(), positionState.getTop(), sizeState.getWidth(), sizeState.getHeight());
 
-        return Anchor.findAnchorPoint(currentX, currentY, anchorList);
+        return findAnchorPoint(currentX, currentY, anchorList);
     }
 
     /**

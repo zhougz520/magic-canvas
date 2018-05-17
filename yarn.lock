@@ -75,12 +75,6 @@
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-0.0.30.tgz#dc1e40f7af3b9c815013a7860e6252f6352a84df"
 
-"@types/handsontable@^0.35.0":
-  version "0.35.0"
-  resolved "https://registry.yarnpkg.com/@types/handsontable/-/handsontable-0.35.0.tgz#b4cbcbb3116ba6a8d66ec7b638de52d80e45acaa"
-  dependencies:
-    handsontable "*"
-
 "@types/immutable@^3.8.7":
   version "3.8.7"
   resolved "https://registry.yarnpkg.com/@types/immutable/-/immutable-3.8.7.tgz#536d33d30f3f3d9a6d4642a219419fd82af633fb"
@@ -3210,7 +3204,7 @@ handle-thing@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-1.2.5.tgz#fd7aad726bf1a5fd16dfc29b2f7a6601d27139c4"
 
-handsontable@*, handsontable@^2.0.0:
+handsontable@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/handsontable/-/handsontable-2.0.0.tgz#b22fbd61d3193eb63b9c798e73843f55856ef022"
   dependencies:
@@ -4514,8 +4508,8 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
 
 merge-options@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/merge-options/-/merge-options-1.0.0.tgz#5b4f339a957192b5b98994a3ac5c95d2ca651b94"
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/merge-options/-/merge-options-1.0.1.tgz#2a64b24457becd4e4dc608283247e94ce589aa32"
   dependencies:
     is-plain-obj "^1.1"
 
