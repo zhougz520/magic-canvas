@@ -37,12 +37,13 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState()
+            baseState: this.initBaseStateWithCustomState(props.childData)
         };
     }
     public render() {
-        const { childData, showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
+        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
         const { title } = this.state;
+        const childData = this.getCustomState().toJS();
         // const { p, w, h, map_sm } = data;
         if (childData !== undefined && childData.components.length > 0) {
             this.initCom(childData.components);
@@ -126,7 +127,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={undefined}
+                            updateProps={this.updateCom}
                         />
                     );
                     break;
@@ -139,7 +140,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={undefined}
+                            updateProps={this.updateCom}
                         />
                     );
                     break;
@@ -152,7 +153,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={undefined}
+                            updateProps={this.updateCom}
                         />
                     );
                     break;
@@ -165,7 +166,7 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             selectComChange={this.selectComChange}
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
-                            updateProps={undefined}
+                            updateProps={this.updateCom}
                         />
                     );
                     break;
@@ -179,11 +180,40 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             w={this.getSizeState().getWidth()}
-                            updateProps={undefined}
+                            updateProps={this.updateCom}
                         />
                     );
                     break;
             }
         });
+    }
+
+    // 更新控件
+    protected updateCom = (id: string, props: any) => {
+        // 获取当前数据
+        const childData = this.getCustomState().toJS();
+        // 通过id查找到数据节点
+        const newData = this.updateComProps(childData, id, props);
+        // 更新数据到CustomState
+        this.setCustomState(newData);
+    }
+
+    // 更新控件属性
+    private updateComProps = (data: any, id: string, prop: any) => {
+        let newData: any = data;
+        data.components.forEach((com: any) => {
+            if (com.p.id === id) {
+                com.p = Object.assign({}, com.p, prop);
+                newData = data;
+
+                return newData;
+            }
+            // 如果存在子控件，则
+            if (com.p.p !== undefined && com.p.p.components !== undefined) {
+                this.updateComProps(com.p.p, id, prop);
+            }
+        });
+
+        return newData;
     }
 }

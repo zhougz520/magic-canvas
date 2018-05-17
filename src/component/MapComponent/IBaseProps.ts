@@ -11,6 +11,5 @@ export interface IBaseProps {
     w?: number;
     h?: number;
     fireSelectChildChange: (cid: string, e: any) => void;
-    // key: string;
-    // id: string;
+    updateProps: (id: string, data: any) => void;
 }

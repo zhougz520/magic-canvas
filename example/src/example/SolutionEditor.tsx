@@ -153,46 +153,46 @@ const detail = {
                             {
                                 t: 'MapComponent/map/ProjectDDTree',
                                 p: {
-                                    id: 'cs5.cs1'
+                                    id: 'cs4.cs1'
                                 }
                             },
                             {
                                 t: 'MapComponent/map/AppView',
                                 p: {
-                                    id: 'cs5.cs2'
+                                    id: 'cs4.cs2'
                                 }
                             },
                             {
                                 t: 'MapComponent/map/AppFind',
                                 p: {
-                                    id: 'cs5.cs3'
+                                    id: 'cs4.cs3'
                                 }
                             },
                             {
                                 t: 'MapComponent/map/AppGridMenu',
                                 p: {
-                                    id: 'cs5.cs4',
+                                    id: 'cs4.cs4',
                                     p: {
                                         components: [
                                             {
                                                 t: 'MapComponent/map/AppGridMenuItem',
                                                 p: {
-                                                    id: 'cs5.cs4.cs1',
+                                                    id: 'cs4.cs4.cs1',
+                                                    map_mi_sa: true
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs4.cs4.cs2',
                                                     map_mi_txt: '新增'
                                                 }
                                             },
                                             {
                                                 t: 'MapComponent/map/AppGridMenuItem',
                                                 p: {
-                                                    id: 'cs5.cs4.cs2',
+                                                    id: 'cs4.cs4.cs3',
                                                     map_mi_txt: '删除'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/map/AppGridMenuItem',
-                                                p: {
-                                                    id: 'cs5.cs4.cs3',
-                                                    map_mi_sa: true
                                                 }
                                             }
                                         ]
@@ -202,27 +202,27 @@ const detail = {
                             {
                                 t: 'MapComponent/map/AppGrid',
                                 p: {
-                                    id: 'cs5.cs5',
+                                    id: 'cs4.cs5',
                                     p: {
                                         components: [
                                             {
                                                 t: 'MapComponent/map/AppGridTitle',
                                                 p: {
-                                                    id: 'cs5.cs5.cs1',
+                                                    id: 'cs4.cs5.cs1',
                                                     map_gt_txt: 'AAA'
                                                 }
                                             },
                                             {
                                                 t: 'MapComponent/map/AppGridTitle',
                                                 p: {
-                                                    id: 'cs5.cs5.cs2',
+                                                    id: 'cs4.cs5.cs2',
                                                     map_gt_txt: 'BBB'
                                                 }
                                             },
                                             {
                                                 t: 'MapComponent/map/AppGridTitle',
                                                 p: {
-                                                    id: 'cs5.cs5.cs3',
+                                                    id: 'cs4.cs5.cs3',
                                                     map_gt_txt: 'CCC'
                                                 }
                                             }

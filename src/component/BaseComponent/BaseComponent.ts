@@ -335,13 +335,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给属性工具条
      */
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }];
+            pTitle: '',
+            pKey: '',
+            pValue: '',
+            pType: 'text'
+        }];
     }
 
     /**
@@ -354,13 +354,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给命令工具条
      */
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
-        return  [{
-                    pTitle: '',
-                    pKey: '',
-                    pValue: '',
-                    pType: 'text'
-                }];
+    public getPropertiesToCommand = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+        return [{
+            pTitle: '',
+            pKey: '',
+            pValue: '',
+            pType: 'text'
+        }];
     }
 
     /**
@@ -550,5 +550,4 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             this.props.dbClickToBeginEdit();
         }
     }
-
 }

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import { GlobalUtil } from '../../util';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
     map_gt_txt?: string;
     w: number;
+    index: number;
 }
 
 export class AppGridTitle extends MapComponent<IMapProps, any> {
@@ -14,56 +16,97 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         w: 50
     };
 
+    public resizing = false;
+    public mousePosition = {
+        x: 0
+    };
+    public startW = 0;
     public dragWidth: HTMLElement | null = null;
 
     constructor(props: any, context?: any) {
         super(props, context);
-    }
 
+        this.state = {
+            currX: 0,
+            resizing: false
+        };
+    }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
     componentWillMount() {
-        if (this.com !== null) {
-            // this.com.addEventListener('dragstart', this.dragStart);
-            // this.com.addEventListener('dragend', this.dragEnd);
-        }
+        // document.addEventListener('mousedown', this.onMouseDown);
+        document.addEventListener('mousemove', this.onResizingTitle);
+        document.addEventListener('mouseup', this.onMouseUp);
     }
 
     public render() {
-        const { map_sm, w, map_gt_txt, selectedId, id } = this.props;
+        const { map_sm, map_gt_txt, selectedId, w, id, index } = this.props;
+        const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+            <div
+                ref={provided.innerRef}
+                {...provided.dragHandleProps}
+                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+            >
+                <div
+                    className={`title ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+                    ref={(ref) => this.com = ref}
+                    style={{ width: w }}
+                    onMouseDown={this.selectedCom}
+                >
+                    <div className={`title-content `}>
+                        {map_gt_txt}
+                    </div>
+                </div>
+                {provided.placeholder}
+            </div>
+        );
 
         return (
-            <div
-                className={`title ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
-                ref={(ref) => this.com = ref}
-                style={{ width: w }}
-                onMouseDown={this.selectedCom}
-                onMouseMove={this.mouseMove}
-                onMouseUp={this.mouseUp}
-            >
-                <div className={`title-content `}>
-                    {map_gt_txt}
-                </div>
+            <div className={`app-grid-title-item`} style={{ width: w }}>
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {initDrag}
+                </Draggable>
                 <div
                     className="title-split"
-                    draggable
-                // onClick={this.handleMouseup}
+                    onMouseDown={this.onMouseDown}
+                    // // onMouseMove={this.onMouseMove}
+                    onMouseUp={this.onMouseUp}
                 />
             </div>
         );
     }
-
-    public mouseMove = (evt: any) => {
-        // evt.dataTransfer.effectAllowed = 'move';
-        // evt.dataTransfer.setData('text', evt.target.outerHTML);
-
-        // 计算鼠标开始拖拽时的偏移量(鼠标落点与item左上角的偏移量)
-        // let offset = { x: 0, y: 0 } as { x: number, y: number };
-
+    public onMouseDown = (evt: any) => {
+        this.setState({
+            resizing: true,
+            currX: evt.clientX
+            // width: newWidth <= 400 ? 400 : newWidth
+        });
+    }
+    public onMouseUp = (evt: any) => {
+        this.setState({
+            resizing: false,
+            currX: 0
+            // width: newWidth <= 400 ? 400 : newWidth
+        });
+        evt.stopPropagation();
+    }
+    public onResizingTitle = (evt: any) => {
+        const { id, w } = this.props;
+        const { currX, resizing } = this.state;
+        if (resizing) {
+            this.setState({
+                currX: evt.clientX
+            });
+            const newWidth = w + (evt.clientX - currX);
+            this.props.updateProps(id, { w: newWidth < 50 ? 50 : newWidth });
+        }
     }
 
-    public mouseUp = (evt: any) => {
-        // delete localStorage.__dnd_type;
-        // delete localStorage.__dnd_value;
-    }
     // 鼠标松开时，计算title宽度
     public handleMouseup = (e: any) => {
         e.preventDefault();

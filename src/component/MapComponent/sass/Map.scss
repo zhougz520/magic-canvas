@@ -115,10 +115,13 @@ table {
         overflow: hidden;
         color: #FFF;
         >div {
+            &.menu-list {
+                display: flex;
+                justify-content: flex-end;
+            }
             >div {
                 &.app-grid-menu-item {
-                    cursor: default;
-                    float: left;
+                    cursor: default; // float: left;
                     margin-right: 8px;
                     &:hover {
                         background-color: #3a7cbc;
@@ -157,34 +160,39 @@ table {
                 height: 22px;
                 display: inline-block;
                 text-align: center;
-                border-bottom: 1px solid #e6e6e6;
             }
             .grid-title-content {
                 display: inline-block;
+                .title-list {
+                    display: flex;
+                }
                 border-bottom: 1px solid #e6e6e6;
             }
-            .title,
-            .gu-mirror {
+            .app-grid-title-item {
+                height: 22px;
+                &.index {
+                    display: inline-block;
+                    width: 40px;
+                    border-bottom: 1px solid #e6e6e6;
+                    height: 23px;
+                }
+            }
+            .title-split {
+                position: relative;
+                top: -16px;
+                width: 4px;
+                height: 14px;
+                float: right;
+                background: url('../../../images/map/bar_line.gif') left no-repeat;
+                cursor: col-resize;
+            }
+            .title {
                 min-width: 50px;
                 text-align: center;
                 display: inline-block;
                 white-space: nowrap;
                 .title-content {
                     display: inline-block;
-                }
-            }
-            .title-split {
-                width: 4px;
-                height: 14px;
-                margin-top: 4px;
-                margin-bottom: -2px;
-                float: right;
-                background: url('../../../images/map/bar_line.gif') left no-repeat;
-                cursor: col-resize;
-                &.no-ctrl {
-                    cursor: default;
-                    display: inline-block;
-                    float: none;
                 }
             }
         }

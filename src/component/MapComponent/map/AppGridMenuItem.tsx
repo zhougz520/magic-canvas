@@ -11,6 +11,7 @@ export interface IMapProps extends IBaseProps {
     map_mi_ico?: string;
     map_mi_sa?: boolean;
     index?: number;
+    data: any;
 }
 
 export class AppGridMenuItem extends MapComponent<IMapProps, any> {
@@ -21,17 +22,9 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
 
     constructor(props: any, context?: any) {
         super(props, context);
-
-        this.state = {
-            ...props
-        };
     }
 
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-        // some basic styles to make the items look a bit nicer
-        // userSelect: 'none',
-        // paddingRight: 5,
-        // paddingLeft: 5,
 
         // change background colour if dragging
         background: isDragging ? 'blue' : '',
@@ -87,7 +80,6 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
         );
 
         return (
-            // TODO: 现在位置不对，是因为拖动元素的样式有问题，不能用fload...
             <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                 {initDrag}
             </Draggable>
