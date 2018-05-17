@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox, Select, Input, Button } from 'antd';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+// import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 const Option = Select.Option;
 
 export interface IMapProps extends IBaseProps {
