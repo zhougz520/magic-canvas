@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Anchor from '../../util/AnchorPoint';
+import { countAnchorPoint } from '../../util';
 import { IReactData } from '../model/types';
 
 export interface ISelectedProps {
@@ -11,7 +11,7 @@ export interface ISelectedProps {
 
 const createSelected = (props: ISelectedProps) => {
     const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth, borderOffset } = props.data;
-    const anchorList = Anchor.countAnchorPoint(props.cid, props.type,
+    const anchorList = countAnchorPoint(props.cid, props.type,
         pointX, pointY, width, height, undefined, borderOffset);
 
     const rectList: any[] = [];

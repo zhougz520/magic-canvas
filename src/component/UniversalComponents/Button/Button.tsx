@@ -5,7 +5,7 @@ import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
 import { ButtonState } from './ButtonState';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 
 export default class Button extends BaseComponent<IBaseProps, IBaseState> {

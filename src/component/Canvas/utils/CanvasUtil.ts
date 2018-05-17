@@ -1,6 +1,5 @@
 import { Canvas } from '../Canvas';
 import { IComponentList } from '../ICanvasState';
-import { config } from '../../config';
 
 import { OrderedSet } from 'immutable';
 
@@ -35,9 +34,10 @@ export class CanvasUtil {
      * 重绘画布的大小
      */
     repaintCanvas = (pointX: number, pointY: number) => {
-        if (pointX > config.canvasSize.width || pointY > config.canvasSize.height) {
-            const pointXList: number[] = [config.canvasSize.width];
-            const pointYList: number[] = [config.canvasSize.height];
+        const canvasSize: { width: number; height: number; } = this._canvas.props.canvasSize;
+        if (pointX > canvasSize.width || pointY > canvasSize.height) {
+            const pointXList: number[] = [canvasSize.width];
+            const pointYList: number[] = [canvasSize.height];
 
             const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
             componentList.map(

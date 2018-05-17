@@ -5,7 +5,7 @@ import {
 import { InputState } from './InputState';
 import { Input  as AntInput } from 'antd';
 import { Map } from 'immutable';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {

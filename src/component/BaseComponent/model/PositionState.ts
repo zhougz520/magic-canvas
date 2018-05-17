@@ -7,17 +7,13 @@ import { Record } from 'immutable';
  * 相对定位：对应 margin
  */
 export interface IPosition {
-    left: number;
-    right: number;
     top: number;
-    bottom: number;
+    left: number;
 }
 
 const defaultRecord: IPosition = {
-    left: 0,
-    right: 0,
     top: 0,
-    bottom: 0
+    left: 0
 };
 
 export const PositionStateRecord: Record.Class = Record(defaultRecord);
@@ -30,7 +26,7 @@ export class PositionState extends PositionStateRecord {
      * 初始化一个空的PositionState
      */
     static createEmpty(): PositionState {
-        return PositionState.create({left: 0, right: 0, top: 0, bottom: 0});
+        return PositionState.create({ top: 0, left: 0 });
     }
 
     /**
@@ -41,19 +37,11 @@ export class PositionState extends PositionStateRecord {
         return new PositionState(position);
     }
 
-    getLeft(): number {
-        return this.get('left');
-    }
-
-    getRight(): number {
-        return this.get('right');
-    }
-
     getTop(): number {
         return this.get('top');
     }
 
-    getBottom(): number {
-        return this.get('bottom');
+    getLeft(): number {
+        return this.get('left');
     }
 }

@@ -1,8 +1,8 @@
+import { Canvas } from '../Canvas';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
-import { config } from '../../config';
 import { IBaseData } from '../../Draw/model/types';
-import * as Anchor from '../../util/AnchorPoint';
+import { IAnchor } from '../../util';
 
 import { Map, Set } from 'immutable';
 
@@ -46,10 +46,9 @@ export class CanvasGlobalParam {
             offsetY: number;
         }): void;
     };                                                          // 当前画布canvas相对document的偏移量
-    public currentAnchor: Anchor.IAnchor | null;                // 当前触发的锚点
+    public currentAnchor: IAnchor | null;                // 当前触发的锚点
     public dragType: string;                                    // 当前鼠标移动的类型
     public dragDivList: Map<string, IDragDiv>;                  // 当前生成的组件位移框
-    public isRichEditMode: boolean;                             // 是否富文本编辑状态
     public TECellEditorActivateKeyRange: Array<{
         min: number;
         max: number;
@@ -63,10 +62,13 @@ export class CanvasGlobalParam {
     public scrollTimer: NodeJS.Timer | null;                    // stage的滚动定时器
     public isCanCtrl: boolean;                                  // 选中时是否可操作
 
+    private _canvas: Canvas;
     /**
      * 构造函数，初始化全局变量
      */
-    public constructor() {
+    public constructor(canvas: Canvas) {
+        this._canvas = canvas;
+
         this.body = document.getElementsByTagName('body')[0];
         this.timer = null;
         this.ctrlPress = false;
@@ -113,7 +115,6 @@ export class CanvasGlobalParam {
         this.currentAnchor = null;
         this.dragType = 'none';
         this.dragDivList = Map<string, IDragDiv>();
-        this.isRichEditMode = false;
         this.TECellEditorActivateKeyRange = [
             { min: 229, max: 229 }, // 中文输入法
             { min: 13, max: 13 },   // 回车
@@ -242,7 +243,7 @@ export class CanvasGlobalParam {
 
     // 鼠标移动时计算组件锚点位置
     anchorCalc(currentX: number, currentY: number) {
-        let anchor: Anchor.IAnchor | null = null;
+        let anchor: IAnchor | null = null;
         let find = false;
         this.selectedComponents.map((com, cid) => {
             if (com && !find) {
@@ -258,7 +259,7 @@ export class CanvasGlobalParam {
     }
 
     // 组件上锚点触发的鼠标点击事件
-    anchorMouseDown(e: any, anchor: Anchor.IAnchor) {
+    anchorMouseDown(e: any, anchor: IAnchor) {
         this.mouseDown = true;
         this.dragType = DragType.Stretch;
         this.currentComponentSize.setValue(this.selectedComponents);
@@ -312,9 +313,9 @@ export class CanvasGlobalParam {
                     value.position.top + value.size.height - 10 : value.position.top + y;
                 const width = value.size.width + w < 10 ? 10 : value.size.width + w;
                 const height = value.size.height + h < 10 ? 10 : value.size.height + h;
-                const position = { left, right: value.position.right, top, bottom: value.position.bottom };
+                const position = { top, left };
                 const size = { width, height };
-                if (end || config.highPerformance) {
+                if (end || this._canvas.props.highPerformance) {
                     // 高性能模式，组件立即变化
                     com.setPosition(position);
                     com.setSize(size);
@@ -365,10 +366,8 @@ export class CanvasGlobalParam {
             if (component) {
                 const position = component.getPosition();
                 component.setPosition({
-                    left: axis === 'y' ? position.left : position.left + distance,
-                    right: position.right,
                     top: axis === 'x' ? position.top : position.top + distance,
-                    bottom: position.bottom
+                    left: axis === 'y' ? position.left : position.left + distance
                 });
             }
         });
@@ -415,16 +414,14 @@ export class CanvasGlobalParam {
     moveDragBox(offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) {
         if (!stageBoundary) return;
         this.dargging = true;
-        if (config.highPerformance) {
+        if (this._canvas.props.highPerformance) {
             // 高性能模式，直接拖动组件
             this.selectedComponents.map((component, cid) => {
                 if (component && cid) {
                     const value = this.currentComponentSize.getValue(cid);
-                    const left = value.position.left + offset.x;
                     const top = value.position.top + offset.y;
-                    const right = value.position.right;
-                    const bottom = value.position.bottom;
-                    component.setPosition({ left, right, top, bottom });
+                    const left = value.position.left + offset.x;
+                    component.setPosition({ top, left });
                 }
             });
         } else {
@@ -473,12 +470,9 @@ export class CanvasGlobalParam {
             if (value !== undefined) {
                 const div = value.documentDiv;
                 if (div.style.left && div.style.top && value.hasChange) {
-                    const pos = value.component.getPosition();
                     value.component.setPosition({
-                        left: parseInt(div.style.left, 10) - offset.pageX,
-                        right: pos.right,
                         top: parseInt(div.style.top, 10) - offset.pageY,
-                        bottom: pos.bottom
+                        left: parseInt(div.style.left, 10) - offset.pageX
                     });
                 }
                 this.body.removeChild(div);
@@ -504,14 +498,6 @@ export class CanvasGlobalParam {
         }
     }
 
-    getIsRichEditMode(): boolean {
-        return this.isRichEditMode;
-    }
-
-    setIsRichEditMode(mode: boolean): void {
-        this.isRichEditMode = mode;
-    }
-
     getTECellEditorActivateKeyRange(): any {
         return this.TECellEditorActivateKeyRange;
     }
@@ -531,5 +517,15 @@ export class CanvasGlobalParam {
 
     setIsCanCtrl(isCanCtrl: boolean): void {
         this.isCanCtrl = isCanCtrl;
+    }
+
+    setIsWingmanFocus = (value: boolean): void => {
+        this._canvas._isWingmanFocus = value;
+    }
+
+    setIsRichEditMode = (value: boolean): void => {
+        this._canvas._isRichEditMode = value;
+        // tslint:disable-next-line:no-console
+        console.log('编辑模式：' + value);
     }
 }

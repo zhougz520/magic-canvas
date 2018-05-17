@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { IBoundary, IOffset } from '../model/types';
-import { BaseState, IComponent, ComponentType, IComData, convertFromDataToBaseState } from '../../BaseComponent';
+import { IBoundary, IOffset, IRange, AlignType } from '../model/types';
+import { BaseState, IComponent, ComponentType, IComData, convertFromDataToBaseState, IPosition, ISize } from '../../BaseComponent';
 import { Canvas } from '../Canvas';
 import { IComponentList } from '../ICanvasState';
 import { Map, OrderedSet, Set } from 'immutable';
@@ -101,6 +101,7 @@ export class ComponentsUtil {
      * 得到选中组件的坐标范围 {startPoint: {x: 0, y: 0}, endPoint: {x: 10, y: 10}}
      * @param coms 组件对象
      */
+    // TODO 与getSelectedComponentsRange功能重复
     public getComponentsRange = (coms: Map<string, any>): IBoundary => {
         const startPoint: IOffset = { x: 1000000, y: 1000000 };
         const endPoint: IOffset = { x: 0, y: 0 };
@@ -239,7 +240,7 @@ export class ComponentsUtil {
     /**
      * 获得选中组件的z-Index范围
      */
-    public getSelectedComponentZIndexRange(): { maxZIndex: number; minZIndex: number } {
+    public getSelectedComponentsZIndexRange(): { maxZIndex: number; minZIndex: number } {
         let maxZIndex: number = 0;
         let minZIndex: number = 100000;
 
@@ -258,4 +259,134 @@ export class ComponentsUtil {
         };
     }
 
+    /**
+     * 设置选中组件的对齐坐标
+     * @param range 选择组件的范围
+     * @param alignType 对齐类型
+     */
+    public updateSelectedComponentsPosition(range: IRange, alignType: AlignType) {
+        let selectedComponents: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
+        const position: IPosition = { top: 0, left: 0 };
+        let prevEndPosition: IPosition = { top: 0, left: 0 };
+        let spacing: number = 0;
+
+        // 调整间距的时候：1.把组件按position排序；2.计算间距
+        if (alignType === 'Horizontal' && selectedComponents.size > 1) {
+            selectedComponents = selectedComponents.sortBy(
+                (com: IComponent) => {
+                    return com.getPosition().left;
+                }
+            ) as Map<string, IComponent>;
+            spacing = (range.width - range.sumComWidth) / ( range.comNum - 1 );
+        } else if (alignType === 'Vertical' && selectedComponents.size > 1) {
+            selectedComponents = selectedComponents.sortBy(
+                (com: IComponent) => {
+                    return com.getPosition().top;
+                }
+            ) as Map<string, IComponent>;
+            spacing = (range.height - range.sumComHeight) / ( range.comNum - 1 );
+        }
+
+        selectedComponents.map(
+            (com: IComponent) => {
+                const comPosition: IPosition = com.getPosition();
+                const comSize: ISize = com.getSize();
+
+                switch (alignType) {
+                    case 'Left':
+                        position.left = range.left;
+                        position.top = comPosition.top;
+                        break;
+                    case 'Center':
+                        position.left = Math.ceil(range.left + (range.width - comSize.width) / 2);
+                        position.top = comPosition.top;
+                        break;
+                    case 'Right':
+                        position.left = range.left + range.width - comSize.width;
+                        position.top = comPosition.top;
+                        break;
+                    case 'Top':
+                        position.top = range.top;
+                        position.left = comPosition.left;
+                        break;
+                    case 'Middle':
+                        position.top = Math.ceil(range.top + (range.height - comSize.height) / 2);
+                        position.left = comPosition.left;
+                        break;
+                    case 'Bottom':
+                        position.top = range.top + range.height - comSize.height;
+                        position.left = comPosition.left;
+                        break;
+                    case 'Horizontal':
+                        if (com !== selectedComponents.first() && com !== selectedComponents.last()) {
+                            position.left = Math.ceil(prevEndPosition.left + spacing);
+                            position.top = comPosition.top;
+                        } else {
+                            position.left = comPosition.left;
+                            position.top = comPosition.top;
+                        }
+                        break;
+                    case 'Vertical':
+                        if (com !== selectedComponents.first() && com !== selectedComponents.last()) {
+                            position.top = Math.ceil(prevEndPosition.top + spacing);
+                            position.left = comPosition.left;
+                        } else {
+                            position.top = comPosition.top;
+                            position.left = comPosition.left;
+                        }
+                        break;
+                }
+
+                prevEndPosition = {
+                    top: position.top + comSize.height,
+                    left: position.left + comSize.width
+                };
+                com.setPosition(position);
+            }
+        );
+    }
+
+    /**
+     * 获取选中组件的position、size范围
+     */
+    public getSelectedComponentsRange(): IRange {
+        const startPosition: IPosition = {
+            top: 100000,
+            left: 100000
+        };
+        const endPosition: IPosition = {
+            top: 0,
+            left: 0
+        };
+        let comNum: number = 0;
+        let sumComWidth: number = 0;
+        let sumComHeight: number = 0;
+
+        const selectedComponents: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
+        selectedComponents.map(
+            (com: IComponent) => {
+                const position: IPosition = com.getPosition();
+                const size: ISize = com.getSize();
+
+                startPosition.top = Math.min(startPosition.top, position.top);
+                startPosition.left = Math.min(startPosition.left, position.left);
+                endPosition.top = Math.max(endPosition.top, position.top + size.height);
+                endPosition.left = Math.max(endPosition.left, position.left + size.width);
+
+                comNum += 1;
+                sumComWidth += size.width;
+                sumComHeight += size.height;
+            }
+        );
+
+        return {
+            top: startPosition.top,
+            left: startPosition.left,
+            width: endPosition.left - startPosition.left,
+            height: endPosition.top - startPosition.top,
+            comNum,
+            sumComWidth,
+            sumComHeight
+        };
+    }
 }

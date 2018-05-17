@@ -1,7 +1,7 @@
 import * as React from 'react';
 import 'rc-color-picker/assets/index.css';
 import { Button, Input, Switch, Slider} from 'antd';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../../../../../src';
 import { List, fromJS, Map } from 'immutable';
 import ColorPicker from 'rc-color-picker';
 
