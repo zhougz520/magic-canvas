@@ -51,25 +51,6 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         );
     }
 
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return [
-                {
-                    pTitle: '是否为圆形按钮',
-                    pKey: 'isCircle',
-                    pValue: this.getCustomState().getIsCircle(),
-                    pType: PropertiesEnum.SWITCH
-                }
-            ];
-    }
-
-    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
-
-        this.setCustomState(newButtonState);
-    }
-
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {

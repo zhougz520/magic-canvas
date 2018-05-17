@@ -55,35 +55,6 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return [
-                {
-                    pTitle: '是否选中',
-                    pKey: 'isCheck',
-                    pValue: this.getCustomState().getIsCheck(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '文本内容',
-                    pKey: 'option',
-                    pValue: this.getCustomState().getOption(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '是否禁用',
-                    pKey: 'disabled',
-                    pValue: this.getCustomState().getDisabled(),
-                    pType: PropertiesEnum.SWITCH
-                }
-            ];
-    }
-
-    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newCheckBoxState: CheckBoxState = CheckBoxState.set(this.getCustomState(), properties);
-
-        this.setCustomState(newCheckBoxState);
-    }
-
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {

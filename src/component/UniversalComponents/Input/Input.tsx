@@ -53,25 +53,6 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return [
-                {
-                    pTitle: '输入框提示',
-                    pKey: 'placeholder',
-                    pValue: this.getCustomState().getPlaceholder(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }
-            ];
-    }
-
-    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newInputState: InputState = InputState.set(this.getCustomState(), properties);
-
-        this.setCustomState(newInputState);
-    }
-
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {

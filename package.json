@@ -51,8 +51,8 @@
     }
   },
   "dependencies": {
-    "@types/react-beautiful-dnd": "^6.0.1",
     "@types/handsontable": "^0.35.0",
+    "@types/react-beautiful-dnd": "^6.0.1",
     "antd": "^3.3.3",
     "drag-on-drop": "^3.2.2",
     "fbjs": "^0.8.16",

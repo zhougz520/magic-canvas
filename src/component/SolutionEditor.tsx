@@ -212,6 +212,30 @@ const detail = {
                 }
             },
             {
+                t: 'UniversalComponents/ImageCom/Image',
+                p: {
+                    id: 'cs6',
+                    txt_v: '我是测试组件6',
+                    w: 300, // 默认宽
+                    h: 200,
+                    l: 150,
+                    t: 150,
+                    zIndex: 6
+                }
+            },
+            {
+                t: 'UniversalComponents/Attachment/Attachment',
+                p: {
+                    id: 'cs7',
+                    txt_v: '我是测试组件7',
+                    w: 60, // 默认宽
+                    h: 75,
+                    l: 200,
+                    t: 500,
+                    zIndex: 6
+                }
+            },
+            {
                 t: 'BaseComponent/demo/Demo',
                 p: {
                     id: 'cs2',
@@ -331,18 +355,6 @@ const detail = {
                     }
                 }
             }
-            // {
-            //     t: 'MapComponent/demo/TableDemo',
-            //     p: {
-            //         id: 'cs5',
-            //         txt_v: '我是测试组件5',
-            //         w: 1400,
-            //         h: 200,
-            //         l: 150,
-            //         t: 150,
-            //         zIndex: 5
-            //     }
-            // }
         ]
     },
     layout: { mode: 'free' }

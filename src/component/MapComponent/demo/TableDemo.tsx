@@ -4,10 +4,14 @@ import Handsontable from 'handsontable';
 import 'handsontable/dist/handsontable.full.css';
 import 'handsontable/languages/de-CH';
 import { Map } from 'immutable';
-import { Button, Modal, Input } from 'antd';
+import {  Modal, Input } from 'antd';
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps {
     // headParams: string[]; // 表头传入参数数组，数组序号0-2 对应输入框从左到右的位置
+}
+export interface ITableData {
+    head: string[];
+    data: string[][];
 }
 
 export default class Table extends PureComponent<IDemoProps, any> {
@@ -31,32 +35,46 @@ export default class Table extends PureComponent<IDemoProps, any> {
         };
         this.hotInstance = null;
     }
+    sendPageId = () => {
+        // tslint:disable-next-line:no-console
+        console.log('event');
+    }
 
     componentDidMount() {
-        const data = [
-            ['1.1', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', '<a href="https://www.baidu.com">百度1</a>', 'euzd', 'asdjfl', 'asdf'],
-            ['1.2', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', '<a href="https://www.baidu.com">百度2</a>', 'euzd', 'asdjfl', 'asdf'],
-            ['1.3', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', '<a href="https://www.baidu.com">百度3</a>', 'euzd', 'asdjfl', 'asdf']
-        ];
-        const head = [['客户', '', '系统版本', '', '']];
+        const initData: ITableData = {
+            head: ['', '', ''],
+            data: [
+                ['1.1', 'sdfa', 'asdf', 'adsf3', '3fsadf111111111111111111111111111111', '3sdf', '<a  href="#">百度1</a>', 'euzd', 'asdjfl', 'asdf'],
+                ['1.2', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', '<a id="td2" href="https://www.baidu.com">百度2</a>', 'euzd', 'asdjfl', 'asdf'],
+                ['1.3', 'sdfa', 'asdf', 'adsf3', '3fsadf', '3sdf', '<a id="td3" href="https://www.baidu.com">百度3</a>', 'euzd', 'asdjfl', 'asdf']
+            ]
+        };
 
-        // Handsontable.dom.addEvent(this.com, 'mousedown',  (event: any) => {
-        //     if (event.target.firstChild.nodeName === 'A') {
-        //     }
-        //   });
+        const initHeadData = [['客户', initData.head[0], '系统版本', initData.head[1], initData.head[2]]];
+
+        Handsontable.dom.addEvent(this.com, 'mousedown',  (event: any) => {
+            const tableResult: ITableData = this.SaveTableData();
+            // tslint:disable-next-line:no-console
+            console.log(tableResult);
+            if (event.target.nodeName === 'A') {
+                // tslint:disable-next-line:no-console
+                console.log(event.target.id);
+                // TODO 传递id
+            }
+        });
 
         this.hotInstance = new Handsontable(this.com, {
-            data,
+            data: initData.data,
             colHeaders: ['序号', '需求主题', '需求提出人', '需求人岗位', '场景', '痛点/价值点', '解决方案', '涉及模块', '期望完成日期', '需求负责人'],
             width: 940,
             height: 487,
-            allowHtml: true,
+            // allowHtml: true,
 
-            manualRowMove: true,
-            manualRowResize: true,
+            // manualRowMove: true,
+            // manualRowResize: true,
             bindRowsWithHeaders: true,
 
-            autoRowSize: true,
+            // autoRowSize: true,
             wordWrap: true,
             mergeCells: [
                 { row: 1, col: 1, rowspan: 1, colspan: 1 }
@@ -113,14 +131,14 @@ export default class Table extends PureComponent<IDemoProps, any> {
         this.hotInstance.updateSettings({
             contextMenu: {
                 callback: (key: string, options: any) => {
-                    if (key === 'addLink' ) {
+                    if (key === 'addLink' || key === 'editLink' ) {
                         // tslint:disable-next-line:no-console
                         const colNum = options[0].start.col;
                         const rowNum = options[0].start.row;
                         const cell: any = this.hotInstance.getCell(rowNum, colNum, true);
                         if (cell.firstChild.nodeName === 'A') {
                             // 获取a 标签的 href和文本
-                            const hrefValue = cell.firstChild.href;
+                            const hrefValue = cell.firstChild.getAttribute('href');
                             const textValue = cell.firstChild.innerText;
                             let modalDataMap = Map();
                             modalDataMap = modalDataMap.set('Link_Modal_Text', textValue);
@@ -156,25 +174,57 @@ export default class Table extends PureComponent<IDemoProps, any> {
                         name: '删除行'
                     },
                     hsep2: '---------', // 提供分隔线
-                    addLink: {name: '插入超链接'}
+                    addLink: {
+                        name: '新增需求页',
+                        disabled: () => {
+                            const cellPoint = this.hotInstance.getSelected();
+                            const cell = this.hotInstance.getCell(cellPoint[0][0], cellPoint[0][1]);
 
+                            return !(cellPoint[0][1] === 6 && cell.innerHTML === '');
+                        }
+                    },
+                    editLink: {
+                        name: '编辑需求页',
+                        disabled: () => {
+                            const cellPoint = this.hotInstance.getSelected();
+                            const cell = this.hotInstance.getCell(cellPoint[0][0], cellPoint[0][1]);
+
+                            return !(cellPoint[0][1] === 6 && cell.innerHTML !== '');
+                        }
+                    }
                 }
             }
         });
 
+        Handsontable.hooks.add('afterChange', (changes: [any], source: string) => {
+
+            if (source !== 'populateFromArray' && source !==  'loadData') {
+                this.SaveTableData();
+            }
+        });
+
         this.hotInstanceHead = new Handsontable(this.headCom, {
-            data: head,
+            data: initHeadData,
             width: 940,
             height: 24,
             colWidths: [40, 300, 100, 300, 200],
-            autoRowSize: true,
+            // autoRowSize: true,
             columns: (index: number) => {
                 if (index === 0 || index === 2) {
                     return {
                         readOnly: true
                     };
                 } else return {};
-            }
+            },
+            customBorders: [
+                {
+                    range: {
+                        from: {row: 0, col: 0},
+                        to: {row: 0, col: 4}
+                    },
+                    bottom: { width: 0, color: '#FFF'}
+                }
+            ]
         });
     }
 
@@ -192,8 +242,6 @@ export default class Table extends PureComponent<IDemoProps, any> {
 
         return (
             <div style={{border: 'solid 1px red'}}>
-                <Button onClick={this.onExportExcelClick} >导出</Button>
-                <Button onClick={this.SaveTableData} >保存</Button>
                 <div ref={(handler: HTMLElement | null) => this.headCom = handler} />
                 <div ref={(handler: HTMLElement | null) => this.com = handler} />
                 <div>
@@ -206,7 +254,7 @@ export default class Table extends PureComponent<IDemoProps, any> {
                         cancelText={'取消'}
                     >
                         <p>
-                            <label>文本</label>
+                            <label>需求页名称</label>
                             <Input
                                 id={'Link_Modal_Text'}
                                 placeholder={'请输入超链接显示的文本'}
@@ -230,17 +278,20 @@ export default class Table extends PureComponent<IDemoProps, any> {
     }
 
     // 保存按钮 获取表格数据
-    private SaveTableData = () => {
+    private SaveTableData = (): ITableData => {
         const endRow = this.hotInstance.countRows() - 1;
         const endCol = this.hotInstance.countCols() - 1;
 
-        const data = this.hotInstance.getData(0, 0, endRow, endCol);
-        // tslint:disable-next-line:no-console
-        console.log(data);
-        // 可编辑单元格 坐标分别为（0，1）  （0，3） （0，5） 即 headData[1]/[3]/[5]
+        const tableData: string[][] = this.hotInstance.getData(0, 0, endRow, endCol);
         const headData = this.hotInstanceHead.getData(0, 0, 0, 4);
-        // tslint:disable-next-line:no-console
-        console.log(headData);
+
+        const tableResult: ITableData = {
+            head: [headData[1], headData[3], headData[5]],
+            data: tableData
+        };
+        // TODO 此处调用保存数据的方法
+
+        return tableResult;
     }
 
     private ShowModal = () => {
@@ -256,7 +307,15 @@ export default class Table extends PureComponent<IDemoProps, any> {
 
         if (this.activeLinkTargetRowCol !== null) {
             const cellTarget = this.hotInstance.getCell(this.activeLinkTargetRowCol[0], this.activeLinkTargetRowCol[1]);
-            cellTarget.innerHTML = '<a href=' + hrefValue + '>' + textValue + '</a>';
+            let id = 'testid';
+            if (cellTarget.innerHTML === '' || !cellTarget.firstChild.hasAttribute('id')) {
+                // TODO 传出name（即textValue），id为undefined  获取返回新增的id
+                // const id = 'testid';
+            } else {
+                id = cellTarget.firstChild.id;
+            }
+            cellTarget.innerHTML = '<a id=' + id + ' href=' + hrefValue + ' >' + textValue + '</a>';
+
             // 设置单元格超链接，清空modal框数据, 清空选中坐标
             let modalDataMap = Map();
             modalDataMap = modalDataMap.set('Link_Modal_Text', '');
