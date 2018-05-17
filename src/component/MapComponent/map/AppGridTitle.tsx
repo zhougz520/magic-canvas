@@ -88,12 +88,14 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         });
     }
     public onMouseUp = (evt: any) => {
-        this.setState({
-            resizing: false,
-            currX: 0
-            // width: newWidth <= 400 ? 400 : newWidth
-        });
-        evt.stopPropagation();
+        if (this.state.resizing) {
+            this.setState({
+                resizing: false,
+                currX: 0
+                // width: newWidth <= 400 ? 400 : newWidth
+            });
+            evt.stopPropagation();
+        }
     }
     public onResizingTitle = (evt: any) => {
         const { id, w } = this.props;

@@ -175,7 +175,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
         return (
             <div>
                 {!map_af_se ? normalFind : extendFind}
-                <MaskLayer />
+                {/* <MaskLayer /> */}
             </div>);
     }
 
