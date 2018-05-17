@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarList';
-import { Draw, IDrawComponent } from './Draw';
-import { Canvas, ICanvasComponent, IBoundary, IOffset } from './Canvas';
+import { Stage, ComponentsType } from './Stage';
 import './solution.css';
 import { ICompos, config } from './config';
 import { Map } from 'immutable';
@@ -19,9 +18,7 @@ export interface ISolutionState {
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
-    private canvas: ICanvasComponent | null = null;
-    private draw: IDrawComponent | null = null;
-    private stage: HTMLDivElement | null = null;
+    private stage: Stage | null = null;
     private barList: IBarListComponent |null = null;
 
     constructor(props: ISolutionProp) {
@@ -32,88 +29,22 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         };
     }
 
-    getCanvas = () => {
-        return this.canvas;
-    }
-
-    getDraw = () => {
-        return this.draw;
+    getStage = (): Stage => {
+        return (this.stage as Stage);
     }
 
     // 修改画布的偏移量
     changeStageOffset = (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => {
-        const newStageOffset = Object.assign({}, this.state.compos.stageOffset, {
-            top: titleBarCollapsed ? 35 : 80,
-            left: resourceBarCollapsed ? 24 : 184,
-            right: propsBarCollapsed ? 24 : 250
-        });
-        this.setState({
-            compos: Object.assign({}, this.state.compos, { stageOffset: newStageOffset })
-        });
+        this.getStage().changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
     }
 
-    StageStyle = () => {
-        const stageOffset = this.state.compos.stageOffset;
-
-        return {
-            top: `${stageOffset.top}px`,
-            left: `${stageOffset.left}px`,
-            right: `${stageOffset.right}px`,
-            bottom: `${stageOffset.bottom}px`
-        } as React.CSSProperties;
-    }
-
-    // 获取stage上滚动条的偏移量
-    getStageScroll = () => {
-        let scrollLeft: number = 0;
-        let scrollTop: number = 0;
-        if (this.stage !== null) {
-            scrollLeft = this.stage.scrollLeft;
-            scrollTop = this.stage.scrollTop;
-        }
-
-        return { scrollLeft, scrollTop };
-    }
-
-    // 修改滚动条
-    setStageScroll = (offset: IOffset) => {
-        if (this.stage !== null) {
-            this.stage.scrollLeft += offset.x;
-            this.stage.scrollTop += offset.y;
-        }
-    }
-
-    // 获取stage的边界范围
-    getStageBoundary = () => {
-        if (this.stage === null) return;
-
-        const stageOffset = this.state.compos.stageOffset;
-        const width = this.stage.offsetWidth;
-        const height = this.stage.offsetHeight;
-
-        return {
-            startPoint: { x: stageOffset.left, y: stageOffset.top },
-            endPoint: {
-                x: stageOffset.left + width,
-                y: stageOffset.top + height
-            }
-        } as IBoundary;
-    }
-
-    getStageSize = () => {
-        if (this.stage === null) return;
-
-        const width = this.stage.offsetWidth;
-        const height = this.stage.offsetHeight;
-
-        return { width, height };
+    highPerformance = (value: boolean) => {
+        this.getStage().changeHighPerformance(value);
     }
 
     // 获取命令，并传给canvas
     onCommandEmitted = (cmd: any) => {
-        if (this.canvas) {
-            this.canvas.executeCommand(cmd);
-        }
+        this.getStage().getCanvas().executeCommand(cmd);
     }
 
     // 获取选中的组件集合并传给CommandBar
@@ -133,9 +64,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
     // 将propertyTool的修改的属性传给canvas 设置对应的选中控件
     onFireProperties = (pKey: string, pValue: any) => {
-        if (this.canvas) {
-            this.canvas.executeProperties(pKey, pValue);
-        }
+        this.getStage().getCanvas().executeProperties(pKey, pValue);
     }
 
     // 清除属性工具栏状态
@@ -145,17 +74,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         }
     }
 
-    /**
-     * 修改画布大小
-     */
-    updateCanvasSize = (width: number, height: number) => {
-        this.setState({ canvasSize: { width, height } });
-    }
-
     render() {
-        const { compos, canvasSize } = this.state;
-        const stateStyle = this.StageStyle();
-
         return (
             <div className="main-editor">
                 <BarList
@@ -164,32 +83,17 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     onCommandEmitted={this.onCommandEmitted}
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
+                    highPerformance={this.highPerformance}
                     // objectlist={this.props.objectlist}
                 />
-                <div id="stage" ref={(render) => this.stage = render} className="stage" style={stateStyle}>
-                    <Draw
-                        ref={(render) => this.draw = render}
-                        getCanvas={this.getCanvas}
-                        canvasSize={canvasSize}
-                        componentPosition={compos}
-                        getStageScroll={this.getStageScroll}
-                    />
-                    <Canvas
-                        ref={(render) => this.canvas = render}
-                        getDraw={this.getDraw}
-                        canvasSize={canvasSize}
-                        componentPosition={compos}
-                        getStageScroll={this.getStageScroll}
-                        setStageScroll={this.setStageScroll}
-                        getStageBoundary={this.getStageBoundary}
-                        getStageSize={this.getStageSize}
-                        components={detail.content.components}
-                        onCommandProperties={this.onCommandProperties}
-                        onPropertyProperties={this.onPropertyProperties}
-                        updateCanvasSize={this.updateCanvasSize}
-                        clearSelectedProperty={this.clearSelectedProperty}
-                    />
-                </div>
+                <Stage
+                    config={config}
+                    ref={(render) => this.stage = render}
+                    components={detail.content.components as ComponentsType}
+                    onCommandProperties={this.onCommandProperties}
+                    onPropertyProperties={this.onPropertyProperties}
+                    clearSelectedProperty={this.clearSelectedProperty}
+                />
             </div>
         );
     }
@@ -330,18 +234,6 @@ const detail = {
                     }
                 }
             }
-            // {
-            //     t: 'MapComponent/demo/TableDemo',
-            //     p: {
-            //         id: 'cs5',
-            //         txt_v: '我是测试组件5',
-            //         w: 1400,
-            //         h: 200,
-            //         l: 150,
-            //         t: 150,
-            //         zIndex: 5
-            //     }
-            // }
         ]
     },
     layout: { mode: 'free' }

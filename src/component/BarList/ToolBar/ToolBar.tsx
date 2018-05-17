@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
 import { CommandMap } from '../../Canvas';
-import { config } from '../../config';
 
 import { Switch, Button, Dropdown, Menu, Icon } from 'antd';
 import { Map } from 'immutable';
@@ -24,7 +23,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
 
     // 高性能开关
     onChange = (e: boolean) => {
-        config.highPerformance = e;
+        this.props.highPerformance(e);
     }
 
     /**

@@ -1,7 +1,6 @@
 import { Canvas } from '../Canvas';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
-import { config } from '../../config';
 import { IBaseData } from '../../Draw/model/types';
 import * as Anchor from '../../util/AnchorPoint';
 
@@ -316,7 +315,7 @@ export class CanvasGlobalParam {
                 const height = value.size.height + h < 10 ? 10 : value.size.height + h;
                 const position = { top, left };
                 const size = { width, height };
-                if (end || config.highPerformance) {
+                if (end || this._canvas.props.highPerformance) {
                     // 高性能模式，组件立即变化
                     com.setPosition(position);
                     com.setSize(size);
@@ -415,7 +414,7 @@ export class CanvasGlobalParam {
     moveDragBox(offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) {
         if (!stageBoundary) return;
         this.dargging = true;
-        if (config.highPerformance) {
+        if (this._canvas.props.highPerformance) {
             // 高性能模式，直接拖动组件
             this.selectedComponents.map((component, cid) => {
                 if (component && cid) {

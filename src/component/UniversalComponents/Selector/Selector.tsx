@@ -4,7 +4,7 @@ import { SelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
 import { BoxType } from '../../util/AnchorPoint';
 import { Map, List } from 'immutable';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 
 const Option = AntSelector.Option;
 // tslint:disable-next-line:no-empty-interface

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { HyperlinkState } from './HyperlinkState';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 
 // tslint:disable-next-line:no-empty-interface
