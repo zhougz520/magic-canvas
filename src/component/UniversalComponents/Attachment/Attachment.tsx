@@ -4,7 +4,7 @@ import {
 } from '../../BaseComponent';
 
 import { AttachmentState } from './AttachmentState';
-import { PropertiesEnum } from '../../config';
+import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 import '../../UniversalComponents/sass/UComponents.scss';
 
