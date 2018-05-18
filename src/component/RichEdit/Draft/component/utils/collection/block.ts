@@ -125,7 +125,7 @@ export function setListBlockStyleData(
 
     let data: any = currentBlockData;
     let editorStateWithBlockType: EditorState | null = null;
-    if (currentBlockType !==  blockType) {
+    if (currentBlockType !== blockType) {
         // 1.otherBlockType to ul/ol
         // 2.ul to ol/ol to ul
         // 3.ul/ol to otherBlockType 逻辑在 toggleBlockType方法的(specialBlockType.includes(typeToSet) === false)中判断，删除对应的data
@@ -154,4 +154,36 @@ export function setListBlockStyleData(
     const editorStateWithData: EditorState = setBlockData(editorStateWithBlockType, data);
 
     return editorStateWithData;
+}
+
+/**
+ * 移除所选Block的blockStyle
+ */
+export function removeSelectedBlocksStyle(
+    editorState: EditorState
+): EditorState {
+    const newContentState = RichTextEditorUtil.tryToRemoveBlockStyle(editorState);
+    if (newContentState) {
+        return EditorState.push(editorState, newContentState, 'change-block-type');
+    }
+
+    return editorState;
+}
+
+/**
+ * 新插入一行block
+ * @param editorState 当前editorState
+ */
+export function insertNewUnstyledBlock(editorState: EditorState): EditorState {
+    const newContentState = DraftModifier.splitBlock(
+        editorState.getCurrentContent(),
+        editorState.getSelection()
+    );
+    const newEditorState = EditorState.push(
+        editorState,
+        newContentState,
+        'split-block'
+    );
+
+    return removeSelectedBlocksStyle(newEditorState);
 }
