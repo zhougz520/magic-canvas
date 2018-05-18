@@ -1,14 +1,19 @@
 import * as React from 'react';
+import { DraftPublic } from '../../../../../src/component/RichEdit/Draft';
+const { DefaultDraftBlockStyle } = DraftPublic;
 
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
 import { CommandMap } from '../../../../../src';
 
-import { Switch, Button, Dropdown, Menu, Icon } from 'antd';
+import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio } from 'antd';
+import ColorPicker from 'rc-color-picker';
 import { Map } from 'immutable';
 
 import '../sass/bar.scss';
 
+/* tslint:disable:jsx-no-multiline-js */
 export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
+    _colorPickerCount: number = 0;
     constructor(props: IToolbarProps) {
         super(props);
         this.state = {
@@ -29,13 +34,11 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
     /**
      * 发射命令
      */
-    fireCommand = (cmd: any) => {
+    fireCommand = (cmd: any, param: any = null) => {
         this.props.onCommandEmitted(
             {
                 t: cmd,
-                d: {
-                    value: '我是批注1'
-                }
+                d: param
             }
         );
     }
@@ -100,6 +103,15 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
         );
     }
 
+    changeColor = (color: any) => {
+        this._colorPickerCount += 1;
+        if (this._colorPickerCount % 2 === 0) {
+            // TODO 还组件
+        } else {
+            this.fireCommand(CommandMap.EDITOR_FONTCOLOR, color.color);
+        }
+    }
+
     render() {
         const { titleBarCollapsed } = this.props;
         const { selectedComs } = this.state;
@@ -151,14 +163,61 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                         onClick={() => this.fireCommand(CommandMap.EDITOR_BOLD)}
                     >
                         加粗
-                    </Button>&nbsp;&nbsp;
+                    </Button>&nbsp;
                     <Button
                         type="primary"
                         // tslint:disable-next-line:jsx-no-lambda
                         onClick={() => this.fireCommand(CommandMap.EDITOR_ITALIC)}
                     >
                         斜体
-                    </Button>
+                    </Button>&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.EDITOR_UNDERLINE)}
+                    >
+                        下划线
+                    </Button>&nbsp;
+                    <Button
+                        type="primary"
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onClick={() => this.fireCommand(CommandMap.EDITOR_STRIKETHROUGH)}
+                    >
+                        删除线
+                    </Button>&nbsp;
+                    <ColorPicker
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onChange={this.changeColor}
+                        enableAlpha={false}
+                    >
+                        <Button
+                            type="primary"
+                        >
+                            字体颜色
+                        </Button>
+                    </ColorPicker>&nbsp;
+                    <InputNumber
+                        min={1}
+                        max={100}
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onChange={(value: any) => this.fireCommand(CommandMap.EDITOR_FONTSIZE, value)}
+                    />&nbsp;
+                    <ListTypeControls
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_UL, e)}
+                        type={'UL'}
+                        list={UL_TYPE}
+                    />&nbsp;
+                    <ListTypeControls
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_OL, e)}
+                        type={'OL'}
+                        list={OL_TYPE}
+                    />&nbsp;
+                    <TextAlignControls
+                        // tslint:disable-next-line:jsx-no-lambda
+                        onToggle={(textAlign: any) => this.fireCommand(CommandMap.EDITOR_TEXTALIGN, textAlign)}
+                    />
                 </div>
                 <div
                     style={{marginRight: '50px'}}
@@ -208,3 +267,40 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
     }
 
 }
+
+const UL_TYPE = DefaultDraftBlockStyle.listStyleTypeMap.get('unordered-list-item').toJS();
+const OL_TYPE = DefaultDraftBlockStyle.listStyleTypeMap.get('ordered-list-item').toJS();
+const ListTypeControls: any = (props: any) => {
+    const menu = (
+        <Menu onClick={props.onToggle}>
+            {
+                props.list.map(
+                    (type: any) => {
+                        return <Menu.Item key={type}>{type}</Menu.Item>;
+                    }
+                )
+            }
+        </Menu>
+    );
+
+    return (
+        <Dropdown.Button onClick={props.onToggle} overlay={menu}>
+            {props.type}
+        </Dropdown.Button>
+    );
+};
+
+const TEXT_ALIGN = ['left', 'center', 'right'];
+const TextAlignControls: any = (props: any) => {
+    return (
+        <Radio.Group onChange={props.onToggle}>
+            {
+                TEXT_ALIGN.map(
+                    (align: any) => {
+                        return <Radio.Button value={align} key={align}>{align}</Radio.Button>;
+                    }
+                )
+            }
+        </Radio.Group>
+    );
+};

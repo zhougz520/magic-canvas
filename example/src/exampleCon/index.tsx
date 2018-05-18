@@ -130,7 +130,6 @@ export default class Example extends React.PureComponent<any, any> {
                 )
             );
         }
-
     }
 
     blockStyleFn = (block: any): string => {

@@ -1,4 +1,4 @@
-import { IPosition, ISize } from '../BaseComponent';
+import { IPosition, ISize } from '../../BaseComponent';
 
 export interface IEditState {
     position: IPosition;

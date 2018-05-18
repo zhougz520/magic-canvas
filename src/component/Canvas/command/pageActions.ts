@@ -257,5 +257,61 @@ export const pageActions = {
         if (isRichEditMode === true) {
             this.getThis().getEditor().toggleInlineStyle('ITALIC');
         }
+    },
+
+    // 下划线
+    underlineEditor() {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleInlineStyle('UNDERLINE');
+        }
+    },
+
+    // 删除
+    strikethroughEditor() {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleInlineStyle('STRIKETHROUGH');
+        }
+    },
+
+    // 字体颜色
+    fontColorEditor(color: any) {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleColorStyle(color);
+        }
+    },
+
+    // 字体大小
+    fontSizeEditor(size: any) {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleFontSize(size);
+        }
+    },
+
+    // 有序列表
+    olEditor(e: any) {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleOLBlockTypeClass(e);
+        }
+    },
+
+    // 无序列表
+    ulEditor(e: any) {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleULBlockTypeClass(e);
+        }
+    },
+
+    // 文本对齐
+    textAlignEditor(textAlign: any) {
+        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+        if (isRichEditMode === true) {
+            this.getThis().getEditor().toggleTextAlign(textAlign);
+        }
     }
 };

@@ -37,5 +37,19 @@ export const CommandMap = {
     // 加粗
     EDITOR_BOLD: 'e.boldEditor',
     // 斜体
-    EDITOR_ITALIC: 'e.italicEditor'
+    EDITOR_ITALIC: 'e.italicEditor',
+    // 下划线
+    EDITOR_UNDERLINE: 'e.underlineEditor',
+    // 删除线
+    EDITOR_STRIKETHROUGH: 'e.strikethroughEditor',
+    // 字体颜色
+    EDITOR_FONTCOLOR: 'e.fontColorEditor',
+    // 字体大小
+    EDITOR_FONTSIZE: 'e.fontSizeEditor',
+    // 有序列表
+    EDITOR_OL: 'e.olEditor',
+    // 无序列表
+    EDITOR_UL: 'e.ulEditor',
+    // 对齐
+    EDITOR_TEXTALIGN: 'e.textAlignEditor'
 };
