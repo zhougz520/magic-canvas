@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { DraftPublic } from './Draft';
-const { Editor, EditorState, RichUtils, InlineUtils, FbjsUtils } = DraftPublic;
-const { cx } = FbjsUtils;
+const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils } = DraftPublic;
 
-import { IEditProps, IEditState, IEditStyle } from './types';
-import { EditStyle } from './EditStyle';
+import { IEditProps, IEditState, IEditStyle } from './model/types';
+import { EditStyle } from './model/EditStyle';
+import { blockStyleFn } from './model/DraftUtils';
 
 /**
  * RichEdit：画布上的编辑框，所有组件的文本编辑都调用此编辑框来进行
@@ -24,6 +24,9 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
         } ;
     }
 
+    /**
+     * 快捷键触发方法
+     */
     handleKeyCommand = (command: any, editorState: any) => {
         const newState = RichUtils.handleKeyCommand(editorState, command);
         if (newState) {
@@ -35,36 +38,22 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
         return false;
     }
 
+    /**
+     * Draft修改内容触发
+     */
     onChange = (editorState: any) => this.setState({ editorState });
 
+    /**
+     * tab按键方法
+     */
     onTab = (e: any) => {
         this.onChange(RichUtils.onTab(e, this.state.editorState));
     }
 
-    blockStyleFn = (block: any): string => {
-        const blockAlignment = block.getData() && block.getData().get('text-align');
-        const styleULType = block.getData() && block.getData().get('unordered-list-item');
-        const styleOLType = block.getData() && block.getData().get('ordered-list-item');
-
-        return this.getListItemClasses(blockAlignment, styleULType === undefined ? styleOLType : styleULType);
-    }
-
-    getListItemClasses = (align: string | undefined, styleType: string | undefined) => {
-        return cx({
-            'block-aligned-center': align === 'center',
-            'block-aligned-justify': align === 'justify',
-            'block-aligned-right': align === 'right',
-            'block-aligned-left': align === 'left',
-            'unordered-list-item-image': styleType === 'image',
-            'unordered-list-item-disc': styleType === 'disc',
-            'unordered-list-item-circle': styleType === 'circle',
-            'unordered-list-item-square': styleType === 'square',
-            'ordered-list-item-decimal': styleType === 'decimal',
-            'ordered-list-item-lower-alpha': styleType === 'lower-alpha',
-            'ordered-list-item-lower-roman': styleType === 'lower-roman'
-        });
-    }
-
+    /**
+     * 设置InLineStyle
+     * @param inlineStyle 对应Draft-js的inlineStyleRenderMap
+     */
     toggleInlineStyle = (inlineStyle: any) => {
         this.onChange(
             RichUtils.toggleInlineStyle(
@@ -72,6 +61,81 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
                 inlineStyle
             )
         );
+    }
+
+    /**
+     * 设置无序列表样式
+     */
+    // TODO e参数需要修改
+    toggleULBlockTypeClass = (e: any) => {
+        this.onChange(
+            BlockUtils.setListBlockStyleData(
+                this.state.editorState,
+                'unordered-list-item',
+                e.key === undefined ? 'image' : e.key
+            )
+        );
+    }
+
+    /**
+     * 设置有序列表样式
+     */
+    toggleOLBlockTypeClass = (e: any) => {
+        this.onChange(
+            BlockUtils.setListBlockStyleData(
+                this.state.editorState,
+                'ordered-list-item',
+                e.key === undefined ? 'decimal' : e.key
+            )
+        );
+    }
+
+    /**
+     * 设置字体颜色
+     */
+    toggleFontColor = (color: any) => {
+        this.onChange(
+            InlineUtils.toggleCustomInlineStyle(
+                this.state.editorState,
+                'color',
+                color
+            )
+        );
+    }
+
+    /**
+     * 设置字体大小
+     */
+    toggleFontSize = (fontSize: any) => {
+        this.onChange(
+            InlineUtils.toggleCustomInlineStyle(
+                this.state.editorState,
+                'fontSize',
+                fontSize
+            )
+        );
+    }
+
+    /**
+     * 设置文本对齐方式
+     */
+    toggleTextAlign = (textAlign: any) => {
+        const currentTextAlignment = BlockUtils.getSelectedBlocksMetadata(this.state.editorState).get('text-align');
+        if (currentTextAlignment !== textAlign) {
+            this.onChange(
+                BlockUtils.mergeBlockData(
+                    this.state.editorState,
+                    { 'text-align': textAlign.target.value }
+                )
+            );
+        } else {
+            this.onChange(
+                BlockUtils.mergeBlockData(
+                    this.state.editorState,
+                    { 'text-align': undefined }
+                )
+            );
+        }
     }
 
     /**
@@ -152,6 +216,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             height: size.height,
             style
         };
+        InlineUtils.extractInlineStyle(editorState);
 
         return (
             <div
@@ -165,7 +230,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
                     onTab={this.onTab}
                     // tslint:disable-next-line:jsx-no-string-ref
                     ref="editor"
-                    blockStyleFn={this.blockStyleFn}
+                    blockStyleFn={blockStyleFn}
                 />
             </div>
         );

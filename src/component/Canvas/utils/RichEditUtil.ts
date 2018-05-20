@@ -1,7 +1,7 @@
 import { Canvas } from '../Canvas';
 import { IComponent, ISize, IPosition } from '../../BaseComponent';
 import { DraftPublic } from '../../RichEdit';
-const { EditorState } = DraftPublic;
+const { EditorState, BlockUtils } = DraftPublic;
 
 export class RichEditUtil {
     private _canvas: Canvas;
@@ -32,7 +32,7 @@ export class RichEditUtil {
             this._canvas.getEditor().setState({
                 position,
                 size,
-                editorState: EditorState.createEmpty()
+                editorState: BlockUtils.insertNewUnstyledBlock((currentSelectedComponent as any).getRichChildNode())
             });
             this._canvas.getEditor().setFocus();
             // const value = currentSelectedComponent.getRichChildNode();
@@ -70,7 +70,8 @@ export class RichEditUtil {
                 style: null,
                 editorState: EditorState.createEmpty()
             });
-            currentSelectedComponent.setRichChildNode(EditorState.createWithContent(value.getCurrentContent()));
+
+            currentSelectedComponent.setRichChildNode(value);
             if ((currentSelectedComponent as any).hiddenEditor) {
                 (currentSelectedComponent as any).hiddenEditor(false);
             }

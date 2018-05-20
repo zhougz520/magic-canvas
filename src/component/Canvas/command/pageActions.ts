@@ -279,7 +279,7 @@ export const pageActions = {
     fontColorEditor(color: any) {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleColorStyle(color);
+            this.getThis().getEditor().toggleFontColor(color);
         }
     },
 

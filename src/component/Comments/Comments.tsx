@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle, IPosition, ISize } from '../BaseComponent';
-import { DraftPublic } from '../RichEdit';
-const { Editor, EditorState } = DraftPublic;
+import { DraftPublic, blockStyleFn } from '../RichEdit';
+const { Editor, EditorState, InlineUtils } = DraftPublic;
 // import { CommentsLine } from './CommentsLine';
 // import { Map } from 'immutable';
 
@@ -65,7 +65,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
     render() {
         // const rectList: JSX.Element[] = [];
         const { hidden } = this.state;
-        const richChildNode = this.getRichChildNode();
+        const editorState = this.getRichChildNode();
+        InlineUtils.extractInlineStyle(editorState);
 
         // TODO Comments优化代码
         // const lineList: Map<string, any> = this.getCustomState();
@@ -103,11 +104,13 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <Editor
-                    editorState={richChildNode}
+                    editorState={EditorState.createWithContent(editorState.getCurrentContent())}
+                    inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
                     // tslint:disable-next-line:jsx-no-lambda
                     onChange={() => { return; }}
                     readOnly
                     customContentStyle={{padding: this._padding, display: hidden ? 'none' : 'block'}}
+                    blockStyleFn={blockStyleFn}
                 />
             </div>
         );
