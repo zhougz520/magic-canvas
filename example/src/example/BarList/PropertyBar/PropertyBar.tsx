@@ -11,7 +11,6 @@ export interface IPropertyProps {
     collapsed: boolean;
     titleBarCollapsed: boolean;
     onPropsBarCollapse: (collapsed: boolean) => void;
-    // setComponentProperties: (pName: string, pValue: any, pType: string) => void;
     onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
         void;
 

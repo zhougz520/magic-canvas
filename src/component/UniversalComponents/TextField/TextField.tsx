@@ -24,40 +24,6 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return [
-                {
-                    pTitle: '行数',
-                    pKey: 'rowNum',
-                    pValue: this.getCustomState().getRowNum(),
-                    pType: PropertiesEnum.INPUT_NUMBER
-                }, {
-                    pTitle: '值',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_TEXT
-                }, {
-                    pTitle: '默认值',
-                    pKey: 'defaultvalue',
-                    pValue: this.getCustomState().getDefaultValue(),
-                    pType: PropertiesEnum.INPUT_TEXT
-                }, {
-                    pTitle: '是否自适应行数',
-                    pKey: 'autosize',
-                    pValue: this.getCustomState().getAutosize(),
-                    pType: PropertiesEnum.SWITCH
-                }
-            ];
-    }
-
-    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newTextFieldState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
-
-        this.setCustomState(newTextFieldState);
-    }
-
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {

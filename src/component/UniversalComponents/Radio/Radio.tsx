@@ -131,38 +131,6 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newRadioState);
     }
 
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
-        return [
-                {
-                    pTitle: '选中值',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '选项',
-                    pKey: 'options',
-                    pValue: this.getCustomState().getOptions(),
-                    pType: PropertiesEnum.INPUT_OBJECT_LIST
-                }, {
-                    pTitle: '是否为方形按钮',
-                    pKey: 'isButton',
-                    pValue: this.getCustomState().getIsButton(),
-                    pType: PropertiesEnum.SWITCH
-                }
-            ];
-    }
-
-    public setPropertiesFromCommand = (cid: string, pProperty: {pKey: string, pValue: any}) => {
-        let propertiesMap = Map();
-        propertiesMap = propertiesMap.set(pProperty.pKey, pProperty.pValue);
-        propertiesMap = propertiesMap.set('selectedCid', cid);
-
-        const newRadioState: RadioState = RadioState.set(
-            this.getCustomState(), propertiesMap
-        );
-        this.setCustomState(newRadioState);
-    }
-
     // private onChange = (event: RadioChangeEvent) => {
     //     const newRadioState: RadioState = RadioState.set(
     //         this.getCustomState(),

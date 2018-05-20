@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
-import { HyperlinkState } from './HyperlinkState';
+import { ImageState } from './ImageState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 
@@ -9,18 +9,32 @@ export interface IDemoProps extends IBaseProps {
 
 }
 
-export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
-    com: any = null;
+export default class Image extends BaseComponent<IDemoProps, IBaseState> {
+    static defaultProps = {
+        data: {
+            id: 'cs6',
+            txt_v: '我是测试组件6',
+            w: 300,
+            h: 200,
+            l: 300,
+            t: 10
+        }
+    };
+
+    com: HTMLElement| null = null;
 
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new HyperlinkState())
+            baseState: this.initBaseStateWithCustomState(new ImageState())
         };
     }
 
     render() {
+
+        // const { w, h, att_url, att_n} = this.props;
+
         return (
             <div
                 onMouseDown={this.fireSelectChange}
@@ -36,14 +50,18 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                         borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
-                    <a
-                        // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                            textDecoration: this.getCustomState().getTextDecoration(), display: 'inline-block',
-                            textAlign: this.getCustomState().getTextAlign()}}
-                        href={this.getCustomState().getHerf()}
-                    >
-                        {this.getCustomState().getContent()}
+                    <a href="javascript:void(0)" title={'att_n'}>
+                        <img
+                            // tslint:disable-next-line:jsx-no-multiline-js
+                            style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                                textDecoration: this.getCustomState().getTextDecoration(), display: 'inline-block',
+                                textAlign: this.getCustomState().getTextAlign()}}
+                            src={this.getCustomState().getSrc()}
+                            alt={this.getCustomState().getAlt()}
+                            // width={this.getCustomState().getWidth()}
+                            // height={this.getCustomState().getHeight()}
+                            key={'img'}
+                        />
                     </a>
                 </div>
             </div>
@@ -54,14 +72,14 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
         return  [
                 {
                     pTitle: '链接地址',
-                    pKey: 'herf',
-                    pValue: this.getCustomState().getHerf(),
+                    pKey: 'alt',
+                    pValue: this.getCustomState().getAlt(),
                     pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '字体',
-                    pKey: 'fontSize',
-                    pValue: this.getCustomState().getFontSize(),
-                    pType: PropertiesEnum.INPUT_NUMBER
+                // }, {
+                //     pTitle: '字体',
+                //     pKey: 'fontSize',
+                //     pValue: this.getCustomState().get(),
+                //     pType: PropertiesEnum.INPUT_NUMBER
                 }, {
                     pTitle: '背景颜色',
                     pKey: 'backgroundColor',
@@ -84,9 +102,9 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
-        const newHyperlinkState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
+        const newImageState: ImageState = ImageState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newHyperlinkState);
+        this.setCustomState(newImageState);
     }
 
 }

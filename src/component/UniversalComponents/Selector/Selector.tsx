@@ -35,30 +35,6 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         console.log(this.getSize());
     }
 
-    public getPropertiesToCommand = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return [
-                {
-                    pTitle: '选项',
-                    pKey: 'options',
-                    pValue: this.getCustomState().getOptions(),
-                    pType: PropertiesEnum.INPUT_OBJECT_LIST
-                }, {
-                    pTitle: '选中值',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }
-            ];
-    }
-
-    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), properties);
-
-        this.setCustomState(newSelectorState);
-    }
-
     public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
         return [
                 {
