@@ -187,3 +187,26 @@ export function insertNewUnstyledBlock(editorState: EditorState): EditorState {
 
     return removeSelectedBlocksStyle(newEditorState);
 }
+
+/**
+ * 把选中光标移动到所有文本的最后
+ * @param editorState 当前editorState
+ */
+export function moveSelectionToEndOfBlocks(editorState: EditorState): EditorState {
+    const selection: SelectionState = editorState.getSelection();
+    const content: ContentState = editorState.getCurrentContent();
+    const lastBlock: ContentBlock = content.getLastBlock();
+    const textLength: number = lastBlock.getLength();
+    const endKey: string = lastBlock.getKey();
+
+    return EditorState.set(editorState, {
+        selection: selection.merge({
+            anchorKey: endKey,
+            anchorOffset: textLength,
+            focusKey: endKey,
+            focusOffset: textLength,
+            isBackward: false
+        }),
+        forceSelection: true
+    });
+}
