@@ -1,5 +1,5 @@
 import { Canvas } from '../Canvas';
-import { IComponent, ISize, IPosition } from '../../BaseComponent';
+import { IComponent, ISize, IPosition, IRichEditOption, EditType } from '../../BaseComponent';
 import { DraftPublic } from '../../RichEdit';
 const { EditorState, BlockUtils } = DraftPublic;
 
@@ -20,40 +20,26 @@ export class RichEditUtil {
         const currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
 
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
-            const position: IPosition = (currentSelectedComponent as any).getRichEditorSizeAndPosition ?
-                (currentSelectedComponent as any).getRichEditorSizeAndPosition().position : currentSelectedComponent.getPosition();
-            const size: ISize = (currentSelectedComponent as any).getRichEditorSizeAndPosition ?
-                (currentSelectedComponent as any).getRichEditorSizeAndPosition().size : currentSelectedComponent.getSize();
+            // 展示富文本编辑器的位置
+            const richEditOption: IRichEditOption = currentSelectedComponent.getRichEditOption();
+            const position: IPosition = richEditOption.position;
+            const size: ISize = richEditOption.size;
 
-            if ((currentSelectedComponent as any).hiddenEditor) {
-                (currentSelectedComponent as any).hiddenEditor(true);
+            // 根据不同的编辑框，操作不同
+            const richEditType: EditType = currentSelectedComponent.getRichEditType();
+            switch (richEditType) {
+                case 'RichEdit':
+                    // 隐藏组件中的富文本接收器
+                    currentSelectedComponent.hiddenEditorDom(true);
+                    this._canvas.getEditor().setEditState({
+                        position,
+                        size,
+                        editorState: BlockUtils.moveSelectionToEndOfBlocks(currentSelectedComponent.getRichChildNode())
+                    });
+                    break;
             }
-            // TODO 按组件分类：富文本、非富文本。
-            this._canvas.getEditor().setState({
-                position,
-                size,
-                editorState: BlockUtils.insertNewUnstyledBlock((currentSelectedComponent as any).getRichChildNode())
-            });
-            this._canvas.getEditor().setFocus();
-            // const value = currentSelectedComponent.getRichChildNode();
-            // currentSelectedComponent.setRichChildNode(null);
-            // const style: CSSStyleDeclaration = currentSelectedComponent.getStyle(currentSelectedComponent);
-            // const size: ISize = currentSelectedComponent.getSize();
-            // const position: IPosition = currentSelectedComponent.getPosition();
-            // const bodyOffset: any = this._canvas._positionUtil.getPositionRelativeDocument(position.left, position.top);
 
-            // if (isDbClick === true) {
-            //     this._canvas.getEditor().setValue(value);
-            // } else {
-            //     this._canvas.getEditor().setValue('');
-            // }
-            // this._canvas.getEditor().setEditComState(
-            //     size.width,
-            //     bodyOffset.pageY + size.height / 2,
-            //     bodyOffset.pageX + size.width / 2,
-            //     style
-            // );
-            // // this._canvas.getEditor().setFocus();
+            this._canvas.getEditor().setFocus();
         }
     }
 
@@ -62,18 +48,20 @@ export class RichEditUtil {
         const currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
 
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
-            // TODO 分类：富文本、非富文本
-            const value: any = this._canvas.getEditor().state.editorState;
-            this._canvas.getEditor().setState({
-                position: { top: -10000, left: -10000 },
-                size: { width: 0, height: 0 },
-                style: null,
-                editorState: EditorState.createEmpty()
-            });
-
-            currentSelectedComponent.setRichChildNode(value);
-            if ((currentSelectedComponent as any).hiddenEditor) {
-                (currentSelectedComponent as any).hiddenEditor(false);
+            // 根据不同的编辑框，操作不同
+            const richEditType: EditType = currentSelectedComponent.getRichEditType();
+            const editValue: any = this._canvas.getEditor().getEditValue(richEditType);
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().setEditState({
+                        position: { top: -10000, left: -10000 },
+                        size: { width: 0, height: 0 },
+                        style: null,
+                        editorState: EditorState.createEmpty()
+                    });
+                    currentSelectedComponent.setRichChildNode(EditorState.createWithContent(editValue.getCurrentContent()));
+                    currentSelectedComponent.hiddenEditorDom(false);
+                    break;
             }
         }
     }

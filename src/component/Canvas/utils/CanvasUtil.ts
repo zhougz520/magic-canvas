@@ -64,21 +64,41 @@ export class CanvasUtil {
         const zIndexList: number[] = [];
         const comIndexList: number[] = [];
 
+        const commentsZIndexList: number[] = [];
+        const commentsIndexList: number[] = [];
+
         const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         componentList.map(
             (component: IComponentList) => {
                 const com = this._canvas.getComponent(component.cid);
                 if (com) {
-                    zIndexList.push(com.getHierarchy());
-                    comIndexList.push(parseInt(component.cid.replace('cs', ''), 10));
+                    if (com.getComType() === 'Comments') {
+                        commentsZIndexList.push(com.getHierarchy());
+                        commentsIndexList.push(parseInt(component.cid.replace('cm', ''), 10));
+                    } else {
+                        zIndexList.push(com.getHierarchy());
+                        comIndexList.push(parseInt(component.cid.replace('cs', ''), 10));
+                    }
                 }
             }
         );
 
-        this._canvas._maxZIndex = Math.max(...zIndexList);
-        this._canvas._minZIndex = Math.min(...zIndexList);
+        if (isFinite(Math.max(...zIndexList)) === true) {
+            this._canvas._maxZIndex = Math.max(...zIndexList);
+            this._canvas._minZIndex = Math.min(...zIndexList);
+        }
+        if (isFinite(Math.max(...commentsZIndexList)) === true) {
+            this._canvas._maxCommentsZIndex = Math.max(...commentsZIndexList);
+            this._canvas._minCommentsZIndex = Math.min(...commentsZIndexList);
+        }
+
         if (isResetComIndex) {
-            this._canvas._maxComIndex = Math.max(...comIndexList);
+            if (isFinite(Math.max(...comIndexList)) === true) {
+                this._canvas._maxComIndex = Math.max(...comIndexList);
+            }
+            if (isFinite(Math.max(...commentsIndexList)) === true) {
+                this._canvas._maxCommentsIndex = Math.max(...commentsIndexList);
+            }
         }
     }
 

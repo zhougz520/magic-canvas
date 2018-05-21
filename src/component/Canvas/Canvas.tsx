@@ -67,6 +67,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _maxZIndex: number = 0;                          // 当前最大z-Index
     public _minZIndex: number = 0;                          // 当前最小z-Index
     public _maxComIndex: number = 0;                        // 当前最大组件index
+    public _maxCommentsZIndex: number = 100000;                  // 当前最大批注z-Index
+    public _minCommentsZIndex: number = 100000;                  // 当前最小批注z-Index
+    public _maxCommentsIndex: number = 0;                   // 当前最大批注index
     public _newComponentCid: string | null = null;          // 新添加的组件cid，用于选中新添加组件
     public _isWingmanFocus: boolean = false;                // 僚机是否获取到焦点
     public _isRichEditMode: boolean = false;                // 是否富文本编辑模式

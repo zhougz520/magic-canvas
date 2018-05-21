@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle, IPosition, ISize } from '../BaseComponent';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle, IPosition, ISize, EditType, IRichEditOption } from '../BaseComponent';
 import { DraftPublic, blockStyleFn } from '../RichEdit';
 const { Editor, EditorState, InlineUtils } = DraftPublic;
 // import { CommentsLine } from './CommentsLine';
@@ -29,18 +29,22 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         //     };
         // }
         this.state = {
-            baseState: this.initBaseStateWithCustomState(null, EditorState.createEmpty()),
+            baseState: this.initBaseStateWithCustomState(null, EditorState.createEmpty('需求' + this.getCid().replace('cm', '') + '：\n')),
             hidden: false
         };
     }
 
     /**
+     * 调用富文本编辑器
+     */
+    public getRichEditType = (): EditType => {
+        return 'RichEdit';
+    }
+
+    /**
      * 获取富文本编辑器的大小和位置
      */
-    public getRichEditorSizeAndPosition = (): {
-        position: IPosition;
-        size: ISize;
-    } => {
+    public getRichEditOption = (): IRichEditOption => {
         const comPosition: IPosition = this.getPosition();
         const comSize: ISize = this.getSize();
 
@@ -56,9 +60,9 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         return { position, size };
     }
 
-    public hiddenEditor = (hidden: boolean): void => {
+    public hiddenEditorDom = (isHidden: boolean): void => {
         this.setState({
-            hidden
+            hidden: isHidden
         });
     }
 
@@ -104,12 +108,12 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <Editor
-                    editorState={EditorState.createWithContent(editorState.getCurrentContent())}
+                    editorState={editorState}
                     inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
                     // tslint:disable-next-line:jsx-no-lambda
                     onChange={() => { return; }}
                     readOnly
-                    customContentStyle={{padding: this._padding, display: hidden ? 'none' : 'block'}}
+                    customContentStyle={{padding: this._padding, visibility: hidden ? 'hidden' : 'visible'}}
                     blockStyleFn={blockStyleFn}
                 />
             </div>

@@ -9,6 +9,7 @@ import { BaseState } from './model/BaseState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
+import { EditType, IRichEditOption } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { Stack, Map } from 'immutable';
@@ -330,6 +331,32 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const style = window.getComputedStyle(ReactDOM.findDOMNode(com));
 
         return style;
+    }
+
+    /**
+     * 定义组件的富文本编辑方式，默认为无编辑
+     */
+    public getRichEditType = (): EditType => {
+        return 'none';
+    }
+
+    /**
+     * 获取现实富文本编辑器的一些选项
+     * { position, size }
+     */
+    public getRichEditOption = (): IRichEditOption => {
+        return {
+            position: this.getPosition(),
+            size: this.getSize()
+        };
+    }
+
+    /**
+     * 隐藏可编辑部分，由组件自己重写
+     * 呼出富文本编辑器时隐藏组件中被编辑部分
+     */
+    public hiddenEditorDom = (isHidden: boolean): void => {
+        return;
     }
 
     /**

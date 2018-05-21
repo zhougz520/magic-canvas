@@ -198,10 +198,10 @@ export class ComponentsUtil {
             // 添加新组件
             data = {
                 ...component.p,
-                id: 'cs' + (this._canvas._maxComIndex + 1),
+                id: comType === 'Comments' ? 'cm' + (this._canvas._maxCommentsIndex + 1) : 'cs' + (this._canvas._maxComIndex + 1),
                 l: position.x - offset.x,
                 t: position.y - offset.y,
-                zIndex: this._canvas._maxZIndex + 1,
+                zIndex: comType === 'Comments' ? this._canvas._maxCommentsZIndex + 1 : this._canvas._maxZIndex + 1,
                 comType,
                 customState,
                 commentsMap: Map(),
@@ -225,12 +225,19 @@ export class ComponentsUtil {
      * 更新选中组件的层级
      * @param adjustment 调整层级数量
      */
-    public updateSelectedComponentsZIndex(adjustment: number): void {
+    public updateSelectedComponentsZIndex(adjustment: number, adjustmentComments: number): void {
         const selectedComponents: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         selectedComponents.map(
             (com: IComponent) => {
                 const oldZIndex: number = com.getHierarchy();
-                const newZIndex = oldZIndex + adjustment;
+                let newZIndex: number = 0;
+
+                const comType: ComponentType | null = com.getComType();
+                if (comType === 'Comments') {
+                    newZIndex = oldZIndex + adjustmentComments;
+                } else {
+                    newZIndex = oldZIndex + adjustment;
+                }
 
                 com.setHierarchy(newZIndex);
             }
@@ -240,22 +247,33 @@ export class ComponentsUtil {
     /**
      * 获得选中组件的z-Index范围
      */
-    public getSelectedComponentsZIndexRange(): { maxZIndex: number; minZIndex: number } {
-        let maxZIndex: number = 0;
-        let minZIndex: number = 100000;
+    public getSelectedComponentsZIndexRange(): {
+        maxZIndex: number;
+        minZIndex: number;
+        maxCommentsZIndex: number;
+        minCommentsZIndex: number;
+    } {
+        const zIndexList: number[] = [];
+        const commentsZIndexList: number[] = [];
 
         const selectedComponents: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         selectedComponents.map(
             (com: IComponent) => {
                 const zIndex: number = com.getHierarchy();
-                maxZIndex = Math.max(maxZIndex, zIndex);
-                minZIndex = Math.min(minZIndex, zIndex);
+                const comType: ComponentType | null = com.getComType();
+                if (comType === 'Comments') {
+                    commentsZIndexList.push(zIndex);
+                } else {
+                    zIndexList.push(zIndex);
+                }
             }
         );
 
         return {
-            maxZIndex,
-            minZIndex
+            maxZIndex: isFinite(Math.max(...zIndexList))  === true ? Math.max(...zIndexList) : this._canvas._maxZIndex,
+            minZIndex: isFinite(Math.min(...zIndexList))  === true ? Math.min(...zIndexList) : this._canvas._minZIndex,
+            maxCommentsZIndex: isFinite(Math.max(...commentsZIndexList))  === true ? Math.max(...commentsZIndexList) : this._canvas._maxCommentsZIndex,
+            minCommentsZIndex: isFinite(Math.min(...commentsZIndexList))  === true ? Math.min(...commentsZIndexList) : this._canvas._minCommentsZIndex
         };
     }
 

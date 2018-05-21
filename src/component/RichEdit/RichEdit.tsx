@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { EditType } from '../BaseComponent';
 import { DraftPublic } from './Draft';
 const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils } = DraftPublic;
 
@@ -139,61 +140,22 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     }
 
     /**
-     * 隐藏编辑框
-     */
-    hiddenEditCom = () => {
-        // this.setState({
-        //     maxWidth: 1,
-        //     top: -10000,
-        //     left: -10000,
-        //     style: null
-        // });
-    }
-
-    /**
-     * TODO KeyDown
-     */
-    onKeyDown = (e: any) => {
-        // e.preventDefault();
-    }
-
-    /**
-     * TODO KeyUp
-     */
-    onKeyUp = (e: any) => {
-        // e.preventDefault();
-    }
-
-    /**
      * 设置编辑框的状态
-     * @param maxWidth 编辑框最大宽度
-     * @param top 相对document的Y偏移量
-     * @param left 相对document的X偏移量
-     * @param font fontStyle
+     * @param config 设置的对象
      */
-    setEditComState = (maxWidth: number, top: number, left: number, style: CSSStyleDeclaration): void => {
-        // this.setState({
-        //     maxWidth,
-        //     top,
-        //     left,
-        //     style
-        // });
-    }
-
-    /**
-     * 设置编辑框内的值
-     */
-    // TODO value带格式的富文本
-    setValue = (value: string): void => {
-        // (this.editor as HTMLElement).innerHTML = value;
+    setEditState = (config: any): void => {
+        this.setState(config);
     }
 
     /**
      * 获取编辑框内的值
      */
     // TODO value带格式的富文本
-    getValue = (): void => {
-        // return (this.editor as HTMLElement).innerHTML;
+    getEditValue = (richEditType: EditType): any => {
+        switch (richEditType) {
+            case 'RichEdit':
+                return this.state.editorState;
+        }
     }
 
     /**

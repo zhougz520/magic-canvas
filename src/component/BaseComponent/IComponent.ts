@@ -2,6 +2,7 @@ import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { BaseState } from './model/BaseState';
+import { EditType, IRichEditOption } from './model/types';
 
 import { IAnchor } from '../util';
 import { Map } from 'immutable';
@@ -92,6 +93,24 @@ export interface IComponent {
      * 获取组件样式表
      */
     getStyle: (com: any) => CSSStyleDeclaration;
+
+    /**
+     * 获取组件富文本编辑模式
+     * 返回值：富文本、普通文本、多行文本、无文本编辑
+     */
+    getRichEditType: () => EditType;
+
+    /**
+     * 获取现实富文本编辑器的一些选项
+     * { position, size }
+     */
+    getRichEditOption: () => IRichEditOption;
+
+    /**
+     * 隐藏可编辑部分
+     * 呼出富文本编辑器时隐藏组件中被编辑部分
+     */
+    hiddenEditorDom: (isHidden: boolean) => void;
 
     getPropertiesToProperty: () =>  Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 

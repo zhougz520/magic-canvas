@@ -173,26 +173,32 @@ export const pageActions = {
 
     // 上移一层
     upperCom() {
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(1);
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(1, 1);
     },
 
     // 下移一层
     lowerCom() {
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(-1);
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(-1, -1);
     },
 
     // 置于顶层
     frontCom() {
-        const selectedComponentZIndexMin: number = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange().minZIndex;
+        const selectedComponentsZIndexRange = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange();
+        const selectedComponentZIndexMin: number = selectedComponentsZIndexRange.minZIndex;
         const maxZIndex: number = this.getThis()._maxZIndex + 1;
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin);
+        const selectedCommentsZIndexMin: number = selectedComponentsZIndexRange.minCommentsZIndex;
+        const maxCommentsZIndex: number = this.getThis()._maxCommentsZIndex + 1;
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin, maxCommentsZIndex - selectedCommentsZIndexMin);
     },
 
     // 置于底层
     backCom() {
-        const selectedComponentZIndexMax: number = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange().maxZIndex;
+        const selectedComponentsZIndexRange = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange();
+        const selectedComponentZIndexMax: number = selectedComponentsZIndexRange.maxZIndex;
         const minZIndex: number = this.getThis()._minZIndex - 1;
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax);
+        const selectedCommentsZIndexMax: number = selectedComponentsZIndexRange.maxCommentsZIndex;
+        const minCommentsZIndex: number = this.getThis()._minCommentsZIndex - 1;
+        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax, minCommentsZIndex - selectedCommentsZIndexMax);
     },
 
     // 左对齐
