@@ -2,10 +2,11 @@ import * as React from 'react';
 import { RichEdit, Wingman } from '../RichEdit';
 
 import { BaseState, IComponent, convertFromDataToBaseState, IComData } from '../BaseComponent';
-import { ICanvasState, IComponentList } from './ICanvasState';
+import { ICanvasState } from './ICanvasState';
 import { ICanvasProps } from './ICanvasProps';
 import { ICanvasComponent } from './ICanvasComponent';
 import { CanvasStyle, ContainerStyle } from './model/CanvasStyle';
+import { IComponentList } from './model/types';
 
 import { CanvasUtil } from './utils/CanvasUtil';
 import { ComponentsUtil } from './utils/ComponentsUtil';
@@ -73,6 +74,8 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _newComponentCid: string | null = null;          // 新添加的组件cid，用于选中新添加组件
     public _isWingmanFocus: boolean = false;                // 僚机是否获取到焦点
     public _isRichEditMode: boolean = false;                // 是否富文本编辑模式
+    public _undoStack: Stack<any> = Stack();                // 撤销栈
+    public _redoStack: Stack<any> = Stack();                // 重做栈
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中

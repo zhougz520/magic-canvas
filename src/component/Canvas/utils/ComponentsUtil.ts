@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IBoundary, IOffset, IRange, AlignType } from '../model/types';
 import { BaseState, IComponent, ComponentType, IComData, convertFromDataToBaseState, IPosition, ISize } from '../../BaseComponent';
 import { Canvas } from '../Canvas';
-import { IComponentList } from '../ICanvasState';
+import { IComponentList } from '../model/types';
 import { Map, OrderedSet, Set } from 'immutable';
 
 export class ComponentsUtil {

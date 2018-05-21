@@ -1,6 +1,5 @@
 import { Canvas } from '../Canvas';
-import { IComponentList } from '../ICanvasState';
-import { DragType, IOffset } from '../model/types';
+import { IComponentList, DragType, IOffset } from '../model/types';
 import { IComponent } from '../../BaseComponent';
 
 import { Map, OrderedSet, Set } from 'immutable';

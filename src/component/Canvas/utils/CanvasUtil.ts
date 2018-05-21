@@ -1,5 +1,5 @@
 import { Canvas } from '../Canvas';
-import { IComponentList } from '../ICanvasState';
+import { IComponentList } from '../model/types';
 
 import { OrderedSet } from 'immutable';
 

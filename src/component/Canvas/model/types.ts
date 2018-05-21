@@ -1,4 +1,11 @@
-import { IComponent } from '../../BaseComponent';
+import { BaseState, IComponent } from '../../BaseComponent';
+
+export interface IComponentList {
+    cid: string;
+    comPath: string;
+    baseState: BaseState;
+    childData?: any;
+}
 
 // 鼠标拖拽类型
 export enum DragType {

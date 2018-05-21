@@ -1,5 +1,5 @@
 
-import { BaseState } from '../BaseComponent';
+import { IComponentList } from './model/types';
 import { IAnchor } from '../util';
 import { OrderedSet, List, Stack } from 'immutable';
 
@@ -9,13 +9,6 @@ export type OperationType = 'create' | 'modify' | 'remove';
 export interface ISComponentList {
     cid: string;
     comData: any;
-}
-
-export interface IComponentList {
-    cid: string;
-    comPath: string;
-    baseState: BaseState;
-    childData?: any;
 }
 
 export interface IStack {
