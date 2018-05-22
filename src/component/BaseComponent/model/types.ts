@@ -8,4 +8,4 @@ export interface IRichEditOption {
     size: ISize;
 }
 
-export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Stack';
+export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Custom' | 'Stack';

@@ -246,7 +246,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
-        this.setBaseState(newBaseState);
+        this.setState({
+            baseState: newBaseState
+        }, () => this.callBackForRender('Custom'));
     }
 
     /**
@@ -573,6 +575,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 break;
             case 'Rich':
                 this.setCanvasUndoStack();
+                break;
+            case 'Custom':
                 break;
             case 'Stack':
                 this.setCanvasUndoStack();
