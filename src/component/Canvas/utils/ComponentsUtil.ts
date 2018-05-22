@@ -3,7 +3,7 @@ import { IBoundary, IOffset, IRange, AlignType } from '../model/types';
 import { BaseState, IComponent, ComponentType, IComData, convertFromDataToBaseState, IPosition, ISize } from '../../BaseComponent';
 import { Canvas } from '../Canvas';
 import { IComponentList } from '../model/types';
-import { Map, OrderedSet, Set } from 'immutable';
+import { Map, OrderedSet, Set, List } from 'immutable';
 
 export class ComponentsUtil {
     private _canvas: Canvas;
@@ -17,54 +17,81 @@ export class ComponentsUtil {
     }
 
     /**
-     * 画布增加组件,返回新的组件List
-     * @param data 组件的数据流
+     * 画布增加组件
+     * @param dataList 组件的数据流List
      * @param position 组件在画布上添加的位置
      */
-    addCancasComponent = (data: any, position: IOffset = { x: 0, y: 0 }): OrderedSet<IComponentList> => {
-        const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, position);
-        const baseState: BaseState = convertFromDataToBaseState(comData);
-        // 记录新添加的组件cid
-        this._canvas._newComponentCid = comData.id;
+    addCancasComponent = (dataList: List<any>, position: IOffset = { x: 0, y: 0 }, isSetUndoStack: boolean = true): void => {
+        let addComponentList: List<IComponentList> = List();
+        const timeStamp: number = Date.parse(new Date().toString());
 
-        const oldComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
-        const newComponentList: OrderedSet<IComponentList> = oldComponentList.add({
-            cid: comData.id,
-            comPath: comData.comPath,
-            baseState,
-            childData: comData.p
+        let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        dataList.map(
+            (data: any) => {
+                const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, position);
+                const baseState: BaseState = convertFromDataToBaseState(comData);
+                const component: IComponentList = {
+                    cid: comData.id,
+                    comPath: comData.comPath,
+                    baseState,
+                    childData: comData.p
+                };
+
+                componentList = componentList.add(component);
+                addComponentList = addComponentList.push(component);
+            }
+        );
+
+        // 添加撤销栈
+        if (isSetUndoStack === true) {
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'create',
+                addComponentList
+            );
+        }
+
+        this._canvas.setState({
+            componentList
         });
-
-        return newComponentList;
     }
 
     /**
      * 画布删除组件
      */
-    deleteCanvasComponent = (cids: Set<string>, isSetStack: boolean = true) => {
+    deleteCanvasComponent = (cids: Set<string>, isSetUndoStack: boolean = true) => {
+        let delComponentList: List<IComponentList> = List();
+        const timeStamp: number = Date.parse(new Date().toString());
+
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         componentList.map(
             (component: IComponentList) => {
                 if (cids.contains(component.cid)) {
                     componentList = componentList.delete(component);
+
+                    delComponentList = delComponentList.push({
+                        cid: component.cid,
+                        comPath: component.comPath,
+                        baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
+                        // TODO 删除的时候需要记录最新的childData？
+                        childData: component.childData
+                    });
                 }
             }
         );
 
-        const state: any = {
-            componentList
-        };
-        // if (isSetStack === true) {
-        //     // 删除组件记栈
-        //     const oldUndoStack: Stack<IStack> = this.state.undoStack;
-        //     const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this, oldUndoStack, 'remove', comDataList);
-        //     state = {
-        //         componentList,
-        //         undoStack: newUndoStack
-        //     };
-        // }
+        // 添加撤销栈
+        if (isSetUndoStack === true) {
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'remove',
+                delComponentList
+            );
+        }
 
-        this._canvas.setState(state);
+        this._canvas.setState({
+            componentList
+        });
         this._canvas._drawUtil.clearSelected();
         this._canvas._drawUtil.clearDragBox();
     }
@@ -80,14 +107,20 @@ export class ComponentsUtil {
                 const comModule = this._canvas._componentsUtil.getComponentModule(com.comPath);
 
                 array[com.cid] = React.createElement(comModule,
-                    Object.assign({}, { baseState: com.baseState, childData: com.childData }, {
+                    Object.assign({}, {
+                        baseState: com.baseState,
+                        childData: com.childData,
+                        comPath: com.comPath
+                    }, {
                         ref: `c.${com.cid}`,
+                        pageMode: this._canvas.props.pageMode,
                         selectionChanging: this._canvas.selectionChanging,
                         repaintSelected: this._canvas._drawUtil.repaintSelected,
                         repaintCanvas: this._canvas._canvasUtil.repaintCanvas,
                         dbClickToBeginEdit: this._canvas._richEditUtil.dbClickToBeginEdit,
                         getComponent: this._canvas.getComponent,
-                        resetMaxAndMinZIndex: this._canvas._canvasUtil.resetZIndexAndComIndex
+                        resetMaxAndMinZIndex: this._canvas._canvasUtil.resetZIndexAndComIndex,
+                        setCanvasUndoStack: this._canvas._stackUtil.setCanvasUndoStack
                     })
                 );
             }

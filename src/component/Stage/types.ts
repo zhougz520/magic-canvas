@@ -1,3 +1,9 @@
+/**
+ * 'Run'：运行模式
+ * 'Edit'：编辑模式
+ */
+export type PageMode = 'Run' | 'Edit';
+
 // 画布的偏移量
 export interface ICompos {
     stageOffset: { top: number, left: number, right: number, bottom: number };  // stage相对body的偏移量

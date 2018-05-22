@@ -1,60 +1,49 @@
-import { OperationType, ISComponentList, IStack } from '../ICanvasState';
-import { Map, OrderedSet, List, Stack } from 'immutable';
+import { Canvas } from '../Canvas';
+import { IStack, OperationType, IComponentList } from '../model/types';
+import { List, Stack } from 'immutable';
 
-export const StackUtil = {
-    getCanvasStack(
-        t: any, oldUndoStack: Stack<IStack>,
+export class StackUtil {
+    private _canvas: Canvas;
+
+    /**
+     * 构造函数，通过画布对象初始化
+     * @param canvas 画布对象
+     */
+    public constructor(canvas: Canvas) {
+        this._canvas = canvas;
+    }
+
+    /**
+     * 设置画布的撤销栈
+     * @param timeStamp 当前时间戳
+     * @param operationType 操作类型
+     * @param componentList 操作组件List
+     */
+    setCanvasUndoStack = (
+        timeStamp: number,
         operationType: OperationType,
-        comsData: Map<string, any> | OrderedSet<any>
-    ): Stack<IStack> {
-        let newUndoStack: Stack<IStack>;
-        let componentList: List<ISComponentList> = List();
-        let stackData: IStack;
+        componentList: List<IComponentList>
+    ): void => {
+        let currentUndoStack: Stack<IStack> = this._canvas._undoStack;
 
-        switch (operationType) {
-            case 'create':
-                (comsData as OrderedSet<any>).map(
-                    (comData) => {
-                        const component: ISComponentList = {
-                            cid: comData.p.id,
-                            comData
-                        };
-
-                        componentList = componentList.push(component);
-                    }
-                );
-                stackData = {
-                    operationType,
-                    componentList
-                };
-                newUndoStack = oldUndoStack.push(stackData);
-                break;
-            case 'modify':
-                newUndoStack = oldUndoStack;
-                break;
-            case 'remove':
-                (comsData as OrderedSet<any>).map(
-                    (comData) => {
-                        comData.p.baseState = t.getComponent(comData.p.id).getBaseState();
-                        const component: ISComponentList = {
-                            cid: comData.p.id,
-                            comData
-                        };
-
-                        componentList = componentList.push(component);
-                    }
-                );
-                stackData = {
-                    operationType,
-                    componentList
-                };
-                newUndoStack = oldUndoStack.push(stackData);
-                break;
-            default:
-                newUndoStack = oldUndoStack;
-                break;
+        // 如果推过来的栈与第一个栈时间戳一致，则进行合并。否则作为新栈
+        if (currentUndoStack.first() && currentUndoStack.first().timeStamp === timeStamp) {
+            componentList.map(
+                (component: IComponentList) => {
+                    currentUndoStack.first().componentList = currentUndoStack.first().componentList.update(
+                        // tslint:disable-next-line:arrow-return-shorthand
+                        (value: List<IComponentList>) => { return value.push(component); }
+                    );
+                }
+            );
+        } else {
+            currentUndoStack = currentUndoStack.push({
+                timeStamp,
+                operationType,
+                componentList
+            });
         }
 
-        return newUndoStack;
+        this._canvas._undoStack = currentUndoStack;
     }
-};
+}

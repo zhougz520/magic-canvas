@@ -6,15 +6,16 @@ import { ICanvasState } from './ICanvasState';
 import { ICanvasProps } from './ICanvasProps';
 import { ICanvasComponent } from './ICanvasComponent';
 import { CanvasStyle, ContainerStyle } from './model/CanvasStyle';
-import { IComponentList } from './model/types';
+import { IComponentList, IStack } from './model/types';
 
+import { CanvasGlobalParam } from './utils/CanvasGlobalParam';
 import { CanvasUtil } from './utils/CanvasUtil';
 import { ComponentsUtil } from './utils/ComponentsUtil';
 import { DrawUtil } from './utils/DrawUtil';
 import { MouseAndKeyUtil } from './utils/MouseAndKeyUtil';
 import { PositionUtil } from './utils/PositionUtil';
 import { RichEditUtil } from './utils/RichEditUtil';
-import { CanvasGlobalParam } from './utils/CanvasGlobalParam';
+import { StackUtil } from './utils/StackUtil';
 
 import { HandleModes } from './handlers/HandleModes';
 import { HandlerMap } from './handlers/canvas/HandlerMap';
@@ -41,13 +42,14 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     /**
      * 画布的工具包
      */
+    public _canvasGlobalParam: CanvasGlobalParam;
     public _canvasUtil: CanvasUtil;
     public _componentsUtil: ComponentsUtil;
     public _drawUtil: DrawUtil;
     public _mouseAndKeyUtil: MouseAndKeyUtil;
     public _positionUtil: PositionUtil;
     public _richEditUtil: RichEditUtil;
-    public _canvasGlobalParam: CanvasGlobalParam;
+    public _stackUtil: StackUtil;
 
     /**
      * 把事件路由到处理程序
@@ -68,14 +70,14 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _maxZIndex: number = 0;                          // 当前最大z-Index
     public _minZIndex: number = 0;                          // 当前最小z-Index
     public _maxComIndex: number = 0;                        // 当前最大组件index
-    public _maxCommentsZIndex: number = 100000;                  // 当前最大批注z-Index
-    public _minCommentsZIndex: number = 100000;                  // 当前最小批注z-Index
+    public _maxCommentsZIndex: number = 100000;             // 当前最大批注z-Index
+    public _minCommentsZIndex: number = 100000;             // 当前最小批注z-Index
     public _maxCommentsIndex: number = 0;                   // 当前最大批注index
     public _newComponentCid: string | null = null;          // 新添加的组件cid，用于选中新添加组件
     public _isWingmanFocus: boolean = false;                // 僚机是否获取到焦点
     public _isRichEditMode: boolean = false;                // 是否富文本编辑模式
-    public _undoStack: Stack<any> = Stack();                // 撤销栈
-    public _redoStack: Stack<any> = Stack();                // 重做栈
+    public _undoStack: Stack<IStack> = Stack();             // 撤销栈
+    public _redoStack: Stack<IStack> = Stack();             // 重做栈
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -87,13 +89,14 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         /**
          * 初始化画布工具包
          */
+        this._canvasGlobalParam = new CanvasGlobalParam(this);
         this._canvasUtil = new CanvasUtil(this);
         this._componentsUtil = new ComponentsUtil(this);
         this._drawUtil = new DrawUtil(this);
         this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
         this._positionUtil = new PositionUtil(this);
         this._richEditUtil = new RichEditUtil(this);
-        this._canvasGlobalParam = new CanvasGlobalParam(this);
+        this._stackUtil = new StackUtil(this);
 
         // 把props的components的数据转译为baseState
         let componentList: OrderedSet<IComponentList> = OrderedSet();
@@ -113,9 +116,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
 
         this.state = {
             anchor: null,
-            componentList,
-            undoStack: Stack(),
-            redoStack: Stack()
+            componentList
         };
 
         // 绑定操作动作（模仿.net partial）

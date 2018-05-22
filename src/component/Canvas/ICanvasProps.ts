@@ -1,10 +1,12 @@
 import { IDrawComponent } from '../Draw';
 
-import { ICompos, ComponentsType } from '../Stage/types';
+import { ICompos, ComponentsType, PageMode } from '../Stage';
 import { IBoundary, IOffset } from './model/types';
 import { Map } from 'immutable';
 
 export interface ICanvasProps {
+    // 页面模式
+    pageMode: PageMode;
     // 组件数据
     components: ComponentsType;
     // 高性能模式

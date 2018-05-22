@@ -129,6 +129,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                 <Draw
                     ref={(render) => this.draw = render}
                     getCanvas={this.getCanvas}
+                    pageMode={this.props.pageMode}
                     canvasSize={canvasSize}
                     componentPosition={componentPosition}
                     getStageScroll={this.getStageScroll}
@@ -136,6 +137,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                 <Canvas
                     ref={(render) => this.canvas = render}
                     getDraw={this.getDraw}
+                    pageMode={this.props.pageMode}
                     highPerformance={highPerformance}
                     canvasSize={canvasSize}
                     componentPosition={componentPosition}

@@ -7,3 +7,5 @@ export interface IRichEditOption {
     position: IPosition;
     size: ISize;
 }
+
+export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Stack';

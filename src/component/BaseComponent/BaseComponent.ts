@@ -9,10 +9,11 @@ import { BaseState } from './model/BaseState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import { EditType, IRichEditOption } from './model/types';
+import { EditType, IRichEditOption, CallBackType } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
-import { Stack, Map } from 'immutable';
+import { OperationType, IComponentList } from '../Canvas';
+import { Stack, Map, List } from 'immutable';
 
 /**
  * 基类
@@ -196,7 +197,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.callBackForZIndex);
+        }, () => this.callBackForRender('ZIndex'));
     }
 
     /**
@@ -220,7 +221,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
-        this.setBaseState(newBaseState);
+        this.setState({
+            baseState: newBaseState
+        }, () => this.callBackForRender('Rich'));
     }
 
     /**
@@ -307,7 +310,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             redoStack: Stack()
         });
 
-        this.setState({ baseState: newBaseState });
+        this.setState({
+            baseState: newBaseState
+        }, () => this.callBackForRender('Stack'));
     }
 
     /**
@@ -419,6 +424,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param customState 组件自定义State
      */
     protected initBaseStateWithCustomState(customState: any = null, richChildNode: any = null): BaseState {
+        // TODO 区分新增加载和重做加载
         const baseState: BaseState = this.props.baseState;
 
         let newBaseState: BaseState = baseState;
@@ -437,6 +443,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 }
             ) as ContentState;
         }
+        // TODO 不能重新生成baseState
         newBaseState = BaseState.createWithContent(newContentState);
 
         return newBaseState;
@@ -467,7 +474,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.callBackForSizeAndPosition);
+        }, () => this.callBackForRender('Size'));
     }
 
     /**
@@ -495,10 +502,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, this.callBackForSizeAndPosition);
+        }, () => this.callBackForRender('Position'));
     }
 
-    // render后的回调函数
+    /**
+     * 设置Size、Position后回调函数
+     */
     protected callBackForSizeAndPosition = (): void => {
         // 通知画布重绘组件的选中框
         this.props.repaintSelected();
@@ -540,8 +549,35 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // }
     }
 
+    /**
+     * 设置ZIndex后回调函数
+     */
     protected callBackForZIndex = (): void => {
         this.props.resetMaxAndMinZIndex();
+    }
+
+    /**
+     * setState后回掉总入口
+     */
+    protected callBackForRender = (type: CallBackType): void => {
+        switch (type) {
+            case 'Size':
+                this.callBackForSizeAndPosition();
+                break;
+            case 'Position':
+                this.callBackForSizeAndPosition();
+                break;
+            case 'ZIndex':
+                this.callBackForZIndex();
+                this.setCanvasUndoStack();
+                break;
+            case 'Rich':
+                this.setCanvasUndoStack();
+                break;
+            case 'Stack':
+                this.setCanvasUndoStack();
+                break;
+        }
     }
 
     /**
@@ -575,6 +611,28 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     protected doDbClickToEdit = (): void => {
         if (this.props.dbClickToBeginEdit) {
             this.props.dbClickToBeginEdit();
+        }
+    }
+
+    /**
+     * 设置画布撤销栈
+     */
+    protected setCanvasUndoStack = (): void => {
+        if (this.props.setCanvasUndoStack) {
+            const timeStamp: number = Date.parse(new Date().toString());
+            const operationType: OperationType = 'modify';
+            const componentList: List<IComponentList> = List().push({
+                cid: this.getCid(),
+                comPath: this.props.comPath,
+                baseState: this.getBaseState(),
+                childData: this.props.childData
+            }) as List<IComponentList>;
+
+            this.props.setCanvasUndoStack(
+                timeStamp,
+                operationType,
+                componentList
+            );
         }
     }
 }

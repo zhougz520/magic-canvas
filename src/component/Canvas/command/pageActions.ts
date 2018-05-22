@@ -1,8 +1,7 @@
 import { Canvas } from '../Canvas';
-import { IBoundary, IRange } from '../model/types';
-import { IStack, ISComponentList } from '../ICanvasState';
+import { IBoundary, IRange, IStack, IComponentList } from '../model/types';
 import { IComponent } from '../../BaseComponent';
-import { Map, Stack, Set } from 'immutable';
+import { Map, Stack, Set, List, OrderedSet } from 'immutable';
 
 export const pageActions = {
     bind(ins: any) {
@@ -28,12 +27,12 @@ export const pageActions = {
 
         // 批注组件的数据
         const data = {
-            offset: {x: 0, y: 0},
-            props: {name: '批注', w: 204, h: 170},
+            offset: { x: 0, y: 0 },
+            props: { name: '批注', w: 204, h: 170 },
             type: 'Comments/Comments',
             lineList: Map()
         };
-        let position: {x: number, y: number};
+        let position: { x: number, y: number };
 
         const selectedComponents: Map<string, IComponent> = this.getThis()._canvasGlobalParam.getSelectedComponents();
         if (selectedComponents.size > 0) {
@@ -52,7 +51,7 @@ export const pageActions = {
                     const sizeCom = com.getSize();
 
                     lineList = lineList.set(
-                        key, {x1: positionCom.left + sizeCom.width, y1: positionCom.top, x2: position.x, y2: position.y}
+                        key, { x1: positionCom.left + sizeCom.width, y1: positionCom.top, x2: position.x, y2: position.y }
                     );
                 }
             );
@@ -65,7 +64,7 @@ export const pageActions = {
             };
         }
 
-        this.getThis()._componentsUtil.addCancasComponent(data, position);
+        this.getThis()._componentsUtil.addCancasComponent(List().push(data), position);
         // 添加批注记栈
         // const comDataList: OrderedSet<any> = OrderedSet().add(comData);
         // const oldUndoStack: Stack<IStack> = this.getThis().state.undoStack;
@@ -77,22 +76,34 @@ export const pageActions = {
 
     // 画布撤销
     undoCanvas() {
-        const undoStack: Stack<IStack> = this.getThis().state.undoStack;
-        const currentStack: IStack = undoStack.peek();
-        if (!currentStack) {
+        const undoStack: Stack<IStack> = this.getThis()._undoStack;
+        const redoStack: Stack<IStack> = this.getThis()._redoStack;
+        let currentComponentList: OrderedSet<IComponentList> = this.getThis().state.componentList;
+
+        const currentUndoStack: IStack = undoStack.peek();
+        if (!currentUndoStack) {
             return;
         }
 
-        const { operationType, componentList } = currentStack;
+        let resetCurrentUndoStack: IStack;
+        let resetComponentList: List<IComponentList> = List();
+        const { timeStamp, operationType, componentList } = currentUndoStack;
 
         switch (operationType) {
             case 'create':
                 let cids: Set<string> = Set();
                 componentList.map(
-                    (component: ISComponentList) => {
+                    (component: IComponentList) => {
                         const com = this.getThis().getComponent(component.cid);
                         if (com) {
-                            component.comData.p.baseState = com.getBaseState();
+                            resetComponentList = resetComponentList.push(
+                                {
+                                    cid: component.cid,
+                                    comPath: component.comPath,
+                                    baseState: com.getBaseState(),
+                                    childData: component.childData
+                                }
+                            );
                         }
 
                         cids = cids.add(component.cid);
@@ -101,12 +112,21 @@ export const pageActions = {
                 this.getThis()._componentsUtil.deleteCanvasComponent(cids, false);
                 break;
             case 'modify':
+                componentList.map(
+                    (component: IComponentList) => {
+                        const com = this.getThis().getComponent(component.cid);
+                        if (com) {
+                            resetComponentList = resetComponentList.push(component);
+                            com.undo();
+                        }
+                    }
+                );
                 break;
             case 'remove':
-                let currentComponentList = this.getThis().state.componentList;
                 componentList.map(
-                    (component: ISComponentList) => {
-                        currentComponentList = currentComponentList.add(component.comData);
+                    (component: IComponentList) => {
+                        resetComponentList = resetComponentList.push(component);
+                        currentComponentList = currentComponentList.add(component);
                     }
                 );
                 this.getThis().setState({
@@ -117,28 +137,36 @@ export const pageActions = {
                 break;
         }
 
-        this.getThis().setState({
-            undoStack: undoStack.shift(),
-            redoStack: this.getThis().state.redoStack.push(currentStack)
-        });
+        resetCurrentUndoStack = {
+            timeStamp,
+            operationType,
+            componentList: resetComponentList
+        };
+        this.getThis()._undoStack = undoStack.shift();
+        this.getThis()._redoStack = redoStack.push(resetCurrentUndoStack);
     },
 
     // 画布重做
     redoCanvas() {
-        const redoStack: Stack<IStack> = this.getThis().state.redoStack;
-        const currentStack: IStack = redoStack.peek();
-        if (!currentStack) {
+        const undoStack: Stack<IStack> = this.getThis()._undoStack;
+        const redoStack: Stack<IStack> = this.getThis()._redoStack;
+        let currentComponentList: OrderedSet<IComponentList> = this.getThis().state.componentList;
+
+        const currentRedoStack: IStack = redoStack.peek();
+        if (!currentRedoStack) {
             return;
         }
 
-        const { operationType, componentList } = currentStack;
+        let resetCurrentRedoStack: IStack;
+        let resetComponentList: List<IComponentList> = List();
+        const { timeStamp, operationType, componentList } = currentRedoStack;
 
         switch (operationType) {
             case 'create':
-                let currentComponentList = this.getThis().state.componentList;
                 componentList.map(
-                    (component: ISComponentList) => {
-                        currentComponentList = currentComponentList.add(component.comData);
+                    (component: IComponentList) => {
+                        resetComponentList = resetComponentList.push(component);
+                        currentComponentList = currentComponentList.add(component);
                     }
                 );
                 this.getThis().setState({
@@ -146,14 +174,30 @@ export const pageActions = {
                 });
                 break;
             case 'modify':
+                componentList.map(
+                    (component: IComponentList) => {
+                        const com = this.getThis().getComponent(component.cid);
+                        if (com) {
+                            resetComponentList = resetComponentList.push(component);
+                            com.redo();
+                        }
+                    }
+                );
                 break;
             case 'remove':
                 let cids: Set<string> = Set();
                 componentList.map(
-                    (component: ISComponentList) => {
+                    (component: IComponentList) => {
                         const com = this.getThis().getComponent(component.cid);
                         if (com) {
-                            component.comData.p.baseState = com.getBaseState();
+                            resetComponentList = resetComponentList.push(
+                                {
+                                    cid: component.cid,
+                                    comPath: component.comPath,
+                                    baseState: com.getBaseState(),
+                                    childData: component.childData
+                                }
+                            );
                         }
 
                         cids = cids.add(component.cid);
@@ -165,10 +209,13 @@ export const pageActions = {
                 break;
         }
 
-        this.getThis().setState({
-            undoStack: this.getThis().state.undoStack.push(currentStack),
-            redoStack: redoStack.shift()
-        });
+        resetCurrentRedoStack = {
+            timeStamp,
+            operationType,
+            componentList: resetComponentList
+        };
+        this.getThis()._undoStack = undoStack.push(resetCurrentRedoStack);
+        this.getThis()._redoStack = redoStack.shift();
     },
 
     // 上移一层

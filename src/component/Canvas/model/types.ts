@@ -1,10 +1,19 @@
 import { BaseState, IComponent } from '../../BaseComponent';
+import { List } from 'immutable';
 
 export interface IComponentList {
     cid: string;
     comPath: string;
     baseState: BaseState;
     childData?: any;
+}
+
+export type OperationType = 'create' | 'modify' | 'remove';
+
+export interface IStack {
+    timeStamp: number;
+    operationType: OperationType;
+    componentList: List<IComponentList>;
 }
 
 // 鼠标拖拽类型
