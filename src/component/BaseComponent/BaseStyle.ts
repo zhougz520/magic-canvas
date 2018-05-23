@@ -13,7 +13,7 @@ export const BaseStyle = (
         overflow: 'hidden',
         transition: 'none',
         position: 'absolute',
-        border: hasBorder ? '1px solid' : null,
+        border: hasBorder ? '1px solid' : undefined,
         outline: 'none',
         width: size.getWidth(),
         height: size.getHeight(),

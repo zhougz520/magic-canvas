@@ -335,7 +335,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param com 组件对象
      */
     public getStyle = (com: any): CSSStyleDeclaration => {
-        const style = window.getComputedStyle(ReactDOM.findDOMNode(com));
+        const style = window.getComputedStyle(ReactDOM.findDOMNode(com) as Element);
 
         return style;
     }
