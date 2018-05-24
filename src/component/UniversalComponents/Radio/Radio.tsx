@@ -7,6 +7,7 @@ import { Radio as AntRadio } from 'antd';
 import { RadioState } from './RadioState';
 import { Map } from 'immutable';
 import { PropertiesEnum } from '../types';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 const AntRadioButton = AntRadio.Button;
 
@@ -38,9 +39,11 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
                     ref={(handler: HTMLElement | null) => this.com = handler}
                     style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 >
+                    <MaskLayer id={this.getCid()} />
                     <AntRadioButton
                         // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                        style={{
+                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                             fontSize: this.getCustomState().getFontSize() + 'px',
                             fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
                             borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
@@ -49,7 +52,7 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
                         disabled={this.getCustomState().getDisabled()}
                     >
                         <span
-                            style={{display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration(), fontStyle: this.getCustomState().getFontStyle()}}
+                            style={{ display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration(), fontStyle: this.getCustomState().getFontStyle() }}
                         >
                             {this.getCustomState().getValue()}
                         </span>
@@ -65,7 +68,8 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
                 >
                     <AntRadio
                         // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                        style={{
+                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                             fontSize: this.getCustomState().getFontSize() + 'px',
                             fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
                             borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px',
@@ -76,7 +80,7 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
 
                     >
                         <span
-                            style={{display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration()}}
+                            style={{ display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration() }}
                         >
                             {this.getCustomState().getValue()}
                         </span>
@@ -86,40 +90,40 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         }
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}> => {
-        return  [
-               {
-                    pTitle: '选项',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '是否选中',
-                    pKey: 'checked',
-                    pValue: this.getCustomState().getChecked(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '是否为方形按钮',
-                    pKey: 'isButton',
-                    pValue: this.getCustomState().getIsButton(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+        return [
+            {
+                pTitle: '选项',
+                pKey: 'value',
+                pValue: this.getCustomState().getValue(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '是否选中',
+                pKey: 'checked',
+                pValue: this.getCustomState().getChecked(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '是否为方形按钮',
+                pKey: 'isButton',
+                pValue: this.getCustomState().getIsButton(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {

@@ -24,7 +24,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     com: any = null;
-    onlySelected: boolean = false;
 
     // TODO 基类中不写构造器
     constructor(props: P, context?: any) {
@@ -42,6 +41,16 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             } as Readonly<S>;
         }
 
+    }
+    componentDidMount() {
+        const currMaskLayer = document.getElementById(this.getCid());
+        // console.log('id', this.props.id);
+        if (currMaskLayer !== null) {
+            currMaskLayer.style.width = this.getSize().width + 'px';
+            currMaskLayer.style.height = this.getSize().height + 'px';
+            // currMaskLayer.style.top = this.getPosition().top + 'px';
+            // currMaskLayer.style.left = this.getPosition().left + 'px';
+        }
     }
     componentWillUnmount() {
         // TODO Comments优化代码
@@ -412,7 +421,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         this.setState({
             selectedId: id
         });
-        this.onlySelected = true;
     }
 
     /**
@@ -596,15 +604,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             this.props.selectionChanging(cid);
         }
         e.preventDefault();
-        // if (this.onlySelected) {
-        //     // alert('我是点击baseComponent');
-        //     console.log('this.onlySelected 1111', this.onlySelected);
-        //     e.stopPropagation();
-        //     this.onlySelected = false;
-        //     console.log('this.onlySelected 2222', this.onlySelected);
-        // }
-        localStorage.setItem('currHandle', 'base');
-        localStorage.setItem('map', '');
     }
 
     protected doDbClickToEdit = (): void => {

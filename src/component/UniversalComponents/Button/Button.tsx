@@ -7,6 +7,7 @@ import {
 import { ButtonState } from './ButtonState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 export default class Button extends BaseComponent<IBaseProps, IBaseState> {
     com: any = null;
@@ -27,9 +28,11 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 onMouseDown={this.fireSelectChange}
             >
+                <MaskLayer id={this.getCid()} />
                 <AntButton
                     // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                    style={{
+                        width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                         fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
                         fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(),
                         // , borderStyle: 'solid',
@@ -42,7 +45,7 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
                     disabled={this.getCustomState().getDisabled()}
                 >
                     <span
-                        style={{display: 'inline-block', width: '100%', textAlign: this.getCustomState().getTextAlign()}}
+                        style={{ display: 'inline-block', width: '100%', textAlign: this.getCustomState().getTextAlign() }}
                     >
                         {this.getCustomState().getTextValue()}
                     </span>
@@ -51,35 +54,35 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
-                {
-                    pTitle: '是否为圆形按钮',
-                    pKey: 'isCircle',
-                    pValue: this.getCustomState().getIsCircle(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '文字内容',
-                    pKey: 'textValue',
-                    pValue: this.getCustomState().getTextValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+            {
+                pTitle: '是否为圆形按钮',
+                pKey: 'isCircle',
+                pValue: this.getCustomState().getIsCircle(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '文字内容',
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
@@ -101,7 +104,7 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
     //     this.setCustomState(newButtonState);
     // }
 
-    private setCircle = (): 'circle' | 'circle-outline' | undefined   => {
+    private setCircle = (): 'circle' | 'circle-outline' | undefined => {
         if (this.getCustomState().getIsCircle()) {
             return 'circle-outline';
         } else return undefined;

@@ -2,11 +2,12 @@ import * as React from 'react';
 import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
-import { Checkbox as AntCheckbox} from 'antd';
+import { Checkbox as AntCheckbox } from 'antd';
 
 import { CheckBoxState } from './CheckBoxState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -32,9 +33,11 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
+                <MaskLayer id={this.getCid()} />
                 <div
                     // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                    style={{
+                        width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                         fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
                         fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
                         borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
@@ -46,7 +49,7 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
                         disabled={this.getCustomState().getDisabled()}
                     />
                     <span
-                        style={{display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign()}}
+                        style={{ display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign() }}
                     >
                         {this.getCustomState().getOption()}
                     </span>
@@ -55,45 +58,45 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
-                {
-                    pTitle: '是否选中',
-                    pKey: 'isCheck',
-                    pValue: this.getCustomState().getIsCheck(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '文字内容',
-                    pKey: 'option',
-                    pValue: this.getCustomState().getOption(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '字体大小',
-                    pKey: 'fontSize',
-                    pValue: this.getCustomState().getFontSize(),
-                    pType: PropertiesEnum.INPUT_NUMBER
-                }, {
-                    pTitle: '是否禁用',
-                    pKey: 'disabled',
-                    pValue: this.getCustomState().getDisabled(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+            {
+                pTitle: '是否选中',
+                pKey: 'isCheck',
+                pValue: this.getCustomState().getIsCheck(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '文字内容',
+                pKey: 'option',
+                pValue: this.getCustomState().getOption(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '字体大小',
+                pKey: 'fontSize',
+                pValue: this.getCustomState().getFontSize(),
+                pType: PropertiesEnum.INPUT_NUMBER
+            }, {
+                pTitle: '是否禁用',
+                pKey: 'disabled',
+                pValue: this.getCustomState().getDisabled(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {

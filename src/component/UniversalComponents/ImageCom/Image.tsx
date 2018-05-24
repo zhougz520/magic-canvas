@@ -3,6 +3,7 @@ import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComp
 import { ImageState } from './ImageState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -21,7 +22,7 @@ export default class Image extends BaseComponent<IDemoProps, IBaseState> {
         }
     };
 
-    com: HTMLElement| null = null;
+    com: HTMLElement | null = null;
 
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
@@ -41,8 +42,9 @@ export default class Image extends BaseComponent<IDemoProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
             >
+                <MaskLayer id={this.getCid()} />
                 <div
-                        // tslint:disable-next-line:jsx-no-multiline-js
+                    // tslint:disable-next-line:jsx-no-multiline-js
                     style={{
                         width: '100%', height: '100%',
                         fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
@@ -53,9 +55,11 @@ export default class Image extends BaseComponent<IDemoProps, IBaseState> {
                     <a href="javascript:void(0)" title={'att_n'}>
                         <img
                             // tslint:disable-next-line:jsx-no-multiline-js
-                            style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                            style={{
+                                width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                                 textDecoration: this.getCustomState().getTextDecoration(), display: 'inline-block',
-                                textAlign: this.getCustomState().getTextAlign()}}
+                                textAlign: this.getCustomState().getTextAlign()
+                            }}
                             src={this.getCustomState().getSrc()}
                             alt={this.getCustomState().getAlt()}
                             // width={this.getCustomState().getWidth()}
@@ -68,35 +72,35 @@ export default class Image extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return  [
-                {
-                    pTitle: '链接地址',
-                    pKey: 'alt',
-                    pValue: this.getCustomState().getAlt(),
-                    pType: PropertiesEnum.INPUT_STRING
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+        return [
+            {
+                pTitle: '链接地址',
+                pKey: 'alt',
+                pValue: this.getCustomState().getAlt(),
+                pType: PropertiesEnum.INPUT_STRING
                 // }, {
                 //     pTitle: '字体',
                 //     pKey: 'fontSize',
                 //     pValue: this.getCustomState().get(),
                 //     pType: PropertiesEnum.INPUT_NUMBER
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {

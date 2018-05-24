@@ -3,6 +3,7 @@ import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComp
 import { HyperlinkState } from './HyperlinkState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -27,8 +28,9 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 ref={(handler) => this.com = handler}
             >
+                <MaskLayer id={this.getCid()} />
                 <div
-                        // tslint:disable-next-line:jsx-no-multiline-js
+                    // tslint:disable-next-line:jsx-no-multiline-js
                     style={{
                         width: '100%', height: '100%',
                         fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
@@ -38,9 +40,11 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
                 >
                     <a
                         // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                        style={{
+                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                             textDecoration: this.getCustomState().getTextDecoration(), display: 'inline-block',
-                            textAlign: this.getCustomState().getTextAlign()}}
+                            textAlign: this.getCustomState().getTextAlign()
+                        }}
                         href={this.getCustomState().getHerf()}
                     >
                         {this.getCustomState().getContent()}
@@ -50,35 +54,35 @@ export default class Hyperlink extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
-        return  [
-                {
-                    pTitle: '链接地址',
-                    pKey: 'herf',
-                    pValue: this.getCustomState().getHerf(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '字体',
-                    pKey: 'fontSize',
-                    pValue: this.getCustomState().getFontSize(),
-                    pType: PropertiesEnum.INPUT_NUMBER
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+        return [
+            {
+                pTitle: '链接地址',
+                pKey: 'herf',
+                pValue: this.getCustomState().getHerf(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '字体',
+                pKey: 'fontSize',
+                pValue: this.getCustomState().getFontSize(),
+                pType: PropertiesEnum.INPUT_NUMBER
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {

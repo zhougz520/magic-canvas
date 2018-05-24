@@ -7,6 +7,7 @@ import { Map } from 'immutable';
 
 import { TextFieldState } from './TextFieldState';
 import { PropertiesEnum } from '../types';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 const { TextArea } = Input;
 // tslint:disable-next-line:no-empty-interface
@@ -24,30 +25,30 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         };
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
-                {
-                    pTitle: '文字内容',
-                    pKey: 'textValue',
-                    pValue: this.getCustomState().getTextValue(),
-                    pType: PropertiesEnum.INPUT_TEXT
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+            {
+                pTitle: '文字内容',
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
+                pType: PropertiesEnum.INPUT_TEXT
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
@@ -69,15 +70,18 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
+                <MaskLayer id={this.getCid()} />
                 <div
                     // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{width: '100%', height: '100%', borderStyle: 'solid',
+                    style={{
+                        width: '100%', height: '100%', borderStyle: 'solid',
                         borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
                     <TextArea
                         // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                        style={{
+                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                             fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
                             fontWeight: this.getCustomState().getFontWeight(), textAlign: this.getCustomState().getTextAlign(), backgroundColor: this.getCustomState().getBackgroundColor()
                         }}

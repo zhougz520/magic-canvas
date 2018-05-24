@@ -5,6 +5,7 @@ import { Select as AntSelector } from 'antd';
 import { BoxType } from '../../util';
 import { Map, List } from 'immutable';
 import { PropertiesEnum } from '../types';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 const Option = AntSelector.Option;
 // tslint:disable-next-line:no-empty-interface
@@ -35,35 +36,35 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
         console.log(this.getSize());
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
-                {
-                    pTitle: '选项',
-                    pKey: 'options',
-                    pValue: this.getCustomState().getOptions(),
-                    pType: PropertiesEnum.INPUT_OBJECT_LIST
-                }, {
-                    pTitle: '选中项',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '是否禁用',
-                    pKey: 'disabled',
-                    pValue: this.getCustomState().getDisabled(),
-                    pType: PropertiesEnum.SWITCH
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+            {
+                pTitle: '选项',
+                pKey: 'options',
+                pValue: this.getCustomState().getOptions(),
+                pType: PropertiesEnum.INPUT_OBJECT_LIST
+            }, {
+                pTitle: '选中项',
+                pKey: 'value',
+                pValue: this.getCustomState().getValue(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '是否禁用',
+                pKey: 'disabled',
+                pValue: this.getCustomState().getDisabled(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
@@ -108,7 +109,7 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                     <Option
                         key={optionsList.toArray()[i].get('label')}
                     >
-                         {optionsList.toArray()[i].get('label')}
+                        {optionsList.toArray()[i].get('label')}
                     </Option>);
             }
 
@@ -120,11 +121,13 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 onMouseDown={this.fireSelectChange}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                // onClick={this.onClick}
+            // onClick={this.onClick}
             >
+                <MaskLayer id={this.getCid()} />
                 <AntSelector
                     // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
+                    style={{
+                        width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
                         fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
                         fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
                         borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'

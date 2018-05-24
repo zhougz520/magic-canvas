@@ -3,9 +3,10 @@ import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
 import { InputState } from './InputState';
-import { Input  as AntInput } from 'antd';
+import { Input as AntInput } from 'antd';
 import { Map } from 'immutable';
 import { PropertiesEnum } from '../types';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
@@ -30,15 +31,18 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
+                <MaskLayer id={this.getCid()} />
                 <div
                     // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{width: '100%', height: '100%', borderStyle: 'solid',
+                    style={{
+                        width: '100%', height: '100%', borderStyle: 'solid',
                         borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
                     }}
                 >
                     <AntInput
                         // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{width: '100%', height: '100%', backgroundColor: this.getCustomState().getBackgroundColor(),
+                        style={{
+                            width: '100%', height: '100%', backgroundColor: this.getCustomState().getBackgroundColor(),
                             color: this.getCustomState().getFontColor(), fontStyle: this.getCustomState().getFontStyle(),
                             textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
                             fontWeight: this.getCustomState().getFontWeight(),
@@ -53,35 +57,35 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
-                {
-                    pTitle: '输入框提示',
-                    pKey: 'placeholder',
-                    pValue: this.getCustomState().getPlaceholder(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '输入框内容',
-                    pKey: 'value',
-                    pValue: this.getCustomState().getValue(),
-                    pType: PropertiesEnum.INPUT_STRING
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
+            {
+                pTitle: '输入框提示',
+                pKey: 'placeholder',
+                pValue: this.getCustomState().getPlaceholder(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '输入框内容',
+                pKey: 'value',
+                pValue: this.getCustomState().getValue(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
     }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
