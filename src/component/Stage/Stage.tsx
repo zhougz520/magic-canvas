@@ -5,6 +5,8 @@ import { Canvas, ICanvasComponent, IBoundary, IOffset } from '../Canvas';
 import { IStageProps } from './IStageProps';
 import { IStageState } from './IStageState';
 
+import './sass/Stage.scss';
+
 export class Stage extends React.PureComponent<IStageProps, IStageState> {
     private canvas: ICanvasComponent | null = null;
     private draw: IDrawComponent | null = null;
