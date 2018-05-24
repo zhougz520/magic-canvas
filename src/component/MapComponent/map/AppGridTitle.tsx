@@ -48,6 +48,7 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         const { map_sm, map_gt_txt, selectedId, w, id, index } = this.props;
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
+                onMouseDown={this.selectedCom}
                 ref={provided.innerRef}
                 {...provided.dragHandleProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
@@ -56,7 +57,6 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
                     className={`title ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
                     ref={(ref) => this.com = ref}
                     style={{ width: w }}
-                    onMouseDown={this.selectedCom}
                 >
                     <div className={`title-content `}>
                         {map_gt_txt}
@@ -67,7 +67,10 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         );
 
         return (
-            <div className={`app-grid-title-item`} style={{ width: w }}>
+            <div
+                className={`app-grid-title-item`}
+                style={{ width: w }}
+            >
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>

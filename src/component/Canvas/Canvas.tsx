@@ -162,7 +162,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 组件选中，画布不要记录组件的位置与大小信息，否则同步信息很乱
      * @param cid 组件ID
      */
-    selectionChanging = (cid: string, isCanCtrl: boolean = true): void => {
+    selectionChanging = (cid: string): void => {
         // 选中组件就把焦点给到编辑框，随时准备输入
         this.getWingman().setFocus();
 
@@ -173,8 +173,6 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         }
 
         const com = this.findComponent(cid);
-        // 设置当前选中是否能够进行拖拽和拖放操作
-        this._canvasGlobalParam.setIsCanCtrl(isCanCtrl);
         if (com) {
             this._drawUtil.selectedComponent(cid, com, false);
         }
@@ -307,7 +305,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public initEventListener = (): void => {
         document.addEventListener('mousemove', this._onDocMouseMove);
         document.addEventListener('mouseleave', this._onDocMouseLeave);
-        document.addEventListener('mousedown', this._onDocMouseDown, true);
+        if (this.canvas !== null) {
+            this.canvas.addEventListener('mousedown', this._onDocMouseDown);
+        }
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);

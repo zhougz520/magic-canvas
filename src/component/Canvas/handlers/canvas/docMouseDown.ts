@@ -1,7 +1,6 @@
 import { Canvas } from '../../Canvas';
 
 export function docMouseDown(canvas: Canvas, e: any): void {
-    if (!canvas._canvasGlobalParam.getIsCanCtrl()) return;
     // 鼠标按下时，计算鼠标位置
     canvas._mouseAndKeyUtil.recordPointStart(e);
 

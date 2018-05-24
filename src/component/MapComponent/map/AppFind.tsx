@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Checkbox, Select, Input, Button } from 'antd';
-// import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 const Option = Select.Option;
 
 export interface IMapProps extends IBaseProps {
@@ -38,17 +38,21 @@ export class AppFind extends MapComponent<IMapProps, any> {
             hover: {}
         };
     }
-    // componentWillMount() {
-    //     console.log(this.com);
-    // }
-    // componentDidMount() {
-    //     if (this.com) {
-    //         console.log(this.com);
-    //     }
-    // }
-
+    // 如果需要特殊遮罩，则在componentDidUpdate中处理
+    componentDidUpdate() {
+        if (this.com !== null) {
+            const currMaskLayer = document.getElementById(this.props.id);
+            // console.log('id', this.props.id);
+            if (currMaskLayer !== null) {
+                currMaskLayer.style.width = this.com.offsetWidth + 'px';
+                currMaskLayer.style.height = (this.com.offsetHeight - 24) + 'px';
+                currMaskLayer.style.top = (this.com.offsetTop + 24) + 'px';
+                currMaskLayer.style.left = this.com.offsetLeft + 'px';
+            }
+        }
+    }
     public render() {
-        const { map_sm, map_af_o, p } = this.props;
+        const { map_sm, map_af_o, p, id } = this.props;
         const { map_af_se } = this.state;
 
         const options: any[] = [];
@@ -62,7 +66,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
 
         const fieldList: any = this.initHightMode(p);
         const normalFind: any = (
-            <div className="csr-pc-map-app-find" ref={(ref) => this.com = ref}>
+            <div className="normal">
                 <div className={`app-find-menu ${map_sm || ''}`}>
                     <div className="app-find-menu-title"><b style={{ color: '#66666' }}>快速查询（普通）</b></div>
                     <div style={{ float: 'right' }}>
@@ -112,71 +116,64 @@ export class AppFind extends MapComponent<IMapProps, any> {
             </div>);
 
         const extendFind: any = (
-            <table className="csr-pc-map-app-find" ref={(ref) => this.com = ref}>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div className={`app-find-menu ${map_sm || ''}`}>
-                                <div className="app-find-menu-title">
-                                    <b style={{ color: '#66666' }}>快速查询（高级）</b>
-                                    <Select
-                                        defaultValue="历史查询..."
-                                        style={{ width: '130px', height: '18px', marginLeft: '30px', marginTop: '3px' }}
-                                    >
-                                        <Option value="" />
-                                    </Select>
-                                    <img className="height-grade" />
-                                </div>
-                                <div style={{ float: 'right' }}>
-                                    <div className="app-find-menu-item">
-                                        <Checkbox style={{ float: 'left' }} defaultChecked={false} />
-                                        <p>视图内查询</p>
-                                    </div>
-                                    <div
-                                        onClick={this.onChangeLowMode}
-                                        className="app-find-menu-item"
-                                        style={{ marginLeft: '14px' }}
-                                    >
-                                        <img className="lookup" />
-                                        <p >普通</p>
-                                    </div>
-                                    <div
-                                        onClick={this.onChangeHightMode}
-                                        className="app-find-menu-item"
-                                        style={{ marginLeft: '22px', marginRight: '14px' }}
-                                    >
-                                        <img className="lookup" />
-                                        <p>高级</p>
-                                    </div>
-                                </div>
+            <div className="high">
+                <div className={`app-find-menu ${map_sm || ''}`}>
+                    <div className="app-find-menu-title">
+                        <b style={{ color: '#66666' }}>快速查询（高级）</b>
+                        <Select
+                            defaultValue="历史查询..."
+                            style={{ width: '130px', height: '18px', marginLeft: '30px', marginTop: '3px' }}
+                        >
+                            <Option value="" />
+                        </Select>
+                        <img className="height-grade" />
+                    </div>
+                    <div style={{ float: 'right' }}>
+                        <div className="app-find-menu-item">
+                            <Checkbox style={{ float: 'left' }} defaultChecked={false} />
+                            <p>视图内查询</p>
+                        </div>
+                        <div
+                            onClick={this.onChangeLowMode}
+                            className="app-find-menu-item"
+                            style={{ marginLeft: '14px' }}
+                        >
+                            <img className="lookup" />
+                            <p >普通</p>
+                        </div>
+                        <div
+                            onClick={this.onChangeHightMode}
+                            className="app-find-menu-item"
+                            style={{ marginLeft: '22px', marginRight: '14px' }}
+                        >
+                            <img className="lookup" />
+                            <p>高级</p>
+                        </div>
+                    </div>
 
-                            </div>
-                            <div className="app-find-content">
-                                {fieldList}
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ width: '100%', height: '30px', verticalAlign: 'top' }}>
-                            <Button>
-                                重置
+                </div>
+                <div className="app-find-content">
+                    {fieldList}
+                </div>
+                <div style={{ width: '100%', height: '30px', verticalAlign: 'top' }}>
+                    <Button>
+                        重置
                             </Button>
-                            <Button>
-                                查找
+                    <Button>
+                        查找
                             </Button>
-                            <Button>
-                                保存
+                    <Button>
+                        保存
                             </Button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>);
+                </div>
+            </div>);
 
         return (
-            <div>
+            <div className="csr-pc-map-app-find" ref={(ref) => this.com = ref}>
+                <MaskLayer id={id} />
                 {!map_af_se ? normalFind : extendFind}
-                {/* <MaskLayer /> */}
-            </div>);
+            </div>
+        );
     }
 
     public onChangeHightMode = () => {

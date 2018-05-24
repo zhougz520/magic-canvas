@@ -18,23 +18,11 @@ export class DrawUtil {
     /**
      * 组件选择
      */
-    selectedComponent = (cid: string, com: IComponent, multiselect: boolean = false, isCanCtrl: boolean = true) => {
+    selectedComponent = (cid: string, com: IComponent, multiselect: boolean = false) => {
         // 组件选择
-        if (this._canvas._canvasGlobalParam.getIsCanCtrl()) {
-            this._canvas._canvasGlobalParam.addSelectedComponent(cid, com, multiselect);
-            this.repaintSelected();
-            this._canvas._canvasGlobalParam.drawDragBox(this._canvas._positionUtil.getPositionRelativeDocument(0, 0));
-        } else {
-            const arrCid: string[] = cid.split('.');
-            const bsCom = this._canvas.findComponent(arrCid[0]);
-            // 顶级父控件选择
-            if (bsCom) {
-                this._canvas._canvasGlobalParam.addSelectedComponent(arrCid[0], bsCom, false);
-                this.repaintSelected();
-                this._canvas._canvasGlobalParam.drawDragBox(this._canvas._positionUtil.getPositionRelativeDocument(0, 0));
-            }
-        }
-        // this._canvas.props.onPropertyProperties();
+        this._canvas._canvasGlobalParam.addSelectedComponent(cid, com, multiselect);
+        this.repaintSelected();
+        this._canvas._canvasGlobalParam.drawDragBox(this._canvas._positionUtil.getPositionRelativeDocument(0, 0));
 
         // 单选的时候一个个传递
         if (multiselect === false) {
@@ -120,7 +108,7 @@ export class DrawUtil {
                         const size = com.getSize();
                         if (pos.left > start.x && pos.top > start.y &&
                             pos.left + size.width < end.x && pos.top + size.height < end.y) {
-                                this.selectedComponent(component.cid, com, true);
+                            this.selectedComponent(component.cid, com, true);
                         }
                     }
                 }

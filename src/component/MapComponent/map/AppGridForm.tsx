@@ -66,49 +66,32 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                 className="ps-map"
                 style={currStyle}
                 ref={(ref) => this.com = ref}
+                onMouseDown={this.fireSelectChange}
             >
-                <table
+                <div
                     className="grid-form"
                 >
-                    <tbody>
-                        <tr className="title" onMouseDown={this.fireSelectChange} >
-                            <td>
-                                {title === undefined ? '标题' : title}
-                            </td>
-                        </tr>
-                        <tr style={{ display: !showProj && !showView ? 'none' : '', height: 30 }} >
-                            <td>
-                                <table className="proj-view" >
-                                    <tbody>
-                                        <tr>
-                                            <td style={{ display: !showProj ? 'none' : '' }}>
-                                                {this.proj}
-                                            </td>
-                                            <td style={{ display: !showView ? 'none' : '' }}>
-                                                {this.view}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr style={{ display: !showAppFind ? 'none' : '', height: 1, marginBottom: 10 }} >
-                            <td>
-                                {this.find}
-                            </td>
-                        </tr>
-                        <tr style={{ display: !showAppGridMenu ? 'none' : '', height: 1 }} >
-                            <td>
-                                {this.menu}
-                            </td>
-                        </tr>
-                        <tr style={{ display: !showAppGrid ? 'none' : '' }} >
-                            <td>
-                                {this.grid}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div className="title">
+                        {title === undefined ? '标题' : title}
+                    </div>
+                    <div className="grid-top" style={{ display: !showProj && !showView ? 'none' : '' }} >
+                        <div style={{ display: !showProj ? 'none' : '' }}>
+                            {this.proj}
+                        </div>
+                        <div style={{ display: !showView ? 'none' : '' }}>
+                            {this.view}
+                        </div>
+                    </div>
+                    <div className="grid-find" style={{ display: !showAppFind ? 'none' : '', marginBottom: 10 }} >
+                        {this.find}
+                    </div>
+                    <div className="grid-menu" style={{ display: !showAppGridMenu ? 'none' : '' }} >
+                        {this.menu}
+                    </div>
+                    <div className="grid-table" style={{ display: !showAppGrid ? 'none' : '' }} >
+                        {this.grid}
+                    </div>
+                </div>
             </div>
         );
     }
@@ -125,7 +108,6 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
-                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.updateCom}
                         />
@@ -138,7 +120,6 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
-                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.updateCom}
                         />
@@ -151,7 +132,6 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
-                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.updateCom}
                         />
@@ -164,7 +144,6 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
-                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             updateProps={this.updateCom}
                         />
@@ -177,7 +156,6 @@ export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
-                            fireSelectChildChange={this.fireSelectChildChange}
                             {...com.p}
                             w={this.getSizeState().getWidth()}
                             updateProps={this.updateCom}

@@ -37,8 +37,7 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
         const {
             updateProps,
             selectedId,
-            selectComChange,
-            fireSelectChildChange
+            selectComChange
         } = this.props;
         const { hover, data } = this.state;
         const children: any = [];
@@ -54,7 +53,6 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
                                 // tslint:disable-next-line:jsx-no-string-ref
                                 ref={`c.${com.p.id}`}
                                 selectComChange={selectComChange}
-                                fireSelectChildChange={fireSelectChildChange}
                                 {...com.p}
                                 updateProps={updateProps}
                                 index={index}

@@ -19,7 +19,7 @@ export interface ISolutionState {
 /* tslint:disable:jsx-no-string-ref */
 export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
     private stage: Stage | null = null;
-    private barList: IBarListComponent |null = null;
+    private barList: IBarListComponent | null = null;
 
     constructor(props: ISolutionProp) {
         super(props);
@@ -55,11 +55,11 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     // 将输入参数：编辑中的组件属性，传给propertyTool
-    onPropertyProperties = (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> | undefined
-            ): void => {
-                if (this.barList && compProperty !== undefined) {
-                    this.barList.setPropertyState(compProperty);
-                }
+    onPropertyProperties = (compProperty: Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> | undefined
+    ): void => {
+        if (this.barList && compProperty !== undefined) {
+            this.barList.setPropertyState(compProperty);
+        }
     }
 
     // 将propertyTool的修改的属性传给canvas 设置对应的选中控件
@@ -84,7 +84,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     highPerformance={this.highPerformance}
-                    // objectlist={this.props.objectlist}
+                // objectlist={this.props.objectlist}
                 />
                 <Stage
                     config={config}
@@ -102,7 +102,105 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
 const detail = {
     content: {
-        components: []
+        components: [
+
+            {
+                t: 'MapComponent/map/AppGridForm',
+                p: {
+                    id: 'cs1',
+                    txt_v: '编辑页面',
+                    w: 600,
+                    h: 400,
+                    l: 450,
+                    t: 350,
+                    zIndex: 4,
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/map/ProjectDDTree',
+                                p: {
+                                    id: 'cs1.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppView',
+                                p: {
+                                    id: 'cs1.cs2'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppFind',
+                                p: {
+                                    id: 'cs1.cs3'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppGridMenu',
+                                p: {
+                                    id: 'cs1.cs4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs1.cs4.cs1',
+                                                    map_mi_txt: '新增'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs1.cs4.cs2',
+                                                    map_mi_txt: '删除'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs1.cs4.cs3',
+                                                    map_mi_sa: true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/AppGrid',
+                                p: {
+                                    id: 'cs1.cs5',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/AppGridTitle',
+                                                p: {
+                                                    id: 'cs1.cs5.cs1',
+                                                    map_gt_txt: 'AAA'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridTitle',
+                                                p: {
+                                                    id: 'cs1.cs5.cs2',
+                                                    map_gt_txt: 'BBB'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/AppGridTitle',
+                                                p: {
+                                                    id: 'cs1.cs5.cs3',
+                                                    map_gt_txt: 'CCC'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
     },
     layout: { mode: 'free' }
 };

@@ -57,7 +57,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
 
         return (
             <div
-                onMouseDown={this.selectedCom}
+                // onMouseDown={this.selectedCom}
                 ref={(ref) => this.com = ref}
                 className={`csr-pc-map-app-grid ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
                 onDragOver={this.handleOver}
@@ -88,7 +88,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
     // 初始化标题
     protected initTitle = (p: any) => {
-        const { selectComChange, selectedId, fireSelectChildChange, updateProps } = this.props;
+        const { selectComChange, selectedId, updateProps } = this.props;
         if (p !== undefined) {
             const currTitles: JSX.Element[] = [];
             p.components.forEach((com: any, index: number) => {
@@ -100,7 +100,6 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                         // tslint:disable-next-line:jsx-no-string-ref
                         ref={`c.${com.p.id}`}
                         selectComChange={selectComChange}
-                        fireSelectChildChange={fireSelectChildChange}
                         {...com.p}
                         updateProps={updateProps}
                         index={index}

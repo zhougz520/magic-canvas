@@ -24,6 +24,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     com: any = null;
+    onlySelected: boolean = false;
 
     // TODO 基类中不写构造器
     constructor(props: P, context?: any) {
@@ -42,7 +43,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         }
 
     }
-
     componentWillUnmount() {
         // TODO Comments优化代码
         const commentsMap = this.getCommentsMap();
@@ -408,11 +408,11 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * map控件选中
      * @param id 组件id
      */
-    public selectComChange = (id: string) => {
+    public selectComChange = (e: any, id: string) => {
         this.setState({
             selectedId: id
         });
-        this.fireSelectChildChange(null);
+        this.onlySelected = true;
     }
 
     /**
@@ -589,27 +589,22 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 每个组件自己记录，还要判断键盘事件，比较复杂，且选中状态对组件身意义不大，故交由画布决定
      * @param cid 组件ref标识
      */
-    protected fireSelectChange = (e: any, cid: string = this.getCid()): void => {
-        // e.stopPropagation();
+    protected fireSelectChange = (e: any): void => {
+        // 获取当前控件ID
+        const cid = this.getCid();
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid, true);
+            this.props.selectionChanging(cid);
         }
-        // 取消子控件选中
-        this.selectComChange('');
         e.preventDefault();
-    }
-
-    /**
-     * 往外传子控件的cid
-     * @param cid 组件ref标识
-     */
-    protected fireSelectChildChange = (e: any, cid: string = this.getCid()): void => {
-        if (e) {
-            if (this.props.selectionChanging) {
-                this.props.selectionChanging(cid, false);
-            }
-            e.preventDefault();
-        }
+        // if (this.onlySelected) {
+        //     // alert('我是点击baseComponent');
+        //     console.log('this.onlySelected 1111', this.onlySelected);
+        //     e.stopPropagation();
+        //     this.onlySelected = false;
+        //     console.log('this.onlySelected 2222', this.onlySelected);
+        // }
+        localStorage.setItem('currHandle', 'base');
+        localStorage.setItem('map', '');
     }
 
     protected doDbClickToEdit = (): void => {

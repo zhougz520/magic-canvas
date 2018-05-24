@@ -36,8 +36,7 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
             p,
             id,
             selectedId,
-            selectComChange,
-            fireSelectChildChange
+            selectComChange
         } = this.props;
         const components = p === undefined ? undefined : p.components;
         const menus: any[] = [];
@@ -53,7 +52,6 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
                             // tslint:disable-next-line:jsx-no-string-ref
                             ref={`c.${com.p.id}`}
                             selectComChange={selectComChange}
-                            fireSelectChildChange={fireSelectChildChange}
                             {...com.p}
                             updateProps={updateProps}
                             index={index}

@@ -13,11 +13,19 @@ import { GlobalUtil } from '../util';
 export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
-    public com: HTMLElement | null = null;
+    com: HTMLElement | null = null;
     componentDidMount() {
-        if (this.com != null) {
+        if (this.com !== null) {
             this.com.addEventListener('drop', this.handleDropAddComponent);
             this.com.addEventListener('mousedown', this.selectedCom);
+            const currMaskLayer = document.getElementById(this.props.id);
+            // console.log('id', this.props.id);
+            if (currMaskLayer !== null) {
+                currMaskLayer.style.width = this.com.offsetWidth + 'px';
+                currMaskLayer.style.height = this.com.offsetHeight + 'px';
+                currMaskLayer.style.top = this.com.offsetTop + 'px';
+                currMaskLayer.style.left = this.com.offsetLeft + 'px';
+            }
         }
     }
     /**
@@ -73,10 +81,10 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      * 选择子控件
      */
     protected selectedCom = (e: any) => {
-        const { id, selectComChange, fireSelectChildChange } = this.props;
-        selectComChange(id);
-        fireSelectChildChange(e, id);
         // e.stopPropagation();
+        localStorage.setItem('currHandle', 'map');
+        const { id, selectComChange } = this.props;
+        selectComChange(e, id);
     }
 
     /**

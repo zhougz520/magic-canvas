@@ -54,35 +54,38 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
             </Menu>
         );
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-            <div className={`app-grid-menu-item`}>
-                <div
-                    ref={provided.innerRef}
-                    {...provided.dragHandleProps}
-                    style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
-                >
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <div
-                            ref={(ref) => this.com = ref}
-                            className={`app-grid-menu-item ${selectedId === id ? 'selectecd' : ''}`}
-                        >
-                            {map_mi_txt}
-                            {map_mi_si ? (<div className={`ico ${map_mi_ico}`} />) : ''}
-                            <Icon
-                                type="caret-down"
-                                className="dropDownArrow"
-                                style={{ display: map_mi_sa ? `block` : `none` }}
-                            />
-                        </div>
-                    </Dropdown>
-                </div>
+            <div
+                onMouseDown={this.selectedCom}
+                ref={provided.innerRef}
+                {...provided.dragHandleProps}
+                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+            >
+                <Dropdown overlay={menu} trigger={['click']}>
+                    <div
+                        ref={(ref) => this.com = ref}
+                        className={`app-grid-menu-item ${selectedId === id ? 'selectecd' : ''}`}
+                    >
+                        {map_mi_txt}
+                        {map_mi_si ? (<div className={`ico ${map_mi_ico}`} />) : ''}
+                        <Icon
+                            type="caret-down"
+                            className="dropDownArrow"
+                            style={{ display: map_mi_sa ? `block` : `none` }}
+                        />
+                    </div>
+                </Dropdown>
                 {provided.placeholder}
-            </div>
+            </div >
         );
 
         return (
-            <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
-                {initDrag}
-            </Draggable>
+            <div
+                className={`app-grid-menu-item`}
+            >
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {initDrag}
+                </Draggable>
+            </div>
         );
     }
 }
