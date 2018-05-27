@@ -42,8 +42,8 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
             const com = this.getComponent(cid);
             if (com === null) return;
             const frameData: IReactData = {
-                pointX: com.getPosition().left + pos.canvasOffset.left + 0.5,
-                pointY: com.getPosition().top + pos.canvasOffset.top + 0.5,
+                pointX: com.getPosition().left + pos.canvasOffset.left,
+                pointY: com.getPosition().top + pos.canvasOffset.top,
                 width: com.getSize().width + 1,
                 height: com.getSize().height + 1,
                 anchorFill: '#fff',
@@ -62,8 +62,8 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
         const pos = this.props.componentPosition;
         data.map((item: IBaseData) => {
             const frameData: IReactData = {
-                pointX: item.position.left + pos.canvasOffset.left + 0.5,
-                pointY: item.position.top + pos.canvasOffset.top + 0.5,
+                pointX: item.position.left + pos.canvasOffset.left,
+                pointY: item.position.top + pos.canvasOffset.top,
                 width: item.size.width + 1,
                 height: item.size.height + 1,
                 anchorFill: '#fff',

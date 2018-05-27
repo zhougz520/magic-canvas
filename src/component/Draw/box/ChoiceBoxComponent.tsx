@@ -36,8 +36,9 @@ export const ChoiceBox = (props: IChoiceBoxProps) => {
     return (
         <React.Fragment>
             <rect
-                x={pointX + 0.5}
-                y={pointY + 0.5}
+                transform="translate(0.5,0.5)"
+                x={pointX}
+                y={pointY}
                 width={offset.x}
                 height={offset.y}
                 style={{ fill, fillOpacity, stroke, strokeWidth }}

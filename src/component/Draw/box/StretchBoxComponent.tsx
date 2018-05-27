@@ -12,24 +12,34 @@ export interface IStretchProps {
 
 const createStretch = (props: IStretchProps) => {
     const { anchorKey } = props;
-    const { pointX, pointY, width, height, anchorFill, stroke, strokeWidth, borderOffset } = props.data;
-    const anchorList = countAnchorPoint(props.cid, props.type,
-        pointX, pointY, width, height, undefined, borderOffset);
+    const { pointX, pointY, width, height, stroke, strokeWidth, borderOffset } = props.data;
+    const svgWidth: number = width - borderOffset;
+    const svgHeight: number = height - borderOffset;
+    const anchorList = countAnchorPoint(
+        props.cid,
+        props.type,
+        pointX,
+        pointY,
+        width,
+        height,
+        undefined
+    );
 
     const rectList: any[] = [];
-    rectList.push(<rect key="Stretch" x={pointX} y={pointY} width={width - borderOffset} height={height - borderOffset} fill="none" style={{ stroke, strokeWidth, strokeDasharray: '2.5,2.5' }} />);
+    rectList.push(<rect transform="translate(0.5,0.5)" key="Stretch" x={pointX} y={pointY} width={svgWidth} height={svgHeight} fill="none" style={{ stroke, strokeWidth, strokeDasharray: '2.5,2.5' }} />);
     anchorList.map((anchor) => {
         if (anchor.key === anchorKey) {
             rectList.push(
-                <rect
+                <image
                     key={anchor.key}
                     x={anchor.x - anchor.offset}
                     y={anchor.y - anchor.offset}
                     width={anchor.offset * 2}
                     height={anchor.offset * 2}
-                    fill={anchorFill}
-                    style={{ stroke, strokeWidth, pointerEvents: 'none', cursor: anchor.cursor }}
-                />);
+                    // tslint:disable-next-line:max-line-length
+                    xlinkHref="data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZlcnNpb249IjEuMSI+PGNpcmNsZSBjeD0iOSIgY3k9IjkiIHI9IjUiIHN0cm9rZT0iI2ZmZiIgZmlsbD0iIzAwN2RmYyIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+"
+                />
+            );
         }
     });
 
