@@ -105,11 +105,10 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
     }
 
     // 修改画布的偏移量
-    changeStageOffset = (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => {
+    changeStageOffset = (leftCollapsed: boolean, rightCollapsed: boolean) => {
         const newStageOffset = Object.assign({}, this.state.componentPosition.stageOffset, {
-            top: titleBarCollapsed ? 35 : 80,
-            left: resourceBarCollapsed ? 24 : 184,
-            right: propsBarCollapsed ? 24 : 250
+            left: leftCollapsed ? 0 : this.props.config.componentPosition.stageOffset.left,
+            right: rightCollapsed ? 0 : this.props.config.componentPosition.stageOffset.right
         });
         this.setState({
             componentPosition: Object.assign({}, this.state.componentPosition, { stageOffset: newStageOffset })

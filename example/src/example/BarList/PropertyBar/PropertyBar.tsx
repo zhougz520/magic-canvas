@@ -260,6 +260,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             <React.Fragment>
                 <div
                     className={`props-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}${showProps ? ' props-bar-show' : ' props-bar-hide'}`}
+                    style={{zIndex: 10}}
                 >
                     <div className="holder">
                         <div onClick={this.onClick}>折叠</div>

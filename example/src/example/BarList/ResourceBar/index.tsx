@@ -44,6 +44,7 @@ export default class Resource extends React.PureComponent<IResourceProps, IResou
             <React.Fragment>
                 <div
                     className={`resource-bar${collapsed ? ' collapsed' : ''}${titleBarCollapsed ? ' title-bar-collapsed' : ''}`}
+                    style={{zIndex: 10}}
                 >
                     <div className="holder">
                         <div onClick={this.showPages}><Icon type="panel-component" />组件</div>

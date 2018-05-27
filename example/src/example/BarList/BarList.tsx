@@ -9,7 +9,7 @@ import Resource from './ResourceBar';
 import { Map } from 'immutable';
 
 export interface IBarProps {
-    changeStageOffset: (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => void;
+    changeStageOffset: (leftCollapsed: boolean, rightCollapsed: boolean) => void;
     highPerformance: (value: boolean) => void;
     onCommandEmitted: (cmd: any) => void;
     onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
@@ -93,7 +93,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
         if (rc !== undefined) resourceBarCollapsed = rc;
         if (pc !== undefined) propsBarCollapsed = pc;
         this.setState({ titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed });
-        this.props.changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
+        this.props.changeStageOffset(resourceBarCollapsed, propsBarCollapsed);
     }
 
     setPropertyState = (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => {

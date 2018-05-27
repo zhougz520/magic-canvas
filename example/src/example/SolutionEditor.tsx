@@ -34,8 +34,8 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     // 修改画布的偏移量
-    changeStageOffset = (titleBarCollapsed: boolean, resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => {
-        this.getStage().changeStageOffset(titleBarCollapsed, resourceBarCollapsed, propsBarCollapsed);
+    changeStageOffset = (resourceBarCollapsed: boolean, propsBarCollapsed: boolean) => {
+        this.getStage().changeStageOffset(resourceBarCollapsed, propsBarCollapsed);
     }
 
     highPerformance = (value: boolean) => {
