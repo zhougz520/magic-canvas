@@ -34,7 +34,8 @@ export class ComponentsUtil {
                     cid: comData.id,
                     comPath: comData.comPath,
                     baseState,
-                    childData: comData.p
+                    childData: comData.p,
+                    initType: 'Init'
                 };
 
                 componentList = componentList.add(component);
@@ -74,7 +75,8 @@ export class ComponentsUtil {
                         comPath: component.comPath,
                         baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
                         // TODO 删除的时候需要记录最新的childData？
-                        childData: component.childData
+                        childData: component.childData,
+                        initType: 'Stack'
                     });
                 }
             }
@@ -110,7 +112,8 @@ export class ComponentsUtil {
                     Object.assign({}, {
                         baseState: com.baseState,
                         childData: com.childData,
-                        comPath: com.comPath
+                        comPath: com.comPath,
+                        initType: com.initType
                     }, {
                         ref: `c.${com.cid}`,
                         pageMode: this._canvas.props.pageMode,

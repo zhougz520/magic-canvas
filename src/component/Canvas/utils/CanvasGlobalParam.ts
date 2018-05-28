@@ -351,7 +351,7 @@ export class CanvasGlobalParam {
     clearSelectedComponent() {
         // 清空子控件选中状态
         this.selectedComponents.map((com: any, cid) => {
-            if (com && cid) {
+            if (com && cid && this._canvas.getComponent(cid)) {
                 if (com.selectComChange) {
                     com.selectComChange('');
                 }

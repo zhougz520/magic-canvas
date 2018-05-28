@@ -29,7 +29,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         //     };
         // }
         this.state = {
-            baseState: this.initBaseStateWithCustomState(null, EditorState.createEmpty('需求' + this.getCid().replace('cm', '') + '：\n')),
+            baseState: this.initBaseStateWithCustomState(undefined, EditorState.createEmpty('需求' + this.getCid().replace('cm', '') + '：\n')),
             hidden: false
         };
     }
@@ -64,6 +64,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         this.setState({
             hidden: isHidden
         });
+    }
+
+    public isDbClickToEdit = (): boolean => {
+        return true;
     }
 
     render() {
@@ -105,6 +109,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
             <div
                 className="comments"
                 onMouseDown={this.fireSelectChange}
+                onDoubleClick={this.doDbClickToEdit}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
             >
                 <Editor

@@ -101,7 +101,7 @@ export interface IComponent {
     getRichEditType: () => EditType;
 
     /**
-     * 获取现实富文本编辑器的一些选项
+     * 获取富文本编辑器的一些选项
      * { position, size }
      */
     getRichEditOption: () => IRichEditOption;
@@ -111,6 +111,11 @@ export interface IComponent {
      * 呼出富文本编辑器时隐藏组件中被编辑部分
      */
     hiddenEditorDom: (isHidden: boolean) => void;
+
+    /**
+     * 是否可以双击修改
+     */
+    isDbClickToEdit: () => boolean;
 
     getPropertiesToProperty: () =>  Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 

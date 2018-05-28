@@ -6,6 +6,6 @@ export { ICanvasState } from './ICanvasState';
 
 export { CanvasStyle } from './model/CanvasStyle';
 
-export { IBoundary, IOffset, OperationType, IComponentList } from './model/types';
+export { IBoundary, IOffset, OperationType, IComponentList, InitType } from './model/types';
 
 export { CommandMap } from './command/CommandEmitted';

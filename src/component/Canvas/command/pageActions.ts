@@ -101,7 +101,8 @@ export const pageActions = {
                                     cid: component.cid,
                                     comPath: component.comPath,
                                     baseState: com.getBaseState(),
-                                    childData: component.childData
+                                    childData: component.childData,
+                                    initType: 'Stack'
                                 }
                             );
                         }
@@ -195,7 +196,8 @@ export const pageActions = {
                                     cid: component.cid,
                                     comPath: component.comPath,
                                     baseState: com.getBaseState(),
-                                    childData: component.childData
+                                    childData: component.childData,
+                                    initType: 'Stack'
                                 }
                             );
                         }

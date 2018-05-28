@@ -1,11 +1,14 @@
 import { BaseState, IComponent } from '../../BaseComponent';
 import { List } from 'immutable';
 
+export type InitType = 'Init' | 'Stack';
+
 export interface IComponentList {
     cid: string;
     comPath: string;
     baseState: BaseState;
     childData?: any;
+    initType: InitType;
 }
 
 export type OperationType = 'create' | 'modify' | 'remove';
