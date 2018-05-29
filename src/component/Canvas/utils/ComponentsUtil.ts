@@ -21,7 +21,12 @@ export class ComponentsUtil {
      * @param dataList 组件的数据流List
      * @param position 组件在画布上添加的位置
      */
-    addCancasComponent = (dataList: List<any>, position: IOffset = { x: 0, y: 0 }, isSetUndoStack: boolean = true): void => {
+    addCancasComponent = (
+        dataList: List<any>,
+        position: IOffset = { x: 0, y: 0 },
+        isSetUndoStack: boolean = true,
+        isDrop: boolean = false
+    ): void => {
         let addComponentList: List<IComponentList> = List();
         const timeStamp: number = Date.parse(new Date().toString());
 
@@ -40,6 +45,11 @@ export class ComponentsUtil {
 
                 componentList = componentList.add(component);
                 addComponentList = addComponentList.push(component);
+
+                // 如果是拖拽添加组件，选中当前添加的组件
+                if (isDrop) {
+                    this._canvas._newComponentCid = comData.id;
+                }
             }
         );
 
