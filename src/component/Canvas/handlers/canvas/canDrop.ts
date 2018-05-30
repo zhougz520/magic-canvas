@@ -11,4 +11,5 @@ export function canDrop(canvas: Canvas, e: any): void {
     const position = canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
 
     canvas._componentsUtil.addCancasComponent(List().push(data), position, undefined, true);
+    canvas._canvasGlobalParam.outsizeMouseUp(undefined);
 }
