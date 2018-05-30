@@ -33,7 +33,11 @@ export class MouseAndKeyUtil {
      */
     onMouseEventType = (e: any): string => {
         if (e.target) {
-            if (e.target.className.startsWith('canvas') || e.target.className.startsWith('container')) return 'canvas';
+            if (
+                e.target.className.startsWith &&
+                (e.target.className.startsWith('canvas') || e.target.className.startsWith('container'))
+            ) return 'canvas';
+
             if (this._canvas._canvasUtil.containClassName(e.target, 'canvas')) return 'component';
         }
 

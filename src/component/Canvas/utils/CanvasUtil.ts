@@ -19,12 +19,12 @@ export class CanvasUtil {
      * @param dom HTML对象
      * @param target className
      */
-    containClassName = (dom: HTMLElement, target: string) => {
-        let hasFind = dom.className === target;
-        let offsetParent = dom.offsetParent as HTMLElement;
-        while (!hasFind && offsetParent !== undefined && offsetParent !== null) {
-            hasFind = offsetParent.className === target;
-            offsetParent = offsetParent.offsetParent as HTMLElement;
+    containClassName = (dom: HTMLElement, target: string): boolean => {
+        let hasFind: boolean = dom.className === target;
+        let parentElement: HTMLElement | null = dom.parentElement;
+        while (!hasFind && parentElement !== undefined && parentElement !== null) {
+            hasFind = parentElement.className === target;
+            parentElement = parentElement.parentElement;
         }
 
         return hasFind;
