@@ -4,4 +4,4 @@ export { IDrawProps } from './IDrawProps';
 export { IDrawState } from './IDrawState';
 
 export { DrawStyle } from './model/DrawStyle';
-export { IReactData } from './model/types';
+export { IReactData, IBaseData } from './model/types';

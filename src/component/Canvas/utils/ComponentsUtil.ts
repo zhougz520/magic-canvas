@@ -127,6 +127,7 @@ export class ComponentsUtil {
                     }, {
                         ref: `c.${com.cid}`,
                         pageMode: this._canvas.props.pageMode,
+                        componentPosition: this._canvas.props.componentPosition,
                         selectionChanging: this._canvas.selectionChanging,
                         repaintSelected: this._canvas._drawUtil.repaintSelected,
                         repaintCanvas: this._canvas._canvasUtil.repaintCanvas,

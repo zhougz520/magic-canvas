@@ -13,6 +13,7 @@ import { EditType, IRichEditOption, CallBackType } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
+import { IReactData, IBaseData } from '../Draw';
 import { Stack, Map, List } from 'immutable';
 
 /**
@@ -386,6 +387,48 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public isDbClickToEdit = (): boolean => {
         return false;
+    }
+
+    /**
+     * 组件是否可以被选中
+     * 默认：是，组件自己重写
+     */
+    public isCanSelected = (): boolean => {
+        return true;
+    }
+
+    /**
+     * 选中框属性
+     * 组件可以重写
+     */
+    public selectedFrameData = (): IReactData => {
+        return {
+            pointX: this.getPosition().left + this.props.componentPosition.canvasOffset.left,
+            pointY: this.getPosition().top + this.props.componentPosition.canvasOffset.top,
+            width: this.getSize().width + 1,
+            height: this.getSize().height + 1,
+            anchorFill: '#fff',
+            stroke: '#108ee9',
+            strokeWidth: 1,
+            borderOffset: this.props.componentPosition.borderOffset.border * 2
+        };
+    }
+
+    /**
+     * 低效果拖动框属性
+     * 组件可以重写
+     */
+    public stretchFrameData = (item: IBaseData): IReactData => {
+        return {
+            pointX: item.position.left + this.props.componentPosition.canvasOffset.left,
+            pointY: item.position.top + this.props.componentPosition.canvasOffset.top,
+            width: item.size.width + 1,
+            height: item.size.height + 1,
+            anchorFill: '#fff',
+            stroke: '#108ee9',
+            strokeWidth: 1,
+            borderOffset: this.props.componentPosition.borderOffset.border * 2
+        };
     }
 
     /**

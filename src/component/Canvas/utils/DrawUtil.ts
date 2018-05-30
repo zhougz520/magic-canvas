@@ -104,11 +104,14 @@ export class DrawUtil {
                 (component: IComponentList) => {
                     const com = this._canvas.getComponent(component.cid);
                     if (com !== null) {
-                        const pos = com.getPosition();
-                        const size = com.getSize();
-                        if (pos.left > start.x && pos.top > start.y &&
-                            pos.left + size.width < end.x && pos.top + size.height < end.y) {
-                            this.selectedComponent(component.cid, com, true);
+                        const isCanSelected: boolean = com.isCanSelected();
+                        if (isCanSelected) {
+                            const pos = com.getPosition();
+                            const size = com.getSize();
+                            if (pos.left > start.x && pos.top > start.y &&
+                                pos.left + size.width < end.x && pos.top + size.height < end.y) {
+                                this.selectedComponent(component.cid, com, true);
+                            }
                         }
                     }
                 }

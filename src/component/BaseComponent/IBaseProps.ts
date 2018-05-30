@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IComponent } from './IComponent';
 import { BaseState } from './model/BaseState';
 import { OperationType, IComponentList, InitType } from '../Canvas';
-import { PageMode } from '../Stage';
+import { PageMode, ICompos } from '../Stage';
 
 import { List } from 'immutable';
 
@@ -21,6 +21,8 @@ export interface IBaseProps {
     comPath: string;
     // 组件初始化类型
     initType: InitType;
+    // 画布偏移量
+    componentPosition: ICompos;
     // 改动组件大小的时候，调用画布的重绘选中框
     repaintSelected: () => void;
     // 改动组件位置的时候，调用画布的重置画布大小
