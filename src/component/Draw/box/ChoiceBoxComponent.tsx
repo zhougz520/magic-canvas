@@ -8,10 +8,7 @@ export interface IChoiceBoxData {
     pointX: number;
     pointY: number;
     offset: { x: number, y: number };
-    fill: string;
-    fillOpacity: number;
-    stroke: string;
-    strokeWidth: number;
+    style: React.CSSProperties;
 }
 
 const createChoiceBox = (data: IChoiceBoxData) => {
@@ -31,7 +28,7 @@ const createChoiceBox = (data: IChoiceBoxData) => {
 
 export const ChoiceBox = (props: IChoiceBoxProps) => {
     const data = createChoiceBox(props.data);
-    const { pointX, pointY, offset, fill, stroke, fillOpacity, strokeWidth } = data;
+    const { pointX, pointY, offset, style } = data;
 
     return (
         <React.Fragment>
@@ -41,7 +38,7 @@ export const ChoiceBox = (props: IChoiceBoxProps) => {
                 y={pointY}
                 width={offset.x}
                 height={offset.y}
-                style={{ fill, fillOpacity, stroke, strokeWidth }}
+                style={style}
             />
         </React.Fragment>
     );

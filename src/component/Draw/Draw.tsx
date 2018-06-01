@@ -64,17 +64,14 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
     }
 
     // 绘制拉选框
-    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any } | null) => {
+    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any, style: React.CSSProperties } | null) => {
         let choiceBox = null;
         if (data !== null) {
             choiceBox = {
                 pointX: data.pointX,
                 pointY: data.pointY,
                 offset: data.offset,
-                fill: '#108ee9',
-                fillOpacity: 0.05,
-                stroke: '#108ee9',
-                strokeWidth: 1
+                style: data.style
             } as IChoiceBoxData;
         }
         this.setState({ choiceBox });
