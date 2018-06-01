@@ -1,7 +1,6 @@
 import { Canvas } from '../Canvas';
-import { IBoundary, IRange, IStack, IComponentList } from '../model/types';
-import { IComponent } from '../../BaseComponent';
-import { Map, Stack, Set, List, OrderedSet } from 'immutable';
+import { IRange, IStack, IComponentList } from '../model/types';
+import { Stack, Set, List, OrderedSet } from 'immutable';
 
 export const pageActions = {
     bind(ins: any) {
@@ -19,59 +18,7 @@ export const pageActions = {
 
     // 添加批注
     addComments() {
-        // 获取stage的宽高，如果没有选中组件则在画布正中央添加批注
-        const stageSize = this.getThis().props.getStageSize();
-        if (stageSize === undefined) {
-            return;
-        }
-
-        // 批注组件的数据
-        const data = {
-            offset: { x: 0, y: 0 },
-            props: { name: '批注', w: 204, h: 170 },
-            type: 'Comments/Comments',
-            lineList: Map()
-        };
-        let position: { x: number, y: number };
-
-        const selectedComponents: Map<string, IComponent> = this.getThis()._canvasGlobalParam.getSelectedComponents();
-        if (selectedComponents.size > 0) {
-            // 如果选中组件，向所有选中组件的最右侧距离100px添加批注,组件范围的中心与批注的中心相对
-            const componentsRange: IBoundary = this.getThis()._componentsUtil.getComponentsRange(selectedComponents);
-            position = {
-                x: componentsRange.endPoint.x + 100,
-                y: Math.ceil((componentsRange.endPoint.y + componentsRange.startPoint.y) / 2 - data.props.h / 2)
-            };
-
-            // TODO Comments优化代码
-            let lineList: Map<string, any> = Map();
-            selectedComponents.map(
-                (com: IComponent, key: string) => {
-                    const positionCom = com.getPosition();
-                    const sizeCom = com.getSize();
-
-                    lineList = lineList.set(
-                        key, { x1: positionCom.left + sizeCom.width, y1: positionCom.top, x2: position.x, y2: position.y }
-                    );
-                }
-            );
-            data.lineList = lineList;
-        } else {
-            // 如果没有选中组件，向画布中央添加批注
-            position = {
-                x: Math.ceil(stageSize.width / 2 - data.props.w / 2),
-                y: Math.ceil(stageSize.height / 2 - data.props.h / 2)
-            };
-        }
-
-        this.getThis()._componentsUtil.addCancasComponent(List().push(data), position);
-        // 添加批注记栈
-        // const comDataList: OrderedSet<any> = OrderedSet().add(comData);
-        // const oldUndoStack: Stack<IStack> = this.getThis().state.undoStack;
-        // const newUndoStack: Stack<IStack> = StackUtil.getCanvasStack(this.getThis(), oldUndoStack, 'create', comDataList);
-        // this.getThis().setState({
-        //     undoStack: newUndoStack
-        // });
+        this.getThis()._commentsUtil.startAddComments();
     },
 
     // 画布撤销
