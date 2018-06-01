@@ -18,6 +18,8 @@ export class RichEditUtil {
 
     // 编辑框开始编辑
     beginEdit = () => {
+        this._canvas._isRichEditMode = true;
+
         // 获取最后选中的组件
         let currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
         if (this._dbClickComponentCid) {
@@ -71,6 +73,8 @@ export class RichEditUtil {
                     break;
             }
         }
+
+        this._canvas._isRichEditMode = false;
     }
 
     // 双击编辑
@@ -80,7 +84,6 @@ export class RichEditUtil {
             const isDbClickToEdit: boolean = com.isDbClickToEdit();
             if (isDbClickToEdit && this._canvas._isRichEditMode === false) {
                 this._dbClickComponentCid = cid;
-                this._canvas._canvasGlobalParam.setIsRichEditMode(true);
                 this.beginEdit();
             }
         }

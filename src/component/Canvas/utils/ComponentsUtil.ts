@@ -25,7 +25,8 @@ export class ComponentsUtil {
         dataList: List<any>,
         position: IOffset = { x: 0, y: 0 },
         isSetUndoStack: boolean = true,
-        isDrop: boolean = false
+        isDrop: boolean = false,
+        callback?: () => void
     ): void => {
         let addComponentList: List<IComponentList> = List();
         const timeStamp: number = Date.parse(new Date().toString());
@@ -64,7 +65,7 @@ export class ComponentsUtil {
 
         this._canvas.setState({
             componentList
-        });
+        }, callback);
     }
 
     /**
