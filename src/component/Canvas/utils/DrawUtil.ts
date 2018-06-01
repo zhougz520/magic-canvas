@@ -76,9 +76,25 @@ export class DrawUtil {
         const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
+        const style = {fill: '#108ee9', fillOpacity: 0.05, stroke: '#108ee9', strokeWidth: 1};
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
-            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset });
+            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
+        }
+    }
+
+    /**
+     * 绘制鼠标选择框
+     */
+    drawChoiceBoxAddCommentsMode = (e: any) => {
+        // 通知绘画层出现选择框
+        const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
+        const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
+        const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
+        const style = {fill: '#fff', fillOpacity: 0, stroke: '#D0021B', strokeWidth: 1, rx: 5, ry: 5};
+        const draw = this._canvas.props.getDraw();
+        if (draw !== null) {
+            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
         }
     }
 
