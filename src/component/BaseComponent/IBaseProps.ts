@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { IComponent } from './IComponent';
 import { BaseState } from './model/BaseState';
 import { OperationType, IComponentList, InitType } from '../Canvas';
@@ -37,6 +36,4 @@ export interface IBaseProps {
     resetMaxAndMinZIndex: () => void;
     // 设置画布撤销栈
     setCanvasUndoStack: (timeStamp: number, operationType: OperationType, componentList: List<IComponentList>) => void;
-
-    componentRef?: (ref: React.ReactNode | null) => (void | React.ReactNode);
 }

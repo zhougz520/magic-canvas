@@ -8,7 +8,7 @@ export { BaseState, IBase } from './model/BaseState';
 export { ContentState, IContent, ComponentType } from './model/ContentState';
 export { SizeState, ISize } from './model/SizeState';
 export { PositionState, IPosition } from './model/PositionState';
-export { EditType, IRichEditOption } from './model/types';
+export { EditType, IRichEditOption, ICommentsMap } from './model/types';
 
 export { MaskLayer } from './mask/MaskLayer';
 

@@ -2,7 +2,7 @@ import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { BaseState } from './model/BaseState';
-import { EditType, IRichEditOption } from './model/types';
+import { EditType, IRichEditOption, ICommentsMap } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
 
 import { IAnchor } from '../util';
@@ -44,8 +44,8 @@ export interface IComponent {
     getCustomState: () => any;
     setCustomState: (newCustomState: any) => void;
 
-    getCommentsMap: () => Map<any, any>;
-    setCommentsMap: (newCommentsMap: Map<any, any>) => void;
+    getCommentsMap: () => Map<string, ICommentsMap>;
+    setCommentsMap: (newCommentsMap: Map<string, ICommentsMap>) => void;
 
     /**
      * 重做、撤销

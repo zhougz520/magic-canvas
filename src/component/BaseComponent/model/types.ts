@@ -9,3 +9,7 @@ export interface IRichEditOption {
 }
 
 export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Custom' | 'Stack';
+
+export interface ICommentsMap {
+    relativePosition: IPosition;
+}

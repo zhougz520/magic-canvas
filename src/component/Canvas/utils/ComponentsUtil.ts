@@ -48,8 +48,12 @@ export class ComponentsUtil {
                 addComponentList = addComponentList.push(component);
 
                 // 如果是拖拽添加组件，选中当前添加的组件
-                if (isDrop) {
+                if (isDrop === true) {
                     this._canvas._newComponentCid = comData.id;
+                }
+                // 添加批注模式，记录当前添加的批注cid
+                if (this._canvas._isAddCommentsMode === true) {
+                    this._canvas._commentsUtil._currentCommentsCid = comData.id;
                 }
             }
         );
@@ -171,24 +175,6 @@ export class ComponentsUtil {
             startPoint,
             endPoint
         };
-    }
-
-    /**
-     * 更新ContentState中的CommentsMap
-     * @param coms 选中组件
-     * @param componentIndex Comments的componentIndex
-     */
-    public updateCommentsMap = (coms: Map<string, any>, componentIndex: number) => {
-        // 更新所选组件的commentsMap
-        coms.map(
-            (com: IComponent) => {
-                const oldCommentsMap = com.getCommentsMap();
-                const newCommentsMap = oldCommentsMap.merge(
-                    Map().set('cs' + componentIndex, 'Comments')
-                );
-                com.setCommentsMap(newCommentsMap);
-            }
-        );
     }
 
     /**

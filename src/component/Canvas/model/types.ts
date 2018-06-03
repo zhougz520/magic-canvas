@@ -22,9 +22,10 @@ export interface IStack {
 // 鼠标拖拽类型
 export enum DragType {
     None = 'none',
-    Choice = 'choice',  // 鼠标拉选框
-    Shift = 'shift',    //  组件位移框
-    Stretch = 'stretch' // 组件缩放框
+    Choice = 'choice',      // 鼠标拉选框
+    Shift = 'shift',        // 组件位移框
+    Stretch = 'stretch',    // 组件缩放框
+    Comments = 'comments'   // 添加批注
 }
 
 export interface IDragDiv {
@@ -69,3 +70,9 @@ export interface IRange {
 }
 
 export type AlignType = 'Left' | 'Center' | 'Right' | 'Top' | 'Middle' | 'Bottom' | 'Horizontal' | 'Vertical';
+
+export interface IAddCommentsParam {
+    component: IComponent | null;
+    startPoint: IOffset | null;
+    endPoint: IOffset | null;
+}

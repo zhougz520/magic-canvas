@@ -9,7 +9,7 @@ import { BaseState } from './model/BaseState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import { EditType, IRichEditOption, CallBackType } from './model/types';
+import { EditType, IRichEditOption, CallBackType, ICommentsMap } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
@@ -30,18 +30,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     constructor(props: P, context?: any) {
         super(props, context);
 
-        // TODO 优化代码
-        const propsBaseState = props.baseState;
-        if (propsBaseState !== null && propsBaseState !== undefined) {
-            this.state = {
-                baseState: propsBaseState
-            } as Readonly<S>;
-        } else {
-            this.state = {
-                baseState: this.initBaseStateWithCustomState()
-            } as Readonly<S>;
-        }
-
+        this.state = {
+            baseState: this.initBaseStateWithCustomState()
+        } as Readonly<S>;
     }
 
     componentDidMount() {
@@ -52,23 +43,31 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         }
     }
 
-    componentWillUnmount() {
-        // TODO Comments优化代码
-        // const commentsMap = this.getCommentsMap();
-        // if (commentsMap.size > 0) {
-        //     commentsMap.map(
-        //         (value, key) => {
-        //             const comments = this.props.getComponent(key);
-        //             if (comments) {
-        //                 const oldLineList = comments.getCustomState();
-        //                 const newLineList: Map<string, any> = oldLineList.delete(
-        //                     this.getCid()
-        //                 );
-        //                 comments.setCustomState(newLineList);
-        //             }
-        //         }
-        //     );
-        // }
+    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
+        const currentContent: ContentState = this.state.baseState.getCurrentContent();
+        const prevContent: ContentState = prevState.baseState.getCurrentContent();
+
+        if (
+            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
+        ) {
+            // 如果有批注，更新批注的位置
+            const commentsMap: Map<string, ICommentsMap> = this.getCommentsMap();
+            const componentPosition: IPosition = this.getPosition();
+            commentsMap.map(
+                (value: ICommentsMap, key: string) => {
+                    const relativePosition: IPosition = value.relativePosition;
+                    const commentsRectPosition: IPosition = {
+                        top: componentPosition.top + relativePosition.top,
+                        left: componentPosition.left + relativePosition.left
+                    };
+
+                    const commentsRect: IComponent | null = this.props.getComponent(key);
+                    if (commentsRect !== null) {
+                        commentsRect.setPosition(commentsRectPosition);
+                    }
+                }
+            );
+        }
     }
 
     /**
@@ -263,9 +262,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的批注集合
      */
-    public getCommentsMap = (): Map<any, any> => {
+    public getCommentsMap = (): Map<string, ICommentsMap> => {
         const baseState: BaseState = this.getBaseState();
-        const commentsMap: Map<any, any> = baseState.getCurrentContent().getCommentsMap();
+        const commentsMap: Map<string, ICommentsMap> = baseState.getCurrentContent().getCommentsMap();
 
         return commentsMap;
     }
@@ -274,7 +273,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 设置组件的批注集合
      * @param newCommentsMap 新的批注集合
      */
-    public setCommentsMap = (newCommentsMap: Map<any, any>): void => {
+    public setCommentsMap = (newCommentsMap: Map<string, ICommentsMap>): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             commentsMap: newCommentsMap
@@ -591,39 +590,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // 计算边界调整画布的大小
         const boundary = this.getBoundaryPoint();
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
-
-        // TODO Comments优化代码
-        // if (this.getComType() === 'Comments') {
-        //     const position = this.getPosition();
-        //     const oldLineList: Map<string, any> = this.getCustomState();
-        //     let newLineList: Map<string, any> = Map();
-        //     oldLineList.map(
-        //         (value: any, key: string) => {
-        //             newLineList = newLineList.set(
-        //                 key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
-        //             );
-        //         }
-        //     );
-        //     this.setCustomState(newLineList);
-        // } else {
-        //     const position = this.getPosition();
-        //     const size = this.getSize();
-        //     const commentsMap = this.getCommentsMap();
-        //     if (commentsMap.size > 0) {
-        //         commentsMap.map(
-        //             (value, key) => {
-        //                 const comments = this.props.getComponent(key);
-        //                 if (comments) {
-        //                     const oldLineList = comments.getCustomState();
-        //                     const newLineList: Map<string, any> = oldLineList.update(
-        //                         this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
-        //                     );
-        //                     comments.setCustomState(newLineList);
-        //                 }
-        //             }
-        //         );
-        //     }
-        // }
     }
 
     /**
