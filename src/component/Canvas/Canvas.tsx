@@ -140,25 +140,19 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 根据组件cid获取组件对象
      */
     getComponent = (cid: string): IComponent | null => {
-        const ref = this.refs[`c.${cid}`] as any;
-
-        return (ref as IComponent) || null;
-    }
-
-    /**
-     * 根据组件cid找到组件对象
-     */
-    findComponent = (cid: string): IComponent | null => {
-        const cids: string[] = cid.split('.');
+        const idList: string[] = cid.split('.');
         let currRefs: any = this.refs;
-        let ref: any = null;
         let currCid: string = 'c';
-        cids.forEach((currId) => {
-            currCid += '.' + currId;
-            ref = currRefs[`${currCid}`] as any;
-            // TODO Cannot read property 'refs' of undefined，点appGrid中的子组件报错
-            currRefs = currRefs[`${currCid}`].refs as any;
-        });
+
+        let ref: any = null;
+        idList.map(
+            (id: string) => {
+                currCid += '.' + id;
+                ref = currRefs[`${currCid}`] as any;
+                // TODO Cannot read property 'refs' of undefined，点appGrid中的子组件报错
+                currRefs = currRefs[`${currCid}`].refs as any;
+            }
+        );
 
         return (ref as IComponent) || null;
     }
@@ -176,7 +170,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             this._richEditUtil.endEdit();
         }
 
-        const com = this.findComponent(cid);
+        const com = this.getComponent(cid);
         if (com) {
             this._drawUtil.selectedComponent(cid, com, false);
         }
