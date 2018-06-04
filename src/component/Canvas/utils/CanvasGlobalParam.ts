@@ -428,6 +428,7 @@ export class CanvasGlobalParam {
             // 高性能模式，直接拖动组件
             this.selectedComponents.map((component, cid) => {
                 if (component && cid) {
+                    if (component.isCanMove() === false) return;
                     const value = this.currentComponentSize.getValue(cid);
                     const top = value.position.top + offset.y;
                     const left = value.position.left + offset.x;
@@ -456,6 +457,7 @@ export class CanvasGlobalParam {
 
             this.dragDivList.map((item: IDragDiv | undefined) => {
                 if (item !== undefined) {
+                    if (item.component.isCanMove() === false) return;
                     const pos = item.component.getPosition();
                     const div = item.documentDiv;
                     div.style.display = 'block';

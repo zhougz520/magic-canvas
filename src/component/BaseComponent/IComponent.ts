@@ -124,6 +124,11 @@ export interface IComponent {
     isCanSelected: () => boolean;
 
     /**
+     * 是否可以移动
+     */
+    isCanMove: () => boolean;
+
+    /**
      * 是否可以挤开其他组件
      */
     isCanPushOpenOtherComponent: () => boolean;
