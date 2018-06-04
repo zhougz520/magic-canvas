@@ -42,7 +42,9 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     /**
      * Draft修改内容触发
      */
-    onChange = (editorState: any) => this.setState({ editorState });
+    onChange = (editorState: any) => {
+        this.setState({ editorState });
+    }
 
     /**
      * tab按键方法
@@ -143,8 +145,8 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
      * 设置编辑框的状态
      * @param config 设置的对象
      */
-    setEditState = (config: any): void => {
-        this.setState(config);
+    setEditState = (config: any, callback?: () => void): void => {
+        this.setState(config, callback);
     }
 
     /**

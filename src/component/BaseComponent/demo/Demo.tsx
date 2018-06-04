@@ -36,7 +36,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
             <div
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 onMouseDown={this.fireSelectChange}
-                onMouseUp={this.onMouseUp}
                 onDoubleClick={this.doDbClickToEdit}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
@@ -49,7 +48,6 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 <Button
                     type="primary"
                     size="small"
-                    onClick={this.click}
                     ref={(handler) => this.antCom = handler}
                 >
                     DemoClick
@@ -67,19 +65,5 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
                 </RadioGroup>
             </div>
         );
-    }
-
-    private click = (): void => {
-        // const baseState: BaseState = this.getBaseState();
-
-        // tslint:disable-next-line:no-console
-    }
-
-    /**
-     * 组件选中事件
-     * @param cid 组件ref标识
-     */
-    private onMouseUp = (e: any) => {
-        // this.fireSelectChange(cid, e);
     }
 }

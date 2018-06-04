@@ -21,7 +21,13 @@ export class ComponentsUtil {
      * @param dataList 组件的数据流List
      * @param position 组件在画布上添加的位置
      */
-    addCancasComponent = (dataList: List<any>, position: IOffset = { x: 0, y: 0 }, isSetUndoStack: boolean = true): void => {
+    addCancasComponent = (
+        dataList: List<any>,
+        position: IOffset = { x: 0, y: 0 },
+        isSetUndoStack: boolean = true,
+        isDrop: boolean = false,
+        callback?: () => void
+    ): void => {
         let addComponentList: List<IComponentList> = List();
         const timeStamp: number = Date.parse(new Date().toString());
 
@@ -34,11 +40,21 @@ export class ComponentsUtil {
                     cid: comData.id,
                     comPath: comData.comPath,
                     baseState,
-                    childData: comData.p
+                    childData: comData.p,
+                    initType: 'Init'
                 };
 
                 componentList = componentList.add(component);
                 addComponentList = addComponentList.push(component);
+
+                // 如果是拖拽添加组件，选中当前添加的组件
+                if (isDrop === true) {
+                    this._canvas._newComponentCid = comData.id;
+                }
+                // 添加批注模式，记录当前添加的批注cid
+                if (this._canvas._isAddCommentsMode === true) {
+                    this._canvas._commentsUtil._currentCommentsCid = comData.id;
+                }
             }
         );
 
@@ -53,7 +69,7 @@ export class ComponentsUtil {
 
         this._canvas.setState({
             componentList
-        });
+        }, callback);
     }
 
     /**
@@ -74,7 +90,8 @@ export class ComponentsUtil {
                         comPath: component.comPath,
                         baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
                         // TODO 删除的时候需要记录最新的childData？
-                        childData: component.childData
+                        childData: component.childData,
+                        initType: 'Stack'
                     });
                 }
             }
@@ -110,10 +127,12 @@ export class ComponentsUtil {
                     Object.assign({}, {
                         baseState: com.baseState,
                         childData: com.childData,
-                        comPath: com.comPath
+                        comPath: com.comPath,
+                        initType: com.initType
                     }, {
                         ref: `c.${com.cid}`,
                         pageMode: this._canvas.props.pageMode,
+                        componentPosition: this._canvas.props.componentPosition,
                         selectionChanging: this._canvas.selectionChanging,
                         repaintSelected: this._canvas._drawUtil.repaintSelected,
                         repaintCanvas: this._canvas._canvasUtil.repaintCanvas,
@@ -156,24 +175,6 @@ export class ComponentsUtil {
             startPoint,
             endPoint
         };
-    }
-
-    /**
-     * 更新ContentState中的CommentsMap
-     * @param coms 选中组件
-     * @param componentIndex Comments的componentIndex
-     */
-    public updateCommentsMap = (coms: Map<string, any>, componentIndex: number) => {
-        // 更新所选组件的commentsMap
-        coms.map(
-            (com: IComponent) => {
-                const oldCommentsMap = com.getCommentsMap();
-                const newCommentsMap = oldCommentsMap.merge(
-                    Map().set('cs' + componentIndex, 'Comments')
-                );
-                com.setCommentsMap(newCommentsMap);
-            }
-        );
     }
 
     /**

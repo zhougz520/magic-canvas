@@ -2,6 +2,7 @@ import { BaseState } from '../model/BaseState';
 import { ContentState, ComponentType } from '../model/ContentState';
 import { SizeState } from '../model/SizeState';
 import { PositionState } from '../model/PositionState';
+import { ICommentsMap } from '../model/types';
 
 import { Map } from 'immutable';
 
@@ -16,7 +17,7 @@ export interface IComData {
     zIndex: number;
     comType: ComponentType | null;
     customState: any;
-    commentsMap: Map<any, any>;
+    commentsMap: Map<string, ICommentsMap>;
     comPath: string;
 }
 

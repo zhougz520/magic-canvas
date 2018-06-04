@@ -1,5 +1,6 @@
 import { SizeState } from './SizeState';
 import { PositionState } from './PositionState';
+import { ICommentsMap } from './types';
 import { Map, Record } from 'immutable';
 
 // 组件类型
@@ -21,8 +22,8 @@ export interface IContent {
     richChildNode: any;
     // 组件个性化属性
     customState: any;
-    // TODO 组件对应的批注集合
-    commentsMap: Map<any, any>;
+    // 组件对应的批注集合
+    commentsMap: Map<string, ICommentsMap>;
 }
 
 const defaultRecord: IContent = {
@@ -84,7 +85,7 @@ export class ContentState extends ContentStateRecord {
         return this.get('customState');
     }
 
-    getCommentsMap(): Map<any, any> {
+    getCommentsMap(): Map<string, ICommentsMap> {
         return this.get('commentsMap');
     }
 }

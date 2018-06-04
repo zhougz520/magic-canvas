@@ -9,10 +9,11 @@ import { BaseState } from './model/BaseState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import { EditType, IRichEditOption, CallBackType } from './model/types';
+import { EditType, IRichEditOption, CallBackType, ICommentsMap } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
-import { OperationType, IComponentList } from '../Canvas';
+import { OperationType, IComponentList, InitType } from '../Canvas';
+import { IReactData, IBaseData } from '../Draw';
 import { Stack, Map, List } from 'immutable';
 
 /**
@@ -29,42 +30,40 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     constructor(props: P, context?: any) {
         super(props, context);
 
-        // TODO 优化代码
-        const propsBaseState = props.baseState;
-        if (propsBaseState !== null && propsBaseState !== undefined) {
-            this.state = {
-                baseState: propsBaseState
-            } as Readonly<S>;
-        } else {
-            this.state = {
-                baseState: this.initBaseStateWithCustomState()
-            } as Readonly<S>;
-        }
-
+        this.state = {
+            baseState: this.initBaseStateWithCustomState()
+        } as Readonly<S>;
     }
+
     componentDidMount() {
         const currMaskLayer = document.getElementById(this.getCid());
-        // console.log('id', this.props.id);
         if (currMaskLayer !== null) {
             currMaskLayer.style.width = this.getSize().width + 'px';
             currMaskLayer.style.height = this.getSize().height + 'px';
-            // currMaskLayer.style.top = this.getPosition().top + 'px';
-            // currMaskLayer.style.left = this.getPosition().left + 'px';
         }
     }
-    componentWillUnmount() {
-        // TODO Comments优化代码
-        const commentsMap = this.getCommentsMap();
-        if (commentsMap.size > 0) {
+
+    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
+        const currentContent: ContentState = this.state.baseState.getCurrentContent();
+        const prevContent: ContentState = prevState.baseState.getCurrentContent();
+
+        if (
+            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
+        ) {
+            // 如果有批注，更新批注的位置
+            const commentsMap: Map<string, ICommentsMap> = this.getCommentsMap();
+            const componentPosition: IPosition = this.getPosition();
             commentsMap.map(
-                (value, key) => {
-                    const comments = this.props.getComponent(key);
-                    if (comments) {
-                        const oldLineList = comments.getCustomState();
-                        const newLineList: Map<string, any> = oldLineList.delete(
-                            this.getCid()
-                        );
-                        comments.setCustomState(newLineList);
+                (value: ICommentsMap, key: string) => {
+                    const relativePosition: IPosition = value.relativePosition;
+                    const commentsRectPosition: IPosition = {
+                        top: componentPosition.top + relativePosition.top,
+                        left: componentPosition.left + relativePosition.left
+                    };
+
+                    const commentsRect: IComponent | null = this.props.getComponent(key);
+                    if (commentsRect !== null) {
+                        commentsRect.setPosition(commentsRectPosition);
                     }
                 }
             );
@@ -263,9 +262,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的批注集合
      */
-    public getCommentsMap = (): Map<any, any> => {
+    public getCommentsMap = (): Map<string, ICommentsMap> => {
         const baseState: BaseState = this.getBaseState();
-        const commentsMap: Map<any, any> = baseState.getCurrentContent().getCommentsMap();
+        const commentsMap: Map<string, ICommentsMap> = baseState.getCurrentContent().getCommentsMap();
 
         return commentsMap;
     }
@@ -274,7 +273,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 设置组件的批注集合
      * @param newCommentsMap 新的批注集合
      */
-    public setCommentsMap = (newCommentsMap: Map<any, any>): void => {
+    public setCommentsMap = (newCommentsMap: Map<string, ICommentsMap>): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             commentsMap: newCommentsMap
@@ -363,7 +362,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取现实富文本编辑器的一些选项
+     * 获取富文本编辑器的一些选项
      * { position, size }
      */
     public getRichEditOption = (): IRichEditOption => {
@@ -379,6 +378,56 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public hiddenEditorDom = (isHidden: boolean): void => {
         return;
+    }
+
+    /**
+     * 是否可以双击修改
+     * 默认：否，组件自己重写
+     */
+    public isDbClickToEdit = (): boolean => {
+        return false;
+    }
+
+    /**
+     * 组件是否可以被选中
+     * 默认：是，组件自己重写
+     */
+    public isCanSelected = (): boolean => {
+        return true;
+    }
+
+    /**
+     * 选中框属性
+     * 组件可以重写
+     */
+    public selectedFrameData = (): IReactData => {
+        return {
+            pointX: this.getPosition().left + this.props.componentPosition.canvasOffset.left,
+            pointY: this.getPosition().top + this.props.componentPosition.canvasOffset.top,
+            width: this.getSize().width + 1,
+            height: this.getSize().height + 1,
+            anchorFill: '#fff',
+            stroke: '#108ee9',
+            strokeWidth: 1,
+            borderOffset: this.props.componentPosition.borderOffset.border * 2
+        };
+    }
+
+    /**
+     * 低效果拖动框属性
+     * 组件可以重写
+     */
+    public stretchFrameData = (item: IBaseData): IReactData => {
+        return {
+            pointX: item.position.left + this.props.componentPosition.canvasOffset.left,
+            pointY: item.position.top + this.props.componentPosition.canvasOffset.top,
+            width: item.size.width + 1,
+            height: item.size.height + 1,
+            anchorFill: '#fff',
+            stroke: '#108ee9',
+            strokeWidth: 1,
+            borderOffset: this.props.componentPosition.borderOffset.border * 2
+        };
     }
 
     /**
@@ -435,32 +484,43 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     public getComponentSettableCommands = (): string[] => {
         return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
     }
+
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State
      */
     protected initBaseStateWithCustomState(customState: any = null, richChildNode: any = null): BaseState {
-        // TODO 区分新增加载和重做加载
+        const initType: InitType = this.props.initType;
         const baseState: BaseState = this.props.baseState;
 
-        let newBaseState: BaseState = baseState;
-        let newContentState: ContentState = baseState.getCurrentContent();
-        if (customState !== null) {
-            newContentState = newContentState.merge(
-                {
-                    customState
+        let newBaseState: BaseState;
+        switch (initType) {
+            case 'Init':
+                let newContentState: ContentState = baseState.getCurrentContent();
+                if (customState !== null) {
+                    newContentState = newContentState.merge(
+                        {
+                            customState
+                        }
+                    ) as ContentState;
                 }
-            ) as ContentState;
-        }
-        if (richChildNode !== null) {
-            newContentState = newContentState.merge(
-                {
-                    richChildNode
+                if (richChildNode !== null) {
+                    newContentState = newContentState.merge(
+                        {
+                            richChildNode
+                        }
+                    ) as ContentState;
                 }
-            ) as ContentState;
+
+                newBaseState = BaseState.createWithContent(newContentState);
+                break;
+            case 'Stack':
+                newBaseState = baseState;
+                break;
+            default:
+                newBaseState = baseState;
+                break;
         }
-        // TODO 不能重新生成baseState
-        newBaseState = BaseState.createWithContent(newContentState);
 
         return newBaseState;
     }
@@ -530,39 +590,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // 计算边界调整画布的大小
         const boundary = this.getBoundaryPoint();
         this.props.repaintCanvas(boundary.pointX, boundary.pointY);
-
-        // TODO Comments优化代码
-        // if (this.getComType() === 'Comments') {
-        //     const position = this.getPosition();
-        //     const oldLineList: Map<string, any> = this.getCustomState();
-        //     let newLineList: Map<string, any> = Map();
-        //     oldLineList.map(
-        //         (value: any, key: string) => {
-        //             newLineList = newLineList.set(
-        //                 key, {x1: value.x1, y1: value.y1, x2: position.left, y2: position.top}
-        //             );
-        //         }
-        //     );
-        //     this.setCustomState(newLineList);
-        // } else {
-        //     const position = this.getPosition();
-        //     const size = this.getSize();
-        //     const commentsMap = this.getCommentsMap();
-        //     if (commentsMap.size > 0) {
-        //         commentsMap.map(
-        //             (value, key) => {
-        //                 const comments = this.props.getComponent(key);
-        //                 if (comments) {
-        //                     const oldLineList = comments.getCustomState();
-        //                     const newLineList: Map<string, any> = oldLineList.update(
-        //                         this.getCid(), (val: any) => ({x1: position.left + size.width, y1: position.top, x2: oldLineList.get(this.getCid()).x2, y2: oldLineList.get(this.getCid()).y2})
-        //                     );
-        //                     comments.setCustomState(newLineList);
-        //                 }
-        //             }
-        //         );
-        //     }
-        // }
     }
 
     /**
@@ -612,10 +639,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         e.preventDefault();
     }
 
-    protected doDbClickToEdit = (): void => {
+    /**
+     * 双击修改
+     */
+    protected doDbClickToEdit = (e: any, cid: string = this.getCid()): void => {
         if (this.props.dbClickToBeginEdit) {
-            this.props.dbClickToBeginEdit();
+            this.props.dbClickToBeginEdit(cid);
         }
+        e.preventDefault();
     }
 
     /**
@@ -629,7 +660,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 cid: this.getCid(),
                 comPath: this.props.comPath,
                 baseState: this.getBaseState(),
-                childData: this.props.childData
+                childData: this.props.childData,
+                initType: 'Stack'
             }) as List<IComponentList>;
 
             this.props.setCanvasUndoStack(

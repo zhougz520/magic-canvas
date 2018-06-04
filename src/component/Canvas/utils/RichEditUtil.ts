@@ -5,6 +5,7 @@ const { EditorState, BlockUtils } = DraftPublic;
 
 export class RichEditUtil {
     private _canvas: Canvas;
+    private _dbClickComponentCid: string | null;
 
     /**
      * 构造函数，通过画布对象初始化
@@ -12,12 +13,18 @@ export class RichEditUtil {
      */
     public constructor(canvas: Canvas) {
         this._canvas = canvas;
+        this._dbClickComponentCid = null;
     }
 
     // 编辑框开始编辑
-    beginEdit = (isDbClick: boolean = false) => {
+    beginEdit = () => {
+        this._canvas._isRichEditMode = true;
+
         // 获取最后选中的组件
-        const currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
+        let currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
+        if (this._dbClickComponentCid) {
+            currentSelectedComponent = this._canvas.getComponent(this._dbClickComponentCid);
+        }
 
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
             // 展示富文本编辑器的位置
@@ -35,17 +42,18 @@ export class RichEditUtil {
                         position,
                         size,
                         editorState: BlockUtils.moveSelectionToEndOfBlocks(currentSelectedComponent.getRichChildNode())
-                    });
+                    }, () => { this._canvas.getEditor().setFocus(); });
                     break;
             }
-
-            this._canvas.getEditor().setFocus();
         }
     }
 
     // 编辑框结束编辑
     endEdit = () => {
-        const currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
+        let currentSelectedComponent: IComponent | null = this._canvas._canvasGlobalParam.getSelectedComponents().last();
+        if (this._dbClickComponentCid) {
+            currentSelectedComponent = this._canvas.getComponent(this._dbClickComponentCid);
+        }
 
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
             // 根据不同的编辑框，操作不同
@@ -61,15 +69,24 @@ export class RichEditUtil {
                     });
                     currentSelectedComponent.setRichChildNode(EditorState.createWithContent(editValue.getCurrentContent()));
                     currentSelectedComponent.hiddenEditorDom(false);
+                    this._dbClickComponentCid = null;
                     break;
             }
         }
+
+        this._canvas._isRichEditMode = false;
     }
 
     // 双击编辑
-    dbClickToBeginEdit = () => {
-        this._canvas._canvasGlobalParam.setIsRichEditMode(true);
-        this.beginEdit(true);
+    dbClickToBeginEdit = (cid: string) => {
+        const com: IComponent | null = this._canvas.getComponent(cid);
+        if (com) {
+            const isDbClickToEdit: boolean = com.isDbClickToEdit();
+            if (isDbClickToEdit && this._canvas._isRichEditMode === false) {
+                this._dbClickComponentCid = cid;
+                this.beginEdit();
+            }
+        }
     }
 
     // 非编辑模式保持僚机的焦点

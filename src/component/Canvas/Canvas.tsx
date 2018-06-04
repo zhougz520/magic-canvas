@@ -10,6 +10,7 @@ import { IComponentList, IStack } from './model/types';
 
 import { CanvasGlobalParam } from './utils/CanvasGlobalParam';
 import { CanvasUtil } from './utils/CanvasUtil';
+import { CommentsUtil } from './utils/CommentsUtil';
 import { ComponentsUtil } from './utils/ComponentsUtil';
 import { DrawUtil } from './utils/DrawUtil';
 import { MouseAndKeyUtil } from './utils/MouseAndKeyUtil';
@@ -44,6 +45,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      */
     public _canvasGlobalParam: CanvasGlobalParam;
     public _canvasUtil: CanvasUtil;
+    public _commentsUtil: CommentsUtil;
     public _componentsUtil: ComponentsUtil;
     public _drawUtil: DrawUtil;
     public _mouseAndKeyUtil: MouseAndKeyUtil;
@@ -78,6 +80,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _isRichEditMode: boolean = false;                // 是否富文本编辑模式
     public _undoStack: Stack<IStack> = Stack();             // 撤销栈
     public _redoStack: Stack<IStack> = Stack();             // 重做栈
+    public _isAddCommentsMode: boolean = false;             // 是否新增批注模式
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -91,6 +94,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
          */
         this._canvasGlobalParam = new CanvasGlobalParam(this);
         this._canvasUtil = new CanvasUtil(this);
+        this._commentsUtil = new CommentsUtil(this);
         this._componentsUtil = new ComponentsUtil(this);
         this._drawUtil = new DrawUtil(this);
         this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
@@ -109,13 +113,14 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                     cid: comData.id,
                     comPath: comData.comPath,
                     baseState,
-                    childData: comData.p
+                    childData: comData.p,
+                    initType: 'Init'
                 });
             }
         );
 
         this.state = {
-            anchor: null,
+            cursor: 'default',
             componentList
         };
 
@@ -135,25 +140,19 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 根据组件cid获取组件对象
      */
     getComponent = (cid: string): IComponent | null => {
-        const ref = this.refs[`c.${cid}`] as any;
-
-        return (ref as IComponent) || null;
-    }
-
-    /**
-     * 根据组件cid找到组件对象
-     */
-    findComponent = (cid: string): IComponent | null => {
-        const cids: string[] = cid.split('.');
+        const idList: string[] = cid.split('.');
         let currRefs: any = this.refs;
-        let ref: any = null;
         let currCid: string = 'c';
-        cids.forEach((currId) => {
-            currCid += '.' + currId;
-            ref = currRefs[`${currCid}`] as any;
-            // TODO Cannot read property 'refs' of undefined，点appGrid中的子组件报错
-            currRefs = currRefs[`${currCid}`].refs as any;
-        });
+
+        let ref: any = null;
+        idList.map(
+            (id: string) => {
+                currCid += '.' + id;
+                ref = currRefs[`${currCid}`] as any;
+                // TODO Cannot read property 'refs' of undefined，点appGrid中的子组件报错
+                currRefs = currRefs[`${currCid}`].refs as any;
+            }
+        );
 
         return (ref as IComponent) || null;
     }
@@ -169,10 +168,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         // 如果是编辑模式：切换选中或者点击当前组件，结束编辑状态。
         if (this._isRichEditMode === true) {
             this._richEditUtil.endEdit();
-            this._canvasGlobalParam.setIsRichEditMode(false);
         }
 
-        const com = this.findComponent(cid);
+        const com = this.getComponent(cid);
         if (com) {
             this._drawUtil.selectedComponent(cid, com, false);
         }
@@ -270,7 +268,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         const { componentPosition, canvasSize } = this.props;
         const canvasOffset = componentPosition.canvasOffset;
         const children = this._componentsUtil.getChildrenComponent(this.state.componentList);
-        const cursor = this.state.anchor ? this.state.anchor.cursor : 'default';
+        const cursor = this.state.cursor;
 
         return (
             <div
@@ -305,9 +303,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public initEventListener = (): void => {
         document.addEventListener('mousemove', this._onDocMouseMove);
         document.addEventListener('mouseleave', this._onDocMouseLeave);
-        if (this.canvas !== null) {
-            this.canvas.addEventListener('mousedown', this._onDocMouseDown);
-        }
+        document.addEventListener('mousedown', this._onDocMouseDown, true);
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);

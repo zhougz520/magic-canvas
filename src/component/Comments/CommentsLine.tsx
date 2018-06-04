@@ -12,7 +12,13 @@ export class CommentsLine extends React.PureComponent<ICommentsLineProps, any> {
         const { x1, y1, x2, y2 } = this.props;
 
         return (
-            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#108ee9" strokeWidth="1" />
+            <path
+                transform="translate(0.5,0.5)"
+                d={'M ' + x1 + ' ' + y1 + ' L ' + x2 + ' ' + y2}
+                fill="none"
+                stroke="#D0021B"
+                strokeMiterlimit="10"
+            />
         );
     }
 }

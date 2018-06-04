@@ -10,25 +10,25 @@ export function docMouseDown(canvas: Canvas, e: any): void {
         // 如果是编辑模式：结束编辑模式
         if (canvas._isRichEditMode === true) {
             canvas._richEditUtil.endEdit();
-            canvas._canvasGlobalParam.setIsRichEditMode(false);
         }
+
+        canvas._canvasGlobalParam.anchorMouseDown(e, anchor);
         // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
         // TODO 折叠拖动bug
         e.stopPropagation();
         e.preventDefault();
-        canvas._canvasGlobalParam.anchorMouseDown(e, anchor);
     } else {
         switch (canvas._mouseAndKeyUtil.onMouseEventType(e)) {
             case 'component': {
                 // 组件中的点击
-                return canvas._canvasGlobalParam.componentMouseDown(e);
+                canvas._canvasGlobalParam.componentMouseDown(e);
+                break;
             }
             case 'canvas': {
                 // 画布上的点击
                 // 如果是编辑模式：结束编辑模式
                 if (canvas._isRichEditMode === true) {
                     canvas._richEditUtil.endEdit();
-                    canvas._canvasGlobalParam.setIsRichEditMode(false);
                 }
 
                 // 非多选模式下，清楚所有组件选中状态
@@ -38,10 +38,16 @@ export function docMouseDown(canvas: Canvas, e: any): void {
                     // canvas.props.clearSelectedProperty();
                 }
 
-                return canvas._canvasGlobalParam.canvasMouseDown(e);
+                if (canvas._isAddCommentsMode === true) {
+                    canvas._canvasGlobalParam.canvasMouseDownAddCommentsMode(e);
+                } else {
+                    canvas._canvasGlobalParam.canvasMouseDown(e);
+                }
+                break;
             }
             case 'outside': {
-                return canvas._canvasGlobalParam.outsideMouseDown(e);
+                canvas._canvasGlobalParam.outsideMouseDown(e);
+                break;
             }
         }
     }

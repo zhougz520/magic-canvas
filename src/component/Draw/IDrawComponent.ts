@@ -6,6 +6,6 @@ import { IBaseData } from './model/types';
  */
 export interface IDrawComponent {
     drawSelectedBox: (cids: Set<string>) => void;
-    drawChoiceBox: (data: { pointX: number, pointY: number, offset: any } | null) => void;
+    drawChoiceBox: (data: { pointX: number, pointY: number, offset: any, style: React.CSSProperties } | null) => void;
     drawStretchBox: (data: IBaseData[]) => void;
 }

@@ -15,7 +15,11 @@ export function docMouseUp(canvas: Canvas, e: any): void {
             canvas._canvasGlobalParam.componentMouseUp(e);
             break;
         case 'canvas':
-            canvas._canvasGlobalParam.canvasMouseUp(e);
+            if (canvas._isAddCommentsMode === true) {
+                canvas._canvasGlobalParam.canvasMouseUpAddCommentsMode(e);
+            } else {
+                canvas._canvasGlobalParam.canvasMouseUp(e);
+            }
             break;
         case 'outside':
             canvas._canvasGlobalParam.outsizeMouseUp(e);

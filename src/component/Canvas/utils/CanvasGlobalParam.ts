@@ -195,6 +195,13 @@ export class CanvasGlobalParam {
         this.dragType = DragType.Choice;
     }
 
+    // 添加批注模式，canvas上的鼠标点击事件
+    canvasMouseDownAddCommentsMode(e: any) {
+        this.mouseDown = true;
+        this.dragType = DragType.Comments;
+        this._canvas._commentsUtil.setMouseDownParam(e);
+    }
+
     // canvas上的鼠标点击事件
     canvasMouseUp(e: any) {
         // 当组件经历过形状位置改变后，手动设置一次组件堆栈
@@ -202,6 +209,15 @@ export class CanvasGlobalParam {
         this.mouseDown = false;
         this.dargging = false;
         this.dragType = DragType.None;
+    }
+
+    // 添加批注模式，canvas上的鼠标点击事件
+    canvasMouseUpAddCommentsMode(e: any) {
+        this.mouseDown = false;
+        this.dargging = false;
+        this.dragType = DragType.None;
+        this._canvas._commentsUtil.setMouseUpParam(e);
+        this._canvas._commentsUtil.stopAddComments();
     }
 
     // 组件传递而来的鼠标点击事件
@@ -242,7 +258,7 @@ export class CanvasGlobalParam {
     }
 
     // 鼠标移动时计算组件锚点位置
-    anchorCalc(currentX: number, currentY: number) {
+    anchorCalc(currentX: number, currentY: number): IAnchor | null {
         let anchor: IAnchor | null = null;
         let find = false;
         this.selectedComponents.map((com, cid) => {
@@ -264,13 +280,6 @@ export class CanvasGlobalParam {
         this.dragType = DragType.Stretch;
         this.currentComponentSize.setValue(this.selectedComponents);
         this.currentAnchor = anchor;
-    }
-
-    // 组件上锚点触发的鼠标点击事件
-    anchorMouseUp(e: any) {
-        this.mouseDown = false;
-        this.dargging = false;
-        this.dragType = DragType.None;
     }
 
     //  组件上锚点拖动事件
@@ -351,7 +360,7 @@ export class CanvasGlobalParam {
     clearSelectedComponent() {
         // 清空子控件选中状态
         this.selectedComponents.map((com: any, cid) => {
-            if (com && cid) {
+            if (com && cid && this._canvas.getComponent(cid)) {
                 if (com.selectComChange) {
                     com.selectComChange('');
                 }
@@ -521,11 +530,5 @@ export class CanvasGlobalParam {
 
     setIsWingmanFocus = (value: boolean): void => {
         this._canvas._isWingmanFocus = value;
-    }
-
-    setIsRichEditMode = (value: boolean): void => {
-        this._canvas._isRichEditMode = value;
-        // tslint:disable-next-line:no-console
-        console.log('编辑模式：' + value);
     }
 }

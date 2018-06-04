@@ -35,22 +35,12 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
     // 绘制组件选中框
     drawSelectedBox = (cids: Set<string>) => {
         const rectList: JSX.Element[] = [];
-        const pos = this.props.componentPosition;
         cids.map((cid) => {
             if (cid === undefined) return;
 
             const com = this.getComponent(cid);
             if (com === null) return;
-            const frameData: IReactData = {
-                pointX: com.getPosition().left + pos.canvasOffset.left,
-                pointY: com.getPosition().top + pos.canvasOffset.top,
-                width: com.getSize().width + 1,
-                height: com.getSize().height + 1,
-                anchorFill: '#fff',
-                stroke: '#108ee9',
-                strokeWidth: 1,
-                borderOffset: pos.borderOffset.border * 2
-            };
+            const frameData: IReactData = com.selectedFrameData();
             rectList.push(<Selected key={cid} cid={cid} type={com.getType()} data={frameData} />);
         });
         this.setState({ rectList });
@@ -59,18 +49,13 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
     // 绘制组件大小拉伸框
     drawStretchBox = (data: IBaseData[]) => {
         const rectList: JSX.Element[] = [];
-        const pos = this.props.componentPosition;
         data.map((item: IBaseData) => {
-            const frameData: IReactData = {
-                pointX: item.position.left + pos.canvasOffset.left,
-                pointY: item.position.top + pos.canvasOffset.top,
-                width: item.size.width + 1,
-                height: item.size.height + 1,
-                anchorFill: '#fff',
-                stroke: '#108ee9',
-                strokeWidth: 1,
-                borderOffset: pos.borderOffset.border * 2
-            };
+            const cid: string = item.cid;
+            if (cid === undefined) return;
+
+            const com = this.getComponent(cid);
+            if (com === null) return;
+            const frameData: IReactData = com.stretchFrameData(item);
             rectList.push(
                 <Stretch key={item.cid} cid={item.cid} type={item.type} data={frameData} anchorKey={item.anchorKey} />
             );
@@ -79,17 +64,14 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
     }
 
     // 绘制拉选框
-    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any } | null) => {
+    drawChoiceBox = (data: { pointX: number, pointY: number, offset: any, style: React.CSSProperties } | null) => {
         let choiceBox = null;
         if (data !== null) {
             choiceBox = {
                 pointX: data.pointX,
                 pointY: data.pointY,
                 offset: data.offset,
-                fill: '#108ee9',
-                fillOpacity: 0.05,
-                stroke: '#108ee9',
-                strokeWidth: 1
+                style: data.style
             } as IChoiceBoxData;
         }
         this.setState({ choiceBox });

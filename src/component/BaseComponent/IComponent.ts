@@ -2,7 +2,8 @@ import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import { ContentState, ComponentType } from './model/ContentState';
 import { BaseState } from './model/BaseState';
-import { EditType, IRichEditOption } from './model/types';
+import { EditType, IRichEditOption, ICommentsMap } from './model/types';
+import { IReactData, IBaseData } from '../Draw';
 
 import { IAnchor } from '../util';
 import { Map } from 'immutable';
@@ -43,8 +44,8 @@ export interface IComponent {
     getCustomState: () => any;
     setCustomState: (newCustomState: any) => void;
 
-    getCommentsMap: () => Map<any, any>;
-    setCommentsMap: (newCommentsMap: Map<any, any>) => void;
+    getCommentsMap: () => Map<string, ICommentsMap>;
+    setCommentsMap: (newCommentsMap: Map<string, ICommentsMap>) => void;
 
     /**
      * 重做、撤销
@@ -101,7 +102,7 @@ export interface IComponent {
     getRichEditType: () => EditType;
 
     /**
-     * 获取现实富文本编辑器的一些选项
+     * 获取富文本编辑器的一些选项
      * { position, size }
      */
     getRichEditOption: () => IRichEditOption;
@@ -111,6 +112,26 @@ export interface IComponent {
      * 呼出富文本编辑器时隐藏组件中被编辑部分
      */
     hiddenEditorDom: (isHidden: boolean) => void;
+
+    /**
+     * 是否可以双击修改
+     */
+    isDbClickToEdit: () => boolean;
+
+    /**
+     * 是否可以被选中，主要用于框选判断
+     */
+    isCanSelected: () => boolean;
+
+    /**
+     * 选中框属性
+     */
+    selectedFrameData: () => IReactData;
+
+    /**
+     * 低效果拖动框属性
+     */
+    stretchFrameData: (item: IBaseData) => IReactData;
 
     getPropertiesToProperty: () =>  Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
 

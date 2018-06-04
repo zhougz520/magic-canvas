@@ -9,7 +9,6 @@ export interface ICanvasComponent {
      * 获取组件对象
      */
     getComponent: (cid: string) => IComponent | null;
-    findComponent: (cid: string) => IComponent | null;
 
     /**
      * 执行命令
