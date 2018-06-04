@@ -29,6 +29,10 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
     public com: HTMLElement | null = null;
     public antCom: any = null;
 
+    public isCanPushOpenOtherComponent = (): boolean => {
+        return true;
+    }
+
     public render() {
         const richChildNode = this.getRichChildNode();
 

@@ -1,5 +1,6 @@
 import { Canvas } from '../Canvas';
-import { IComponentList } from '../model/types';
+import { IComponentList, IOffset } from '../model/types';
+import { IComponent, IPosition, ISize } from '../../BaseComponent';
 
 import { OrderedSet } from 'immutable';
 
@@ -98,6 +99,70 @@ export class CanvasUtil {
             }
             if (isFinite(Math.max(...commentsIndexList)) === true) {
                 this._canvas._maxCommentsIndex = Math.max(...commentsIndexList);
+            }
+        }
+    }
+
+    /**
+     * 推开组件
+     * @param cid 当前添加组件cid
+     * @param offset 推开偏移量
+     */
+    pushOpenOtherComponent = (cid: string, offset: IOffset = { x: 0, y: 50 }): void => {
+        const component: IComponent | null = this._canvas.getComponent(cid);
+        if (component !== null) {
+            const isCanPushOpenOtherComponent: boolean = component.isCanPushOpenOtherComponent();
+            const position: IPosition = component.getPosition();
+            const size: ISize = component.getSize();
+            if (isCanPushOpenOtherComponent === true) {
+                const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+                // 过滤出位置在当前添加组件之下的，并且按position.top排序
+                const componentListDown: OrderedSet<IComponentList> = componentList.filter(
+                    (com: IComponentList) => {
+                        const currentCom = this._canvas.getComponent(com.cid);
+                        if (currentCom !== null) {
+                            return com.cid !== cid && currentCom.getPosition().top >= position.top;
+                        } else {
+                            return false;
+                        }
+                    }
+                ).sortBy(
+                    (com: IComponentList) => {
+                        const currentCom = this._canvas.getComponent(com.cid);
+                        if (currentCom !== null) {
+                            return currentCom.getPosition().top;
+                        } else {
+                            return 0;
+                        }
+                    }
+                ) as OrderedSet<IComponentList>;
+
+                if (componentListDown.size > 0) {
+                    const firstComponent: IComponent | null = this._canvas.getComponent(componentListDown.first().cid);
+                    if (firstComponent) {
+                        const firstComponentPosition: IPosition = firstComponent.getPosition();
+                        if (position.top + size.height >= firstComponentPosition.top) {
+                            // 当前添加组件与他下面的第一个组件有重叠部分，则推开
+                            const pushOffset: IOffset = {
+                                y: position.top + size.height - firstComponentPosition.top + offset.y,
+                                x: 0 + offset.x
+                            };
+
+                            componentListDown.map(
+                                (com: IComponentList) => {
+                                    const currentCom = this._canvas.getComponent(com.cid);
+                                    if (currentCom !== null) {
+                                        const currentComPosition: IPosition = currentCom.getPosition();
+                                        currentCom.setPosition({
+                                            top: currentComPosition.top + pushOffset.y,
+                                            left: currentComPosition.left + pushOffset.x
+                                        });
+                                    }
+                                }
+                            );
+                        }
+                    }
+                }
             }
         }
     }

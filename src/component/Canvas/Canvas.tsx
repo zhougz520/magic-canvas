@@ -254,6 +254,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         // 如果有新拖入的组件，选中新组件
         if (this._newComponentCid !== null) {
             this.selectionChanging(this._newComponentCid);
+            this._canvasUtil.pushOpenOtherComponent(this._newComponentCid);
             // 清除新添加组件记录
             this._newComponentCid = null;
         }

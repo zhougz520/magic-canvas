@@ -397,6 +397,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 是否可以挤开其他组件
+     * 默认：否，组件自己重写
+     */
+    public isCanPushOpenOtherComponent = (): boolean => {
+        return false;
+    }
+
+    /**
      * 选中框属性
      * 组件可以重写
      */
