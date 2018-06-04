@@ -187,6 +187,7 @@ export class CanvasGlobalParam {
     outsizeMouseUp(e: any) {
         this.mouseDown = false;
         this.dargging = false;
+        this.dragType = DragType.None;
     }
 
     // canvas上的鼠标点击事件
