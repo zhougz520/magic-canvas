@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
-import { GlobalUtil } from '../../util';
+import { MapComponent, IBaseProps } from '../../index';
+import { GlobalUtil } from '../../../util';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {

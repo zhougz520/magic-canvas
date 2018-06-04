@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../index';
+import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { Checkbox, Select, Input, Button } from 'antd';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+// import {
+//     InputField,
+//     InputNumberField,
+//     SelectField,
+//     DataTimeField,
+//     LookUpField,
+//     NullField
+// } from '../form/field';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 const Option = Select.Option;
-
+// tslint:disable:jsx-no-string-ref
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
     map_af_o?: string[];
@@ -203,48 +211,52 @@ export class AppFind extends MapComponent<IMapProps, any> {
                 if (p.map_form_f_cols === undefined) {
                     p.map_form_f_cols = 1;
                 }
-                let field: any = '';
+                const field: any = '';
 
                 switch (t) {
-                    case 'pc/map/form/field/InputField':
-                        // field = <InputField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
-                        field = 'AAAA';
+                    case 'MapComponent/map/form/field/InputField':
+                        // field = <InputField
+                        //     titleWidth={110}
+                        //     key={p.id}
+                        //     {...p}
+                        //     unit={2}
+                        //     ref={`c.${p.id}`}
+                        // />;
                         break;
-                    case 'pc/map/form/field/InputNumberField':
+                    case 'MapComponent/map/form/field/InputNumberField':
                         // field =
                         //     <InputNumberField titleWidth={110} key={p.id} {...p} unit={2}
                         //         ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/CheckBoxField':
+                    case 'MapComponent/map/form/field/CheckBoxField':
                         // field = <CheckBoxField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/LinkField':
+                    case 'MapComponent/map/form/field/LinkField':
                         // field = <LinkField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/RadioField':
+                    case 'MapComponent/map/form/field/RadioField':
                         // field = <RadioField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/SelectField':
+                    case 'MapComponent/map/form/field/SelectField':
                         // field = <SelectField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/TextAreaField':
+                    case 'MapComponent/map/form/field/TextAreaField':
                         // field = <TextAreaField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/DataTimeField':
+                    case 'MapComponent/map/form/field/DataTimeField':
                         // field = <DataTimeField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/LookUpField':
+                    case 'MapComponent/map/form/field/LookUpField':
                         // field = <LookUpField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;
-                    case 'pc/map/form/field/NullField':
+                    case 'MapComponent/map/form/field/NullField':
                         // field = <NullField titleWidth={110} key={p.id} {...p} unit={2}
                         //     ref={`c.${p.id}`} />;
                         break;

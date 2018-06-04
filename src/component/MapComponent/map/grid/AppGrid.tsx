@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../index';
+import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { Checkbox } from 'antd';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { AppGridTitle } from './index';
@@ -38,8 +38,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
         super(props, context);
         this.state = {
             dragonDrop: null,
-            hover: {},
-            ...props
+            hover: {}
         };
     }
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
