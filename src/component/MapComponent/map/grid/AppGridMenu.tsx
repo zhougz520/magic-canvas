@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../index';
+import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { AppGridMenuItem } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 

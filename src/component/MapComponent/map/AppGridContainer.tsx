@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
-import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './index';
+import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './grid/index';
 // import { fromJS } from 'immutable';
 
 import '../sass/Map.scss';
@@ -18,7 +18,7 @@ export interface IDemoState extends IBaseState {
     selectedId?: string;  // 先...只能单选，后面看情况在调整
     title?: string;
 }
-export default class AppGridForm extends BaseComponent<IDemoProps, IDemoState> {
+export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoState> {
     static defaultProps = {
         showProj: true,              // 显示 项目控件
         showView: true,              // 显示 视图

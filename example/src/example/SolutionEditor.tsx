@@ -105,7 +105,7 @@ const detail = {
         components: [
 
             {
-                t: 'MapComponent/map/AppGridForm',
+                t: 'MapComponent/map/AppGridContainer',
                 p: {
                     id: 'cs1',
                     txt_v: '编辑页面',

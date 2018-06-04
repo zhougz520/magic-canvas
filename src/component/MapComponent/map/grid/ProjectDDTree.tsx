@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps } from '../../index';
 import { TreeSelect } from 'antd';
 
 export interface IMapProps extends IBaseProps {

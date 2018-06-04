@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps } from '../../index';
 import { Dropdown, Menu, Icon } from 'antd';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
