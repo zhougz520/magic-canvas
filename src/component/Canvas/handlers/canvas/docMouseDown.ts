@@ -40,15 +40,17 @@ export function docMouseDown(canvas: Canvas, e: any): void {
 
                 if (canvas._isAddCommentsMode === true) {
                     canvas._canvasGlobalParam.canvasMouseDownAddCommentsMode(e);
+                    e.stopPropagation();
+                    e.preventDefault();
                 } else {
                     canvas._canvasGlobalParam.canvasMouseDown(e);
                 }
                 break;
             }
-            case 'outside': {
-                canvas._canvasGlobalParam.outsideMouseDown(e);
-                break;
-            }
+            // case 'outside': {
+            //     canvas._canvasGlobalParam.outsideMouseDown(e);
+            //     break;
+            // }
         }
     }
 }
