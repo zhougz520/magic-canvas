@@ -112,7 +112,8 @@ gulp.task('watch', ['compile', 'cssCompile'], () => {
         tasks.css
     ], () => {
         debug('detecting files changed, recompile');
-        runSequence('compile', 'cssCompile')
+        tasks.compile(dist, debug);
+        tasks.cssCompile(dist, debug);
         debug('recompile complete');
     });
 });
