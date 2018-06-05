@@ -24,10 +24,10 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             const currMaskLayer = document.getElementById(this.props.id);
             // console.log('id', this.props.id);
             if (currMaskLayer !== null) {
-                currMaskLayer.style.width = this.com.offsetWidth + 'px';
-                currMaskLayer.style.height = this.com.offsetHeight + 'px';
-                currMaskLayer.style.top = this.com.offsetTop + 'px';
-                currMaskLayer.style.left = this.com.offsetLeft + 'px';
+                currMaskLayer.style.width = `${this.com.offsetWidth}px`;
+                currMaskLayer.style.height = `${this.com.offsetHeight}px`;
+                currMaskLayer.style.top = `${this.com.offsetTop}px`;
+                currMaskLayer.style.left = `${this.com.offsetLeft}px`;
             }
         }
     }
