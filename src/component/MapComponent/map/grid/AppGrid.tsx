@@ -6,6 +6,7 @@ import { AppGridTitle } from './index';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
+    setIsCanMove: (isCanMove: boolean) => void;
     map_g_mc: boolean;   // 是否多选
     map_g_sl: number;   // 滚动条位置
     map_g_pg: boolean;   // 是否显示分页栏
@@ -87,7 +88,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
     // 初始化标题
     protected initTitle = (p: any) => {
-        const { selectComChange, selectedId, updateProps } = this.props;
+        const { selectComChange, selectedId, updateProps, setIsCanMove } = this.props;
         if (p !== undefined) {
             const currTitles: JSX.Element[] = [];
             p.components.forEach((com: any, index: number) => {
@@ -102,6 +103,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                         {...com.p}
                         updateProps={updateProps}
                         index={index}
+                        setIsCanMove={setIsCanMove}
                     />
                 );
             });
