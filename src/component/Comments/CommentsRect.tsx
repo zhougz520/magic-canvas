@@ -17,6 +17,14 @@ import { IComponentList } from '../Canvas';
 import { OrderedSet, Map } from 'immutable';
 
 export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
+    constructor(props: IBaseProps, context?: any) {
+        super(props, context);
+
+        this.state = {
+            baseState: this.initBaseStateWithCustomState()
+        };
+    }
+
     /**
      * 选中框属性
      * 组件可以重写

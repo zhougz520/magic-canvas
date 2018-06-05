@@ -26,15 +26,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     com: any = null;
 
-    // TODO 基类中不写构造器
-    constructor(props: P, context?: any) {
-        super(props, context);
-
-        this.state = {
-            baseState: this.initBaseStateWithCustomState()
-        } as Readonly<S>;
-    }
-
     componentDidMount() {
         const currMaskLayer = document.getElementById(this.getCid());
         if (currMaskLayer !== null) {

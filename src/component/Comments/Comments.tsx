@@ -47,7 +47,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     commentsRectList: OrderedSet(),
                     maxRectId: 0
                 } as ICustomState,
-                EditorState.createEmpty('需求' + this.getCid().replace('cm', '') + '：\n')
+                EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n')
             ),
             hidden: false
         };
