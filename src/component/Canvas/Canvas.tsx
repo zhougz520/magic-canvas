@@ -145,14 +145,14 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         let currCid: string = 'c';
 
         let ref: any = null;
-        idList.map(
-            (id: string) => {
-                currCid += '.' + id;
-                ref = currRefs[`${currCid}`] as any;
-                // TODO Cannot read property 'refs' of undefined，点appGrid中的子组件报错
-                currRefs = currRefs[`${currCid}`].refs as any;
+        for (let i = 0; i < idList.length; i++) {
+            currCid += '.' + idList[i];
+            ref = currRefs[`${currCid}`] as any;
+            if (ref === undefined) {
+                return null;
             }
-        );
+            currRefs = currRefs[`${currCid}`].refs as any;
+        }
 
         return (ref as IComponent) || null;
     }
@@ -254,6 +254,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         // 如果有新拖入的组件，选中新组件
         if (this._newComponentCid !== null) {
             this.selectionChanging(this._newComponentCid);
+            this._canvasUtil.pushOpenOtherComponent(this._newComponentCid);
             // 清除新添加组件记录
             this._newComponentCid = null;
         }
