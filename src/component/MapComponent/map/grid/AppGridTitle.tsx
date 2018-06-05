@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { GlobalUtil } from '../../../util';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -70,7 +71,9 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
             <div
                 className={`app-grid-title-item`}
                 style={{ width: w }}
+                onMouseDown={this.selectedCom}
             >
+                <MaskLayer id={id} />
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>

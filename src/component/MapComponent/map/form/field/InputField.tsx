@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { Checkbox } from 'antd';
+import { Input } from 'antd';
+import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
 export interface IMapProps extends IBaseProps {
-	updateProps: (cid: string, updateProp: any) => void;
 	map_form_f_title: string;
 	map_form_f_default: string;
 	map_form_f_state: string;
@@ -15,11 +15,13 @@ export interface IMapProps extends IBaseProps {
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
+	unit: number;
+	currUnit: number;
 	index: number;
 }
 
 export class InputField extends MapComponent<IMapProps, any> {
-	static defaultOptionProps = {
+	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
 		map_form_f_state: '0',
@@ -27,7 +29,9 @@ export class InputField extends MapComponent<IMapProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		map_form_f_type: 'pc/map/form/field/InputField'
+		unit: 1,
+		currUnit: 2,
+		map_form_f_type: 'MapComponent/map/form/field/InputField'
 	};
 
 	public resizing = false;
@@ -54,9 +58,21 @@ export class InputField extends MapComponent<IMapProps, any> {
 	})
 
 	public render() {
-		const { map_form_f_title, map_form_f_default, id, index, titleWidth } = this.props;
-		// 获取选项
-		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
+		const {
+			map_form_f_title,
+			map_form_f_default,
+			id,
+			index,
+			titleWidth,
+			map_form_f_disabled,
+			unit,
+			currUnit,
+			selectedId
+		} = this.props;
+		let borderClass = '';
+		if (map_form_f_disabled) {
+			borderClass = ' read-only';
+		}
 		const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
 			<div
 				onMouseDown={this.selectedCom}
@@ -64,6 +80,7 @@ export class InputField extends MapComponent<IMapProps, any> {
 				{...provided.dragHandleProps}
 				style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
 			>
+				<MaskLayer id={id} />
 				<table className="field-tb">
 					<tbody>
 						<tr>
@@ -71,13 +88,15 @@ export class InputField extends MapComponent<IMapProps, any> {
 								{map_form_f_title}
 							</td>
 							<td className="field-content">
-								{
-									arrRadio.map((chkBox: string, num: number) => {
-										if (chkBox === '') return '';
-
-										return <Checkbox key={num} >{chkBox}</Checkbox>;
-									})
-								}
+								<Input
+									type="text"
+									className={map_form_f_disabled ? borderClass : ''}
+									placeholder=""
+									// onChange={this.onChangeText}
+									disabled={map_form_f_disabled}
+									defaultValue={map_form_f_default}
+									value={map_form_f_default}
+								/>
 							</td>
 						</tr>
 					</tbody>
@@ -87,7 +106,12 @@ export class InputField extends MapComponent<IMapProps, any> {
 		);
 
 		return (
-			<div ref={(ref) => this.com = ref} style={Object.assign({}, { width: '100%' })} className="field-bar">
+			<div
+				ref={(ref) => this.com = ref}
+				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` })}
+				className={`field-bar ${selectedId === id ? 'selectecd' : ''}`}
+				onMouseDown={this.selectedCom}
+			>
 				<Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
 					{initDrag}
 				</Draggable>

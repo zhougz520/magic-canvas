@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Dropdown, Menu, Icon } from 'antd';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -59,11 +60,12 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
                 ref={provided.innerRef}
                 {...provided.dragHandleProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                className={`${selectedId === id ? 'selectecd' : ''}`}
             >
                 <Dropdown overlay={menu} trigger={['click']}>
                     <div
                         ref={(ref) => this.com = ref}
-                        className={`app-grid-menu-item ${selectedId === id ? 'selectecd' : ''}`}
+                        className={`app-grid-menu-item`}
                     >
                         {map_mi_txt}
                         {map_mi_si ? (<div className={`ico ${map_mi_ico}`} />) : ''}
@@ -82,6 +84,7 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
             <div
                 className={`app-grid-menu-item`}
             >
+                <MaskLayer id={id} />
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>

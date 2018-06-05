@@ -14,9 +14,12 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     com: HTMLElement | null = null;
+    public hasHandle: string[] = ['select'];
     componentDidMount() {
         if (this.com !== null) {
+            // if(this.hasHandle){
             this.com.addEventListener('drop', this.handleDropAddComponent);
+            // }
             this.com.addEventListener('mousedown', this.selectedCom);
             const currMaskLayer = document.getElementById(this.props.id);
             // console.log('id', this.props.id);
@@ -33,12 +36,24 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      */
     public addChildComponent = (data: any, addData: any): any => {
         // 获取新id
-        const childId: string = this.newComponentsId(data.p.components, `${data.id}.cs`);
-        data.p.components.push({
-            t: addData.t,
-            p: Object.assign({}, addData.props, { id: childId })
-        });
-        this.props.updateProps(data.id, { p: data.p });
+        let childId: string = `${data.id}.cs1`;
+        let currP: any = {
+            components: []
+        };
+        if (data.p === undefined || data.p.components === undefined) {
+            currP.components.push({
+                t: addData.t,
+                p: Object.assign({}, addData.props, { id: childId })
+            });
+        } else {
+            childId = this.newComponentsId(data.p.components, `${data.id}.cs`);
+            data.p.components.push({
+                t: addData.t,
+                p: Object.assign({}, addData.props, { id: childId })
+            });
+            currP = data.p;
+        }
+        this.props.updateProps(data.id, { p: currP });
 
         return data;
     }
@@ -53,7 +68,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 生成新控件Id
      */
-    public newComponentsId(collection: any[], prefix = 'cs', pid = '') {
+    public newComponentsId(collection: any[] = [], prefix = 'cs', pid = '') {
         const ids: number[] = [];
         collection.forEach((cs: any) => {
             ids.push(parseInt(cs.p.id.replace(prefix, ''), undefined));
@@ -124,6 +139,18 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
 
             return;
         }
+        // console.log('add_com', this.com);
+        // console.log('add_refs', this.refs);
+        // for (let idx = intersects.length - 1; idx >= 0; idx--) {
+        //     const intersect = intersects[idx];
+        //     if (!isUndefined(intersect.addComponent)) {
+        //         newState = intersect.addComponent(state, cs, csp, pos);
+        //         if (newState !== undefined) {
+        //             return newState;
+        //         }
+        //     }
+        // }
+        // 添加控件
         this.addChildComponent(this.props, data);
         e.stopPropagation();
     }
@@ -132,6 +159,37 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      *  校验控件是否可以被添加
      */
     protected componentCanBeAdded(t: string) {
-        return true;
+        return false;
     }
+
+    /**
+     * 拖动处理
+     */
+    protected onDragEnd = (result: any) => {
+        const { p, id } = this.props;
+        // dropped outside the list
+        if (!result.destination) {
+            return;
+        }
+
+        const components = this.reorder(
+            p.components,
+            result.source.index,
+            result.destination.index
+        );
+
+        p.components = components;
+        this.props.updateProps(id, { p });
+    }
+
+    protected reorder = (list: any, startIndex: any, endIndex: any) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        return result;
+    }
+    /**
+     * 拖动处理
+     */
 }

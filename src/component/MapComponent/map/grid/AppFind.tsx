@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { Checkbox, Select, Input, Button } from 'antd';
-// import {
-//     InputField,
-//     InputNumberField,
-//     SelectField,
-//     DataTimeField,
-//     LookUpField,
-//     NullField
-// } from '../form/field';
+import {
+    InputField,
+    // InputNumberField,
+    // SelectField,
+    // DataTimeField,
+    // LookUpField,
+    // NullField
+} from '../form/field';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 const Option = Select.Option;
 // tslint:disable:jsx-no-string-ref
+// tslint:disable:jsx-wrap-multiline
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
     map_af_o?: string[];
@@ -61,7 +63,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
     }
     public render() {
         const { map_sm, map_af_o, p, id } = this.props;
-        const { map_af_se } = this.state;
+        const { map_af_se, hover } = this.state;
 
         const options: any[] = [];
         if (map_af_o !== undefined) {
@@ -124,7 +126,12 @@ export class AppFind extends MapComponent<IMapProps, any> {
             </div>);
 
         const extendFind: any = (
-            <div className="high">
+            <div
+                className="high"
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+                style={Object.assign({}, hover)}
+            >
                 <div className={`app-find-menu ${map_sm || ''}`}>
                     <div className="app-find-menu-title">
                         <b style={{ color: '#66666' }}>快速查询（高级）</b>
@@ -160,8 +167,14 @@ export class AppFind extends MapComponent<IMapProps, any> {
                     </div>
 
                 </div>
-                <div className="app-find-content">
-                    {fieldList}
+                <div
+                    className="app-find-content"
+                >
+                    <DragDropContext onDragEnd={this.onDragEnd} >
+                        <Droppable droppableId="droppable" direction="horizontal">
+                            {fieldList}
+                        </Droppable>
+                    </DragDropContext>
                 </div>
                 <div style={{ width: '100%', height: '30px', verticalAlign: 'top' }}>
                     <Button>
@@ -178,7 +191,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
 
         return (
             <div className="csr-pc-map-app-find" ref={(ref) => this.com = ref}>
-                <MaskLayer id={id} />
+                {!map_af_se ? <MaskLayer id={id} /> : ''}
                 {!map_af_se ? normalFind : extendFind}
             </div>
         );
@@ -196,139 +209,166 @@ export class AppFind extends MapComponent<IMapProps, any> {
         });
     }
 
+    /*重载添加组件*/
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/map/form/field/CheckBoxField') ||
+            (t === 'MapComponent/map/form/field/DataTimeField') ||
+            (t === 'MapComponent/map/form/field/InputField') ||
+            (t === 'MapComponent/map/form/field/InputIconField') ||
+            (t === 'MapComponent/map/form/field/InputNumberField') ||
+            (t === 'MapComponent/map/form/field/LinkField') ||
+            (t === 'MapComponent/map/form/field/LookUpField') ||
+            (t === 'MapComponent/map/form/field/NullField') ||
+            (t === 'MapComponent/map/form/field/RadioField') ||
+            (t === 'MapComponent/map/form/field/SelectField') ||
+            (t === 'MapComponent/map/form/field/TextAreaField') ||
+            (t === 'MapComponent/map/form/field/UploadFiles');
+    }
     private initHightMode = (data: any) => {
-        const { map_form_ss_unit } = this.props;
+        const { map_form_ss_unit, selectComChange, updateProps, selectedId } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
         const components = data === undefined ? undefined : data.components;
         const rowList: any[] = [];
-
         let fieldList: any = null;
         if (components !== undefined) {
-            let rowNum = 2;
-            let fieldRow: any[] = [];
             components.forEach((com: any, index: number) => {
                 const { t, p } = com;
                 if (p.map_form_f_cols === undefined) {
                     p.map_form_f_cols = 1;
                 }
-                const field: any = '';
+                let field: any = null;
 
                 switch (t) {
                     case 'MapComponent/map/form/field/InputField':
-                        // field = <InputField
-                        //     titleWidth={110}
-                        //     key={p.id}
-                        //     {...p}
-                        //     unit={2}
-                        //     ref={`c.${p.id}`}
-                        // />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/InputNumberField':
-                        // field =
-                        //     <InputNumberField titleWidth={110} key={p.id} {...p} unit={2}
-                        //         ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/CheckBoxField':
-                        // field = <CheckBoxField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/LinkField':
-                        // field = <LinkField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/RadioField':
-                        // field = <RadioField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/SelectField':
-                        // field = <SelectField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/TextAreaField':
-                        // field = <TextAreaField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/DataTimeField':
-                        // field = <DataTimeField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/LookUpField':
-                        // field = <LookUpField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                     case 'MapComponent/map/form/field/NullField':
-                        // field = <NullField titleWidth={110} key={p.id} {...p} unit={2}
-                        //     ref={`c.${p.id}`} />;
+                        field = <InputField
+                            titleWidth={110}
+                            key={p.id}
+                            {...p}
+                            unit={1}
+                            currUnit={currUnit}
+                            ref={`c.${p.id}`}
+                            selectComChange={selectComChange}
+                        />;
                         break;
                 }
-                // 每加载一个控件，就判断是否换行
-                rowNum = rowNum - p.map_form_f_cols;
-                if (rowNum === 0) {
-                    fieldRow.push(<td key={index} className="fieldList-td" colSpan={p.map_form_f_cols}>{field}</td>);
-                    rowList.push(<tr key={index} className="fieldList-tr">{fieldRow}</tr>);
-                    // 重置行
-                    fieldRow = [];
-                    rowNum = currUnit;
-                } else if (rowNum < 0) {
-                    fieldRow.push(
-                        <td key={index} className="fieldList-td" colSpan={rowNum + p.map_form_f_cols}>{``}</td>
-                    );
-                    // 添加现有行
-                    rowList.push(<tr key={index} className="fieldList-tr">{fieldRow}</tr>);
-                    // 重置行
-                    fieldRow = [];
-                    // 将当前field添加到新行
-                    fieldRow.push(
-                        <td
-                            key={index}
-                            className="fieldList-td"
-                            style={{ width: `${p.map_form_f_cols * 100 / currUnit}%` }}
-                            colSpan={p.map_form_f_cols}
-                        >
-                            {field}
-                        </td>);
-                    rowNum = - p.map_form_f_cols;
-                } else {
-                    fieldRow.push(
-                        <td
-                            key={index}
-                            className="fieldList-td"
-                            style={{ width: `${p.map_form_f_cols * 100 / currUnit}%` }}
-                            colSpan={p.map_form_f_cols}
-                        >
-                            {field}
-                        </td>);
-                }
-                // 如果是最后一次循环，但是还没有填满行，则直接新增行
-                if (index === components.length - 1) {
-                    if (rowNum > 0) {
-                        fieldRow.push(
-                            <td
-                                key={index + 1}
-                                className="fieldList-td"
-                                colSpan={rowNum}
-                            >
-                                {``}
-                            </td>);
-                    }
-                    // 添加现有行
-                    rowList.push(<tr key={index + 1} className="fieldList-tr">{fieldRow}</tr>);
+
+                if (field !== null) {
+                    rowList.push(field);
                 }
             });
-
-            if (rowList.length > 0) {
-                fieldList = (
-                    <table
-                        className="fieldList-tb"
-                    >
-                        <tbody>
-                            {rowList}
-                        </tbody>
-                    </table>);
-            }
         }
+
+        fieldList = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+            (
+                <div
+                    className="field-list"
+                    ref={provided.innerRef}
+                >
+                    {rowList}
+                </div>
+            );
 
         return fieldList;
     }
-
 }
