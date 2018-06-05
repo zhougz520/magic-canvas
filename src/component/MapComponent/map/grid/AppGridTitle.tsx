@@ -6,6 +6,7 @@ import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
+    setIsCanMove: (isCanMove: boolean) => void;
     map_gt_txt?: string;
     w: number;
     index: number;
@@ -98,6 +99,7 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
             currX: evt.clientX
             // width: newWidth <= 400 ? 400 : newWidth
         });
+        this.props.setIsCanMove(false);
     }
     public onMouseUp = (evt: any) => {
         if (this.state.resizing) {
@@ -108,6 +110,7 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
             });
             evt.stopPropagation();
         }
+        this.props.setIsCanMove(true);
     }
     public onResizingTitle = (evt: any) => {
         const { id, w } = this.props;

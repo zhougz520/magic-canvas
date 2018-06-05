@@ -397,6 +397,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 组件是否可以移动
+     * 默认：是，组件自己重写
+     */
+    public isCanMove = (): boolean => {
+        return true;
+    }
+
+    /**
      * 是否可以挤开其他组件
      * 默认：否，组件自己重写
      */

@@ -34,6 +34,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
     private find: any = '';
     private menu: any = '';
     private grid: any = '';
+    private _isCanMove: boolean = true;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -41,6 +42,15 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
             baseState: this.initBaseStateWithCustomState(props.childData)
         };
     }
+
+    public isCanMove = () => {
+        return this._isCanMove;
+    }
+
+    public setIsCanMove = (isCanMove: boolean): void => {
+        this._isCanMove = isCanMove;
+    }
+
     public render() {
         const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
         const { title } = this.state;
@@ -160,6 +170,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             {...com.p}
                             w={this.getSizeState().getWidth()}
                             updateProps={this.updateCom}
+                            setIsCanMove={this.setIsCanMove}
                         />
                     );
                     break;

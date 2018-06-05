@@ -3,10 +3,18 @@ import { IKeyArgs } from '../../utils/MouseAndKeyUtil';
 
 export function docKeyDown(canvas: Canvas, e: any): void {
     const args = canvas._mouseAndKeyUtil.keyArgs(e);
-    const { key, ctrl, alt, keyCode } = args as IKeyArgs;
+    const { key, ctrl, alt, keyCode, target, targetName } = args as IKeyArgs;
 
     // 非编辑模式：执行组件删除、组件移动等操作
     if (canvas._isRichEditMode === false) {
+        // 如果是常规输入框或文本框，则跳出键盘事件，执行默认事件
+        if (
+            (targetName === 'textarea' && (target as any).className !== 'wingman') ||
+            targetName === 'input'
+        ) {
+            return;
+        }
+
         if (ctrl) {
             canvas._canvasGlobalParam.ctrlPress = true;
         }

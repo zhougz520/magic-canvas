@@ -33,6 +33,10 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
         return true;
     }
 
+    public isCanMove = (): boolean => {
+        return false;
+    }
+
     public render() {
         const richChildNode = this.getRichChildNode();
 
