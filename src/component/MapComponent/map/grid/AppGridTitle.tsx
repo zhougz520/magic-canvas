@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { GlobalUtil } from '../../../util';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -39,12 +40,18 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         // styles we need to apply on draggables
         ...draggableStyle
     })
-    componentWillMount() {
-        // document.addEventListener('mousedown', this.onMouseDown);
+    // 如果需要特殊遮罩，则在componentDidUpdate中处理
+    componentDidUpdate() {
         document.addEventListener('mousemove', this.onResizingTitle);
         document.addEventListener('mouseup', this.onMouseUp);
+        if (this.com !== null) {
+            const currMaskLayer = document.getElementById(this.props.id);
+            // console.log('id', this.props.id);
+            if (currMaskLayer !== null) {
+                currMaskLayer.style.width = `${this.com.offsetWidth - 8}px`;
+            }
+        }
     }
-
     public render() {
         const { map_sm, map_gt_txt, selectedId, w, id, index } = this.props;
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -71,7 +78,9 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
             <div
                 className={`app-grid-title-item`}
                 style={{ width: w }}
+                onMouseDown={this.selectedCom}
             >
+                <MaskLayer id={id} />
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>

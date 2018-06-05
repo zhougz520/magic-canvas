@@ -4,6 +4,7 @@ import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './grid/in
 // import { fromJS } from 'immutable';
 
 import '../sass/Map.scss';
+import '../sass/Field.scss';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {

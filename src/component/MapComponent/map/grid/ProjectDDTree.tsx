@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { TreeSelect } from 'antd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -53,6 +54,7 @@ export class ProjectDDTree extends MapComponent<IMapProps, any> {
                         </td>
                         <td>
                             <div className="first-page">
+                                <MaskLayer id={id} />
                                 <TreeSelect
                                     style={{ width: '100%' }}
                                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}

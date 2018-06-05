@@ -118,29 +118,5 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                 );
         }
     }
-    protected onDragEnd = (result: any) => {
-        const { p, id } = this.props;
-        // dropped outside the list
-        if (!result.destination) {
-            return;
-        }
-
-        const components = this.reorder(
-            p.components,
-            result.source.index,
-            result.destination.index
-        );
-
-        p.components = components;
-        this.props.updateProps(id, { p });
-    }
-
-    protected reorder = (list: any, startIndex: any, endIndex: any) => {
-        const result = Array.from(list);
-        const [removed] = result.splice(startIndex, 1);
-        result.splice(endIndex, 0, removed);
-
-        return result;
-    }
 
 }

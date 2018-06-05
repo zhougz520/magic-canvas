@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Select } from 'antd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 const Option = Select.Option;
 
@@ -51,6 +52,7 @@ export class AppView extends MapComponent<IMapProps, any> {
                             <b style={{ color: '#66666' }}>{map_v_txt}</b>
                         </td>
                         <td>
+                            <MaskLayer id={id} />
                             <div className="first-page">
                                 <Select style={{ width: '100%' }}>
                                     {options}
@@ -68,15 +70,15 @@ export class AppView extends MapComponent<IMapProps, any> {
             projectValue: value
         });
     }
+
     public collectProps = () => {
         // const { map_v_txt, map_v_o, id } = this.props;
         // const { id } = this.props;
-        const currProps: Array<{pTitle: string, pKey: string, pValue: any, pType: string}> =
-[
+        const currProps: Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> =
+            [
                 // { pTitle: '标题', pKey: 'map_v_txt', pValue: map_v_txt, pType: '文本框' },
                 // { pTitle: '选项', pKey: 'map_v_o', pValue: map_v_o, pType: '文本框' }
-            ]
-        ;
+            ];
 
         return currProps;
     }
