@@ -29,13 +29,13 @@ export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
         };
     }
 
-    public isCanPushOpenOtherComponent = (): boolean => {
-        return true;
-    }
+    // public isCanPushOpenOtherComponent = (): boolean => {
+    //     return true;
+    // }
 
-    public isCanMove = (): boolean => {
-        return false;
-    }
+    // public isCanMove = (): boolean => {
+    //     return false;
+    // }
 
     public render() {
         const richChildNode = this.getRichChildNode();
