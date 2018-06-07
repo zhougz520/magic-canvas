@@ -1,3 +1,5 @@
+import { IComData } from '../BaseComponent';
+
 /**
  * 'Run'：运行模式
  * 'Edit'：编辑模式
@@ -21,16 +23,7 @@ export interface IConfig {
 // 数据库存储的数据结构
 export type ComponentsType = Array<{
     t: string;
-    p: {
-        id: string;
-        txt_v: string;
-        w: number;
-        h: number;
-        l: number;
-        t: number;
-        zIndex: number;
-        p: any;
-    };
+    p: IComData;
 }>;
 
 export const ComponentsMap = {

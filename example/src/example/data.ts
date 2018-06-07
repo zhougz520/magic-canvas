@@ -1,5 +1,5 @@
 /* tslint:disable:quotemark object-literal-key-quotes */
-export const detail = {
+export const detail1 = {
     "content": {
         "components": [
             {
@@ -180,7 +180,7 @@ export const detail = {
                             }
                         ]
                     },
-                    "commentsMap": {},
+                    "commentsList": [],
                     "comType": "Map"
                 }
             },
@@ -188,20 +188,21 @@ export const detail = {
                 "t": "BaseComponent/demo/Demo",
                 "p": {
                     "id": "cs2",
-                    "w": 386,
-                    "h": 113,
-                    "l": 131,
-                    "t": 113,
+                    "w": 452,
+                    "h": 101,
+                    "l": 93,
+                    "t": 134,
                     "zIndex": 5,
                     "customState": null,
-                    "commentsMap": {
-                        "cm1.cr1": {
+                    "commentsList": [
+                        {
+                            "cid": "cm1.cr1",
                             "relativePosition": {
-                                "top": 68,
-                                "left": 257
+                                "top": 22,
+                                "left": 298
                             }
                         }
-                    },
+                    ],
                     "comType": null
                 }
             },
@@ -212,8 +213,8 @@ export const detail = {
                     "txt_v": {
                         "currentContent": {
                             "blockMap": {
-                                "69oag": {
-                                    "key": "69oag",
+                                "c0c57": {
+                                    "key": "c0c57",
                                     "type": "unstyled",
                                     "text": "需求1：",
                                     "characterList": [
@@ -233,84 +234,30 @@ export const detail = {
                                     "depth": 0,
                                     "data": {}
                                 },
-                                "diact": {
-                                    "key": "diact",
-                                    "type": "unordered-list-item",
-                                    "text": "123213123",
-                                    "characterList": [
-                                        {
-                                            "style": []
-                                        },
-                                        {
-                                            "style": []
-                                        },
-                                        {
-                                            "style": []
-                                        },
-                                        {
-                                            "style": []
-                                        },
-                                        {
-                                            "style": []
-                                        },
-                                        {
-                                            "style": [
-                                                "color-#e90d0d"
-                                            ]
-                                        },
-                                        {
-                                            "style": [
-                                                "color-#e90d0d"
-                                            ]
-                                        },
-                                        {
-                                            "style": [
-                                                "color-#e90d0d"
-                                            ]
-                                        },
-                                        {
-                                            "style": [
-                                                "color-#e90d0d"
-                                            ]
-                                        }
-                                    ],
+                                "7kpn8": {
+                                    "key": "7kpn8",
+                                    "type": "unstyled",
+                                    "text": "",
+                                    "characterList": [],
                                     "depth": 0,
-                                    "data": {
-                                        "unordered-list-item": "image"
-                                    }
-                                },
-                                "30tg0": {
-                                    "key": "30tg0",
-                                    "type": "unordered-list-item",
-                                    "text": "2",
-                                    "characterList": [
-                                        {
-                                            "style": [
-                                                "color-#e90d0d"
-                                            ]
-                                        }
-                                    ],
-                                    "depth": 1,
-                                    "data": {
-                                        "unordered-list-item": "disc"
-                                    }
+                                    "data": {}
                                 }
                             },
                             "selectionBefore": {
-                                "anchorKey": "30tg0",
+                                "anchorKey": "c0c57",
                                 "anchorOffset": 0,
-                                "focusKey": "30tg0",
+                                "focusKey": "c0c57",
                                 "focusOffset": 0,
                                 "isBackward": false,
-                                "hasFocus": true
+                                "hasFocus": false
                             },
                             "selectionAfter": {
-                                "anchorKey": "30tg0",
-                                "anchorOffset": 1,
-                                "focusKey": "30tg0",
-                                "focusOffset": 1,
+                                "anchorKey": "c0c57",
+                                "anchorOffset": 0,
+                                "focusKey": "c0c57",
+                                "focusOffset": 0,
                                 "isBackward": false,
-                                "hasFocus": true
+                                "hasFocus": false
                             }
                         },
                         "forceSelection": false,
@@ -319,15 +266,15 @@ export const detail = {
                         "lastChangeType": null,
                         "nativelyRenderedContent": null,
                         "selection": {
-                            "anchorKey": "69oag",
+                            "anchorKey": "c0c57",
                             "anchorOffset": 0,
-                            "focusKey": "69oag",
+                            "focusKey": "c0c57",
                             "focusOffset": 0,
                             "isBackward": false,
                             "hasFocus": false
                         },
                         "treeMap": {
-                            "69oag": [
+                            "c0c57": [
                                 {
                                     "start": 0,
                                     "end": 4,
@@ -339,30 +286,14 @@ export const detail = {
                                     ]
                                 }
                             ],
-                            "diact": [
+                            "7kpn8": [
                                 {
                                     "start": 0,
-                                    "end": 9,
+                                    "end": 0,
                                     "leaves": [
                                         {
                                             "start": 0,
-                                            "end": 5
-                                        },
-                                        {
-                                            "start": 5,
-                                            "end": 9
-                                        }
-                                    ]
-                                }
-                            ],
-                            "30tg0": [
-                                {
-                                    "start": 0,
-                                    "end": 1,
-                                    "leaves": [
-                                        {
-                                            "start": 0,
-                                            "end": 1
+                                            "end": 0
                                         }
                                     ]
                                 }
@@ -371,8 +302,8 @@ export const detail = {
                     },
                     "w": 204,
                     "h": 170,
-                    "l": 660,
-                    "t": 143,
+                    "l": 616,
+                    "t": 106,
                     "zIndex": 100001,
                     "customState": {
                         "commentsRectList": [
@@ -385,62 +316,248 @@ export const detail = {
                                         "comType": "Comments",
                                         "zIndex": 0,
                                         "sizeState": {
-                                            "width": 109,
-                                            "height": 44
+                                            "width": 75,
+                                            "height": 42
                                         },
                                         "positionState": {
-                                            "top": 181,
-                                            "left": 388
+                                            "top": 156,
+                                            "left": 391
                                         },
                                         "customState": {
                                             "cid": "cs2"
                                         },
-                                        "commentsMap": {}
+                                        "commentsList": []
                                     },
                                     "tempContentState": {
                                         "cid": "cm1.cr1",
                                         "comType": "Comments",
                                         "zIndex": 0,
                                         "sizeState": {
-                                            "width": 109,
-                                            "height": 44
+                                            "width": 75,
+                                            "height": 42
                                         },
                                         "positionState": {
-                                            "top": 247,
-                                            "left": 377
+                                            "top": 156,
+                                            "left": 391
                                         },
                                         "customState": {
                                             "cid": "cs2"
                                         },
-                                        "commentsMap": {}
+                                        "commentsList": []
                                     },
                                     "redoStack": [],
-                                    "undoStack": [
-                                        {
-                                            "cid": "cm1.cr1",
-                                            "comType": "Comments",
-                                            "zIndex": 0,
-                                            "sizeState": {
-                                                "width": 109,
-                                                "height": 44
-                                            },
-                                            "positionState": {
-                                                "top": 166,
-                                                "left": 312
-                                            },
-                                            "customState": {
-                                                "cid": "cs2"
-                                            },
-                                            "commentsMap": {}
-                                        }
-                                    ]
+                                    "undoStack": []
                                 },
                                 "initType": "Init"
                             }
+                        ],
+                        "maxRectId": 1
+                    },
+                    "commentsList": [],
+                    "comType": "Comments"
+                }
+            }
+        ]
+    }
+};
+
+export const detail2 = {
+    "content": {
+        "components": [
+            {
+                "t": "MapComponent/map/AppGridContainer",
+                "p": {
+                    "id": "cs1",
+                    "txt_v": "编辑页面",
+                    "w": 600,
+                    "h": 400,
+                    "l": 450,
+                    "t": 350,
+                    "p": {
+                        "components": [
+                            {
+                                "t": "MapComponent/map/ProjectDDTree",
+                                "p": {
+                                    "id": "cs1.cs1"
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppView",
+                                "p": {
+                                    "id": "cs1.cs2"
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppFind",
+                                "p": {
+                                    "id": "cs1.cs3"
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppGridMenu",
+                                "p": {
+                                    "id": "cs1.cs4",
+                                    "p": {
+                                        "components": [
+                                            {
+                                                "t": "MapComponent/map/AppGridMenuItem",
+                                                "p": {
+                                                    "id": "cs1.cs4.cs1",
+                                                    "map_mi_txt": "新增"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridMenuItem",
+                                                "p": {
+                                                    "id": "cs1.cs4.cs2",
+                                                    "map_mi_txt": "删除"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridMenuItem",
+                                                "p": {
+                                                    "id": "cs1.cs4.cs3",
+                                                    "map_mi_sa": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppGrid",
+                                "p": {
+                                    "id": "cs1.cs5",
+                                    "p": {
+                                        "components": [
+                                            {
+                                                "t": "MapComponent/map/AppGridTitle",
+                                                "p": {
+                                                    "id": "cs1.cs5.cs1",
+                                                    "map_gt_txt": "AAA"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridTitle",
+                                                "p": {
+                                                    "id": "cs1.cs5.cs2",
+                                                    "map_gt_txt": "BBB"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridTitle",
+                                                "p": {
+                                                    "id": "cs1.cs5.cs3",
+                                                    "map_gt_txt": "CCC"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
                         ]
                     },
-                    "commentsMap": {},
-                    "comType": "Comments"
+                    "zIndex": 4,
+                    "customState": {
+                        "components": [
+                            {
+                                "t": "MapComponent/map/ProjectDDTree",
+                                "p": {
+                                    "id": "cs1.cs1"
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppView",
+                                "p": {
+                                    "id": "cs1.cs2"
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppFind",
+                                "p": {
+                                    "id": "cs1.cs3"
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppGridMenu",
+                                "p": {
+                                    "id": "cs1.cs4",
+                                    "p": {
+                                        "components": [
+                                            {
+                                                "t": "MapComponent/map/AppGridMenuItem",
+                                                "p": {
+                                                    "id": "cs1.cs4.cs1",
+                                                    "map_mi_txt": "新增"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridMenuItem",
+                                                "p": {
+                                                    "id": "cs1.cs4.cs2",
+                                                    "map_mi_txt": "删除"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridMenuItem",
+                                                "p": {
+                                                    "id": "cs1.cs4.cs3",
+                                                    "map_mi_sa": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "t": "MapComponent/map/AppGrid",
+                                "p": {
+                                    "id": "cs1.cs5",
+                                    "p": {
+                                        "components": [
+                                            {
+                                                "t": "MapComponent/map/AppGridTitle",
+                                                "p": {
+                                                    "id": "cs1.cs5.cs1",
+                                                    "map_gt_txt": "AAA"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridTitle",
+                                                "p": {
+                                                    "id": "cs1.cs5.cs2",
+                                                    "map_gt_txt": "BBB"
+                                                }
+                                            },
+                                            {
+                                                "t": "MapComponent/map/AppGridTitle",
+                                                "p": {
+                                                    "id": "cs1.cs5.cs3",
+                                                    "map_gt_txt": "CCC"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "commentsList": {},
+                    "comType": "Map"
+                }
+            },
+            {
+                "t": "BaseComponent/demo/Demo",
+                "p": {
+                    "id": "cs2",
+                    "w": 467,
+                    "h": 113,
+                    "l": 138,
+                    "t": 89,
+                    "zIndex": 5,
+                    "customState": null,
+                    "commentsList": {},
+                    "comType": null
                 }
             }
         ]
