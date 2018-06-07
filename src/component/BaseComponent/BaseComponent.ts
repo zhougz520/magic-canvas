@@ -514,6 +514,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         let newBaseState: BaseState = baseState;
         switch (initType) {
             case 'Init':
+                newBaseState = baseState;
+                break;
             case 'Add':
                 let newContentState: ContentState = baseState.getCurrentContent();
                 if (customState !== null) {

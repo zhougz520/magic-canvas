@@ -542,7 +542,7 @@ export const detail2 = {
                             }
                         ]
                     },
-                    "commentsList": {},
+                    "commentsList": [],
                     "comType": "Map"
                 }
             },
@@ -556,7 +556,7 @@ export const detail2 = {
                     "t": 89,
                     "zIndex": 5,
                     "customState": null,
-                    "commentsList": {},
+                    "commentsList": [],
                     "comType": null
                 }
             }

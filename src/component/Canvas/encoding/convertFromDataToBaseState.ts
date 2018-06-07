@@ -5,7 +5,7 @@ import {
     PositionState,
     IComData
 } from '../../BaseComponent';
-import { fromJS, List } from 'immutable';
+import { fromJS, List, Map } from 'immutable';
 
 /**
  * 把Canvas中的data转译成baseState
@@ -26,7 +26,7 @@ export const convertFromDataToBaseState = (data: IComData): BaseState => {
         }),
         // TODO 带格式的富文本
         richChildNode: fromJS(data.txt_v),
-        customState: fromJS(data.customState),
+        customState: Map(data.customState),
         commentsList: List(data.commentsList)
     });
 

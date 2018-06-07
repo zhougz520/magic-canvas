@@ -85,12 +85,11 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     highPerformance={this.highPerformance}
-                // objectlist={this.props.objectlist}
                 />
                 <Stage
                     config={config}
                     ref={(render) => this.stage = render}
-                    components={detail1.content.components as ComponentsType}
+                    components={detail2.content.components as ComponentsType}
                     onCommandProperties={this.onCommandProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     clearSelectedProperty={this.clearSelectedProperty}
