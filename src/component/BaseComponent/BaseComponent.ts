@@ -497,12 +497,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
     }
 
-    public converFromCustomStateToData = (): any => {
-        const customState: any = this.getCustomState();
-
-        return customState && customState.toJS ? customState.toJS() : customState;
-    }
-
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State

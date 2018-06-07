@@ -152,7 +152,4 @@ export interface IComponent {
     setPropertiesFromCommand: (pKey: string, pValue: any) => void;
 
     getComponentSettableCommands: () => string[];
-
-    converFromCustomStateToData: () => any;
-
 }

@@ -9,8 +9,8 @@ export const detail1 = {
                     "txt_v": "编辑页面",
                     "w": 600,
                     "h": 400,
-                    "l": 450,
-                    "t": 350,
+                    "l": 376,
+                    "t": 332,
                     "p": {
                         "components": [
                             {
@@ -171,7 +171,8 @@ export const detail1 = {
                                                 "t": "MapComponent/map/AppGridTitle",
                                                 "p": {
                                                     "id": "cs1.cs5.cs3",
-                                                    "map_gt_txt": "CCC"
+                                                    "map_gt_txt": "CCC",
+                                                    "w": 322
                                                 }
                                             }
                                         ]
@@ -188,18 +189,25 @@ export const detail1 = {
                 "t": "BaseComponent/demo/Demo",
                 "p": {
                     "id": "cs2",
-                    "w": 452,
-                    "h": 101,
-                    "l": 93,
-                    "t": 134,
+                    "w": 467,
+                    "h": 113,
+                    "l": 138,
+                    "t": 110,
                     "zIndex": 5,
                     "customState": null,
                     "commentsList": [
                         {
                             "cid": "cm1.cr1",
                             "relativePosition": {
-                                "top": 22,
-                                "left": 298
+                                "top": 21,
+                                "left": 348
+                            }
+                        },
+                        {
+                            "cid": "cm2.cr1",
+                            "relativePosition": {
+                                "top": 34,
+                                "left": 172
                             }
                         }
                     ],
@@ -213,8 +221,8 @@ export const detail1 = {
                     "txt_v": {
                         "currentContent": {
                             "blockMap": {
-                                "c0c57": {
-                                    "key": "c0c57",
+                                "bq93u": {
+                                    "key": "bq93u",
                                     "type": "unstyled",
                                     "text": "需求1：",
                                     "characterList": [
@@ -234,8 +242,8 @@ export const detail1 = {
                                     "depth": 0,
                                     "data": {}
                                 },
-                                "7kpn8": {
-                                    "key": "7kpn8",
+                                "66ile": {
+                                    "key": "66ile",
                                     "type": "unstyled",
                                     "text": "",
                                     "characterList": [],
@@ -244,17 +252,17 @@ export const detail1 = {
                                 }
                             },
                             "selectionBefore": {
-                                "anchorKey": "c0c57",
+                                "anchorKey": "bq93u",
                                 "anchorOffset": 0,
-                                "focusKey": "c0c57",
+                                "focusKey": "bq93u",
                                 "focusOffset": 0,
                                 "isBackward": false,
                                 "hasFocus": false
                             },
                             "selectionAfter": {
-                                "anchorKey": "c0c57",
+                                "anchorKey": "bq93u",
                                 "anchorOffset": 0,
-                                "focusKey": "c0c57",
+                                "focusKey": "bq93u",
                                 "focusOffset": 0,
                                 "isBackward": false,
                                 "hasFocus": false
@@ -266,15 +274,15 @@ export const detail1 = {
                         "lastChangeType": null,
                         "nativelyRenderedContent": null,
                         "selection": {
-                            "anchorKey": "c0c57",
+                            "anchorKey": "bq93u",
                             "anchorOffset": 0,
-                            "focusKey": "c0c57",
+                            "focusKey": "bq93u",
                             "focusOffset": 0,
                             "isBackward": false,
                             "hasFocus": false
                         },
                         "treeMap": {
-                            "c0c57": [
+                            "bq93u": [
                                 {
                                     "start": 0,
                                     "end": 4,
@@ -286,7 +294,7 @@ export const detail1 = {
                                     ]
                                 }
                             ],
-                            "7kpn8": [
+                            "66ile": [
                                 {
                                     "start": 0,
                                     "end": 0,
@@ -302,56 +310,260 @@ export const detail1 = {
                     },
                     "w": 204,
                     "h": 170,
-                    "l": 616,
-                    "t": 106,
+                    "l": 695,
+                    "t": 11,
                     "zIndex": 100001,
                     "customState": {
                         "commentsRectList": [
                             {
-                                "cid": "cm1.cr1",
-                                "comPath": "Comments/CommentsRect",
-                                "baseState": {
-                                    "currentContent": {
-                                        "cid": "cm1.cr1",
-                                        "comType": "Comments",
-                                        "zIndex": 0,
-                                        "sizeState": {
-                                            "width": 75,
-                                            "height": 42
-                                        },
-                                        "positionState": {
-                                            "top": 156,
-                                            "left": 391
-                                        },
-                                        "customState": {
-                                            "cid": "cs2"
-                                        },
-                                        "commentsList": []
+                                "t": "Comments/CommentsRect",
+                                "p": {
+                                    "id": "cm1.cr1",
+                                    "w": 93,
+                                    "h": 40,
+                                    "l": 486,
+                                    "t": 131,
+                                    "zIndex": 0,
+                                    "customState": {
+                                        "cid": "cs2"
                                     },
-                                    "tempContentState": {
-                                        "cid": "cm1.cr1",
-                                        "comType": "Comments",
-                                        "zIndex": 0,
-                                        "sizeState": {
-                                            "width": 75,
-                                            "height": 42
-                                        },
-                                        "positionState": {
-                                            "top": 156,
-                                            "left": 391
-                                        },
-                                        "customState": {
-                                            "cid": "cs2"
-                                        },
-                                        "commentsList": []
-                                    },
-                                    "redoStack": [],
-                                    "undoStack": []
-                                },
-                                "initType": "Init"
+                                    "commentsList": [],
+                                    "comType": "Comments"
+                                }
                             }
                         ],
                         "maxRectId": 1
+                    },
+                    "commentsList": [],
+                    "comType": "Comments"
+                }
+            },
+            {
+                "t": "Comments/Comments",
+                "p": {
+                    "id": "cm2",
+                    "txt_v": {
+                        "currentContent": {
+                            "blockMap": {
+                                "5qj3v": {
+                                    "key": "5qj3v",
+                                    "type": "unstyled",
+                                    "text": "需求2：",
+                                    "characterList": [
+                                        {
+                                            "style": []
+                                        },
+                                        {
+                                            "style": []
+                                        },
+                                        {
+                                            "style": []
+                                        },
+                                        {
+                                            "style": []
+                                        }
+                                    ],
+                                    "depth": 0,
+                                    "data": {}
+                                },
+                                "7194g": {
+                                    "key": "7194g",
+                                    "type": "unstyled",
+                                    "text": "",
+                                    "characterList": [],
+                                    "depth": 0,
+                                    "data": {}
+                                }
+                            },
+                            "selectionBefore": {
+                                "anchorKey": "5qj3v",
+                                "anchorOffset": 0,
+                                "focusKey": "5qj3v",
+                                "focusOffset": 0,
+                                "isBackward": false,
+                                "hasFocus": false
+                            },
+                            "selectionAfter": {
+                                "anchorKey": "5qj3v",
+                                "anchorOffset": 0,
+                                "focusKey": "5qj3v",
+                                "focusOffset": 0,
+                                "isBackward": false,
+                                "hasFocus": false
+                            }
+                        },
+                        "forceSelection": false,
+                        "inCompositionMode": false,
+                        "inlineStyleOverride": null,
+                        "lastChangeType": null,
+                        "nativelyRenderedContent": null,
+                        "selection": {
+                            "anchorKey": "5qj3v",
+                            "anchorOffset": 0,
+                            "focusKey": "5qj3v",
+                            "focusOffset": 0,
+                            "isBackward": false,
+                            "hasFocus": false
+                        },
+                        "treeMap": {
+                            "5qj3v": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "leaves": [
+                                        {
+                                            "start": 0,
+                                            "end": 4
+                                        }
+                                    ]
+                                }
+                            ],
+                            "7194g": [
+                                {
+                                    "start": 0,
+                                    "end": 0,
+                                    "leaves": [
+                                        {
+                                            "start": 0,
+                                            "end": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "w": 204,
+                    "h": 170,
+                    "l": 662,
+                    "t": 221,
+                    "zIndex": 100002,
+                    "customState": {
+                        "commentsRectList": [
+                            {
+                                "t": "Comments/CommentsRect",
+                                "p": {
+                                    "id": "cm2.cr1",
+                                    "w": 78,
+                                    "h": 34,
+                                    "l": 310,
+                                    "t": 144,
+                                    "zIndex": 0,
+                                    "customState": {
+                                        "cid": "cs2"
+                                    },
+                                    "commentsList": [],
+                                    "comType": "Comments"
+                                }
+                            }
+                        ],
+                        "maxRectId": 1
+                    },
+                    "commentsList": [],
+                    "comType": "Comments"
+                }
+            },
+            {
+                "t": "Comments/Comments",
+                "p": {
+                    "id": "cm3",
+                    "txt_v": {
+                        "currentContent": {
+                            "blockMap": {
+                                "56k9m": {
+                                    "key": "56k9m",
+                                    "type": "unstyled",
+                                    "text": "需求3：",
+                                    "characterList": [
+                                        {
+                                            "style": []
+                                        },
+                                        {
+                                            "style": []
+                                        },
+                                        {
+                                            "style": []
+                                        },
+                                        {
+                                            "style": []
+                                        }
+                                    ],
+                                    "depth": 0,
+                                    "data": {}
+                                },
+                                "37civ": {
+                                    "key": "37civ",
+                                    "type": "unstyled",
+                                    "text": "",
+                                    "characterList": [],
+                                    "depth": 0,
+                                    "data": {}
+                                }
+                            },
+                            "selectionBefore": {
+                                "anchorKey": "56k9m",
+                                "anchorOffset": 0,
+                                "focusKey": "56k9m",
+                                "focusOffset": 0,
+                                "isBackward": false,
+                                "hasFocus": false
+                            },
+                            "selectionAfter": {
+                                "anchorKey": "56k9m",
+                                "anchorOffset": 0,
+                                "focusKey": "56k9m",
+                                "focusOffset": 0,
+                                "isBackward": false,
+                                "hasFocus": false
+                            }
+                        },
+                        "forceSelection": false,
+                        "inCompositionMode": false,
+                        "inlineStyleOverride": null,
+                        "lastChangeType": null,
+                        "nativelyRenderedContent": null,
+                        "selection": {
+                            "anchorKey": "56k9m",
+                            "anchorOffset": 0,
+                            "focusKey": "56k9m",
+                            "focusOffset": 0,
+                            "isBackward": false,
+                            "hasFocus": false
+                        },
+                        "treeMap": {
+                            "56k9m": [
+                                {
+                                    "start": 0,
+                                    "end": 4,
+                                    "leaves": [
+                                        {
+                                            "start": 0,
+                                            "end": 4
+                                        }
+                                    ]
+                                }
+                            ],
+                            "37civ": [
+                                {
+                                    "start": 0,
+                                    "end": 0,
+                                    "leaves": [
+                                        {
+                                            "start": 0,
+                                            "end": 0
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "w": 204,
+                    "h": 170,
+                    "l": 68,
+                    "t": 403,
+                    "zIndex": 100003,
+                    "customState": {
+                        "commentsRectList": [],
+                        "maxRectId": 0
                     },
                     "commentsList": [],
                     "comType": "Comments"
