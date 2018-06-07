@@ -10,6 +10,8 @@ export interface ICanvasComponent {
      */
     getComponent: (cid: string) => IComponent | null;
 
+    getSaveData: () => any;
+
     /**
      * 执行命令
      */
