@@ -9,12 +9,12 @@ import {
     IPosition,
     ContentState,
     IComponent,
-    ICommentsMap
+    ICommentsList
 } from '../BaseComponent';
 import { IReactData, IBaseData } from '../Draw';
 import { IComponentList } from '../Canvas';
 
-import { OrderedSet, Map } from 'immutable';
+import { OrderedSet, List } from 'immutable';
 
 export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
     constructor(props: IBaseProps, context?: any) {
@@ -71,20 +71,31 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
             this.updateCommentsCustomState(this.getBaseState());
 
             // 更新组件客中存的相对位置
-            const component: IComponent | null = this.getCustomState().component;
+            const cid: string | null = this.getCustomState().get('cid');
+            const component: IComponent | null = cid !== null ? this.props.getComponent(cid) : null;
             if (component) {
                 const componentPosition: IPosition = component.getPosition();
                 const rectPosition: IPosition = this.getPosition();
-                const commentsMap: ICommentsMap = {
+                const newComments: ICommentsList = {
+                    cid: (cid as string),
                     relativePosition: {
                         top: rectPosition.top - componentPosition.top,
                         left: rectPosition.left - componentPosition.left
                     }
                 };
 
-                const oldCommentsMap = component.getCommentsMap();
-                const newCommentsMap = oldCommentsMap.merge(Map().set(this.getCid(), commentsMap) as Map<string, ICommentsMap>);
-                component.setCommentsMap(newCommentsMap);
+                const oldCommentsList = component.getCommentsList();
+                let newCommentsList: List<ICommentsList> = List();
+                oldCommentsList.map(
+                    (oldComments: ICommentsList) => {
+                        if (oldComments.cid === cid) {
+                            newCommentsList = newCommentsList.push(newComments);
+                        } else {
+                            newCommentsList = newCommentsList.push(oldComments);
+                        }
+                    }
+                );
+                component.setCommentsList(newCommentsList);
             }
         }
     }

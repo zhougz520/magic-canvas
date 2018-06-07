@@ -1,19 +1,19 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
-import { ContentState, ComponentType } from './model/ContentState';
+import { IBaseProps } from './IBaseProps';
+import { ContentState } from './model/ContentState';
 import { BaseState } from './model/BaseState';
-import { EditType, IRichEditOption, ICommentsMap } from './model/types';
+import { EditType, IRichEditOption, ICommentsList, ComponentType } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
 
 import { IAnchor } from '../util';
-import { Map } from 'immutable';
+import { List } from 'immutable';
 
 /**
  * BaseComponent提供的方法接口
  */
 export interface IComponent {
-
-    com: any;
+    getBaseProps: () => IBaseProps;
     /**
      * 获取、设置组件的baseState
      */
@@ -44,8 +44,8 @@ export interface IComponent {
     getCustomState: () => any;
     setCustomState: (newCustomState: any) => void;
 
-    getCommentsMap: () => Map<string, ICommentsMap>;
-    setCommentsMap: (newCommentsMap: Map<string, ICommentsMap>) => void;
+    getCommentsList: () => List<ICommentsList>;
+    setCommentsList: (newCommentsList: List<ICommentsList>) => void;
 
     /**
      * 重做、撤销
@@ -152,5 +152,7 @@ export interface IComponent {
     setPropertiesFromCommand: (pKey: string, pValue: any) => void;
 
     getComponentSettableCommands: () => string[];
+
+    converFromCustomStateToData: () => any;
 
 }

@@ -6,15 +6,15 @@ import { IBaseProps } from './IBaseProps';
 import { IBaseState } from './IBaseState';
 
 import { BaseState } from './model/BaseState';
-import { ContentState, ComponentType } from './model/ContentState';
+import { ContentState } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import { EditType, IRichEditOption, CallBackType, ICommentsMap } from './model/types';
+import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
-import { Stack, Map, List } from 'immutable';
+import { Stack, List } from 'immutable';
 
 /**
  * 基类
@@ -23,8 +23,6 @@ import { Stack, Map, List } from 'immutable';
  */
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
-
-    com: any = null;
 
     componentDidMount() {
         const currMaskLayer = document.getElementById(this.getCid());
@@ -42,23 +40,30 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             currentContent.getPositionState().equals(prevContent.getPositionState()) === false
         ) {
             // 如果有批注，更新批注的位置
-            const commentsMap: Map<string, ICommentsMap> = this.getCommentsMap();
+            const commentsList: List<ICommentsList> = this.getCommentsList();
             const componentPosition: IPosition = this.getPosition();
-            commentsMap.map(
-                (value: ICommentsMap, key: string) => {
-                    const relativePosition: IPosition = value.relativePosition;
+            commentsList.map(
+                (comments: ICommentsList) => {
+                    const relativePosition: IPosition = comments.relativePosition;
                     const commentsRectPosition: IPosition = {
                         top: componentPosition.top + relativePosition.top,
                         left: componentPosition.left + relativePosition.left
                     };
 
-                    const commentsRect: IComponent | null = this.props.getComponent(key);
+                    const commentsRect: IComponent | null = this.props.getComponent(comments.cid);
                     if (commentsRect !== null) {
                         commentsRect.setPosition(commentsRectPosition);
                     }
                 }
             );
         }
+    }
+
+    /**
+     * 获取组件路径
+     */
+    public getBaseProps = (): IBaseProps => {
+        return this.props;
     }
 
     /**
@@ -253,21 +258,21 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的批注集合
      */
-    public getCommentsMap = (): Map<string, ICommentsMap> => {
+    public getCommentsList = (): List<ICommentsList> => {
         const baseState: BaseState = this.getBaseState();
-        const commentsMap: Map<string, ICommentsMap> = baseState.getCurrentContent().getCommentsMap();
+        const commentsList: List<ICommentsList> = baseState.getCurrentContent().getCommentsList();
 
-        return commentsMap;
+        return commentsList;
     }
 
     /**
      * 设置组件的批注集合
-     * @param newCommentsMap 新的批注集合
+     * @param newCommentsList 新的批注集合
      */
-    public setCommentsMap = (newCommentsMap: Map<string, ICommentsMap>): void => {
+    public setCommentsList = (newCommentsList: List<ICommentsList>): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            commentsMap: newCommentsMap
+            commentsList: newCommentsList
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
@@ -492,6 +497,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
     }
 
+    public converFromCustomStateToData = (): any => {
+        const customState: any = this.getCustomState();
+
+        return customState && customState.toJS ? customState.toJS() : customState;
+    }
+
     /**
      * 初始化BaseSate
      * @param customState 组件自定义State
@@ -500,9 +511,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const initType: InitType = this.props.initType;
         const baseState: BaseState = this.props.baseState;
 
-        let newBaseState: BaseState;
+        let newBaseState: BaseState = baseState;
         switch (initType) {
             case 'Init':
+            case 'Add':
                 let newContentState: ContentState = baseState.getCurrentContent();
                 if (customState !== null) {
                     newContentState = newContentState.merge(
@@ -522,9 +534,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 newBaseState = BaseState.createWithContent(newContentState);
                 break;
             case 'Stack':
-                newBaseState = baseState;
-                break;
-            default:
                 newBaseState = baseState;
                 break;
         }

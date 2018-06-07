@@ -1,7 +1,7 @@
 import { BaseState, IComponent } from '../../BaseComponent';
 import { List } from 'immutable';
 
-export type InitType = 'Init' | 'Stack';
+export type InitType = 'Init' | 'Add' | 'Stack';
 
 export interface IComponentList {
     cid: string;
