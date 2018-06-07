@@ -9,3 +9,6 @@ export { CanvasStyle } from './model/CanvasStyle';
 export { IBoundary, IOffset, OperationType, IComponentList, InitType } from './model/types';
 
 export { CommandMap } from './command/CommandEmitted';
+
+export { convertFromBaseStateToData } from './encoding/convertFromBaseStateToData';
+export { convertFromDataToBaseState } from './encoding/convertFromDataToBaseState';

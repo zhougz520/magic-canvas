@@ -5,13 +5,15 @@ import {
     PositionState,
     IComData
 } from '../../BaseComponent';
-import { fromJS, List, Map } from 'immutable';
+import { convertFromDataToCustomState } from './convertFromDataToCustomState';
+import { fromJS, List } from 'immutable';
 
 /**
  * 把Canvas中的data转译成baseState
  * @param data Canvas中的data
+ * @param comPath 组件路径
  */
-export const convertFromDataToBaseState = (data: IComData): BaseState => {
+export const convertFromDataToBaseState = (data: IComData, comPath: string): BaseState => {
     const contentState: ContentState = ContentState.create({
         cid: data.id,
         comType: data.comType,
@@ -26,7 +28,7 @@ export const convertFromDataToBaseState = (data: IComData): BaseState => {
         }),
         // TODO 带格式的富文本
         richChildNode: fromJS(data.txt_v),
-        customState: Map(data.customState),
+        customState: convertFromDataToCustomState(data.customState, comPath),
         commentsList: List(data.commentsList)
     });
 

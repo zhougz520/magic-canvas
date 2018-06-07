@@ -177,13 +177,13 @@ export class CommentsUtil {
             comData.id = comComments.getCid() + '.cr' + (commentsCustomState.get('maxRectId') + 1);
             comData.zIndex = 0;
 
-            const baseState: BaseState = convertFromDataToBaseState(comData);
+            const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
             const component: IComponentList = {
                 cid: comData.id,
                 comPath: data.t,
                 baseState,
                 childData: comData.p,
-                initType: 'Add'
+                initType: 'Init'
             };
 
             const commentsRectList: OrderedSet<IComponentList> =

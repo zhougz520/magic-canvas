@@ -109,7 +109,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this.props.components.map(
             (component) => {
                 const comData: IComData = this._componentsUtil.convertComponentToData(component);
-                const baseState: BaseState = convertFromDataToBaseState(comData);
+                const baseState: BaseState = convertFromDataToBaseState(comData, component.t);
 
                 componentList = componentList.add({
                     cid: comData.id,
@@ -255,8 +255,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                     components.push(
                         convertFromBaseStateToData(
                             com.getBaseState(),
-                            com.getBaseProps(),
-                            com.converFromCustomStateToData()
+                            {
+                                comPath: com.getBaseProps().comPath,
+                                childData: com.getBaseProps().childData
+                            }
                         )
                     );
                 }

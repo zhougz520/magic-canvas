@@ -77,7 +77,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                 const componentPosition: IPosition = component.getPosition();
                 const rectPosition: IPosition = this.getPosition();
                 const newComments: ICommentsList = {
-                    cid: (cid as string),
+                    cid: this.getCid(),
                     relativePosition: {
                         top: rectPosition.top - componentPosition.top,
                         left: rectPosition.left - componentPosition.left
@@ -88,7 +88,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                 let newCommentsList: List<ICommentsList> = List();
                 oldCommentsList.map(
                     (oldComments: ICommentsList) => {
-                        if (oldComments.cid === cid) {
+                        if (oldComments.cid === this.getCid()) {
                             newCommentsList = newCommentsList.push(newComments);
                         } else {
                             newCommentsList = newCommentsList.push(oldComments);
@@ -128,6 +128,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
         const comments = this.props.getComponent(commentsCid);
         if (comments) {
             const oldCommentsRectList: OrderedSet<IComponentList> = comments.getCustomState().get('commentsRectList');
+            const oldMaxRectId: number = comments.getCustomState().get('maxRectId');
             let newCommentsRectList: OrderedSet<IComponentList> = OrderedSet();
             oldCommentsRectList.map(
                 (commentsRect: IComponentList) => {
@@ -139,7 +140,8 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
             );
 
             comments.setCustomState({
-                commentsRectList: newCommentsRectList
+                commentsRectList: newCommentsRectList,
+                maxRectId: oldMaxRectId
             });
         }
     }

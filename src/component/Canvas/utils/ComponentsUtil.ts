@@ -43,7 +43,7 @@ export class ComponentsUtil {
         dataList.map(
             (data: any) => {
                 const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, position);
-                const baseState: BaseState = convertFromDataToBaseState(comData);
+                const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
                 const component: IComponentList = {
                     cid: comData.id,
                     comPath: data.t,
