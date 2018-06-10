@@ -630,6 +630,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 this.setCanvasUndoStack();
                 break;
             case 'Custom':
+                this.setCanvasUndoStack();
                 break;
             case 'Stack':
                 this.setCanvasUndoStack();
