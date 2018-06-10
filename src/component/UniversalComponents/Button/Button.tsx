@@ -4,7 +4,7 @@ import { Button as AntButton } from 'antd';
 import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
-import { ButtonState } from './ButtonState';
+import { ButtonState, IButtonState } from './ButtonState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
@@ -93,21 +93,20 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
         this.setCustomState(newButtonState);
     }
 
-    // private onClick = () => {
-    //     const newButtonState: ButtonState = ButtonState.set(
-    //         this.getCustomState(),
-    //         {
-    //             type: 'danger'
-    //         }
-    //     );
-
-    //     this.setCustomState(newButtonState);
-    // }
-
     private setCircle = (): 'circle' | 'circle-outline' | undefined => {
         if (this.getCustomState().getIsCircle()) {
             return 'circle-outline';
         } else return undefined;
     }
 
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：IButtonState
+ */
+export function convertFromDataToCustomState(
+    customData: IButtonState
+): any {
+    return new ButtonState(customData);
 }

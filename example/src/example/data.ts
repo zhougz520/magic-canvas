@@ -577,199 +577,202 @@ export const detail2 = {
     "content": {
         "components": [
             {
-                "t": "MapComponent/map/AppGridContainer",
+                "t": "UniversalComponents/Button/Button",
                 "p": {
-                    "id": "cs1",
-                    "txt_v": "编辑页面",
-                    "w": 600,
-                    "h": 400,
-                    "l": 450,
-                    "t": 350,
-                    "p": {
-                        "components": [
-                            {
-                                "t": "MapComponent/map/ProjectDDTree",
-                                "p": {
-                                    "id": "cs1.cs1"
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppView",
-                                "p": {
-                                    "id": "cs1.cs2"
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppFind",
-                                "p": {
-                                    "id": "cs1.cs3"
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppGridMenu",
-                                "p": {
-                                    "id": "cs1.cs4",
-                                    "p": {
-                                        "components": [
-                                            {
-                                                "t": "MapComponent/map/AppGridMenuItem",
-                                                "p": {
-                                                    "id": "cs1.cs4.cs1",
-                                                    "map_mi_txt": "新增"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridMenuItem",
-                                                "p": {
-                                                    "id": "cs1.cs4.cs2",
-                                                    "map_mi_txt": "删除"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridMenuItem",
-                                                "p": {
-                                                    "id": "cs1.cs4.cs3",
-                                                    "map_mi_sa": true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppGrid",
-                                "p": {
-                                    "id": "cs1.cs5",
-                                    "p": {
-                                        "components": [
-                                            {
-                                                "t": "MapComponent/map/AppGridTitle",
-                                                "p": {
-                                                    "id": "cs1.cs5.cs1",
-                                                    "map_gt_txt": "AAA"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridTitle",
-                                                "p": {
-                                                    "id": "cs1.cs5.cs2",
-                                                    "map_gt_txt": "BBB"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridTitle",
-                                                "p": {
-                                                    "id": "cs1.cs5.cs3",
-                                                    "map_gt_txt": "CCC"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "zIndex": 4,
+                    "id": "cs4",
+                    "w": 80,
+                    "h": 22,
+                    "l": 30,
+                    "t": 40,
+                    "zIndex": 7,
                     "customState": {
-                        "components": [
-                            {
-                                "t": "MapComponent/map/ProjectDDTree",
-                                "p": {
-                                    "id": "cs1.cs1"
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppView",
-                                "p": {
-                                    "id": "cs1.cs2"
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppFind",
-                                "p": {
-                                    "id": "cs1.cs3"
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppGridMenu",
-                                "p": {
-                                    "id": "cs1.cs4",
-                                    "p": {
-                                        "components": [
-                                            {
-                                                "t": "MapComponent/map/AppGridMenuItem",
-                                                "p": {
-                                                    "id": "cs1.cs4.cs1",
-                                                    "map_mi_txt": "新增"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridMenuItem",
-                                                "p": {
-                                                    "id": "cs1.cs4.cs2",
-                                                    "map_mi_txt": "删除"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridMenuItem",
-                                                "p": {
-                                                    "id": "cs1.cs4.cs3",
-                                                    "map_mi_sa": true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            {
-                                "t": "MapComponent/map/AppGrid",
-                                "p": {
-                                    "id": "cs1.cs5",
-                                    "p": {
-                                        "components": [
-                                            {
-                                                "t": "MapComponent/map/AppGridTitle",
-                                                "p": {
-                                                    "id": "cs1.cs5.cs1",
-                                                    "map_gt_txt": "AAA"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridTitle",
-                                                "p": {
-                                                    "id": "cs1.cs5.cs2",
-                                                    "map_gt_txt": "BBB"
-                                                }
-                                            },
-                                            {
-                                                "t": "MapComponent/map/AppGridTitle",
-                                                "p": {
-                                                    "id": "cs1.cs5.cs3",
-                                                    "map_gt_txt": "CCC"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
+                        "type": "primary",
+                        "isCircle": false,
+                        "disabled": false,
+                        "textValue": "按钮",
+                        "textAlign": "center",
+                        "fontColor": "#FFF",
+                        "fontStyle": "normal",
+                        "fontSize": 14,
+                        "fontWeight": "normal",
+                        "textDecoration": "none",
+                        "backgroundColor": "#1890ff",
+                        "borderColor": "#1890ff",
+                        "borderWidth": 0
                     },
                     "commentsList": [],
-                    "comType": "Map"
+                    "comType": "Universal"
                 }
             },
             {
-                "t": "BaseComponent/demo/Demo",
+                "t": "UniversalComponents/CheckBox/CheckBox",
                 "p": {
-                    "id": "cs2",
-                    "w": 467,
-                    "h": 113,
-                    "l": 138,
-                    "t": 89,
-                    "zIndex": 5,
-                    "customState": null,
+                    "id": "cs5",
+                    "w": 160,
+                    "h": 32,
+                    "l": 26,
+                    "t": 95,
+                    "zIndex": 8,
+                    "customState": {
+                        "option": "checkbox",
+                        "isCheck": false,
+                        "disabled": false,
+                        "fontColor": "#000",
+                        "fontStyle": "normal",
+                        "fontSize": 16,
+                        "fontWeight": "normal",
+                        "textDecoration": "none",
+                        "textAlign": "left",
+                        "backgroundColor": "#FFF",
+                        "borderColor": "#FFF",
+                        "borderWidth": 0
+                    },
                     "commentsList": [],
-                    "comType": null
+                    "comType": "Universal"
+                }
+            },
+            {
+                "t": "UniversalComponents/Hyperlink/Hyperlink",
+                "p": {
+                    "id": "cs6",
+                    "w": 120,
+                    "h": 32,
+                    "l": 30,
+                    "t": 165,
+                    "zIndex": 9,
+                    "customState": {
+                        "herf": "https://ps.mingyuanyun.com",
+                        "content": "这是超链接",
+                        "fontColor": "#000",
+                        "fontStyle": "normal",
+                        "fontSize": 16,
+                        "fontWeight": "normal",
+                        "textDecoration": "none",
+                        "textAlign": "center",
+                        "backgroundColor": "#FFF",
+                        "borderColor": "#FFF",
+                        "borderWidth": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Universal"
+                }
+            },
+            {
+                "t": "UniversalComponents/Input/Input",
+                "p": {
+                    "id": "cs7",
+                    "w": 180,
+                    "h": 33,
+                    "l": 32,
+                    "t": 264,
+                    "zIndex": 10,
+                    "customState": {
+                        "placeholder": "这是输入框提示",
+                        "value": "",
+                        "fontColor": "#000",
+                        "fontStyle": "normal",
+                        "fontSize": 16,
+                        "fontWeight": "normal",
+                        "textDecoration": "none",
+                        "textAlign": "left",
+                        "backgroundColor": "#FFF",
+                        "borderColor": "#FFF",
+                        "borderWidth": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Universal"
+                }
+            },
+            {
+                "t": "UniversalComponents/Radio/Radio",
+                "p": {
+                    "id": "cs8",
+                    "w": 260,
+                    "h": 40,
+                    "l": 50,
+                    "t": 335,
+                    "zIndex": 11,
+                    "customState": {
+                        "value": "radio",
+                        "isButton": false,
+                        "disabled": false,
+                        "checked": false,
+                        "fontColor": "#000",
+                        "fontStyle": "normal",
+                        "fontSize": 16,
+                        "fontWeight": "normal",
+                        "textDecoration": "none",
+                        "textAlign": "left",
+                        "backgroundColor": "#FFF",
+                        "borderColor": "#FFF",
+                        "borderWidth": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Universal"
+                }
+            },
+            {
+                "t": "UniversalComponents/Selector/Selector",
+                "p": {
+                    "id": "cs9",
+                    "w": 120,
+                    "h": 32,
+                    "l": 59,
+                    "t": 413,
+                    "zIndex": 12,
+                    "customState": {
+                        "disabled": false,
+                        "options": [
+                            {
+                                "label": "option1",
+                                "value": "option1"
+                            },
+                            {
+                                "label": "option2",
+                                "value": "option2"
+                            },
+                            {
+                                "label": "option3",
+                                "value": "option3"
+                            }
+                        ],
+                        "value": "option1",
+                        "fontColor": "#000",
+                        "fontStyle": "normal",
+                        "fontSize": 16,
+                        "fontWeight": "normal",
+                        "backgroundColor": "#FFF",
+                        "borderColor": "#FFF",
+                        "borderWidth": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Universal"
+                }
+            },
+            {
+                "t": "UniversalComponents/TextField/TextField",
+                "p": {
+                    "id": "cs10",
+                    "w": 280,
+                    "h": 73,
+                    "l": 33,
+                    "t": 483,
+                    "zIndex": 13,
+                    "customState": {
+                        "placeholder": "这是文本框",
+                        "textValue": "",
+                        "fontColor": "#000",
+                        "fontStyle": "normal",
+                        "fontSize": 16,
+                        "fontWeight": "normal",
+                        "textDecoration": "none",
+                        "textAlign": "left",
+                        "backgroundColor": "#FFF",
+                        "borderColor": "#FFF",
+                        "borderWidth": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Universal"
                 }
             }
         ]

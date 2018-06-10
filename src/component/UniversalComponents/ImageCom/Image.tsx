@@ -5,12 +5,7 @@ import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-
-}
-
-export default class Image extends BaseComponent<IDemoProps, IBaseState> {
+export default class Image extends BaseComponent<IBaseProps, IBaseState> {
     static defaultProps = {
         data: {
             id: 'cs6',
@@ -24,7 +19,7 @@ export default class Image extends BaseComponent<IDemoProps, IBaseState> {
 
     com: HTMLElement | null = null;
 
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {

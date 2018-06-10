@@ -38,7 +38,7 @@ const defaultRecord: IImageState = {
 export const ImageRecord: Record.Class = Record(defaultRecord);
 
 export class ImageState extends ImageRecord {
-    static create(imageState: ImageState): ImageState {
+    static create(imageState: IImageState): ImageState {
         return new ImageState(imageState);
     }
 
