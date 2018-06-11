@@ -26,7 +26,7 @@ export class Wingman extends React.PureComponent<any, any> {
 
     render() {
         return (
-            <textarea id="wingman" className="wingman" tabIndex={-1} autoComplete="off" wrap="hard" />
+            <textarea id="wingman" className="Wingman" tabIndex={-1} autoComplete="off" wrap="hard" />
         );
     }
 }
