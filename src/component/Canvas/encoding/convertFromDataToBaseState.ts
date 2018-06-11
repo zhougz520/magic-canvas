@@ -6,7 +6,8 @@ import {
     IComData
 } from '../../BaseComponent';
 import { convertFromDataToCustomState } from './convertFromDataToCustomState';
-import { fromJS, List } from 'immutable';
+import { convertFromDataToRich } from './convertFromDataToRich';
+import { List } from 'immutable';
 
 /**
  * 把Canvas中的data转译成baseState
@@ -26,8 +27,7 @@ export const convertFromDataToBaseState = (data: IComData, comPath: string): Bas
             top: data.t,
             left: data.l
         }),
-        // TODO 带格式的富文本
-        richChildNode: fromJS(data.txt_v),
+        richChildNode: convertFromDataToRich(data.txt_v, comPath),
         customState: convertFromDataToCustomState(data.customState, comPath),
         commentsList: List(data.commentsList)
     });

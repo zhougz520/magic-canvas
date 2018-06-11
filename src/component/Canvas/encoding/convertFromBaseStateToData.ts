@@ -7,6 +7,7 @@ import {
     ICommentsList
 } from '../../BaseComponent';
 import { convertFromCustomStateToData } from './convertFromCustomStateToData';
+import { convertFromRichToData } from './convertFromRichToData';
 import { List } from 'immutable';
 
 /**
@@ -32,7 +33,7 @@ export const convertFromBaseStateToData = (baseState: BaseState, baseProps: {
         t: baseProps.comPath,
         p: {
             id: content.getCid(),
-            txt_v: richChildNode && richChildNode.toJS ? richChildNode.toJS() : richChildNode,
+            txt_v: convertFromRichToData(richChildNode, baseProps.comPath),
             w: sizeState.getWidth(),
             h: sizeState.getHeight(),
             l: positionState.getLeft(),

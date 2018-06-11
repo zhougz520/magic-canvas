@@ -577,202 +577,120 @@ export const detail2 = {
     "content": {
         "components": [
             {
-                "t": "UniversalComponents/Button/Button",
+                "t": "Comments/Comments",
                 "p": {
-                    "id": "cs4",
-                    "w": 80,
-                    "h": 22,
-                    "l": 30,
-                    "t": 40,
-                    "zIndex": 7,
-                    "customState": {
-                        "type": "primary",
-                        "isCircle": false,
-                        "disabled": false,
-                        "textValue": "按钮",
-                        "textAlign": "center",
-                        "fontColor": "#FFF",
-                        "fontStyle": "normal",
-                        "fontSize": 14,
-                        "fontWeight": "normal",
-                        "textDecoration": "none",
-                        "backgroundColor": "#1890ff",
-                        "borderColor": "#1890ff",
-                        "borderWidth": 0
-                    },
-                    "commentsList": [],
-                    "comType": "Universal"
-                }
-            },
-            {
-                "t": "UniversalComponents/CheckBox/CheckBox",
-                "p": {
-                    "id": "cs5",
-                    "w": 160,
-                    "h": 32,
-                    "l": 26,
-                    "t": 95,
-                    "zIndex": 8,
-                    "customState": {
-                        "option": "checkbox",
-                        "isCheck": false,
-                        "disabled": false,
-                        "fontColor": "#000",
-                        "fontStyle": "normal",
-                        "fontSize": 16,
-                        "fontWeight": "normal",
-                        "textDecoration": "none",
-                        "textAlign": "left",
-                        "backgroundColor": "#FFF",
-                        "borderColor": "#FFF",
-                        "borderWidth": 0
-                    },
-                    "commentsList": [],
-                    "comType": "Universal"
-                }
-            },
-            {
-                "t": "UniversalComponents/Hyperlink/Hyperlink",
-                "p": {
-                    "id": "cs6",
-                    "w": 120,
-                    "h": 32,
-                    "l": 30,
-                    "t": 165,
-                    "zIndex": 9,
-                    "customState": {
-                        "herf": "https://ps.mingyuanyun.com",
-                        "content": "这是超链接",
-                        "fontColor": "#000",
-                        "fontStyle": "normal",
-                        "fontSize": 16,
-                        "fontWeight": "normal",
-                        "textDecoration": "none",
-                        "textAlign": "center",
-                        "backgroundColor": "#FFF",
-                        "borderColor": "#FFF",
-                        "borderWidth": 0
-                    },
-                    "commentsList": [],
-                    "comType": "Universal"
-                }
-            },
-            {
-                "t": "UniversalComponents/Input/Input",
-                "p": {
-                    "id": "cs7",
-                    "w": 180,
-                    "h": 33,
-                    "l": 32,
-                    "t": 264,
-                    "zIndex": 10,
-                    "customState": {
-                        "placeholder": "这是输入框提示",
-                        "value": "",
-                        "fontColor": "#000",
-                        "fontStyle": "normal",
-                        "fontSize": 16,
-                        "fontWeight": "normal",
-                        "textDecoration": "none",
-                        "textAlign": "left",
-                        "backgroundColor": "#FFF",
-                        "borderColor": "#FFF",
-                        "borderWidth": 0
-                    },
-                    "commentsList": [],
-                    "comType": "Universal"
-                }
-            },
-            {
-                "t": "UniversalComponents/Radio/Radio",
-                "p": {
-                    "id": "cs8",
-                    "w": 260,
-                    "h": 40,
-                    "l": 50,
-                    "t": 335,
-                    "zIndex": 11,
-                    "customState": {
-                        "value": "radio",
-                        "isButton": false,
-                        "disabled": false,
-                        "checked": false,
-                        "fontColor": "#000",
-                        "fontStyle": "normal",
-                        "fontSize": 16,
-                        "fontWeight": "normal",
-                        "textDecoration": "none",
-                        "textAlign": "left",
-                        "backgroundColor": "#FFF",
-                        "borderColor": "#FFF",
-                        "borderWidth": 0
-                    },
-                    "commentsList": [],
-                    "comType": "Universal"
-                }
-            },
-            {
-                "t": "UniversalComponents/Selector/Selector",
-                "p": {
-                    "id": "cs9",
-                    "w": 120,
-                    "h": 32,
-                    "l": 59,
-                    "t": 413,
-                    "zIndex": 12,
-                    "customState": {
-                        "disabled": false,
-                        "options": [
+                    "id": "cm1",
+                    "txt_v": {
+                        "blocks": [
                             {
-                                "label": "option1",
-                                "value": "option1"
+                                "key": "da5pq",
+                                "text": "需求1：",
+                                "type": "unstyled",
+                                "depth": 0,
+                                "inlineStyleRanges": [],
+                                "data": {}
                             },
                             {
-                                "label": "option2",
-                                "value": "option2"
+                                "key": "351ub",
+                                "text": "12312321",
+                                "type": "unordered-list-item",
+                                "depth": 0,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 0,
+                                        "length": 5,
+                                        "style": "color-#d72d2d"
+                                    }
+                                ],
+                                "data": {
+                                    "unordered-list-item": "image"
+                                }
                             },
                             {
-                                "label": "option3",
-                                "value": "option3"
+                                "key": "2f7bu",
+                                "text": "1231231",
+                                "type": "unordered-list-item",
+                                "depth": 1,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 1,
+                                        "length": 4,
+                                        "style": "ITALIC"
+                                    },
+                                    {
+                                        "offset": 1,
+                                        "length": 4,
+                                        "style": "BOLD"
+                                    }
+                                ],
+                                "data": {
+                                    "unordered-list-item": "disc"
+                                }
+                            },
+                            {
+                                "key": "4sncp",
+                                "text": "21313",
+                                "type": "unordered-list-item",
+                                "depth": 2,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 0,
+                                        "length": 4,
+                                        "style": "UNDERLINE"
+                                    },
+                                    {
+                                        "offset": 0,
+                                        "length": 4,
+                                        "style": "STRIKETHROUGH"
+                                    }
+                                ],
+                                "data": {
+                                    "unordered-list-item": "circle"
+                                }
+                            },
+                            {
+                                "key": "43sjc",
+                                "text": "123213",
+                                "type": "ordered-list-item",
+                                "depth": 2,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 1,
+                                        "length": 3,
+                                        "style": "fontsize-1"
+                                    }
+                                ],
+                                "data": {
+                                    "ordered-list-item": "decimal"
+                                }
                             }
-                        ],
-                        "value": "option1",
-                        "fontColor": "#000",
-                        "fontStyle": "normal",
-                        "fontSize": 16,
-                        "fontWeight": "normal",
-                        "backgroundColor": "#FFF",
-                        "borderColor": "#FFF",
-                        "borderWidth": 0
+                        ]
+                    },
+                    "w": 516,
+                    "h": 170,
+                    "l": 396,
+                    "t": 170,
+                    "zIndex": 100001,
+                    "customState": {
+                        "commentsRectList": [],
+                        "maxRectId": 0
                     },
                     "commentsList": [],
-                    "comType": "Universal"
+                    "comType": "Comments"
                 }
             },
             {
-                "t": "UniversalComponents/TextField/TextField",
+                "t": "BaseComponent/demo/Demo",
                 "p": {
-                    "id": "cs10",
-                    "w": 280,
-                    "h": 73,
-                    "l": 33,
-                    "t": 483,
-                    "zIndex": 13,
-                    "customState": {
-                        "placeholder": "这是文本框",
-                        "textValue": "",
-                        "fontColor": "#000",
-                        "fontStyle": "normal",
-                        "fontSize": 16,
-                        "fontWeight": "normal",
-                        "textDecoration": "none",
-                        "textAlign": "left",
-                        "backgroundColor": "#FFF",
-                        "borderColor": "#FFF",
-                        "borderWidth": 0
-                    },
+                    "id": "cs1",
+                    "w": 225,
+                    "h": 121,
+                    "l": 79,
+                    "t": 210,
+                    "zIndex": 1,
+                    "customState": null,
                     "commentsList": [],
-                    "comType": "Universal"
+                    "comType": null
                 }
             }
         ]

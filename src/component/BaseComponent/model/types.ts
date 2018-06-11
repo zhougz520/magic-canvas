@@ -24,7 +24,7 @@ export type ComponentType = 'Map' | 'Universal' | 'Comments';
 
 export interface IComData {
     id: string;
-    txt_v: string;
+    txt_v: any;
     w: number;
     h: number;
     l: number;

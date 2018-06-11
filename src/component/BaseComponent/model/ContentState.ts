@@ -14,8 +14,7 @@ export interface IContent {
     sizeState: SizeState | null;
     // 组件位置：left|right|top|bottom
     positionState: PositionState | null;
-    // TODO 形状属性
-    // TODO 组件中带格式的富文本内容
+    // 组件中带格式的富文本内容
     richChildNode: any;
     // 组件个性化属性
     customState: any;

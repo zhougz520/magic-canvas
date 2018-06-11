@@ -18,7 +18,7 @@ import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
 
 import { DraftPublic, blockStyleFn } from '../RichEdit';
-const { Editor, EditorState, InlineUtils } = DraftPublic;
+const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
 
 import { OrderedSet, Map } from 'immutable';
 import './sass/Comments.scss';
@@ -105,8 +105,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         const commentsRectList: OrderedSet<IComponentList> = this.getEncodeCustomState().commentsRectList;
         const rectList: JSX.Element[] = this.buildRect(commentsRectList);
 
-        // TODO 富文本转译
-        const editorState = EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n');
+        const editorState = this.getRichChildNode();
         InlineUtils.extractInlineStyle(editorState);
 
         return (
@@ -273,4 +272,24 @@ export function convertFromDataToCustomState(
         commentsRectList: componentList,
         maxRectId
     });
+}
+
+export function convertFromRichToData(
+    richChildNode: any
+): any {
+    const contentState: any = richChildNode.getCurrentContent();
+
+    return convertFromDraftStateToRaw(contentState);
+}
+
+export function convertFromDataToRich(
+    richChildData: any
+): any {
+    let richChildNode: any = null;
+    if (richChildData) {
+        const contentState: any = convertFromRawToDraftState(richChildData);
+        richChildNode = EditorState.createWithContent(contentState);
+    }
+
+    return richChildNode;
 }
