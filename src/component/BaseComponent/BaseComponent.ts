@@ -24,14 +24,6 @@ import { Stack, List } from 'immutable';
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
-    componentDidMount() {
-        const currMaskLayer = document.getElementById(this.getCid());
-        if (currMaskLayer !== null) {
-            currMaskLayer.style.width = this.getSize().width + 'px';
-            currMaskLayer.style.height = this.getSize().height + 'px';
-        }
-    }
-
     componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
         const currentContent: ContentState = this.state.baseState.getCurrentContent();
         const prevContent: ContentState = prevState.baseState.getCurrentContent();

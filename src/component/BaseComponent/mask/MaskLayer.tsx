@@ -1,16 +1,12 @@
 import * as React from 'react';
 import '../sass/Component.scss';
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps {
+
+export interface IMaskLayerProps {
     id: string;          // id
 }
-export class MaskLayer extends React.PureComponent<IDemoProps, any> {
 
-    static defaultProps = {
-        w: '100%',
-        h: '100%'
-    };
-    constructor(props: any, context: any) {
+export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
+    constructor(props: IMaskLayerProps, context: any) {
         super(props, context);
     }
 
