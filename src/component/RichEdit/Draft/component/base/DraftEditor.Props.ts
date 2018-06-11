@@ -48,6 +48,11 @@ export interface IDraftEditorProps {
      */
     readOnly?: boolean;
 
+    /**
+     * 设置编辑器是否显示
+     */
+    disPlay?: boolean;
+
     tabIndex?: number;
 
     handleKeyCommand?: (

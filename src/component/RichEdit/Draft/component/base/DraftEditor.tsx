@@ -79,7 +79,7 @@ export class DraftEditor extends React.Component<IDraftEditorProps, IDraftEditor
     }
 
     public render(): React.ReactNode {
-        const { readOnly, customContentStyle } = this.props;
+        const { readOnly, customContentStyle, disPlay } = this.props;
 
         const contentStyle = {
             outline: 'none',
@@ -91,7 +91,10 @@ export class DraftEditor extends React.Component<IDraftEditorProps, IDraftEditor
         };
 
         return (
-            <div className="DraftEditor-root">
+            <div
+                className="DraftEditor-root"
+                style={{display: disPlay ? 'none' : 'block'}}
+            >
                 <div
                     className="DraftEditor-editorContainer"
                     ref={(ref: HTMLElement | null) => (this.editorContainer = ref)}
