@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../../index';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { Checkbox, Select, Input, Button } from 'antd';
+import { MapComponent, IBaseProps } from '../../index';
+import { Draggable, Droppable, DraggableProvided, DraggableStateSnapshot, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import {
     InputField,
     // InputNumberField,
@@ -10,203 +9,82 @@ import {
     // LookUpField,
     // NullField
 } from '../form/field';
-import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-const Option = Select.Option;
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-wrap-multiline
 // tslint:disable:jsx-no-multiline-js
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    map_af_o?: string[];
-    map_af_se?: boolean;
-    map_sm?: string;
-    p?: any;
-    id: string;
-    map_form_ss_unit?: number;
+    map_form_ss?: boolean;              // 是否显示section的标题
+    map_form_ss_name?: string;          // section标题
+    map_form_ss_unit?: number;          // 一行展示的列数
+    map_form_ss_tt_w?: number;          // 标题的宽度
+    index?: number;
 }
-export interface IMapState extends IBaseState {
-    dragonDrop?: any;
-    l: number;
-    f: number;
-    w: number;
-    h: number;
-    // map_af_se: boolean;
-}
-export class AppFind extends MapComponent<IMapProps, any> {
-    static defaultProps = {
-        map_af_se: false,
-        map_af_o: [],
-        map_form_ss_unit: 2
-    };
 
+export class Section extends MapComponent<IMapProps, any> {
+    static defaultProps = {
+        map_form_ss: true,
+        map_form_ss_name: '分组',
+        map_form_ss_unit: 2,
+        map_form_ss_tt_w: 110
+    };
     constructor(props: any, context?: any) {
         super(props, context);
-
         this.state = {
-            map_af_se: props.map_af_se,
-            dragonDrop: null,
             hover: {}
         };
     }
-    // 如果需要特殊遮罩，则在componentDidUpdate中处理
-    componentDidUpdate() {
-        if (this.com !== null) {
-            const currMaskLayer = document.getElementById(this.props.id);
-            // console.log('id', this.props.id);
-            if (currMaskLayer !== null) {
-                currMaskLayer.style.width = this.com.offsetWidth + 'px';
-                currMaskLayer.style.height = (this.com.offsetHeight - 24) + 'px';
-                currMaskLayer.style.top = (this.com.offsetTop + 24) + 'px';
-                currMaskLayer.style.left = this.com.offsetLeft + 'px';
-            }
-        }
-    }
+
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
+
     public render() {
-        const { map_sm, map_af_o, p, id } = this.props;
-        const { map_af_se, hover } = this.state;
+        const { hover } = this.state;
+        const { map_form_ss_name, selectedId, id, index, p } = this.props;
 
-        const options: any[] = [];
-        if (map_af_o !== undefined) {
-            map_af_o.map((mi: string) => {
-                options.push(
-                    <Option value={mi} key={mi}>{mi}</Option>
-                );
-            });
-        }
-
-        const fieldList: any = this.initHightMode(p);
-        const normalFind: any = (
-            <div className="normal">
-                <div className={`app-find-menu ${map_sm || ''}`}>
-                    <div className="app-find-menu-title"><b style={{ color: '#66666' }}>快速查询（普通）</b></div>
-                    <div style={{ float: 'right' }}>
-                        <div className="app-find-menu-item">
-                            <Checkbox style={{ float: 'left' }} defaultChecked={false} />
-                            <p >视图内查询</p>
-                        </div>
-                        <div
-                            onClick={this.onChangeLowMode}
-                            className="app-find-menu-item"
-                            style={{ marginLeft: '14px' }}
-                        >
-                            <img className="lookup" />
-                            <p >普通</p>
-                        </div>
-                        <div
-                            onClick={this.onChangeHightMode}
-                            className="app-find-menu-item"
-                            style={{ marginLeft: '22px', marginRight: '14px' }}
-                        >
-                            <img className="lookup" />
-                            <p>高级</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="first-page">
-                    <table style={{ width: '100%', height: '39px' }}>
-                        <tbody>
-                            <tr>
-                                <td className="app-find-text-td" style={{ width: '60px' }}>查找按</td>
-                                <td style={{ width: '120px' }}>
-                                    <Select style={{ float: 'left', width: '120px' }}>
-                                        {options}
-                                    </Select>
-                                </td>
-                                <td className="app-find-text-td" style={{ width: '56px' }}>关键字</td>
-                                <td>
-                                    <Input style={{ width: '100%', height: '19px' }} />
-                                </td>
-                                <td className="app-find-text-td" style={{ width: '92px' }}>
-                                    <Button style={{ width: '70px', height: '22px', marginLeft: '12px' }} >查找</Button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>);
-
-        const extendFind: any = (
+        const fieldList = this.initFieldList(p);
+        const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
-                className="high"
-                onDragOver={this.handleOver}
-                onDragLeave={this.handleLeave}
-                style={Object.assign({}, hover)}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
             >
-                <div className={`app-find-menu ${map_sm || ''}`}>
-                    <div className="app-find-menu-title">
-                        <b style={{ color: '#66666' }}>快速查询（高级）</b>
-                        <Select
-                            defaultValue="历史查询..."
-                            style={{ width: '130px', height: '18px', marginLeft: '30px', marginTop: '3px' }}
-                        >
-                            <Option value="" />
-                        </Select>
-                        <img className="height-grade" />
-                    </div>
-                    <div style={{ float: 'right' }}>
-                        <div className="app-find-menu-item">
-                            <Checkbox style={{ float: 'left' }} defaultChecked={false} />
-                            <p>视图内查询</p>
-                        </div>
-                        <div
-                            onClick={this.onChangeLowMode}
-                            className="app-find-menu-item"
-                            style={{ marginLeft: '14px' }}
-                        >
-                            <img className="lookup" />
-                            <p >普通</p>
-                        </div>
-                        <div
-                            onClick={this.onChangeHightMode}
-                            className="app-find-menu-item"
-                            style={{ marginLeft: '22px', marginRight: '14px' }}
-                        >
-                            <img className="lookup" />
-                            <p>高级</p>
-                        </div>
-                    </div>
-
-                </div>
                 <div
-                    className="app-find-content"
+                    className={`section-title`}
+                    onClick={this.selectedCom}
+                    {...provided.dragHandleProps}
                 >
-                    <DragDropContext onDragEnd={this.onDragEnd} >
-                        {fieldList}
-                    </DragDropContext>
+                    {map_form_ss_name}
                 </div>
-                <div style={{ width: '100%', height: '30px', verticalAlign: 'top' }}>
-                    <Button>
-                        重置
-                            </Button>
-                    <Button>
-                        查找
-                            </Button>
-                    <Button>
-                        保存
-                            </Button>
-                </div>
-            </div>);
+                <Droppable
+                    droppableId={`${index}`}
+                >
+                    {fieldList}
+                </Droppable>
+                {provided.placeholder}
+            </div >
+        );
 
         return (
-            <div className="csr-pc-map-app-find" ref={(ref) => this.com = ref}>
-                {!map_af_se ? <MaskLayer id={id} /> : ''}
-                {!map_af_se ? normalFind : extendFind}
+            <div
+                ref={(ref) => this.com = ref}
+                className={`section ${selectedId === id ? 'map-selected' : ''}`}
+                style={Object.assign({}, { width: '100%' }, hover)}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+            >
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {initDrag}
+                </Draggable>
             </div>
         );
     }
-
-    public onChangeHightMode = () => {
-        this.setState({
-            map_af_se: true
-        });
-    }
-
-    public onChangeLowMode = () => {
-        this.setState({
-            map_af_se: false
-        });
-    }
-
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/map/form/field/CheckBoxField') ||
@@ -222,7 +100,8 @@ export class AppFind extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/map/form/field/TextAreaField') ||
             (t === 'MapComponent/map/form/field/UploadFiles');
     }
-    private initHightMode = (data: any) => {
+
+    private initFieldList = (data: any) => {
         const { map_form_ss_unit, selectComChange, updateProps, selectedId } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
         const components = data === undefined ? undefined : data.components;
@@ -250,7 +129,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
@@ -264,10 +143,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/CheckBoxField':
@@ -275,10 +157,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/LinkField':
@@ -286,10 +171,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/RadioField':
@@ -297,10 +185,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/SelectField':
@@ -308,10 +199,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/TextAreaField':
@@ -319,10 +213,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/DataTimeField':
@@ -330,10 +227,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/LookUpField':
@@ -341,10 +241,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                     case 'MapComponent/map/form/field/NullField':
@@ -352,10 +255,13 @@ export class AppFind extends MapComponent<IMapProps, any> {
                             titleWidth={110}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            unit={p.unit}
                             currUnit={currUnit}
                             ref={`c.${p.id}`}
                             selectComChange={selectComChange}
+                            updateProps={updateProps}
+                            selectedId={selectedId}
+                            index={index % currUnit}
                         />;
                         break;
                 }
@@ -368,7 +274,12 @@ export class AppFind extends MapComponent<IMapProps, any> {
         }
         fieldList.forEach((row: any, index: number) => {
             currRowList.push(
-                <Droppable key={index} droppableId={`${index}`} direction="horizontal">
+                <Droppable
+                    key={index}
+                    droppableId={`${index}`}
+                    direction="horizontal"
+                    type={'field-row'}
+                >
                     {
                         (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
                             (
@@ -386,7 +297,15 @@ export class AppFind extends MapComponent<IMapProps, any> {
         });
         this.rowList = currComList;
 
-        return currRowList;
+        return (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+            (
+                <div
+                    className={`section-content`}
+                    ref={provided.innerRef}
+                >
+                    {currRowList}
+                </div>
+            );
     }
 
     private getListStyle = (isDraggingOver: any) => ({

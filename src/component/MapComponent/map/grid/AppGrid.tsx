@@ -6,7 +6,6 @@ import { AppGridTitle } from './index';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
-    setIsCanMove: (isCanMove: boolean) => void;
     map_g_mc: boolean;   // 是否多选
     map_g_sl: number;   // 滚动条位置
     map_g_pg: boolean;   // 是否显示分页栏
@@ -17,6 +16,7 @@ export interface IMapProps extends IBaseProps {
     w: number;   // 宽度 (用于列表横向滚动条)
     h: number;   // 高度 (用于列表数据竖向滚动条)
     p: any;
+    scroll: number; // 滚动条位置
 }
 export interface IMapState extends IBaseState {
     dragonDrop?: any;
@@ -29,7 +29,8 @@ export class AppGrid extends MapComponent<IMapProps, any> {
         map_g_pg: false,
         map_g_data: false,
         map_g_modal: false,
-        map_g_tree: false
+        map_g_tree: false,
+        scroll: 0
     };
 
     public title: HTMLElement | null = null;
@@ -42,12 +43,20 @@ export class AppGrid extends MapComponent<IMapProps, any> {
             hover: {}
         };
     }
+
+    componentDidUpdate() {
+        // 记住滚动条的位置，在改变的时候更新
+        if (this.com !== null) {
+            this.com.scrollLeft = this.props.scroll;
+        }
+    }
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
         background: isDragging ? 'lightblue' : 'lightgrey',
         display: 'flex',
         // padding: grid,
         overflow: 'auto'
     })
+
     public render() {
         // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
         const { map_g_mc, map_g_tree, map_sm, selectedId, id, w, p } = this.props;
@@ -59,12 +68,13 @@ export class AppGrid extends MapComponent<IMapProps, any> {
             <div
                 // onMouseDown={this.selectedCom}
                 ref={(ref) => this.com = ref}
-                className={`csr-pc-map-app-grid ${map_sm || ''} ${selectedId === id ? 'selectecd' : ''}`}
+                className={`csr-pc-map-app-grid ${map_sm || ''} ${selectedId === id ? 'map-selected' : ''}`}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
+                onScroll={this.scrollHandle}
                 style={Object.assign({}, hover)}
             >
-                <div className={`grid-title`} style={{ width: w - 10 }}>
+                <div className={`grid-title`} style={{ width: w - 20 }}>
                     <div className="app-grid-title-item index">
                         <div className={`grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
                             {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
@@ -84,11 +94,11 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/AppGridTitle');
+        return (t === 'MapComponent/map/grid/AppGridTitle');
     }
     // 初始化标题
     protected initTitle = (p: any) => {
-        const { selectComChange, selectedId, updateProps, setIsCanMove } = this.props;
+        const { selectComChange, selectedId, updateProps } = this.props;
         if (p !== undefined) {
             const currTitles: JSX.Element[] = [];
             p.components.forEach((com: any, index: number) => {
@@ -103,7 +113,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                         {...com.p}
                         updateProps={updateProps}
                         index={index}
-                        setIsCanMove={setIsCanMove}
+                    // scroll={scroll}
                     />
                 );
             });

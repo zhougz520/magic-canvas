@@ -14,6 +14,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     com: HTMLElement | null = null;
+    rowList: any[] = [];
     public hasHandle: string[] = ['select'];
     componentDidMount() {
         if (this.com !== null) {
@@ -21,6 +22,18 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             this.com.addEventListener('drop', this.handleDropAddComponent);
             // }
             this.com.addEventListener('mousedown', this.selectedCom);
+            const currMaskLayer = document.getElementById(this.props.id);
+            // console.log('id', this.props.id);
+            if (currMaskLayer !== null) {
+                currMaskLayer.style.width = `${this.com.offsetWidth}px`;
+                currMaskLayer.style.height = `${this.com.offsetHeight}px`;
+                currMaskLayer.style.top = `${this.com.offsetTop}px`;
+                currMaskLayer.style.left = `${this.com.offsetLeft}px`;
+            }
+        }
+    }
+    componentWillUpdate() {
+        if (this.com !== null) {
             const currMaskLayer = document.getElementById(this.props.id);
             // console.log('id', this.props.id);
             if (currMaskLayer !== null) {
@@ -96,8 +109,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      * 选择子控件
      */
     protected selectedCom = (e: any) => {
-        // e.stopPropagation();
-        localStorage.setItem('currHandle', 'map');
+        GlobalUtil.debugLog(this.props, 'props');
         const { id, selectComChange } = this.props;
         selectComChange(e, id);
     }
@@ -122,6 +134,14 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         this.setState({
             hover: {}
         });
+        e.preventDefault();
+    }
+
+    /**
+     *  控件离开容器范围，容器颜色消失
+     */
+    protected scrollHandle = (e: any) => {
+        this.props.updateProps(this.props.id, { scroll: e.target.scrollLeft });
         e.preventDefault();
     }
 
@@ -166,14 +186,17 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      * 拖动处理
      */
     protected onDragEnd = (result: any) => {
+        if (result.type === 'field-row') {
+            this.onDragEndBoard(result);
+        }
         const { p, id } = this.props;
         // dropped outside the list
-        if (!result.destination) {
+        if (!result.destination || result.destination.index < 0) {
             return;
         }
-
+        const currComs: any = this.findComponentParent(p, id) === undefined ? p.components : this.findComponentParent(p, id);
         const components = this.reorder(
-            p.components,
+            currComs,
             result.source.index,
             result.destination.index
         );
@@ -182,10 +205,84 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         this.props.updateProps(id, { p });
     }
 
+    /**
+     * 字段拖拽处理
+     */
+    protected onDragEndBoard = (result: any) => {
+        if (this.rowList !== null) {
+            const { source, destination } = result;
+            const { p, id } = this.props;
+
+            // dropped outside the list
+            if (!destination) {
+                return;
+            }
+
+            if (source.droppableId === destination.droppableId) {
+                const components = this.reorder(
+                    this.rowList[source.droppableId],
+                    source.index,
+                    result.destination.index
+                );
+                this.rowList[source.droppableId] = components;
+            } else {
+                const result_move: any = this.move(
+                    this.rowList[source.droppableId],
+                    this.rowList[destination.droppableId],
+                    source,
+                    destination
+                );
+                this.rowList[source.droppableId] = result_move[source.droppableId];
+                this.rowList[destination.droppableId] = result_move[destination.droppableId];
+            }
+            p.components = this.getAllCom(this.rowList);
+            this.props.updateProps(id, { p });
+
+        }
+    }
+    protected getAllCom = (dataList: any[]) => {
+        let coms: any[] = [];
+        dataList.forEach((data: any) => {
+            coms = coms.concat(data);
+        });
+
+        return coms;
+    }
+    // TODO:这里是查找当前id对应的父级别数组(还没找完，明天继续)
+    protected findComponentParent = (p: any, id: string) => {
+        const ids = id.split('.');
+        if (ids.length === 1) {
+            return p.components;
+        }
+        let tmpId = `${ids[0]}.${ids[1]}`;
+        let parent = p.components;
+        if (GlobalUtil.isUndefined(parent)) return;
+        for (let idx = 2; idx < ids.length; idx++) {
+            parent = parent.find((currP: any) => currP.p.id === tmpId);
+            if (parent === undefined || parent.p === undefined || parent.p.p === undefined || parent.p.p.components === undefined) return;
+            parent = parent.p.p.components;
+            tmpId = `${tmpId}.${ids[idx]}`;
+        }
+
+        return parent;
+    }
     protected reorder = (list: any, startIndex: any, endIndex: any) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
+
+        return result;
+    }
+    protected move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
+        const sourceClone = Array.from(source);
+        const destClone = Array.from(destination);
+        const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+        destClone.splice(droppableDestination.index, 0, removed);
+
+        const result: any = {};
+        result[droppableSource.droppableId] = sourceClone;
+        result[droppableDestination.droppableId] = destClone;
 
         return result;
     }

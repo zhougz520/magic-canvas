@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
-import { AppGridMenuItem } from './index';
+import { Section } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
@@ -11,7 +11,7 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
-export class AppGridMenu extends MapComponent<IMapProps, any> {
+export class SectionForm extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
         selectedId: undefined
@@ -22,7 +22,9 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
     constructor(props: IMapProps, context?: any) {
         super(props, context);
         this.state = {
-            hover: {}
+            dragonDrop: null,
+            hover: {},
+            ...props
         };
     }
     render() {
@@ -30,22 +32,19 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
 
         const {
             updateProps,
-            map_gm_txt,
-            map_sm,
             p,
-            id,
             selectedId,
             selectComChange
         } = this.props;
         const components = p === undefined ? undefined : p.components;
-        const menus: any[] = [];
+        const sections: any[] = [];
         // 循环初始化菜单按钮
         if (components !== undefined) {
             components.forEach((com: any, index: number) => {
                 const { t } = com;
-                if (t === 'MapComponent/map/grid/AppGridMenuItem') {
-                    menus.push(
-                        <AppGridMenuItem
+                if (t === 'MapComponent/map/form/Section') {
+                    sections.push(
+                        <Section
                             key={`c.${com.p.id}`}
                             selectedId={selectedId}
                             ref={`c.${com.p.id}`}
@@ -59,30 +58,26 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
             });
         }
 
-        const initMenus = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+        const initSection = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
             (
                 <div
-                    className="menu-list"
                     ref={provided.innerRef}
                 >
-                    {menus}
+                    {sections}
                 </div>
             );
 
         return (
             <div
                 ref={(ref) => this.com = ref}
-                className={`csr-pc-map-grid-menu ${map_sm || ''} ${selectedId === id ? 'map-selected' : ''}`}
-                style={Object.assign({}, { width: '100%' }, hover)}
+                className={`form-sectionForm`}
+                style={Object.assign({}, hover)}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-                <div className="app-grid-menu-title" >
-                    <b>{map_gm_txt}</b>
-                </div>
                 <DragDropContext onDragEnd={this.onDragEnd} >
-                    <Droppable droppableId="droppable" direction="horizontal">
-                        {initMenus}
+                    <Droppable droppableId="droppable">
+                        {initSection}
                     </Droppable>
                 </DragDropContext>
             </div>
@@ -90,6 +85,6 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
     }
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/grid/AppGridMenuItem');
+        return (t === 'MapComponent/map/form/Section');
     }
 }

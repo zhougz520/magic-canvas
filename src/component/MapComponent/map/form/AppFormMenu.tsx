@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
-import { AppGridMenuItem } from './index';
+import { AppFormMenuItem } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
@@ -11,7 +11,7 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
-export class AppGridMenu extends MapComponent<IMapProps, any> {
+export class AppFormMenu extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
         selectedId: undefined
@@ -22,7 +22,9 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
     constructor(props: IMapProps, context?: any) {
         super(props, context);
         this.state = {
-            hover: {}
+            dragonDrop: null,
+            hover: {},
+            ...props
         };
     }
     render() {
@@ -30,10 +32,8 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
 
         const {
             updateProps,
-            map_gm_txt,
             map_sm,
             p,
-            id,
             selectedId,
             selectComChange
         } = this.props;
@@ -43,9 +43,9 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         if (components !== undefined) {
             components.forEach((com: any, index: number) => {
                 const { t } = com;
-                if (t === 'MapComponent/map/grid/AppGridMenuItem') {
+                if (t === 'MapComponent/map/form/AppFormMenuItem') {
                     menus.push(
-                        <AppGridMenuItem
+                        <AppFormMenuItem
                             key={`c.${com.p.id}`}
                             selectedId={selectedId}
                             ref={`c.${com.p.id}`}
@@ -72,24 +72,34 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         return (
             <div
                 ref={(ref) => this.com = ref}
-                className={`csr-pc-map-grid-menu ${map_sm || ''} ${selectedId === id ? 'map-selected' : ''}`}
-                style={Object.assign({}, { width: '100%' }, hover)}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
+                className={`csr-pc-map-form-menu`}
+                style={Object.assign({}, { width: '100%' }, hover)}
             >
-                <div className="app-grid-menu-title" >
-                    <b>{map_gm_txt}</b>
+                <div className={`menu ${map_sm || ''}`}>
+                    <div className="head" />
+                    <div className="menu-list">
+                        <div className={`menu-item`}>文件</div>
+                        <div className={`menu-item`}>操作</div>
+                        <div className={`menu-item`}>帮助</div>
+                    </div>
                 </div>
-                <DragDropContext onDragEnd={this.onDragEnd} >
-                    <Droppable droppableId="droppable" direction="horizontal">
-                        {initMenus}
-                    </Droppable>
-                </DragDropContext>
+                <div
+                    className={`menu ${map_sm || ''}`}
+                >
+                    <div className="head" />
+                    <DragDropContext onDragEnd={this.onDragEnd} >
+                        <Droppable droppableId="droppable" direction="horizontal">
+                            {initMenus}
+                        </Droppable>
+                    </DragDropContext>
+                </div>
             </div>
         );
     }
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/grid/AppGridMenuItem');
+        return (t === 'MapComponent/map/form/AppFormMenuItem');
     }
 }

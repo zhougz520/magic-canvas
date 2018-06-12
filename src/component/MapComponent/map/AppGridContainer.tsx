@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
 import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './grid/index';
+import { MapProvider } from './MapProvider';
 // import { fromJS } from 'immutable';
 
 import '../sass/Map.scss';
@@ -13,6 +14,7 @@ export interface IDemoProps extends IBaseProps {
     showAppFind: boolean;           // 显示 查询控件
     showAppGridMenu: boolean;       // 显示 列表菜单
     showAppGrid: boolean;           // 显示 列表
+    map_sm: string;                 // 版本(皮肤？)
 }
 
 export interface IDemoState extends IBaseState {
@@ -34,7 +36,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
     private find: any = '';
     private menu: any = '';
     private grid: any = '';
-    private _isCanMove: boolean = true;
+    private _isCanMove: boolean = false;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
 
@@ -50,9 +52,22 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
     public setIsCanMove = (isCanMove: boolean): void => {
         this._isCanMove = isCanMove;
     }
-
+    /**
+     * map控件选中
+     * @param id 组件id
+     */
+    public selectComChange = (e: any, id: string | undefined) => {
+        if (id !== undefined) {
+            this.setIsCanMove(false);
+        } else {
+            this.setIsCanMove(true);
+        }
+        this.setState({
+            selectedId: id
+        });
+    }
     public render() {
-        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid } = this.props;
+        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid, map_sm, pageMode } = this.props;
         const { title } = this.state;
         const childData = this.getCustomState().toJS();
         // const { p, w, h, map_sm } = data;
@@ -73,37 +88,51 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         );
 
         return (
-            <div
-                className="ps-map"
-                style={currStyle}
-                ref={(ref) => this.com = ref}
-                onMouseDown={this.fireSelectChange}
+            <MapProvider
+                map_sm={map_sm}
+                updateProps={this.updateProps}
+                selectComChange={this.selectComChange}
+                selectedId={this.state.selectedId}
+                pageMode={pageMode}
             >
                 <div
-                    className="grid-form"
+                    className="ps-map"
+                    style={currStyle}
+                    ref={(ref) => this.com = ref}
+                // onMouseDown={this.selectComTitle}
                 >
-                    <div className="title">
+                    <div
+                        className="title"
+                        onMouseDown={this.ontitleMouseDown}
+                    // onMouseUp={this.ontitleMouseUp}
+                    >
                         {title === undefined ? '标题' : title}
                     </div>
-                    <div className="grid-top" style={{ display: !showProj && !showView ? 'none' : '' }} >
-                        <div style={{ display: !showProj ? 'none' : '' }}>
-                            {this.proj}
+                    <div
+                        className="grid-form"
+                    >
+                        <div className="grid-top" style={{ display: !showProj && !showView ? 'none' : '' }} >
+                            <div className={`grid-top`}>
+                                <div style={{ display: !showProj ? 'none' : '' }}>
+                                    {this.proj}
+                                </div>
+                                <div style={{ display: !showView ? 'none' : '' }}>
+                                    {this.view}
+                                </div>
+                            </div>
                         </div>
-                        <div style={{ display: !showView ? 'none' : '' }}>
-                            {this.view}
+                        <div className="grid-find" style={{ display: !showAppFind ? 'none' : '' }} >
+                            {this.find}
                         </div>
-                    </div>
-                    <div className="grid-find" style={{ display: !showAppFind ? 'none' : '', marginBottom: 10 }} >
-                        {this.find}
-                    </div>
-                    <div className="grid-menu" style={{ display: !showAppGridMenu ? 'none' : '' }} >
-                        {this.menu}
-                    </div>
-                    <div className="grid-table" style={{ display: !showAppGrid ? 'none' : '' }} >
-                        {this.grid}
+                        <div className="grid-menu" style={{ display: !showAppGridMenu ? 'none' : '' }} >
+                            {this.menu}
+                        </div>
+                        <div className="grid-table" style={{ display: !showAppGrid ? 'none' : '' }} >
+                            {this.grid}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </MapProvider>
         );
     }
 
@@ -112,7 +141,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         const { selectedId } = this.state;
         components.forEach((com: any) => {
             switch (com.t) {
-                case 'MapComponent/map/ProjectDDTree':
+                case 'MapComponent/map/grid/ProjectDDTree':
                     this.proj = (
                         <ProjectDDTree
                             selectedId={selectedId}
@@ -120,11 +149,11 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
                             {...com.p}
-                            updateProps={this.updateCom}
+                            updateProps={this.updateProps}
                         />
                     );
                     break;
-                case 'MapComponent/map/AppView':
+                case 'MapComponent/map/grid/AppView':
                     this.view = (
                         <AppView
                             selectedId={selectedId}
@@ -132,11 +161,11 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
                             {...com.p}
-                            updateProps={this.updateCom}
+                            updateProps={this.updateProps}
                         />
                     );
                     break;
-                case 'MapComponent/map/AppFind':
+                case 'MapComponent/map/grid/AppFind':
                     this.find = (
                         <AppFind
                             selectedId={selectedId}
@@ -144,11 +173,11 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
                             {...com.p}
-                            updateProps={this.updateCom}
+                            updateProps={this.updateProps}
                         />
                     );
                     break;
-                case 'MapComponent/map/AppGridMenu':
+                case 'MapComponent/map/grid/AppGridMenu':
                     this.menu = (
                         <AppGridMenu
                             selectedId={selectedId}
@@ -156,11 +185,11 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
                             {...com.p}
-                            updateProps={this.updateCom}
+                            updateProps={this.updateProps}
                         />
                     );
                     break;
-                case 'MapComponent/map/AppGrid':
+                case 'MapComponent/map/grid/AppGrid':
                     this.grid = (
                         <AppGrid
                             selectedId={selectedId}
@@ -169,8 +198,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             selectComChange={this.selectComChange}
                             {...com.p}
                             w={this.getSizeState().getWidth()}
-                            updateProps={this.updateCom}
-                            setIsCanMove={this.setIsCanMove}
+                            updateProps={this.updateProps}
                         />
                     );
                     break;
@@ -179,7 +207,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
     }
 
     // 更新控件
-    protected updateCom = (id: string, props: any) => {
+    protected updateProps = (id: string, props: any) => {
         // 获取当前数据
         const childData = this.getCustomState().toJS();
         // 通过id查找到数据节点
@@ -206,4 +234,14 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
 
         return newData;
     }
+
+    private ontitleMouseDown = (e: any): void => {
+        // this.setIsCanMove(true);
+        this.selectComChange(e, undefined);
+        this.fireSelectChange(e);
+    }
+
+    // private ontitleMouseUp = (): void => {
+    //     this.setIsCanMove(false);
+    // }
 }

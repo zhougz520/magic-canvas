@@ -77,11 +77,12 @@ export class InputField extends MapComponent<IMapProps, any> {
 			<div
 				onMouseDown={this.selectedCom}
 				ref={provided.innerRef}
+				{...provided.draggableProps}
 				{...provided.dragHandleProps}
 				style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
 			>
 				<MaskLayer id={id} />
-				<table className="field-tb">
+				<table className={`field-tb ${selectedId === id ? 'selectecd' : ''}`}>
 					<tbody>
 						<tr>
 							<td className={`field-title`} style={{ width: titleWidth }}>
@@ -109,7 +110,7 @@ export class InputField extends MapComponent<IMapProps, any> {
 			<div
 				ref={(ref) => this.com = ref}
 				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` })}
-				className={`field-bar ${selectedId === id ? 'selectecd' : ''}`}
+				className={`field-bar `}
 				onMouseDown={this.selectedCom}
 			>
 				<Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
