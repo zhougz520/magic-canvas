@@ -1,5 +1,5 @@
 import { Canvas } from '../Canvas';
-import { IComponent, ISize, IPosition, IRichEditOption, EditType } from '../../BaseComponent';
+import { IComponent, ISize, IPosition, IFont, IRichEditOption, EditType } from '../../BaseComponent';
 import { DraftPublic } from '../../RichEdit';
 const { EditorState, BlockUtils } = DraftPublic;
 
@@ -31,6 +31,7 @@ export class RichEditUtil {
             const richEditOption: IRichEditOption = currentSelectedComponent.getRichEditOption();
             const position: IPosition = richEditOption.position;
             const size: ISize = richEditOption.size;
+            const font: IFont = richEditOption.font;
 
             // 根据不同的编辑框，操作不同
             const richEditType: EditType = currentSelectedComponent.getRichEditType();
@@ -41,7 +42,19 @@ export class RichEditUtil {
                     this._canvas.getEditor().setEditState({
                         position,
                         size,
+                        font,
+                        richEditType,
                         editorState: BlockUtils.moveSelectionToEndOfBlocks(currentSelectedComponent.getRichChildNode())
+                    }, () => { this._canvas.getEditor().setFocus(); });
+                    break;
+                case 'Text':
+                    currentSelectedComponent.hiddenEditorDom(true);
+                    this._canvas.getEditor().setEditState({
+                        position,
+                        size,
+                        font,
+                        richEditType,
+                        value: currentSelectedComponent.getRichChildNode()
                     }, () => { this._canvas.getEditor().setFocus(); });
                     break;
             }
@@ -58,16 +71,21 @@ export class RichEditUtil {
         if (currentSelectedComponent !== null && currentSelectedComponent !== undefined) {
             // 根据不同的编辑框，操作不同
             const richEditType: EditType = currentSelectedComponent.getRichEditType();
-            const editValue: any = this._canvas.getEditor().getEditValue(richEditType);
+            const editValue: any = this._canvas.getEditor().getEditValue();
+            const editFont: IFont = this._canvas.getEditor().state.font;
             switch (richEditType) {
                 case 'RichEdit':
-                    this._canvas.getEditor().setEditState({
-                        position: { top: -10000, left: -10000 },
-                        size: { width: 0, height: 0 },
-                        style: null,
-                        editorState: EditorState.createEmpty()
-                    });
+                    this._canvas.getEditor().setEditState(this._canvas.getEditor().getDefaultEditState());
                     currentSelectedComponent.setRichChildNode(EditorState.createWithContent(editValue.getCurrentContent()));
+                    currentSelectedComponent.hiddenEditorDom(false);
+                    this._dbClickComponentCid = null;
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().setEditState(this._canvas.getEditor().getDefaultEditState());
+                    currentSelectedComponent.setRichChildNode({
+                        value: editValue,
+                        font: editFont
+                    });
                     currentSelectedComponent.hiddenEditorDom(false);
                     this._dbClickComponentCid = null;
                     break;

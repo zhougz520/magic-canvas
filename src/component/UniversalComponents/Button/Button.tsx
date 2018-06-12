@@ -2,59 +2,150 @@ import * as React from 'react';
 import { Button as AntButton } from 'antd';
 
 import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState
+    BaseComponent,
+    BaseStyle,
+    IBaseProps,
+    IBaseState,
+    EditType,
+    IRichEditOption,
+    IFont,
+    IPosition,
+    ISize
 } from '../../BaseComponent';
 import { ButtonState, IButtonState } from './ButtonState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
+
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-export default class Button extends BaseComponent<IBaseProps, IBaseState> {
-    com: any = null;
+export interface ICustomState extends IBaseState {
+    hidden: boolean;
+}
+
+// tslint:disable:jsx-no-multiline-js
+export default class Button extends BaseComponent<IBaseProps, ICustomState> {
+    private _padding: number = 15;
 
     constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new ButtonState())
+            baseState: this.initBaseStateWithCustomState(new ButtonState()),
+            hidden: false
         };
     }
 
+    /**
+     * 调用富文本编辑器
+     */
+    public getRichEditType = (): EditType => {
+        return 'Text';
+    }
+
+    /**
+     * 获取富文本编辑器的大小和位置
+     */
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
+
+        const position: IPosition = {
+            top: comPosition.top + (comSize.height - 21) / 2,
+            left: comPosition.left + this._padding
+        };
+        const size: ISize = {
+            width: comSize.width - 2 * this._padding,
+            height: 21
+        };
+        const font: IFont = {
+            textAlign: this.getCustomState().getTextAlign(),
+            fontColor: this.getCustomState().getFontColor(),
+            fontStyle: this.getCustomState().getFontStyle(),
+            textDecoration: this.getCustomState().getTextDecoration(),
+            fontSize: this.getCustomState().getFontSize(),
+            fontWeight: this.getCustomState().getFontWeight()
+        };
+
+        return { position, size, font };
+    }
+
+    /**
+     * 隐藏文本展示Div
+     */
+    public hiddenEditorDom = (isHidden: boolean): void => {
+        this.setState({
+            hidden: isHidden
+        });
+    }
+
+    /**
+     * 重写Base方法，是否可以双击修改
+     */
+    public isDbClickToEdit = (): boolean => {
+        return true;
+    }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        return this.getCustomState().getTextValue();
+    }
+
+    public setRichChildNode = (param: any): void => {
+        const config = {
+            textValue: param.value,
+            ...param.font
+        };
+        const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), Map(config));
+
+        this.setCustomState(newButtonState);
+    }
+
     render() {
-        const circle: 'circle' | 'circle-outline' | undefined = this.setCircle();
+        const { hidden } = this.state;
 
         return (
             <div
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 onMouseDown={this.fireSelectChange}
+                onDoubleClick={this.doDbClickToEdit}
             >
                 <MaskLayer id={this.getCid()} />
                 <AntButton
-                    // tslint:disable-next-line:jsx-no-multiline-js
                     style={{
-                        width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                        fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
-                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(),
-                        // , borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: this.getCustomState().getBackgroundColor(),
+                        borderColor: this.getCustomState().getBorderColor(),
+                        borderWidth: this.getCustomState().getBorderWidth()
                     }}
                     type={this.getCustomState().getType()}
-                    ref={(handler) => this.com = handler}
-                    // onClick={this.onClick}
-                    shape={circle}
+                    shape={this.getCustomState().getIsCircle() ? 'circle' : undefined}
                     disabled={this.getCustomState().getDisabled()}
                 >
-                    <span
-                        style={{ display: 'inline-block', width: '100%', textAlign: this.getCustomState().getTextAlign() }}
+                    <div
+                        style={{
+                            visibility: hidden ? 'hidden' : 'visible',
+                            display: 'inline-block',
+                            width: '100%',
+                            textAlign: this.getCustomState().getTextAlign(),
+                            color: this.getCustomState().getFontColor(),
+                            fontStyle: this.getCustomState().getFontStyle(),
+                            textDecoration: this.getCustomState().getTextDecoration(),
+                            fontSize: this.getCustomState().getFontSize(),
+                            fontWeight: this.getCustomState().getFontWeight()
+                        }}
                     >
                         {this.getCustomState().getTextValue()}
-                    </span>
+                    </div>
                 </AntButton>
             </div>
         );
     }
 
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '是否为圆形按钮',
@@ -92,13 +183,6 @@ export default class Button extends BaseComponent<IBaseProps, IBaseState> {
 
         this.setCustomState(newButtonState);
     }
-
-    private setCircle = (): 'circle' | 'circle-outline' | undefined => {
-        if (this.getCustomState().getIsCircle()) {
-            return 'circle-outline';
-        } else return undefined;
-    }
-
 }
 
 /**

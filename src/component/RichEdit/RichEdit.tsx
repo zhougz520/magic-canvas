@@ -1,28 +1,48 @@
 import * as React from 'react';
-import { EditType } from '../BaseComponent';
+import { IFont } from '../BaseComponent';
 import { DraftPublic } from './Draft';
-const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils } = DraftPublic;
+const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils, FbjsUtils } = DraftPublic;
+const { cx } = FbjsUtils;
 
 import { IEditProps, IEditState, IEditStyle } from './model/types';
 import { EditStyle } from './model/EditStyle';
 import { blockStyleFn } from './model/DraftUtils';
 
+import './sass/RichEdit.scss';
+
 /**
  * RichEdit：画布上的编辑框，所有组件的文本编辑都调用此编辑框来进行
  */
-/* tslint:disable:jsx-no-string-ref */
+/* tslint:disable:jsx-no-string-ref jsx-no-multiline-js */
 export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     public editor: HTMLElement | null = null;
 
     constructor(props: IEditProps, context?: any) {
         super(props, context);
 
-        this.state = {
+        this.state = this.getDefaultEditState();
+    }
+
+    /**
+     * 获取EditState默认值
+     */
+    getDefaultEditState = (): IEditState => {
+        return {
             position: { top: -10000, left: -10000 },
             size: { width: 0, height: 0 },
+            font: {
+                textAlign: 'center',
+                fontColor: 'rgba(0, 0, 0, 0.65)',
+                fontStyle: 'normal',
+                fontSize: 14,
+                fontWeight: 'normal',
+                textDecoration: 'none'
+            },
             style: null,
-            editorState: EditorState.createEmpty()
-        } ;
+            richEditType: 'none',
+            editorState: EditorState.createEmpty(),
+            value: ''
+        };
     }
 
     /**
@@ -69,13 +89,12 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     /**
      * 设置无序列表样式
      */
-    // TODO e参数需要修改
-    toggleULBlockTypeClass = (e: any) => {
+    toggleULBlockTypeClass = (styleType: any) => {
         this.onChange(
             BlockUtils.setListBlockStyleData(
                 this.state.editorState,
                 'unordered-list-item',
-                e.key === undefined ? 'image' : e.key
+                styleType ? styleType : 'image'
             )
         );
     }
@@ -83,12 +102,12 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     /**
      * 设置有序列表样式
      */
-    toggleOLBlockTypeClass = (e: any) => {
+    toggleOLBlockTypeClass = (styleType: any) => {
         this.onChange(
             BlockUtils.setListBlockStyleData(
                 this.state.editorState,
                 'ordered-list-item',
-                e.key === undefined ? 'decimal' : e.key
+                styleType ? styleType : 'decimal'
             )
         );
     }
@@ -128,7 +147,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             this.onChange(
                 BlockUtils.mergeBlockData(
                     this.state.editorState,
-                    { 'text-align': textAlign.target.value }
+                    { 'text-align': textAlign }
                 )
             );
         } else {
@@ -142,6 +161,103 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     }
 
     /**
+     * 普通文本修改
+     */
+    onChangeForText = (e: any) => {
+        this.setState({ value: e.target.value });
+    }
+
+    /**
+     * 为普通文本设置加粗
+     */
+    toggleFontWeightForText = (fontWeight: string) => {
+        const currentFont: IFont = this.state.font;
+        const newFont: IFont = {
+            ...currentFont,
+            fontWeight: currentFont.fontWeight === fontWeight ? 'normal' : fontWeight
+        };
+        this.setState({
+            font: newFont
+        });
+    }
+
+    /**
+     * 为普通文本设置斜体
+     */
+    toggleFontStyleForText = (fontStyle: string) => {
+        const currentFont: IFont = this.state.font;
+        const newFont: IFont = {
+            ...currentFont,
+            fontStyle: currentFont.fontStyle === fontStyle ? 'normal' : fontStyle
+        };
+        this.setState({
+            font: newFont
+        });
+    }
+
+    /**
+     * 为普通文本设置下划线、删除线
+     */
+    toggleTextDecorationForText = (textDecoration: string) => {
+        const currentFont: IFont = this.state.font;
+        const newFont: IFont = {
+            ...currentFont,
+            textDecoration: cx({
+                'none': currentFont.textDecoration === textDecoration,
+                'underline': (textDecoration === 'underline' && currentFont.textDecoration.includes('underline') === false) ||
+                    (textDecoration !== 'underline' && currentFont.textDecoration.includes('underline') === true),
+                'line-through': (textDecoration === 'line-through' && currentFont.textDecoration.includes('line-through') === false) ||
+                    (textDecoration !== 'line-through' && currentFont.textDecoration.includes('line-through') === true)
+            })
+        };
+        this.setState({
+            font: newFont
+        });
+    }
+
+    /**
+     * 为普通文本设置字体颜色
+     */
+    toggleFontColorForText = (fontColor: string) => {
+        const currentFont: IFont = this.state.font;
+        const newFont: IFont = {
+            ...currentFont,
+            fontColor
+        };
+        this.setState({
+            font: newFont
+        });
+    }
+
+    /**
+     * 为普通文本设置字体大小
+     */
+    toggleFontSizeForText = (fontSize: number) => {
+        const currentFont: IFont = this.state.font;
+        const newFont: IFont = {
+            ...currentFont,
+            fontSize
+        };
+        this.setState({
+            font: newFont
+        });
+    }
+
+    /**
+     * 为普通文本设置对齐方式
+     */
+    toggleTextAlignForText = (textAlign: string) => {
+        const currentFont: IFont = this.state.font;
+        const newFont: IFont = {
+            ...currentFont,
+            textAlign: currentFont.textAlign === textAlign ? 'left' : textAlign
+        };
+        this.setState({
+            font: newFont
+        });
+    }
+
+    /**
      * 设置编辑框的状态
      * @param config 设置的对象
      */
@@ -152,11 +268,17 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     /**
      * 获取编辑框内的值
      */
-    // TODO value带格式的富文本
-    getEditValue = (richEditType: EditType): any => {
+    getEditValue = (): any => {
+        const { richEditType } = this.state;
+
         switch (richEditType) {
             case 'RichEdit':
                 return this.state.editorState;
+            case 'Text':
+            case 'TextArea':
+                return this.state.value;
+            case 'none':
+                return '';
         }
     }
 
@@ -164,15 +286,29 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
      * 设置编辑框焦点
      */
     setFocus = (isOnFocus: boolean = true) => {
+        const { richEditType } = this.state;
+        let target: any = null;
+        switch (richEditType) {
+            case 'RichEdit':
+                target = this.refs.editor;
+                break;
+            case 'Text':
+            case 'TextArea':
+                target = this.refs.editorText;
+                break;
+            case 'none':
+                target = null;
+                break;
+        }
         if (isOnFocus) {
-            (this.refs.editor as any).focus();
+            if (target) target.focus();
         } else {
-            (this.refs.editor as any).blur();
+            if (target) target.blur();
         }
     }
 
     render() {
-        const { position, size, style, editorState } = this.state;
+        const { position, size, font, style, richEditType, editorState, value } = this.state;
         const editStyle: IEditStyle = {
             top: position.top,
             left: position.left,
@@ -192,10 +328,31 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
                     handleKeyCommand={this.handleKeyCommand}
                     onChange={this.onChange}
                     onTab={this.onTab}
-                    // tslint:disable-next-line:jsx-no-string-ref
                     ref="editor"
                     blockStyleFn={blockStyleFn}
+                    disPlay={richEditType === 'RichEdit' ? false : true}
                 />
+                <div
+                    className="RichText-root"
+                    style={{
+                        display: richEditType === 'Text' ? 'block' : 'none'
+                    }}
+                >
+                    <textarea
+                        ref="editorText"
+                        className="RichText-container"
+                        onChange={this.onChangeForText}
+                        value={value}
+                        style={{
+                            textAlign: font.textAlign as any,
+                            color: font.fontColor as any,
+                            fontStyle: font.fontStyle as any,
+                            textDecoration: font.textDecoration as any,
+                            fontSize: font.fontSize as any,
+                            fontWeight: font.fontWeight as any
+                        }}
+                    />
+                </div>
             </div>
         );
     }

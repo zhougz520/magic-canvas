@@ -204,19 +204,19 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     />&nbsp;
                     <ListTypeControls
                         // tslint:disable-next-line:jsx-no-lambda
-                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_UL, e)}
+                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_UL, e.key)}
                         type={'UL'}
                         list={UL_TYPE}
                     />&nbsp;
                     <ListTypeControls
                         // tslint:disable-next-line:jsx-no-lambda
-                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_OL, e)}
+                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_OL, e.key)}
                         type={'OL'}
                         list={OL_TYPE}
                     />&nbsp;
                     <TextAlignControls
                         // tslint:disable-next-line:jsx-no-lambda
-                        onToggle={(textAlign: any) => this.fireCommand(CommandMap.EDITOR_TEXTALIGN, textAlign)}
+                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_TEXTALIGN, e.target.value)}
                     />
                 </div>
                 <div

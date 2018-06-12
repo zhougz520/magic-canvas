@@ -8,6 +8,16 @@ export type EditType = 'RichEdit' | 'Text' | 'TextArea' | 'none';
 export interface IRichEditOption {
     position: IPosition;
     size: ISize;
+    font: IFont;
+}
+
+export interface IFont {
+    textAlign: string;
+    fontColor: string;
+    fontStyle: string;
+    textDecoration: string;
+    fontSize: number;
+    fontWeight: string;
 }
 
 // baseState设置后回调类型

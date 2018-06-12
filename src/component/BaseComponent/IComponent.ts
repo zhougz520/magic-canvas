@@ -3,7 +3,7 @@ import { IPosition } from './model/PositionState';
 import { IBaseProps } from './IBaseProps';
 import { ContentState } from './model/ContentState';
 import { BaseState } from './model/BaseState';
-import { EditType, IRichEditOption, ICommentsList, ComponentType } from './model/types';
+import { EditType, IRichEditOption, ICommentsList, ComponentType, IFont } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
 
 import { IAnchor } from '../util';
@@ -100,6 +100,11 @@ export interface IComponent {
      * 返回值：富文本、普通文本、多行文本、无文本编辑
      */
     getRichEditType: () => EditType;
+
+    /**
+     * 获取默认文字样式
+     */
+    getFont: () => IFont;
 
     /**
      * 获取富文本编辑器的一些选项

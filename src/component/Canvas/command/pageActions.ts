@@ -32,6 +32,7 @@ export const pageActions = {
         if (!currentUndoStack) {
             return;
         }
+        this.getThis()._drawUtil.clearSelected();
 
         let resetCurrentUndoStack: IStack;
         let resetComponentList: List<IComponentList> = List();
@@ -105,6 +106,7 @@ export const pageActions = {
         if (!currentRedoStack) {
             return;
         }
+        this.getThis()._drawUtil.clearSelected();
 
         let resetCurrentRedoStack: IStack;
         let resetComponentList: List<IComponentList> = List();
@@ -250,7 +252,15 @@ export const pageActions = {
     boldEditor() {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleInlineStyle('BOLD');
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleInlineStyle('BOLD');
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleFontWeightForText('bold');
+                    break;
+            }
         }
     },
 
@@ -258,7 +268,15 @@ export const pageActions = {
     italicEditor() {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleInlineStyle('ITALIC');
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleInlineStyle('ITALIC');
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleFontStyleForText('italic');
+                    break;
+            }
         }
     },
 
@@ -266,7 +284,15 @@ export const pageActions = {
     underlineEditor() {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleInlineStyle('UNDERLINE');
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleInlineStyle('UNDERLINE');
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleTextDecorationForText('underline');
+                    break;
+            }
         }
     },
 
@@ -274,7 +300,15 @@ export const pageActions = {
     strikethroughEditor() {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleInlineStyle('STRIKETHROUGH');
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleInlineStyle('STRIKETHROUGH');
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleTextDecorationForText('line-through');
+                    break;
+            }
         }
     },
 
@@ -282,7 +316,15 @@ export const pageActions = {
     fontColorEditor(color: any) {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleFontColor(color);
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleFontColor(color);
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleFontColorForText(color);
+                    break;
+            }
         }
     },
 
@@ -290,7 +332,15 @@ export const pageActions = {
     fontSizeEditor(size: any) {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleFontSize(size);
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleFontSize(size);
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleFontSizeForText(size);
+                    break;
+            }
         }
     },
 
@@ -314,7 +364,15 @@ export const pageActions = {
     textAlignEditor(textAlign: any) {
         const isRichEditMode: boolean = this.getThis()._isRichEditMode;
         if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleTextAlign(textAlign);
+            const { richEditType } = this.getThis().getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this.getThis().getEditor().toggleTextAlign(textAlign);
+                    break;
+                case 'Text':
+                    this.getThis().getEditor().toggleTextAlignForText(textAlign);
+                    break;
+            }
         }
     }
 };

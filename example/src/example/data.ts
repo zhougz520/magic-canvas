@@ -692,6 +692,34 @@ export const detail2 = {
                     "commentsList": [],
                     "comType": null
                 }
+            },
+            {
+                "t": "UniversalComponents/Button/Button",
+                "p": {
+                    "id": "cs2",
+                    "w": 199,
+                    "h": 81,
+                    "l": 133,
+                    "t": 472,
+                    "zIndex": 2,
+                    "customState": {
+                        "type": "primary",
+                        "isCircle": false,
+                        "disabled": false,
+                        "textValue": "按钮",
+                        "textAlign": "right",
+                        "fontColor": "#e30d0d",
+                        "fontStyle": "italic",
+                        "fontSize": 12,
+                        "fontWeight": "bold",
+                        "textDecoration": "underline line-through",
+                        "backgroundColor": "#1890ff",
+                        "borderColor": "#1890ff",
+                        "borderWidth": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Universal"
+                }
             }
         ]
     }

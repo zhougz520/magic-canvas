@@ -9,7 +9,7 @@ export function docKeyDown(canvas: Canvas, e: any): void {
     if (canvas._isRichEditMode === false) {
         // 如果是常规输入框或文本框，则跳出键盘事件，执行默认事件
         if (
-            (targetName === 'textarea' && (target as any).className !== 'wingman') ||
+            (targetName === 'textarea' && (target as any).className !== 'Wingman') ||
             targetName === 'input'
         ) {
             return;

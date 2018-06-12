@@ -9,7 +9,7 @@ import { BaseState } from './model/BaseState';
 import { ContentState } from './model/ContentState';
 import { SizeState, ISize } from './model/SizeState';
 import { PositionState, IPosition } from './model/PositionState';
-import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType } from './model/types';
+import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType, IFont } from './model/types';
 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
@@ -349,6 +349,17 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         return 'none';
     }
 
+    public getFont = (): IFont => {
+        return {
+            textAlign: 'center',
+            fontColor: 'rgba(0, 0, 0, 0.65)',
+            fontStyle: 'normal',
+            fontSize: 14,
+            fontWeight: 'normal',
+            textDecoration: 'none'
+        };
+    }
+
     /**
      * 获取富文本编辑器的一些选项
      * { position, size }
@@ -356,7 +367,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     public getRichEditOption = (): IRichEditOption => {
         return {
             position: this.getPosition(),
-            size: this.getSize()
+            size: this.getSize(),
+            font: this.getFont()
         };
     }
 

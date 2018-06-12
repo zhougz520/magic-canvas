@@ -11,7 +11,8 @@ import {
     IRichEditOption,
     PositionState,
     SizeState,
-    IComData
+    IComData,
+    IFont
 } from '../BaseComponent';
 import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState } from '../Canvas';
 import { CommentsRect } from './CommentsRect';
@@ -67,6 +68,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
     public getRichEditOption = (): IRichEditOption => {
         const comPosition: IPosition = this.getPosition();
         const comSize: ISize = this.getSize();
+        const comFont: IFont = this.getFont();
 
         const position: IPosition = {
             top: comPosition.top + this._padding,
@@ -76,8 +78,9 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
             width: comSize.width - 2 * this._padding,
             height: comSize.height - 2 * this._padding
         };
+        const font: IFont = comFont;
 
-        return { position, size };
+        return { position, size, font };
     }
 
     /**
