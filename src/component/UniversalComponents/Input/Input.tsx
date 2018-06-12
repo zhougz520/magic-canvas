@@ -2,20 +2,15 @@ import * as React from 'react';
 import {
     BaseComponent, BaseStyle, IBaseProps, IBaseState
 } from '../../BaseComponent';
-import { InputState } from './InputState';
+import { InputState, IInputState } from './InputState';
 import { Input as AntInput } from 'antd';
 import { Map } from 'immutable';
 import { PropertiesEnum } from '../types';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-
-}
-
-export default class Input extends BaseComponent<IDemoProps, IBaseState> {
+export default class Input extends BaseComponent<IBaseProps, IBaseState> {
     com: any = null;
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -107,4 +102,14 @@ export default class Input extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：IButtonState
+ */
+export function convertFromDataToCustomState(
+    customData: IInputState
+): any {
+    return new InputState(customData);
 }

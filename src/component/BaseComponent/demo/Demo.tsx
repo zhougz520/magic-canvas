@@ -6,15 +6,7 @@ const RadioGroup = Radio.Group;
 
 import '../sass/Demo.scss';
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-}
-
-export interface IDemoState extends IBaseState {
-    demoState: string;
-}
-
-export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
+export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
     static defaultProps = {
         data: {
             id: 'cs2',
@@ -29,13 +21,21 @@ export default class Demo extends BaseComponent<IDemoProps, IDemoState> {
     public com: HTMLElement | null = null;
     public antCom: any = null;
 
-    public isCanPushOpenOtherComponent = (): boolean => {
-        return true;
+    constructor(props: IBaseProps, context?: any) {
+        super(props, context);
+
+        this.state = {
+            baseState: this.initBaseStateWithCustomState()
+        };
     }
 
-    public isCanMove = (): boolean => {
-        return false;
-    }
+    // public isCanPushOpenOtherComponent = (): boolean => {
+    //     return true;
+    // }
+
+    // public isCanMove = (): boolean => {
+    //     return false;
+    // }
 
     public render() {
         const richChildNode = this.getRichChildNode();

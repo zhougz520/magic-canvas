@@ -121,6 +121,10 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         });
     }
 
+    getCanvasSaveData = (): any => {
+        return this.getCanvas().getSaveData();
+    }
+
     render() {
         const { componentPosition, canvasSize, highPerformance } = this.state;
         const stateStyle = this.StageStyle();

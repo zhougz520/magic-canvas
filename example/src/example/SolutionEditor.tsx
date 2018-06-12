@@ -4,7 +4,8 @@ import { BarList, IBarListComponent } from './BarList';
 import { Stage, ComponentsType, ICompos } from '../../../src';
 import './solution.css';
 import { config } from './config';
-import { Map } from 'immutable';
+import { detail1, detail2 } from './data';
+import { Map, List } from 'immutable';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -84,12 +85,11 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     highPerformance={this.highPerformance}
-                // objectlist={this.props.objectlist}
                 />
                 <Stage
                     config={config}
                     ref={(render) => this.stage = render}
-                    components={detail.content.components as ComponentsType}
+                    components={detail2.content.components as ComponentsType}
                     onCommandProperties={this.onCommandProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     clearSelectedProperty={this.clearSelectedProperty}
@@ -100,7 +100,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 }
 
-const detail = {
+export const detail = {
     content: {
         components: [
 
@@ -114,6 +114,9 @@ const detail = {
                     l: 150,
                     t: 150,
                     zIndex: 4,
+                    comType: 'Map',
+                    customState: null,
+                    commentsList: List(),
                     p: {
                         components: [
                             {

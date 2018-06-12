@@ -1,10 +1,7 @@
 import { SizeState } from './SizeState';
 import { PositionState } from './PositionState';
-import { ICommentsMap } from './types';
-import { Map, Record } from 'immutable';
-
-// 组件类型
-export type ComponentType = 'Map' | 'Universal' | 'Comments';
+import { ICommentsList, ComponentType } from './types';
+import { List, Record } from 'immutable';
 
 export interface IContent {
     // 组件ID
@@ -17,13 +14,12 @@ export interface IContent {
     sizeState: SizeState | null;
     // 组件位置：left|right|top|bottom
     positionState: PositionState | null;
-    // TODO 形状属性
-    // TODO 组件中带格式的富文本内容
+    // 组件中带格式的富文本内容
     richChildNode: any;
     // 组件个性化属性
     customState: any;
     // 组件对应的批注集合
-    commentsMap: Map<string, ICommentsMap>;
+    commentsList: List<ICommentsList>;
 }
 
 const defaultRecord: IContent = {
@@ -34,7 +30,7 @@ const defaultRecord: IContent = {
     positionState: null,
     richChildNode: null,
     customState: null ,
-    commentsMap: Map()
+    commentsList: List()
 };
 
 export const ContentStateRecord: Record.Class = Record(defaultRecord);
@@ -49,7 +45,7 @@ export class ContentState extends ContentStateRecord {
             positionState: PositionState.createEmpty(),
             richChildNode: null,
             customState: null,
-            commentsMap: Map()
+            commentsList: List()
         });
     }
 
@@ -85,7 +81,7 @@ export class ContentState extends ContentStateRecord {
         return this.get('customState');
     }
 
-    getCommentsMap(): Map<string, ICommentsMap> {
-        return this.get('commentsMap');
+    getCommentsList(): List<ICommentsList> {
+        return this.get('commentsList');
     }
 }

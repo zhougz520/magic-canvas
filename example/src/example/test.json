@@ -1,0 +1,123 @@
+{
+    "content": {
+        "components": [
+            {
+                "t": "Comments/Comments",
+                "p": {
+                    "id": "cm1",
+                    "txt_v": {
+                        "blocks": [
+                            {
+                                "key": "da5pq",
+                                "text": "需求1：",
+                                "type": "unstyled",
+                                "depth": 0,
+                                "inlineStyleRanges": [],
+                                "data": {}
+                            },
+                            {
+                                "key": "351ub",
+                                "text": "12312321",
+                                "type": "unordered-list-item",
+                                "depth": 0,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 0,
+                                        "length": 5,
+                                        "style": "color-#d72d2d"
+                                    }
+                                ],
+                                "data": {
+                                    "unordered-list-item": "image"
+                                }
+                            },
+                            {
+                                "key": "2f7bu",
+                                "text": "1231231",
+                                "type": "unordered-list-item",
+                                "depth": 1,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 1,
+                                        "length": 4,
+                                        "style": "ITALIC"
+                                    },
+                                    {
+                                        "offset": 1,
+                                        "length": 4,
+                                        "style": "BOLD"
+                                    }
+                                ],
+                                "data": {
+                                    "unordered-list-item": "disc"
+                                }
+                            },
+                            {
+                                "key": "4sncp",
+                                "text": "21313",
+                                "type": "unordered-list-item",
+                                "depth": 2,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 0,
+                                        "length": 4,
+                                        "style": "UNDERLINE"
+                                    },
+                                    {
+                                        "offset": 0,
+                                        "length": 4,
+                                        "style": "STRIKETHROUGH"
+                                    }
+                                ],
+                                "data": {
+                                    "unordered-list-item": "circle"
+                                }
+                            },
+                            {
+                                "key": "43sjc",
+                                "text": "123213",
+                                "type": "ordered-list-item",
+                                "depth": 2,
+                                "inlineStyleRanges": [
+                                    {
+                                        "offset": 1,
+                                        "length": 3,
+                                        "style": "fontsize-1"
+                                    }
+                                ],
+                                "data": {
+                                    "ordered-list-item": "decimal"
+                                }
+                            }
+                        ]
+                    },
+                    "w": 516,
+                    "h": 170,
+                    "l": 396,
+                    "t": 170,
+                    "zIndex": 100001,
+                    "customState": {
+                        "commentsRectList": [],
+                        "maxRectId": 0
+                    },
+                    "commentsList": [],
+                    "comType": "Comments"
+                }
+            },
+            {
+                "t": "BaseComponent/demo/Demo",
+                "p": {
+                    "id": "cs1",
+                    "w": 225,
+                    "h": 121,
+                    "l": 79,
+                    "t": 210,
+                    "zIndex": 1,
+                    "customState": null,
+                    "commentsList": [],
+                    "comType": null
+                }
+            }
+        ]
+    }
+}

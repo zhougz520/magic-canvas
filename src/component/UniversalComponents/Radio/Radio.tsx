@@ -4,21 +4,16 @@ import {
 } from '../../BaseComponent';
 import { Radio as AntRadio } from 'antd';
 
-import { RadioState } from './RadioState';
+import { RadioState, IRadioState } from './RadioState';
 import { Map } from 'immutable';
 import { PropertiesEnum } from '../types';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 const AntRadioButton = AntRadio.Button;
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-
-}
-
-export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
+export default class Radio extends BaseComponent<IBaseProps, IBaseState> {
     com: any = null;
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -134,15 +129,14 @@ export default class Radio extends BaseComponent<IDemoProps, IBaseState> {
         );
         this.setCustomState(newRadioState);
     }
+}
 
-    // private onChange = (event: RadioChangeEvent) => {
-    //     const newRadioState: RadioState = RadioState.set(
-    //         this.getCustomState(),
-    //         {
-    //             value: event.target.value
-    //         }
-    //     );
-    //     this.setCustomState(newRadioState);
-    // }
-
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：IButtonState
+ */
+export function convertFromDataToCustomState(
+    customData: IRadioState
+): any {
+    return new RadioState(customData);
 }

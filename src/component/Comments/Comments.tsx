@@ -10,16 +10,17 @@ import {
     EditType,
     IRichEditOption,
     PositionState,
-    SizeState
+    SizeState,
+    IComData
 } from '../BaseComponent';
-import { IComponentList, IOffset } from '../Canvas';
+import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState } from '../Canvas';
 import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
 
 import { DraftPublic, blockStyleFn } from '../RichEdit';
-const { Editor, EditorState, InlineUtils } = DraftPublic;
+const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
 
-import { OrderedSet } from 'immutable';
+import { OrderedSet, Map } from 'immutable';
 import './sass/Comments.scss';
 
 export interface ICommentsState extends IBaseState {
@@ -47,7 +48,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     commentsRectList: OrderedSet(),
                     maxRectId: 0
                 } as ICustomState,
-                EditorState.createEmpty('需求' + this.getCid().replace('cm', '') + '：\n')
+                EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n')
             ),
             hidden: false
         };
@@ -95,9 +96,13 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         return true;
     }
 
+    public getEncodeCustomState = (): ICustomState => {
+        return this.getCustomState().toObject();
+    }
+
     render() {
         const { hidden } = this.state;
-        const commentsRectList: OrderedSet<IComponentList> = this.getCustomState().get('commentsRectList');
+        const commentsRectList: OrderedSet<IComponentList> = this.getEncodeCustomState().commentsRectList;
         const rectList: JSX.Element[] = this.buildRect(commentsRectList);
 
         const editorState = this.getRichChildNode();
@@ -200,4 +205,91 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
             y2: rectPositionState.getTop()
         };
     }
+}
+
+/**
+ * 批注把customState转成需要保存的data
+ * @param customState 批注的customState
+ */
+export function convertFromCustomStateToData(customState: any): any {
+    const components: any[] = [];
+    const encodeCustomState: ICustomState = customState.toObject();
+    const commentsRectList: OrderedSet<IComponentList> = encodeCustomState.commentsRectList;
+    commentsRectList.map(
+        (commentsRect: IComponentList) => {
+            components.push(
+                convertFromBaseStateToData(
+                    commentsRect.baseState,
+                    {
+                        comPath: commentsRect.comPath,
+                        childData: commentsRect.childData
+                    }
+                )
+            );
+        }
+    );
+
+    return {
+        commentsRectList: components,
+        maxRectId: encodeCustomState.maxRectId
+    };
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：ICommentsState | null | Map
+ */
+export function convertFromDataToCustomState(
+    customData: {
+        commentsRectList: Array<{
+            t: string;
+            p: IComData;
+        }>;
+        maxRectId: number;
+    } | any
+): any {
+    let componentList: OrderedSet<IComponentList> = OrderedSet();
+    let maxRectId: number = 0;
+    if (customData && customData.commentsRectList && customData.maxRectId) {
+        customData.commentsRectList.map(
+            (commentsRect: any) => {
+                const baseState: BaseState = convertFromDataToBaseState(commentsRect.p, commentsRect.t);
+
+                componentList = componentList.add({
+                    cid: commentsRect.p.id,
+                    comPath: commentsRect.t,
+                    baseState,
+                    childData: commentsRect.p.p,
+                    initType: 'Init'
+                });
+            }
+        );
+
+        maxRectId = customData.maxRectId;
+    }
+
+    return Map({
+        commentsRectList: componentList,
+        maxRectId
+    });
+}
+
+export function convertFromRichToData(
+    richChildNode: any
+): any {
+    const contentState: any = richChildNode.getCurrentContent();
+
+    return convertFromDraftStateToRaw(contentState);
+}
+
+export function convertFromDataToRich(
+    richChildData: any
+): any {
+    let richChildNode: any = null;
+    if (richChildData) {
+        const contentState: any = convertFromRawToDraftState(richChildData);
+        richChildNode = EditorState.createWithContent(contentState);
+    }
+
+    return richChildNode;
 }

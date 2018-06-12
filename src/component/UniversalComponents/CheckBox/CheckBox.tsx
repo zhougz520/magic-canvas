@@ -4,19 +4,14 @@ import {
 } from '../../BaseComponent';
 import { Checkbox as AntCheckbox } from 'antd';
 
-import { CheckBoxState } from './CheckBoxState';
+import { CheckBoxState, ICheckBoxState } from './CheckBoxState';
 import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-
-}
-
-export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
+export default class CheckBox extends BaseComponent<IBaseProps, IBaseState> {
     com: any = null;
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -117,4 +112,14 @@ export default class CheckBox extends BaseComponent<IDemoProps, IBaseState> {
         );
         this.setCustomState(newCheckGroupState);
     }
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：IButtonState
+ */
+export function convertFromDataToCustomState(
+    customData: ICheckBoxState
+): any {
+    return new CheckBoxState(customData);
 }

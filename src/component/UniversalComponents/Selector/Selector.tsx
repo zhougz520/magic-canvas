@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState, SizeState, ISize, BaseState, ContentState } from '../../BaseComponent';
-import { SelectorState } from './SelectorState';
+import { SelectorState, ISelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
 import { BoxType } from '../../util';
 import { Map, List } from 'immutable';
@@ -8,15 +8,11 @@ import { PropertiesEnum } from '../types';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 const Option = AntSelector.Option;
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
 
-}
-
-export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
+export default class Selector extends BaseComponent<IBaseProps, IBaseState> {
     // private com: any = null;
     com: any = null;
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -141,4 +137,14 @@ export default class Selector extends BaseComponent<IDemoProps, IBaseState> {
             </div>
         );
     }
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：IButtonState
+ */
+export function convertFromDataToCustomState(
+    customData: ISelectorState
+): any {
+    return new SelectorState(customData);
 }

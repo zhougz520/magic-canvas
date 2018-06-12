@@ -107,14 +107,15 @@ gulp.task('cssCompile', () => tasks.cssCompile(dist, debug));
 gulp.task('watch', ['compile', 'cssCompile'], () => {
     runDevServer();
 
-    // gulp.watch([
-    //     tasks.src,
-    //     tasks.css
-    // ], () => {
-    //     debug('detecting files changed, recompile');
-    //     runSequence('clean', 'compile', 'cssCompile')
-    //     debug('recompile complete');
-    // });
+    gulp.watch([
+        tasks.src,
+        tasks.css
+    ], () => {
+        debug('detecting files changed, recompile');
+        tasks.compile(dist, debug);
+        tasks.cssCompile(dist, debug);
+        debug('recompile complete');
+    });
 });
 
 gulp.task('default', () => {

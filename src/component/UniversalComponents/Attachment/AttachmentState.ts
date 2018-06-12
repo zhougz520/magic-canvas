@@ -38,7 +38,7 @@ const defaultRecord: IAttachmentState = {
 export const AttachmentRecord: Record.Class = Record(defaultRecord);
 
 export class AttachmentState extends AttachmentRecord {
-    static create(attachmentState: AttachmentState): AttachmentState {
+    static create(attachmentState: IAttachmentState): AttachmentState {
         return new AttachmentState(attachmentState);
     }
 

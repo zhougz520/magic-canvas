@@ -8,14 +8,9 @@ import { PropertiesEnum } from '../types';
 import { Map } from 'immutable';
 import '../../UniversalComponents/sass/UComponents.scss';
 
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
-
-}
-
-export default class Attachment extends BaseComponent<IDemoProps, IBaseState> {
+export default class Attachment extends BaseComponent<IBaseProps, IBaseState> {
     com: any = null;
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {

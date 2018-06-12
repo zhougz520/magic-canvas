@@ -19,6 +19,7 @@ export const pageActions = {
     // 添加批注
     addComments() {
         this.getThis()._commentsUtil.startAddComments();
+        this.getThis().getSaveData();
     },
 
     // 画布撤销

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RichEdit, Wingman } from '../RichEdit';
 
-import { BaseState, IComponent, convertFromDataToBaseState, IComData } from '../BaseComponent';
+import { BaseState, IComponent, IComData } from '../BaseComponent';
 import { ICanvasState } from './ICanvasState';
 import { ICanvasProps } from './ICanvasProps';
 import { ICanvasComponent } from './ICanvasComponent';
@@ -18,6 +18,8 @@ import { PositionUtil } from './utils/PositionUtil';
 import { RichEditUtil } from './utils/RichEditUtil';
 import { StackUtil } from './utils/StackUtil';
 
+import { convertFromDataToBaseState } from './encoding/convertFromDataToBaseState';
+import { convertFromBaseStateToData } from './encoding/convertFromBaseStateToData';
 import { HandleModes } from './handlers/HandleModes';
 import { HandlerMap } from './handlers/canvas/HandlerMap';
 import { pageActions } from './command/pageActions';
@@ -107,11 +109,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this.props.components.map(
             (component) => {
                 const comData: IComData = this._componentsUtil.convertComponentToData(component);
-                const baseState: BaseState = convertFromDataToBaseState(comData);
+                const baseState: BaseState = convertFromDataToBaseState(comData, component.t);
 
                 componentList = componentList.add({
                     cid: comData.id,
-                    comPath: comData.comPath,
+                    comPath: component.t,
                     baseState,
                     childData: comData.p,
                     initType: 'Init'
@@ -238,7 +240,42 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         } else {
             return undefined;
         }
+    }
 
+    /**
+     * 收集保存数据
+     */
+    getSaveData = (): any => {
+        const componentList = this.state.componentList;
+        const components: any[] = [];
+        componentList.map(
+            (component: IComponentList) => {
+                const com = this.getComponent(component.cid);
+                if (com) {
+                    components.push(
+                        convertFromBaseStateToData(
+                            com.getBaseState(),
+                            {
+                                comPath: com.getBaseProps().comPath,
+                                childData: com.getBaseProps().childData
+                            }
+                        )
+                    );
+                }
+            }
+        );
+
+        const detail = {
+            content: {
+                components
+            }
+        };
+
+        // tslint:disable:no-console
+        console.log(detail);
+        console.log(JSON.stringify(detail));
+
+        return detail;
     }
 
     componentDidMount() {

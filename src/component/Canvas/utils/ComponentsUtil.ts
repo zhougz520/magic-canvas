@@ -1,8 +1,16 @@
 import * as React from 'react';
 import { IBoundary, IOffset, IRange, AlignType } from '../model/types';
-import { BaseState, IComponent, ComponentType, IComData, convertFromDataToBaseState, IPosition, ISize } from '../../BaseComponent';
+import {
+    BaseState,
+    IComponent,
+    ComponentType,
+    IComData,
+    IPosition,
+    ISize
+} from '../../BaseComponent';
 import { Canvas } from '../Canvas';
 import { IComponentList } from '../model/types';
+import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 import { Map, OrderedSet, Set, List } from 'immutable';
 
 export class ComponentsUtil {
@@ -35,13 +43,13 @@ export class ComponentsUtil {
         dataList.map(
             (data: any) => {
                 const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, position);
-                const baseState: BaseState = convertFromDataToBaseState(comData);
+                const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
                 const component: IComponentList = {
                     cid: comData.id,
-                    comPath: comData.comPath,
+                    comPath: data.t,
                     baseState,
                     childData: comData.p,
-                    initType: 'Init'
+                    initType: 'Add'
                 };
 
                 componentList = componentList.add(component);
@@ -222,13 +230,13 @@ export class ComponentsUtil {
         position: IOffset = { x: 0, y: 0 },
         customState: any = null
     ): IComData => {
-        const comPath: string = component.t;
-        // TODO Map分包后需要修改
-        const comType: ComponentType | null = this.getComponentType(comPath);
         const offset: IOffset = component.offset;
 
         let data: IComData;
         if (offset !== undefined) {
+            const comPath: string = component.t;
+            // TODO Map分包后需要修改
+            const comType: ComponentType | null = this.getComponentType(comPath);
             // 添加新组件
             data = {
                 ...component.p,
@@ -238,17 +246,12 @@ export class ComponentsUtil {
                 zIndex: comType === 'Comments' ? this._canvas._maxCommentsZIndex + 1 : this._canvas._maxZIndex + 1,
                 comType,
                 customState,
-                commentsMap: Map(),
-                comPath
+                commentsList: List()
             };
         } else {
             // 页面第一次加载
             data = {
-                ...component.p,
-                comType,
-                customState,
-                commentsMap: Map(),
-                comPath
+                ...component.p
             };
         }
 

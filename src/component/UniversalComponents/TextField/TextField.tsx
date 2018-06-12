@@ -5,19 +5,15 @@ import {
 import { Input } from 'antd';
 import { Map } from 'immutable';
 
-import { TextFieldState } from './TextFieldState';
+import { TextFieldState, ITextFieldState } from './TextFieldState';
 import { PropertiesEnum } from '../types';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 const { TextArea } = Input;
-// tslint:disable-next-line:no-empty-interface
-export interface IDemoProps extends IBaseProps {
 
-}
-
-export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
+export default class TextField extends BaseComponent<IBaseProps, IBaseState> {
     com: any = null;
-    constructor(props: IDemoProps, context?: any) {
+    constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -106,4 +102,14 @@ export default class TextField extends BaseComponent<IDemoProps, IBaseState> {
         this.setCustomState(newTextFieldState);
     }
 
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：IButtonState
+ */
+export function convertFromDataToCustomState(
+    customData: ITextFieldState
+): any {
+    return new TextFieldState(customData);
 }

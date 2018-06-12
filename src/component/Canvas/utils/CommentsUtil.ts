@@ -1,8 +1,9 @@
 import { Canvas } from '../Canvas';
-import { BaseState, ISize, IPosition, convertFromDataToBaseState, IComData, IComponent, ICommentsMap } from '../../BaseComponent';
+import { BaseState, ISize, IPosition, IComData, IComponent, ICommentsList } from '../../BaseComponent';
 import { IAddCommentsParam, IComponentList, IOffset } from '../model/types';
+import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 
-import { OrderedSet, List, Map } from 'immutable';
+import { OrderedSet, List } from 'immutable';
 
 export class CommentsUtil {
     public _addCommentsRectParam: IAddCommentsParam = {
@@ -171,15 +172,15 @@ export class CommentsUtil {
             const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                 data,
                 { x: position.left, y: position.top },
-                { component: this._addCommentsRectParam.component }
+                { cid: this._addCommentsRectParam.component ? this._addCommentsRectParam.component.getCid() : null }
             );
             comData.id = comComments.getCid() + '.cr' + (commentsCustomState.get('maxRectId') + 1);
             comData.zIndex = 0;
 
-            const baseState: BaseState = convertFromDataToBaseState(comData);
+            const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
             const component: IComponentList = {
                 cid: comData.id,
-                comPath: comData.comPath,
+                comPath: data.t,
                 baseState,
                 childData: comData.p,
                 initType: 'Init'
@@ -192,28 +193,29 @@ export class CommentsUtil {
                 maxRectId: commentsCustomState.get('maxRectId') + 1
             });
 
-            this.setComponentCommentsMap(comData.id, { top: comData.t, left: comData.l });
+            this.setComponentCommentsList(comData.id, { top: comData.t, left: comData.l });
         }
     }
 
     /**
-     * 对选择组件设置CommentsMap
+     * 对选择组件设置CommentsList
      * @param rectCid 选中框cid
      */
-    setComponentCommentsMap = (rectCid: string, rectPosition: IPosition) => {
+    setComponentCommentsList = (rectCid: string, rectPosition: IPosition) => {
         const component: IComponent | null = this._addCommentsRectParam.component;
         if (component !== null) {
             const componentPosition: IPosition = component.getPosition();
-            const commentsMap: ICommentsMap = {
+            const newComments: ICommentsList = {
+                cid: rectCid,
                 relativePosition: {
                     top: rectPosition.top - componentPosition.top,
                     left: rectPosition.left - componentPosition.left
                 }
             };
 
-            const oldCommentsMap = component.getCommentsMap();
-            const newCommentsMap = oldCommentsMap.merge(Map().set(rectCid, commentsMap) as Map<string, ICommentsMap>);
-            component.setCommentsMap(newCommentsMap);
+            const oldCommentsList = component.getCommentsList();
+            const newCommentsList = oldCommentsList.push(newComments);
+            component.setCommentsList(newCommentsList);
         }
     }
 }
