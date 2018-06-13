@@ -1,12 +1,9 @@
 const gulp = require('gulp');
 const ts = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
-const uglifyes = require('uglify-es');
 const composer = require('gulp-uglify/composer');
 const del = require('del');
 const merge = require('merge2');
-
-const minify = composer(uglifyes, console);
 
 const src = ['./src/**/*.ts', './src/**/*.tsx'];
 const css = ['./src/**/*.scss', './src/**/*.sass', './src/**/*.css', './src/**/*.jpg', './src/**/*.png', './src/**/*.gif'];

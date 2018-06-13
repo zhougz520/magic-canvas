@@ -100,6 +100,8 @@ const runDevServer = () => {
 
 gulp.task('clean', () => tasks.clean(dist));
 
+gulp.task('cleanTypes', () => tasks.cleanTypes());
+
 gulp.task('compile', () => tasks.compile(dist, debug));
 
 gulp.task('cssCompile', () => tasks.cssCompile(dist, debug));
@@ -119,5 +121,5 @@ gulp.task('watch', ['compile', 'cssCompile'], () => {
 });
 
 gulp.task('default', () => {
-    runSequence('clean', 'watch');
+    runSequence('cleanTypes', 'clean', 'watch');
 });
