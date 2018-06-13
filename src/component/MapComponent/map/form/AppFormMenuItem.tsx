@@ -13,12 +13,14 @@ export interface IMapProps extends IBaseProps {
     map_mi_sa?: boolean;
     index?: number;
     data: any;
+    map_mi_line?: boolean;
 }
 
-export class AppGridMenuItem extends MapComponent<IMapProps, any> {
+export class AppFormMenuItem extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_mi_txt: '按钮',
-        map_mi_sa: false
+        map_mi_sa: false,
+        map_mi_line: false
     };
 
     constructor(props: any, context?: any) {
@@ -35,7 +37,7 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
     })
 
     public render() {
-        const { map_mi_txt, map_mi_dd, map_mi_ico, map_mi_si, map_mi_sa, selectedId, id, index } = this.props;
+        const { map_mi_txt, map_mi_dd, map_mi_ico, map_mi_si, map_mi_sa, selectedId, id, index, map_mi_line } = this.props;
 
         const dropDownMenu: any[] = [];
         if (map_mi_dd !== undefined) {
@@ -64,8 +66,9 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
                 <Dropdown overlay={menu} trigger={['click']}>
                     <div
                         ref={(ref) => this.com = ref}
-                        className={`app-grid-menu-item ${selectedId === id ? 'map-selected' : ''}`}
+                        className={`menu-item ${selectedId === id ? 'map-selected' : ''}`}
                     >
+                        <span className="line" style={{ display: map_mi_line ? `block` : `none` }}>|</span>
                         {map_mi_txt}
                         {map_mi_si ? (<div className={`ico ${map_mi_ico}`} />) : ''}
                         <Icon
@@ -81,7 +84,7 @@ export class AppGridMenuItem extends MapComponent<IMapProps, any> {
 
         return (
             <div
-                className={`app-grid-menu-item`}
+                className={`menu-item`}
                 onMouseDown={this.selectedCom}
             >
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>

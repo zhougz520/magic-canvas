@@ -2,33 +2,44 @@ table {
     table-layout: auto;
 }
 
-.selectecd {
+.map-selected {
     border: 2px solid blue !important;
 }
 
 .ps-map {
     font: 12px !important;
     color: #000000 !important;
+    display: flex;
+    flex-direction: column;
+    .title {
+        width: 100%;
+        height: 30px;
+        background-color: #f0f0ff;
+        border-bottom: 1px solid gray;
+        line-height: 30px;
+        padding-left: 8px;
+    }
     .grid-form {
         width: 100%;
-        height: 100%;
-        .title {
-            height: 30px;
-            background-color: #f0f0ff;
-            border-bottom: 1px solid gray;
-            line-height: 30px;
-            padding-left: 8px;
-        }
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
         .grid-top {
-            display: -webkit-flex;
-            /* Safari */
-            display: flex;
-            flex-direction: row;
             >div {
-                width: 50%;
-                padding-right: 10px;
-                margin: 5px 0;
+                display: -webkit-flex;
+                /* Safari */
+                display: flex;
+                flex-direction: row;
+                >div {
+                    width: 50%;
+                    padding-right: 10px;
+                    margin: 5px 0;
+                }
             }
+        }
+        .grid-table {
+            flex: 1;
         }
     }
     background: #FBFBFB;

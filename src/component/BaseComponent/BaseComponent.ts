@@ -485,16 +485,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * map控件选中
-     * @param id 组件id
-     */
-    public selectComChange = (e: any, id: string) => {
-        this.setState({
-            selectedId: id
-        });
-    }
-
-    /**
      * 获取基础组件的可设置文本命令
      */
     public getComponentSettableCommands = (): string[] => {

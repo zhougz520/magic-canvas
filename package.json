@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "component base for xpresentation",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./@types/index.d.ts",
   "files": [
+    "@types/",
     "dist/",
     "LICENSE"
   ],

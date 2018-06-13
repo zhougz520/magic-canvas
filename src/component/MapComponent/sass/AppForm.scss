@@ -9,280 +9,157 @@ table {
 .ps-map {
     font: 12px !important;
     color: #000000 !important;
-    .grid-form {
+    display: flex;
+    flex-direction: column;
+    .title {
         width: 100%;
-        height: 100%;
-        .title {
-            height: 30px;
-            background-color: #f0f0ff;
-            border-bottom: 1px solid gray;
-            line-height: 30px;
-            padding-left: 8px;
+        height: 30px;
+        background-color: #f0f0ff;
+        border-bottom: 1px solid gray;
+        line-height: 30px;
+        padding-left: 8px;
+    }
+    .form-form {
+        width: 100%;
+        flex: 1;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        .form-menu {
+            .csr-pc-map-form-menu {
+                .menu {
+                    height: 26px;
+                    background-color: #4984c2;
+                    overflow: hidden;
+                    font-size: 12px;
+                    color: #fff;
+                    .menu-list {
+                        float: left !important;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        padding-top: 2px;
+                    }
+                    .head {
+                        float: left !important;
+                        padding: 0;
+                        width: 3px;
+                        height: 14px;
+                        background-color: #294372;
+                        margin-left: 5px;
+                        margin-right: 5px;
+                        margin-top: 6px;
+                    }
+                }
+                .menu-item {
+                    float: left !important;
+                    height: 26px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    padding-top: 2px;
+                }
+            }
         }
-        .grid-top {
-            display: -webkit-flex;
-            /* Safari */
+        .form-content {
+            border: 1px solid #000000;
+            flex: 1;
             display: flex;
             flex-direction: row;
-            >div {
-                width: 50%;
-                padding-right: 10px;
-                margin: 5px 0;
-            }
-        }
-        .grid-find {
-
-        }
-        .grid-menu {
-
-        }
-        .grid-table {
-            
-        }
-    }
-    background: #FBFBFB;
-    .proj-view {
-        width: 100%;
-        .csr-pc-map-app-project {
-            min-width: 250px;
-        }
-        .csr-pc-map-app-view {
-            min-width: 250px;
-            .ant-select-arrow {
-                border: 0;
-                color: #555;
-            }
-            .ant-select-selection {
-                border-color: #555;
-            }
-        }
-        .first-page {
-            margin-right: 15px;
-        }
-    }
-    .csr-pc-map-app-find {
-        width: 100%;
-        border: 1px solid #e6e6e6;
-        margin-bottom: 10px;
-        .app-find-menu {
-            height: 24px;
-            background-color: #4984c2;
-            padding-left: 4px;
-            overflow: hidden;
-            font-size: 12px;
-            color: #fff;
-            .app-find-menu-title {
-                float: left;
-                font-family: 宋体;
-                line-height: 24px;
-                .ant-select-selection {
-                    border-radius: 0;
-                }
-                .ant-select-selection--single {
-                    line-height: 24px;
-                }
-                .ant-select-selection__rendered {
-                    line-height: 24px;
-                }
-                .height-grade {
-                    margin-left: 5px;
-                    width: 19px;
-                    height: 19px;
-                    border: 1px solid #4683c4;
-                    background: url('../../../images/map/manage.gif') left no-repeat;
-                }
-            }
-            .app-find-menu-item {
-                cursor: pointer;
-                float: left;
-                >p {
-                    line-height: 24px;
-                    float: left;
-                    font-family: 宋体;
-                }
-                .lookup {
-                    float: left;
-                    width: 19px;
-                    height: 19px;
-                    border: 1px solid #4683c4;
-                    background: url('../../../images/map/ico-advance.gif') left no-repeat;
-                }
-            }
-        }
-        .app-find-content {
-            height: 100%;
-            margin: 10px;
-        }
-        .app-find-text-td {
-            padding-left: 8px;
-        }
-        .ant-btn {
-            width: 70px;
-            height: 23px;
-            border-radius: unset;
-            margin-right: 20px;
-            float: right;
-            color: #000000;
-        }
-    }
-    .csr-pc-map-grid-menu {
-        width: auto;
-        height: 26px;
-        background-color: #4984c2;
-        padding-left: 4px;
-        padding-top: 2px;
-        overflow: hidden;
-        color: #FFF;
-        >div {
-            &.menu-list {
+            padding: 10px 5px 10px 10px;
+            .form-navBar {
+                width: 140px;
+                height: 100%;
+                border: 1px solid #000000;
                 display: flex;
-                justify-content: flex-end;
-            }
-            >div {
-                &.app-grid-menu-item {
-                    cursor: default; // float: left;
-                    margin-right: 8px;
-                    &:hover {
-                        background-color: #3a7cbc;
-                        cursor: hand;
+                flex-direction: column;
+                .container {
+                    width: 100%;
+                    margin-bottom: 5px;
+                    .lbItem {
+                        height: 24px;
+                        cursor: pointer;
+                        color: #666666;
+                        padding-left: 7px;
+                        padding-top: 2px;
+                        i {
+                            margin-right: 5px;
+                        }
                     }
-                    >p {
-                        line-height: 20px;
-                        float: left;
-                        margin-left: 5px;
-                        font-family: 宋体;
+                    .lbOn {
+                        color: #ffffff;
+                        background-color: #4683c4;
+                        border-left: 1px none #89bdea;
+                        border-bottom: 1px none #89bdea;
                     }
-                    .dropDownArrow {
-                        float: right;
-                        margin-top: 4px;
-                        margin-left: 2px;
+                    div:hover {
+                        color: #ffffff;
+                        background-color: #4683c4;
                     }
                 }
             }
-        }
-        .app-grid-menu-title {
-            float: left;
-            width: 200px;
-            font-family: 宋体;
-        }
-    }
-    .csr-pc-map-app-grid {
-        min-width: 100px; //这里需要再斟酌一下
-        border: 1px solid #e6e6e6;
-        border-top: 0;
-        height: 100%;
-        overflow-x: auto;
-        .grid-title {
-            white-space: nowrap;
-            .grid-title-index {
-                width: 40px;
-                height: 22px;
-                display: inline-block;
-                text-align: center;
-            }
-            .grid-title-content {
-                display: inline-block;
-                .title-list {
+            .form-tab {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                border: 1px solid #000000;
+                .form-tabItems {
+                    height: 25px;
+                    width: 100%;
                     display: flex;
+                    flex-direction: row;
+                    border: 1px solid #000000;
+                    .tab {
+                        color: black;
+                        font-size: 12px;
+                        border: 1px solid #e6e6e6;
+                        top: 1px;
+                        left: 1px;
+                        height: 17px;
+                        margin-right: 1px;
+                        position: relative;
+                        padding-left: 5px;
+                        padding-right: 5px;
+                        padding-top: 2px;
+                        padding-bottom: 5px;
+                        background-color: #fbfbfb;
+                        cursor: pointer;
+                    }
+                    .tabOn {
+                        filter: none;
+                        background-color: #fbfbfb;
+                        border-bottom: 1px solid #fbfbfb;
+                        border-top: 3px solid #4e95da;
+                        padding-bottom: 7px;
+                        cursor: default;
+                    }
+                    span:hover {
+                        border-top: 3px solid #4e95da;
+                    }
                 }
-                border-bottom: 1px solid #e6e6e6;
-            }
-            .app-grid-title-item {
-                height: 22px;
-                &.index {
-                    display: inline-block;
-                    width: 40px;
-                    border-bottom: 1px solid #e6e6e6;
-                    height: 23px;
-                }
-            }
-            .title-split {
-                position: relative;
-                top: -16px;
-                width: 4px;
-                height: 14px;
-                float: right;
-                background: url('../../../images/map/bar_line.gif') left no-repeat;
-                cursor: col-resize;
-            }
-            .title {
-                min-width: 50px;
-                text-align: center;
-                display: inline-block;
-                white-space: nowrap;
-                .title-content {
-                    display: inline-block;
+                .form-sectionForm {
+                    flex: 1;
+                    border: 1px solid #000000;
+                    .section {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        .section-title {
+                            height: 25px;
+                            width: 100%;
+                            color: #606050;
+                            font-weight: bold;
+                            padding-left: 0;
+                            padding-top: 5px;
+                            border-bottom: 1px solid #838574;
+                        }
+                        .section-content {
+                            flex: 1;
+                            min-height: 30px;
+                            padding-top: 5px;
+                            display: inline-block;
+                        }
+                    }
                 }
             }
         }
-    }
-    input.ant-input {
-        font-size: 9pt;
-        font-family: 宋体, Tahoma, Verdana, Arial;
-        width: 99.9%;
-        height: 19px;
-        border: 1px solid #7b9ebd;
-        line-height: 15px;
-        border-radius: 0;
-        padding: 0;
-    }
-    textarea.ant-input {
-        font-size: 9pt;
-        font-family: 宋体, Tahoma, Verdana, Arial;
-        width: 99.9%;
-        border: 1px solid #7b9ebd;
-        border-radius: 0;
-        padding: 0;
-        margin-bottom: 5px;
-    }
-    .ant-select-selection {
-        border-radius: 0px !important;
-    }
-    .ant-select-selection-selected-value {
-        height: 19px;
-        line-height: 19px;
-        color: #000000;
-    }
-    .ant-select-selection.ant-select-selection--single {
-        height: 19px;
-    }
-    .ant-select-selection__rendered {
-        line-height: 19px !important;
-        >span {
-            cursor: hand;
-            color: blue;
-            text-decoration: underline;
-        }
-    }
-    .ant-select-arrow {
-        border: 1px solid #9999AA;
-        width: 19px;
-        height: 19px;
-        line-height: 19px !important;
-        margin-top: -1px !important;
-        top: 0px !important;
-        right: -1px !important;
-    }
-    .gu-mirror {
-        box-sizing: border-box;
-        position: fixed !important;
-        margin: 0 !important;
-        z-index: 9999 !important;
-        opacity: 0.8;
-    }
-    .gu-hide {
-        display: none !important;
-    }
-    .gu-unselectable {
-        -webkit-user-select: none !important;
-        -moz-user-select: none !important;
-        -ms-user-select: none !important;
-        user-select: none !important;
-    }
-    .gu-transit {
-        opacity: 0.2;
-        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-        filter: alpha(opacity=20);
-        list-style: none;
     }
 }
