@@ -13,6 +13,8 @@ const css = ['./src/**/*.scss', './src/**/*.sass', './src/**/*.css', './src/**/*
 
 const clean = dist => del(`./${dist}`);
 
+const cleanTypes = () => del('./@types');
+
 const compile = (dist, debug, dev = true) => {
     debug('compiling...');
     const tsProject = ts.createProject('./tsconfig.json', {declaration: true});
@@ -31,12 +33,13 @@ const compile = (dist, debug, dev = true) => {
     if (dev) {
         jsStream = result.js.pipe(sourcemaps.write('.', {includeContent: false, sourceRoot: '../src'}));
     } else {
-        jsStream = result.js.pipe(minify());
+        // jsStream = result.js.pipe(minify());
+        jsStream = result.js;
     }
 
     return merge([
         jsStream.pipe(gulp.dest(`./${dist}`)),
-        result.dts.pipe(gulp.dest(`./${dist}`))
+        result.dts.pipe(gulp.dest('./@types'))
     ]);
 }
 
@@ -53,5 +56,6 @@ module.exports = {
     css,
     compile,
     cssCompile,
-    clean
+    clean,
+    cleanTypes
 };
