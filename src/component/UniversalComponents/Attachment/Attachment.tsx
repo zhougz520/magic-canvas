@@ -5,6 +5,7 @@ import {
 
 import { AttachmentState } from './AttachmentState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
 import { Map } from 'immutable';
 import '../../UniversalComponents/sass/UComponents.scss';
 
@@ -71,7 +72,7 @@ export default class Attachment extends BaseComponent<IBaseProps, IBaseState> {
         window.open(att_url);
     }
 
-    public getPropertiesToProperty = (): Array<{pTitle: string, pKey: string, pValue: any, pType: string}>  => {
+    public getPropertiesToProperty = (): IProperty[]  => {
         return [
                 // {
                 //     pTitle: '是否选中',

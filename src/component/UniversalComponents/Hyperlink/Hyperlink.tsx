@@ -16,6 +16,7 @@ import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { HyperlinkState, IHyperlinkState } from './HyperlinkState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
 import { BoxType } from '../../util';
 
 import { Map } from 'immutable';
@@ -72,7 +73,7 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '链接地址',

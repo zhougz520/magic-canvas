@@ -17,8 +17,9 @@ import {
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { SelectorState, ISelectorState } from './SelectorState';
-import { BoxType } from '../../util';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
+import { BoxType } from '../../util';
 
 import { Map, List } from 'immutable';
 
@@ -87,7 +88,7 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '选项',

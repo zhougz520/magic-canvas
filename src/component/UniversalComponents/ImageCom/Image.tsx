@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { ImageState } from './ImageState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
@@ -67,7 +68,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '链接地址',

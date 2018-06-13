@@ -17,6 +17,7 @@ import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { RadioState, IRadioState } from './RadioState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
 import { BoxType } from '../../util';
 
 import { Map } from 'immutable';
@@ -81,7 +82,7 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '是否选中',

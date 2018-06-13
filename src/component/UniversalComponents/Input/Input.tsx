@@ -17,6 +17,7 @@ import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { InputState, IInputState } from './InputState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
 
 import { Map } from 'immutable';
 
@@ -76,7 +77,7 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '输入框提示',

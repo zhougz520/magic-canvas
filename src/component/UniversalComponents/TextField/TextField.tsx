@@ -17,6 +17,7 @@ import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { TextFieldState, ITextFieldState } from './TextFieldState';
 import { PropertiesEnum } from '../types';
+import { IProperty } from '../model/types';
 
 import { Map } from 'immutable';
 
@@ -74,7 +75,7 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [
             {
                 pTitle: '输入框提示',
