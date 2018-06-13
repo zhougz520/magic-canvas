@@ -2,45 +2,36 @@ import * as React from 'react';
 import { Button as AntButton } from 'antd';
 
 import {
-    BaseComponent,
     BaseStyle,
-    IBaseProps,
-    IBaseState,
-    EditType,
     IRichEditOption,
     IFont,
     IPosition,
     ISize
 } from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+
 import { ButtonState, IButtonState } from './ButtonState';
 import { PropertiesEnum } from '../types';
 import { IProperty } from '../model/types';
 
 import { Map } from 'immutable';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
-
-export interface ICustomState extends IBaseState {
-    hidden: boolean;
-}
 
 // tslint:disable:jsx-no-multiline-js
-export default class Button extends BaseComponent<IBaseProps, ICustomState> {
+export default class Button extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
     private _padding: number = 15;
 
-    constructor(props: IBaseProps, context?: any) {
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(new ButtonState()),
             hidden: false
         };
-    }
-
-    /**
-     * 调用富文本编辑器
-     */
-    public getRichEditType = (): EditType => {
-        return 'Text';
     }
 
     /**
@@ -71,34 +62,59 @@ export default class Button extends BaseComponent<IBaseProps, ICustomState> {
     }
 
     /**
-     * 隐藏文本展示Div
+     * 设置组件文本内容
      */
-    public hiddenEditorDom = (isHidden: boolean): void => {
-        this.setState({
-            hidden: isHidden
-        });
-    }
-
-    /**
-     * 重写Base方法，是否可以双击修改
-     */
-    public isDbClickToEdit = (): boolean => {
-        return true;
-    }
-
-    /**
-     * 获取组件文本
-     */
-    public getRichChildNode = (): any => {
-        return this.getCustomState().getTextValue();
-    }
-
     public setRichChildNode = (param: any): void => {
         const config = {
             textValue: param.value,
             ...param.font
         };
         const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), Map(config));
+
+        this.setCustomState(newButtonState);
+    }
+
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): IProperty[] => {
+        return [
+            {
+                pTitle: '是否为圆形按钮',
+                pKey: 'isCircle',
+                pValue: this.getCustomState().getIsCircle(),
+                pType: PropertiesEnum.SWITCH
+            }, {
+                pTitle: '文字内容',
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
+                pType: PropertiesEnum.INPUT_STRING
+            }, {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }, {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
+        ];
+    }
+
+    /**
+     * 设置属性
+     */
+    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+        let properties = Map();
+        properties = properties.set(pKey, pValue);
+        const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
 
         this.setCustomState(newButtonState);
     }
@@ -143,45 +159,6 @@ export default class Button extends BaseComponent<IBaseProps, ICustomState> {
                 </AntButton>
             </div>
         );
-    }
-
-    public getPropertiesToProperty = (): IProperty[] => {
-        return [
-            {
-                pTitle: '是否为圆形按钮',
-                pKey: 'isCircle',
-                pValue: this.getCustomState().getIsCircle(),
-                pType: PropertiesEnum.SWITCH
-            }, {
-                pTitle: '文字内容',
-                pKey: 'textValue',
-                pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_STRING
-            }, {
-                pTitle: '背景颜色',
-                pKey: 'backgroundColor',
-                pValue: this.getCustomState().getBackgroundColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框颜色',
-                pKey: 'borderColor',
-                pValue: this.getCustomState().getBorderColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框宽度',
-                pKey: 'borderWidth',
-                pValue: this.getCustomState().getBorderWidth(),
-                pType: PropertiesEnum.SLIDER
-            }
-        ];
-    }
-
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
-
-        this.setCustomState(newButtonState);
     }
 }
 

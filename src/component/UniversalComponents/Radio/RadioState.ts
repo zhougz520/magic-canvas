@@ -1,42 +1,27 @@
 import { Record} from 'immutable';
+import { IFontState } from '../model/types';
 
-export class RadioProperties {
-    [index: string]: any
-    label: string = '';
-    value: number = 1;
-    // disabled?: boolean = false;
-}
-
-export interface IRadioState {
-    value: string;
-    isButton: boolean;
+export interface IRadioState extends IFontState {
+    isCheck: boolean;
     disabled: boolean;
-    checked: boolean;
-    textAlign: string;
-    fontColor: string;
-    fontStyle: string;
-    textDecoration: string;
-    fontSize: number;
-    fontWeight: string;
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
 }
 
 const defaultRecord: IRadioState = {
-    value: 'radio',
-    isButton: false,
+    isCheck: false,
     disabled: false,
-    checked: false,
-    fontColor: '#000',
-    fontStyle: 'normal',
-    fontSize: 16,
-    fontWeight: 'normal',
-    textDecoration: 'none',
-    textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: 0
+    borderWidth: 0,
+    fontColor: 'rgba(0, 0, 0, 0.65)',
+    fontStyle: 'normal',
+    fontSize: 14,
+    fontWeight: 'normal',
+    textAlign: 'left',
+    textDecoration: 'none',
+    textValue: 'Radio'
 };
 
 export const RadioRecord: Record.Class = Record(defaultRecord);
@@ -57,20 +42,24 @@ export class RadioState extends RadioRecord {
         return new RadioState(map);
     }
 
-    getValue(): string {
-        return this.get('value');
+    getIsCheck(): boolean {
+        return this.get('isCheck');
     }
 
     getDisabled(): boolean {
         return this.get('disabled');
     }
 
-    getChecked(): boolean {
-        return this.get('checked');
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
     }
 
-    getIsButton(): boolean {
-        return this.get('isButton');
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
     }
 
     getFontColor(): string {
@@ -89,24 +78,15 @@ export class RadioState extends RadioRecord {
         return this.get('fontWeight');
     }
 
-    getTextDecoration(): string {
-        return this.get('textDecoration');
-    }
-
     getTextAlign(): string {
         return this.get('textAlign');
     }
 
-    getBackgroundColor(): string {
-        return this.get('backgroundColor');
+    getTextDecoration(): string {
+        return this.get('textDecoration');
     }
 
-    getBorderColor(): string {
-        return this.get('borderColor');
+    getTextValue(): string {
+        return this.get('textValue');
     }
-
-    getBorderWidth(): number {
-        return this.get('borderWidth');
-    }
-
 }

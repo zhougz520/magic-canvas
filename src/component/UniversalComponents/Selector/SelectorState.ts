@@ -1,15 +1,9 @@
 import { Record, List, fromJS} from 'immutable';
+import { IFontState } from '../model/types';
 
-export interface ISelectorState {
+export interface ISelectorState extends IFontState {
     disabled: boolean;
     options: List<Map<any, any>>;
-    value: string;
-    // textAlign: string;
-    fontColor: string;
-    fontStyle: string;
-    // textDecoration: string;
-    fontSize: number;
-    fontWeight: string;
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
@@ -24,14 +18,16 @@ const initOptions = [
 const defaultRecord: ISelectorState = {
     disabled: false,
     options: fromJS(initOptions),
-    value: 'option1',
+    backgroundColor: '#FFF',
+    borderColor: '#d9d9d9',
+    borderWidth: 1,
     fontColor: '#000',
     fontStyle: 'normal',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'normal',
-    backgroundColor: '#FFF',
-    borderColor: '#FFF',
-    borderWidth: 0
+    textValue: 'option1',
+    textDecoration: 'none',
+    textAlign: 'left'
 };
 
 export const SelectorRecord: Record.Class = Record(defaultRecord);
@@ -55,12 +51,20 @@ export class SelectorState extends SelectorRecord {
         return this.get('options');
     }
 
-    getValue(): string {
-        return this.get('value');
-    }
-
     getDisabled(): string {
         return this.get('disabled');
+    }
+
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
     }
 
     getFontColor(): string {
@@ -79,16 +83,15 @@ export class SelectorState extends SelectorRecord {
         return this.get('fontWeight');
     }
 
-    getBackgroundColor(): string {
-        return this.get('backgroundColor');
+    getTextAlign(): string {
+        return this.get('textAlign');
     }
 
-    getBorderColor(): string {
-        return this.get('borderColor');
+    getTextDecoration(): string {
+        return this.get('textDecoration');
     }
 
-    getBorderWidth(): number {
-        return this.get('borderWidth');
+    getTextValue(): string {
+        return this.get('textValue');
     }
-
 }

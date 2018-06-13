@@ -1,33 +1,86 @@
 import * as React from 'react';
-import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState
-} from '../../BaseComponent';
 import { Input } from 'antd';
-import { Map } from 'immutable';
+
+import {
+    BaseStyle,
+    IRichEditOption,
+    IFont,
+    IPosition,
+    ISize
+} from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
+import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { TextFieldState, ITextFieldState } from './TextFieldState';
 import { PropertiesEnum } from '../types';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-const { TextArea } = Input;
+import { Map } from 'immutable';
 
-export default class TextField extends BaseComponent<IBaseProps, IBaseState> {
-    com: any = null;
-    constructor(props: IBaseProps, context?: any) {
+// tslint:disable:jsx-no-multiline-js
+export default class TextField extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new TextFieldState())
+            baseState: this.initBaseStateWithCustomState(new TextFieldState()),
+            hidden: false
         };
     }
 
+    /**
+     * 获取富文本编辑器的大小和位置
+     */
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
+
+        const position: IPosition = {
+            top: comPosition.top + 4,
+            left: comPosition.left + 11
+        };
+        const size: ISize = {
+            width: comSize.width - 22,
+            height: comSize.height - 8
+        };
+        const font: IFont = {
+            textAlign: this.getCustomState().getTextAlign(),
+            fontColor: this.getCustomState().getFontColor(),
+            fontStyle: this.getCustomState().getFontStyle(),
+            textDecoration: this.getCustomState().getTextDecoration(),
+            fontSize: this.getCustomState().getFontSize(),
+            fontWeight: this.getCustomState().getFontWeight()
+        };
+
+        return { position, size, font };
+    }
+
+    /**
+     * 设置组件文本内容
+     */
+    public setRichChildNode = (param: any): void => {
+        const config = {
+            textValue: param.value,
+            ...param.font
+        };
+        const newTextFieldState: TextFieldState = TextFieldState.set(this.getCustomState(), Map(config));
+
+        this.setCustomState(newTextFieldState);
+    }
+
+    /**
+     * 获取组件属性列表
+     */
     public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
             {
-                pTitle: '文字内容',
-                pKey: 'textValue',
-                pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_TEXT
+                pTitle: '输入框提示',
+                pKey: 'placeholder',
+                pValue: this.getCustomState().getPlaceholder(),
+                pType: PropertiesEnum.INPUT_STRING
             }, {
                 pTitle: '背景颜色',
                 pKey: 'backgroundColor',
@@ -47,6 +100,9 @@ export default class TextField extends BaseComponent<IBaseProps, IBaseState> {
         ];
     }
 
+    /**
+     * 设置属性
+     */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
@@ -55,51 +111,35 @@ export default class TextField extends BaseComponent<IBaseProps, IBaseState> {
         this.setCustomState(newTextFieldState);
     }
 
-    public getComponentSettableCommands = (): string[] => {
-        return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
-    }
-
     render() {
+        const { hidden } = this.state;
+
         return (
             <div
-                onMouseDown={this.fireSelectChange}
-                ref={(handler: HTMLElement | null) => this.com = handler}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                onMouseDown={this.fireSelectChange}
+                onDoubleClick={this.doDbClickToEdit}
             >
                 <MaskLayer id={this.getCid()} />
-                <div
-                    // tslint:disable-next-line:jsx-no-multiline-js
+                <Input.TextArea
                     style={{
-                        width: '100%', height: '100%', borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: this.getCustomState().getBackgroundColor(),
+                        borderColor: this.getCustomState().getBorderColor(),
+                        borderWidth: this.getCustomState().getBorderWidth(),
+                        color: this.getCustomState().getFontColor(),
+                        fontStyle: this.getCustomState().getFontStyle(),
+                        textDecoration: this.getCustomState().getTextDecoration(),
+                        fontSize: this.getCustomState().getFontSize(),
+                        fontWeight: this.getCustomState().getFontWeight(),
+                        textAlign: this.getCustomState().getTextAlign()
                     }}
-                >
-                    <TextArea
-                        // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{
-                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                            fontStyle: this.getCustomState().getFontStyle(), textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
-                            fontWeight: this.getCustomState().getFontWeight(), textAlign: this.getCustomState().getTextAlign(), backgroundColor: this.getCustomState().getBackgroundColor()
-                        }}
-                        placeholder={this.getCustomState().getPlaceholder()}
-                        onClick={this.onClick}
-                        onPressEnter={this.onClick}
-                        value={this.getCustomState().getTextValue()}
-                    />
-                </div>
+                    placeholder={hidden ? '' : this.getCustomState().getPlaceholder()}
+                    value={hidden ? '' : this.getCustomState().getTextValue()}
+                />
             </div>
         );
-    }
-
-    private onClick = () => {
-        const newTextFieldState: TextFieldState = TextFieldState.set(
-            this.getCustomState(),
-            {
-                placeholder: 'this is a new placeholder'
-            }
-        );
-
-        this.setCustomState(newTextFieldState);
     }
 
 }

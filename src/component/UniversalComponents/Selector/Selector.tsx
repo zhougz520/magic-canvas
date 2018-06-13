@@ -1,37 +1,92 @@
 import * as React from 'react';
-import { BaseComponent, BaseStyle, IBaseProps, IBaseState, SizeState, ISize, BaseState, ContentState } from '../../BaseComponent';
-import { SelectorState, ISelectorState } from './SelectorState';
 import { Select as AntSelector } from 'antd';
-import { BoxType } from '../../util';
-import { Map, List } from 'immutable';
-import { PropertiesEnum } from '../types';
+
+import {
+    BaseStyle,
+    IRichEditOption,
+    IFont,
+    IPosition,
+    ISize,
+    EditType
+} from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-const Option = AntSelector.Option;
+import { SelectorState, ISelectorState } from './SelectorState';
+import { BoxType } from '../../util';
+import { PropertiesEnum } from '../types';
 
-export default class Selector extends BaseComponent<IBaseProps, IBaseState> {
-    // private com: any = null;
-    com: any = null;
-    constructor(props: IBaseProps, context?: any) {
+import { Map, List } from 'immutable';
+
+// tslint:disable:jsx-no-multiline-js
+export default class Selector extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new SelectorState())
+            baseState: this.initBaseStateWithCustomState(new SelectorState()),
+            hidden: false
         };
     }
 
-    // /**
-    //  * 重写basecomponent方法, 设置此组件的类型
-    //  */
     public getType(): string {
         return BoxType.BarType;
     }
 
-    componentDidUpdate() {
-        // tslint:disable-next-line:no-console
-        console.log(this.getSize());
+    /**
+     * 调用富文本编辑器
+     */
+    public getRichEditType = (): EditType => {
+        return 'none';
     }
 
+    /**
+     * 获取富文本编辑器的大小和位置
+     */
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
+
+        const position: IPosition = {
+            top: comPosition.top,
+            left: comPosition.left
+        };
+        const size: ISize = {
+            width: comSize.width,
+            height: comSize.height
+        };
+        const font: IFont = {
+            textAlign: this.getCustomState().getTextAlign(),
+            fontColor: this.getCustomState().getFontColor(),
+            fontStyle: this.getCustomState().getFontStyle(),
+            textDecoration: this.getCustomState().getTextDecoration(),
+            fontSize: this.getCustomState().getFontSize(),
+            fontWeight: this.getCustomState().getFontWeight()
+        };
+
+        return { position, size, font };
+    }
+
+    /**
+     * 设置组件文本内容
+     */
+    public setRichChildNode = (param: any): void => {
+        const config = {
+            textValue: param.value,
+            ...param.font
+        };
+        const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), Map(config));
+
+        this.setCustomState(newSelectorState);
+    }
+
+    /**
+     * 获取组件属性列表
+     */
     public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
             {
@@ -41,101 +96,75 @@ export default class Selector extends BaseComponent<IBaseProps, IBaseState> {
                 pType: PropertiesEnum.INPUT_OBJECT_LIST
             }, {
                 pTitle: '选中项',
-                pKey: 'value',
-                pValue: this.getCustomState().getValue(),
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
                 pType: PropertiesEnum.INPUT_STRING
             }, {
                 pTitle: '是否禁用',
                 pKey: 'disabled',
                 pValue: this.getCustomState().getDisabled(),
                 pType: PropertiesEnum.SWITCH
-            }, {
-                pTitle: '边框颜色',
-                pKey: 'borderColor',
-                pValue: this.getCustomState().getBorderColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框宽度',
-                pKey: 'borderWidth',
-                pValue: this.getCustomState().getBorderWidth(),
-                pType: PropertiesEnum.SLIDER
             }
         ];
     }
 
+    /**
+     * 设置属性
+     */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
-
-        const oldBorderWidth = this.getCustomState().getBorderWidth();
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
-        let sizeState: SizeState = this.getSizeState();
-        if (pKey === 'borderWidth') {
-            const size: ISize = this.getSize();
-            const newSize: ISize = {
-                width: size.width,
-                height: size.height + (pValue - oldBorderWidth) * 2
-            };
-            sizeState = SizeState.create(newSize);
-        }
-
-        const oldContentState: ContentState = this.getBaseState().getCurrentContent();
-        const newContentState: ContentState = oldContentState.merge({
-            sizeState,
-            customState: newSelectorState
-        }) as ContentState;
-
-        const oldBaseState: BaseState = this.getBaseState();
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContentState);
-        this.setBaseState(newBaseState);
-    }
-
-    public getComponentSettableCommands = (): string[] => {
-        return ['Color', 'fontStyle', 'fontSize', 'fontWeight'];
+        this.setCustomState(newSelectorState);
     }
 
     render() {
-        const optionsList: List<Map<any, any>> = this.getCustomState().getOptions();
-        // tslint:disable-next-line:no-shadowed-variable
-        const optionElem = (optionsList: List<Map<any, any>>) => {
-            const res = [];
-            for (let i = 0; i < optionsList.size; i++) {
-                res.push(
-                    <Option
-                        key={optionsList.toArray()[i].get('label')}
-                    >
-                        {optionsList.toArray()[i].get('label')}
-                    </Option>);
-            }
-
-            return res;
-        };
 
         return (
             <div
-                ref={(handler: HTMLElement | null) => this.com = handler}
-                onMouseDown={this.fireSelectChange}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-            // onClick={this.onClick}
+                onMouseDown={this.fireSelectChange}
             >
                 <MaskLayer id={this.getCid()} />
                 <AntSelector
-                    // tslint:disable-next-line:jsx-no-multiline-js
                     style={{
-                        width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                        fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
-                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
+                        width: '100%',
+                        height: '100%',
+                        color: this.getCustomState().getFontColor(),
+                        fontStyle: this.getCustomState().getFontStyle(),
+                        textDecoration: this.getCustomState().getTextDecoration(),
+                        fontSize: this.getCustomState().getFontSize(),
+                        fontWeight: this.getCustomState().getFontWeight(),
+                        textAlign: this.getCustomState().getTextAlign()
                     }}
                     disabled={this.getCustomState().getDisabled()}
-                    value={this.getCustomState().getValue()}
+                    value={this.getCustomState().getTextValue()}
                 >
-                    {optionElem(optionsList)}
+                    {this.optionElem()}
                 </AntSelector>
 
             </div>
         );
+    }
+
+    private optionElem = () => {
+        const optionList: List<Map<any, any>> = this.getCustomState().getOptions();
+
+        const res: any[] = [];
+        optionList.map(
+            (option: Map<any, any>) => {
+                res.push(
+                    <AntSelector.Option
+                        key={option.get('label')}
+                    >
+                        {option.get('label')}
+                    </AntSelector.Option>
+                );
+            }
+        );
+
+        return res;
     }
 }
 

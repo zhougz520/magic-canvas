@@ -1,31 +1,25 @@
 import { Record } from 'immutable';
+import { IFontState } from '../model/types';
 
-export interface IHyperlinkState {
+export interface IHyperlinkState extends IFontState {
     herf: string;
-    content: string;
-    textAlign: string;
-    fontColor: string;
-    fontStyle: string;
-    textDecoration: string;
-    fontSize: number;
-    fontWeight: string;
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
 }
 
 const defaultRecord: IHyperlinkState = {
-    herf: 'https://ps.mingyuanyun.com',
-    content: '这是超链接',
-    fontColor: '#000',
-    fontStyle: 'normal',
-    fontSize: 16,
-    fontWeight: 'normal',
-    textDecoration: 'none',
-    textAlign: 'center',
+    herf: '',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: 0
+    borderWidth: 0,
+    fontColor: 'blue',
+    fontStyle: 'normal',
+    fontSize: 14,
+    fontWeight: 'normal',
+    textAlign: 'center',
+    textDecoration: 'underline',
+    textValue: '超链接'
 };
 
 export const HyperlinkRecord: Record.Class = Record(defaultRecord);
@@ -49,8 +43,16 @@ export class HyperlinkState extends HyperlinkRecord {
         return this.get('herf');
     }
 
-    getContent(): string {
-        return this.get('content');
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
     }
 
     getFontColor(): string {
@@ -69,24 +71,15 @@ export class HyperlinkState extends HyperlinkRecord {
         return this.get('fontWeight');
     }
 
-    getTextDecoration(): string {
-        return this.get('textDecoration');
-    }
-
     getTextAlign(): string {
         return this.get('textAlign');
     }
 
-    getBackgroundColor(): string {
-        return this.get('backgroundColor');
+    getTextDecoration(): string {
+        return this.get('textDecoration');
     }
 
-    getBorderColor(): string {
-        return this.get('borderColor');
+    getTextValue(): string {
+        return this.get('textValue');
     }
-
-    getBorderWidth(): number {
-        return this.get('borderWidth');
-    }
-
 }

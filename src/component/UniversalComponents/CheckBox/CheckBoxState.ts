@@ -1,36 +1,27 @@
 import { Record } from 'immutable';
+import { IFontState } from '../model/types';
 
-export interface ICheckBoxState {
+export interface ICheckBoxState extends IFontState {
     isCheck: boolean;
-    option: string;
     disabled: boolean;
-    textAlign: string;
-    fontColor: string;
-    fontStyle: string;
-    textDecoration: string;
-    fontSize: number;
-    fontWeight: string;
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
 }
 
-const initOptions = 'checkbox';
-
 const defaultRecord: ICheckBoxState = {
-    option: initOptions,
-    isCheck:  false,
+    isCheck: false,
     disabled: false,
-    fontColor: '#000',
-    fontStyle: 'normal',
-    fontSize: 16,
-    fontWeight: 'normal',
-    textDecoration: 'none',
-    textAlign: 'left',
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: 0
-
+    borderWidth: 0,
+    fontColor: 'rgba(0, 0, 0, 0.65)',
+    fontStyle: 'normal',
+    fontSize: 14,
+    fontWeight: 'normal',
+    textAlign: 'left',
+    textDecoration: 'none',
+    textValue: 'Checkbox'
 };
 
 export const CheckBoxRecord: Record.Class = Record(defaultRecord);
@@ -59,8 +50,16 @@ export class CheckBoxState extends CheckBoxRecord {
         return this.get('disabled');
     }
 
-    getOption(): string {
-        return this.get('option');
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
     }
 
     getFontColor(): string {
@@ -79,24 +78,15 @@ export class CheckBoxState extends CheckBoxRecord {
         return this.get('fontWeight');
     }
 
-    getTextDecoration(): string {
-        return this.get('textDecoration');
-    }
-
     getTextAlign(): string {
         return this.get('textAlign');
     }
 
-    getBackgroundColor(): string {
-        return this.get('backgroundColor');
+    getTextDecoration(): string {
+        return this.get('textDecoration');
     }
 
-    getBorderColor(): string {
-        return this.get('borderColor');
+    getTextValue(): string {
+        return this.get('textValue');
     }
-
-    getBorderWidth(): number {
-        return this.get('borderWidth');
-    }
-
 }

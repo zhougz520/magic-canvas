@@ -1,68 +1,87 @@
 import * as React from 'react';
-import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState
-} from '../../BaseComponent';
-import { InputState, IInputState } from './InputState';
 import { Input as AntInput } from 'antd';
-import { Map } from 'immutable';
-import { PropertiesEnum } from '../types';
+
+import {
+    BaseStyle,
+    IRichEditOption,
+    IFont,
+    IPosition,
+    ISize
+} from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-export default class Input extends BaseComponent<IBaseProps, IBaseState> {
-    com: any = null;
-    constructor(props: IBaseProps, context?: any) {
+import { InputState, IInputState } from './InputState';
+import { PropertiesEnum } from '../types';
+
+import { Map } from 'immutable';
+
+// tslint:disable:jsx-no-multiline-js
+export default class Input extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
+    private _padding: number = 11;
+
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new InputState())
+            baseState: this.initBaseStateWithCustomState(new InputState()),
+            hidden: false
         };
     }
 
-    render() {
-        return (
+    /**
+     * 获取富文本编辑器的大小和位置
+     */
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
 
-            <div
-                onMouseDown={this.fireSelectChange}
-                ref={(handler: HTMLElement | null) => this.com = handler}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-            >
-                <MaskLayer id={this.getCid()} />
-                <div
-                    // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{
-                        width: '100%', height: '100%', borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
-                    }}
-                >
-                    <AntInput
-                        // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{
-                            width: '100%', height: '100%', backgroundColor: this.getCustomState().getBackgroundColor(),
-                            color: this.getCustomState().getFontColor(), fontStyle: this.getCustomState().getFontStyle(),
-                            textDecoration: this.getCustomState().getTextDecoration(), fontSize: this.getCustomState().getFontSize() + 'px',
-                            fontWeight: this.getCustomState().getFontWeight(),
-                            textAlign: this.getCustomState().getTextAlign()
-                        }}
-                        placeholder={this.getCustomState().getPlaceholder()}
-                        onClick={this.onClick}
-                        value={this.getCustomState().getValue()}
-                    />
-                </div>
-            </div>
-        );
+        const position: IPosition = {
+            top: comPosition.top,
+            left: comPosition.left + this._padding
+        };
+        const size: ISize = {
+            width: comSize.width - this._padding,
+            height: comSize.height
+        };
+        const font: IFont = {
+            textAlign: this.getCustomState().getTextAlign(),
+            fontColor: this.getCustomState().getFontColor(),
+            fontStyle: this.getCustomState().getFontStyle(),
+            textDecoration: this.getCustomState().getTextDecoration(),
+            fontSize: this.getCustomState().getFontSize(),
+            fontWeight: this.getCustomState().getFontWeight()
+        };
+
+        return { position, size, font };
     }
 
+    /**
+     * 设置组件文本内容
+     */
+    public setRichChildNode = (param: any): void => {
+        const config = {
+            textValue: param.value,
+            ...param.font
+        };
+        const newInputState: InputState = InputState.set(this.getCustomState(), Map(config));
+
+        this.setCustomState(newInputState);
+    }
+
+    /**
+     * 获取组件属性列表
+     */
     public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
             {
                 pTitle: '输入框提示',
                 pKey: 'placeholder',
                 pValue: this.getCustomState().getPlaceholder(),
-                pType: PropertiesEnum.INPUT_STRING
-            }, {
-                pTitle: '输入框内容',
-                pKey: 'value',
-                pValue: this.getCustomState().getValue(),
                 pType: PropertiesEnum.INPUT_STRING
             }, {
                 pTitle: '背景颜色',
@@ -83,6 +102,9 @@ export default class Input extends BaseComponent<IBaseProps, IBaseState> {
         ];
     }
 
+    /**
+     * 设置属性
+     */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
@@ -91,15 +113,35 @@ export default class Input extends BaseComponent<IBaseProps, IBaseState> {
         this.setCustomState(newInputState);
     }
 
-    private onClick = () => {
-        const newInputState: InputState = InputState.set(
-            this.getCustomState(),
-            {
-                placeholder: '这是一个输入框'
-            }
-        );
+    render() {
+        const { hidden } = this.state;
 
-        this.setCustomState(newInputState);
+        return (
+            <div
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                onMouseDown={this.fireSelectChange}
+                onDoubleClick={this.doDbClickToEdit}
+            >
+                <MaskLayer id={this.getCid()} />
+                <AntInput
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: this.getCustomState().getBackgroundColor(),
+                        borderColor: this.getCustomState().getBorderColor(),
+                        borderWidth: this.getCustomState().getBorderWidth(),
+                        color: this.getCustomState().getFontColor(),
+                        fontStyle: this.getCustomState().getFontStyle(),
+                        textDecoration: this.getCustomState().getTextDecoration(),
+                        fontSize: this.getCustomState().getFontSize(),
+                        fontWeight: this.getCustomState().getFontWeight(),
+                        textAlign: this.getCustomState().getTextAlign()
+                    }}
+                    placeholder={hidden ? '' : this.getCustomState().getPlaceholder()}
+                    value={hidden ? '' : this.getCustomState().getTextValue()}
+                />
+            </div>
+        );
     }
 
 }

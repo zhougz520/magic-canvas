@@ -1,31 +1,25 @@
 import { Record } from 'immutable';
+import { IFontState } from '../model/types';
 
-export interface IInputState {
+export interface IInputState extends IFontState {
     placeholder: string;
-    value: string;
-    textAlign: string;
-    fontColor: string;
-    fontStyle: string;
-    textDecoration: string;
-    fontSize: number;
-    fontWeight: string;
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
 }
 
 const defaultRecord: IInputState = {
-    placeholder: '这是输入框提示',
-    value: '',
+    placeholder: 'input text',
+    backgroundColor: '#FFF',
+    borderColor: '#d9d9d9',
+    borderWidth: 1,
     fontColor: '#000',
     fontStyle: 'normal',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'normal',
+    textValue: '',
     textDecoration: 'none',
-    textAlign: 'left',
-    backgroundColor: '#FFF',
-    borderColor: '#FFF',
-    borderWidth: 0
+    textAlign: 'left'
 };
 
 export const InputRecord: Record.Class = Record(defaultRecord);
@@ -49,8 +43,16 @@ export class InputState extends InputRecord {
         return this.get('placeholder');
     }
 
-    getValue(): string {
-        return this.get('value');
+    getBackgroundColor(): string {
+        return this.get('backgroundColor');
+    }
+
+    getBorderColor(): string {
+        return this.get('borderColor');
+    }
+
+    getBorderWidth(): number {
+        return this.get('borderWidth');
     }
 
     getFontColor(): string {
@@ -69,24 +71,15 @@ export class InputState extends InputRecord {
         return this.get('fontWeight');
     }
 
-    getTextDecoration(): string {
-        return this.get('textDecoration');
-    }
-
     getTextAlign(): string {
         return this.get('textAlign');
     }
 
-    getBackgroundColor(): string {
-        return this.get('backgroundColor');
+    getTextDecoration(): string {
+        return this.get('textDecoration');
     }
 
-    getBorderColor(): string {
-        return this.get('borderColor');
+    getTextValue(): string {
+        return this.get('textValue');
     }
-
-    getBorderWidth(): number {
-        return this.get('borderWidth');
-    }
-
 }

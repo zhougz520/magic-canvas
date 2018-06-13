@@ -6,3 +6,13 @@ export interface IProperty {
     pValue: any;
     pType: PropertiesEnum;
 }
+
+export interface IFontState {
+    fontColor: string;
+    fontStyle: string;
+    fontSize: number;
+    fontWeight: string;
+    textAlign: string;
+    textDecoration: string;
+    textValue: string;
+}

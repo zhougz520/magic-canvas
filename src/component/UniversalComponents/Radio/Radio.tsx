@@ -1,106 +1,97 @@
 import * as React from 'react';
-import {
-    BaseComponent, BaseStyle, IBaseProps, IBaseState
-} from '../../BaseComponent';
 import { Radio as AntRadio } from 'antd';
 
-import { RadioState, IRadioState } from './RadioState';
-import { Map } from 'immutable';
-import { PropertiesEnum } from '../types';
+import {
+    BaseStyle,
+    IRichEditOption,
+    IPosition,
+    ISize,
+    IFont
+} from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
-const AntRadioButton = AntRadio.Button;
+import { RadioState, IRadioState } from './RadioState';
+import { PropertiesEnum } from '../types';
+import { BoxType } from '../../util';
 
-export default class Radio extends BaseComponent<IBaseProps, IBaseState> {
-    com: any = null;
-    constructor(props: IBaseProps, context?: any) {
+import { Map } from 'immutable';
+
+// tslint:disable:jsx-no-multiline-js
+export default class Radio extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
+    private _padding: number = 24;
+
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new RadioState())
+            baseState: this.initBaseStateWithCustomState(new RadioState()),
+            hidden: false
         };
     }
 
-    // public getType(): string {
-    //     return BoxType.BarType;
-    // }
-
-    render() {
-        if (this.getCustomState().getIsButton()) {
-            return (
-
-                <div
-                    onMouseDown={this.fireSelectChange}
-                    ref={(handler: HTMLElement | null) => this.com = handler}
-                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                >
-                    <MaskLayer id={this.getCid()} />
-                    <AntRadioButton
-                        // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{
-                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                            fontSize: this.getCustomState().getFontSize() + 'px',
-                            fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                            borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth()
-                        }}
-                        checked={this.getCustomState().getChecked()}
-                        disabled={this.getCustomState().getDisabled()}
-                    >
-                        <span
-                            style={{ display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration(), fontStyle: this.getCustomState().getFontStyle() }}
-                        >
-                            {this.getCustomState().getValue()}
-                        </span>
-                    </AntRadioButton>
-                </div>
-            );
-        } else {
-            return (
-                <div
-                    onMouseDown={this.fireSelectChange}
-                    ref={(handler: HTMLElement | null) => this.com = handler}
-                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                >
-                    <AntRadio
-                        // tslint:disable-next-line:jsx-no-multiline-js
-                        style={{
-                            width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                            fontSize: this.getCustomState().getFontSize() + 'px',
-                            fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                            borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px',
-                            fontStyle: this.getCustomState().getFontStyle()
-                        }}
-                        checked={this.getCustomState().getChecked()}
-                        disabled={this.getCustomState().getDisabled()}
-
-                    >
-                        <span
-                            style={{ display: 'inline-block', width: '85%', textAlign: this.getCustomState().getTextAlign(), textDecoration: this.getCustomState().getTextDecoration() }}
-                        >
-                            {this.getCustomState().getValue()}
-                        </span>
-                    </AntRadio>
-                </div>
-            );
-        }
+    public getType(): string {
+        return BoxType.BarType;
     }
 
+    /**
+     * 获取富文本编辑器的大小和位置
+     */
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
+
+        const position: IPosition = {
+            top: comPosition.top,
+            left: comPosition.left + this._padding
+        };
+        const size: ISize = {
+            width: comSize.width - this._padding - 8,
+            height: comSize.height
+        };
+        const font: IFont = {
+            textAlign: this.getCustomState().getTextAlign(),
+            fontColor: this.getCustomState().getFontColor(),
+            fontStyle: this.getCustomState().getFontStyle(),
+            textDecoration: this.getCustomState().getTextDecoration(),
+            fontSize: this.getCustomState().getFontSize(),
+            fontWeight: this.getCustomState().getFontWeight()
+        };
+
+        return { position, size, font };
+    }
+
+    /**
+     * 设置组件文本内容
+     */
+    public setRichChildNode = (param: any): void => {
+        const config = {
+            textValue: param.value,
+            ...param.font
+        };
+        const newRadioState: RadioState = RadioState.set(this.getCustomState(), Map(config));
+
+        this.setCustomState(newRadioState);
+    }
+
+    /**
+     * 获取组件属性列表
+     */
     public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
         return [
             {
-                pTitle: '选项',
-                pKey: 'value',
-                pValue: this.getCustomState().getValue(),
-                pType: PropertiesEnum.INPUT_STRING
-            }, {
                 pTitle: '是否选中',
-                pKey: 'checked',
-                pValue: this.getCustomState().getChecked(),
+                pKey: 'isCheck',
+                pValue: this.getCustomState().getIsCheck(),
                 pType: PropertiesEnum.SWITCH
             }, {
-                pTitle: '是否为方形按钮',
-                pKey: 'isButton',
-                pValue: this.getCustomState().getIsButton(),
+                pTitle: '是否禁用',
+                pKey: 'disabled',
+                pValue: this.getCustomState().getDisabled(),
                 pType: PropertiesEnum.SWITCH
             }, {
                 pTitle: '背景颜色',
@@ -121,6 +112,9 @@ export default class Radio extends BaseComponent<IBaseProps, IBaseState> {
         ];
     }
 
+    /**
+     * 设置属性
+     */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let propertiesMap = Map();
         propertiesMap = propertiesMap.set(pKey, pValue);
@@ -129,6 +123,49 @@ export default class Radio extends BaseComponent<IBaseProps, IBaseState> {
         );
         this.setCustomState(newRadioState);
     }
+
+    render() {
+        const { hidden } = this.state;
+
+        return (
+            <div
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                onMouseDown={this.fireSelectChange}
+                onDoubleClick={this.doDbClickToEdit}
+            >
+                <MaskLayer id={this.getCid()} />
+                <AntRadio
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: this.getCustomState().getBackgroundColor(),
+                        borderColor: this.getCustomState().getBorderColor(),
+                        borderWidth: this.getCustomState().getBorderWidth(),
+                        borderStyle: 'solid'
+                    }}
+                    checked={this.getCustomState().getIsCheck()}
+                    disabled={this.getCustomState().getDisabled()}
+                >
+                    <div
+                        style={{
+                            visibility: hidden ? 'hidden' : 'visible',
+                            display: 'inline-block',
+                            width: 'auto',
+                            textAlign: this.getCustomState().getTextAlign(),
+                            color: this.getCustomState().getFontColor(),
+                            fontStyle: this.getCustomState().getFontStyle(),
+                            textDecoration: this.getCustomState().getTextDecoration(),
+                            fontSize: this.getCustomState().getFontSize(),
+                            fontWeight: this.getCustomState().getFontWeight()
+                        }}
+                    >
+                        {this.getCustomState().getTextValue()}
+                    </div>
+                </AntRadio>
+            </div>
+        );
+    }
+
 }
 
 /**
