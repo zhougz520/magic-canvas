@@ -67,9 +67,9 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         });
     }
     public render() {
-        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid, map_sm, pageMode } = this.props;
+        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid, map_sm, pageMode, childData } = this.props;
         const { title } = this.state;
-        const childData = this.getCustomState().toJS();
+        // const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
         // const { p, w, h, map_sm } = data;
         if (childData !== undefined && childData.components.length > 0) {
             this.initCom(childData.components);
@@ -94,6 +94,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                 selectComChange={this.selectComChange}
                 selectedId={this.state.selectedId}
                 pageMode={pageMode}
+                data={childData}
             >
                 <div
                     className="ps-map"

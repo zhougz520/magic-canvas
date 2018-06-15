@@ -3,7 +3,10 @@ import { MapComponent, IBaseProps } from '../../index';
 import { TabItem, SectionForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { MapContext } from '../MapProvider';
 
+// tslint:disable:jsx-no-string-ref
+// tslint:disable:jsx-no-multiline-js
 export interface IMapProps extends IBaseProps {
     showNavBar: boolean;
     showTabItems: boolean;
@@ -70,14 +73,19 @@ export class TabForm extends MapComponent<IMapProps, any> {
                         (sec: any) => {
                             if (sec.t === 'MapComponent/map/form/SectionForm') {
                                 this.sectionForm = (
-                                    <SectionForm
-                                        ref={`c.${sec.p.id}`}
-                                        selectedId={selectedId}
-                                        updateProps={updateProps}
-                                        selectComChange={selectComChange}
-                                        {...sec.p}
-                                        showTabItems={showTabItems}
-                                    />
+                                    <MapContext.Consumer>
+                                        {(value: any) => {
+                                            return <SectionForm
+                                                ref={`c.${sec.p.id}`}
+                                                selectedId={selectedId}
+                                                updateProps={updateProps}
+                                                selectComChange={selectComChange}
+                                                {...sec.p}
+                                                showTabItems={showTabItems}
+                                                state={value.data}
+                                            />;
+                                        }}
+                                    </MapContext.Consumer>
                                 );
                             }
                         }
