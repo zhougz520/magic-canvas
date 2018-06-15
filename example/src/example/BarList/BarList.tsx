@@ -15,7 +15,7 @@ export interface IBarProps {
     onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
         void;
     onFireProperties: (pKey: string, pValue: any) => void;
-    // objectlist: string;
+    getSaveData: () => void;
 }
 
 export interface IBarState {
@@ -62,6 +62,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     // tslint:disable-next-line:jsx-no-lambda
                     onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
                     highPerformance={this.props.highPerformance}
+                    getSaveData={this.props.getSaveData}
                 />
                 <Resource
                     collapsed={resourceBarCollapsed}

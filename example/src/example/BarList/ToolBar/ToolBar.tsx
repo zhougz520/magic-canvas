@@ -9,7 +9,7 @@ import { Map } from 'immutable';
 
 import '../sass/bar.scss';
 
-/* tslint:disable:jsx-no-multiline-js */
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
     _colorPickerCount: number = 0;
     constructor(props: IToolbarProps) {
@@ -110,6 +110,10 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
         }
     }
 
+    doSaveData = () => {
+        this.props.getSaveData();
+    }
+
     render() {
         const { titleBarCollapsed } = this.props;
         const { selectedComs } = this.state;
@@ -152,114 +156,100 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 <div>
                     当前选中组件：{comList.join('|')}
                 </div>
-                <div
-                    style={{marginLeft: 'auto', marginRight: '50px'}}
+
+                <Button
+                    onClick={() => this.fireCommand(CommandMap.EDITOR_BOLD)}
+                    size="small"
+                >
+                    加粗
+                </Button>
+                <Button
+                    onClick={() => this.fireCommand(CommandMap.EDITOR_ITALIC)}
+                    size="small"
+                >
+                    斜体
+                </Button>
+                <Button
+                    onClick={() => this.fireCommand(CommandMap.EDITOR_UNDERLINE)}
+                    size="small"
+                >
+                    下划线
+                </Button>
+                <Button
+                    onClick={() => this.fireCommand(CommandMap.EDITOR_STRIKETHROUGH)}
+                    size="small"
+                >
+                    删除线
+                </Button>
+                <ColorPicker
+                    onChange={this.changeColor}
+                    enableAlpha={false}
                 >
                     <Button
                         type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.EDITOR_BOLD)}
+                        size="small"
                     >
-                        加粗
-                    </Button>&nbsp;
-                    <Button
-                        type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.EDITOR_ITALIC)}
-                    >
-                        斜体
-                    </Button>&nbsp;
-                    <Button
-                        type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.EDITOR_UNDERLINE)}
-                    >
-                        下划线
-                    </Button>&nbsp;
-                    <Button
-                        type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.EDITOR_STRIKETHROUGH)}
-                    >
-                        删除线
-                    </Button>&nbsp;
-                    <ColorPicker
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onChange={this.changeColor}
-                        enableAlpha={false}
-                    >
-                        <Button
-                            type="primary"
-                        >
-                            字体颜色
-                        </Button>
-                    </ColorPicker>&nbsp;
-                    <InputNumber
-                        min={1}
-                        max={100}
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onChange={(value: any) => this.fireCommand(CommandMap.EDITOR_FONTSIZE, value)}
-                    />&nbsp;
-                    <ListTypeControls
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_UL, e.key)}
-                        type={'UL'}
-                        list={UL_TYPE}
-                    />&nbsp;
-                    <ListTypeControls
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_OL, e.key)}
-                        type={'OL'}
-                        list={OL_TYPE}
-                    />&nbsp;
-                    <TextAlignControls
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_TEXTALIGN, e.target.value)}
-                    />
-                </div>
-                <div
-                    style={{marginRight: '50px'}}
-                >
-                    <Dropdown overlay={menuAlign}>
-                        <Button>
-                            对齐 <Icon type="down" />
-                        </Button>
-                    </Dropdown>
-                </div>
-                <div
-                    style={{marginRight: '50px'}}
-                >
-                    <Dropdown overlay={menuZIndex}>
-                        <Button>
-                            图层 <Icon type="down" />
-                        </Button>
-                    </Dropdown>
-                </div>
-                <div
-                    style={{marginRight: '200px'}}
-                >
-                    <Button
-                        type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
-                    >
-                        撤销
-                    </Button>&nbsp;&nbsp;
-                    <Button
-                        type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.CANVAS_REDO)}
-                    >
-                        重做
-                    </Button>&nbsp;&nbsp;
-                    <Button
-                        type="primary"
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onClick={() => this.fireCommand(CommandMap.COMMENTS_ADD)}
-                    >
-                        批注
+                        字体颜色
                     </Button>
-                </div>
+                </ColorPicker>
+                <InputNumber
+                    min={1}
+                    max={100}
+                    style={{width: 50}}
+                    size="small"
+                    onChange={(value: any) => this.fireCommand(CommandMap.EDITOR_FONTSIZE, value)}
+                />&nbsp;
+                <ListTypeControls
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_UL, e.key)}
+                    type={'UL'}
+                    list={UL_TYPE}
+                />&nbsp;
+                <ListTypeControls
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_OL, e.key)}
+                    type={'OL'}
+                    list={OL_TYPE}
+                />&nbsp;
+                <TextAlignControls
+                    // tslint:disable-next-line:jsx-no-lambda
+                    onToggle={(e: any) => this.fireCommand(CommandMap.EDITOR_TEXTALIGN, e.target.value)}
+                />&nbsp;
+                <Dropdown overlay={menuAlign}>
+                    <Button size="small">
+                        对齐 <Icon type="down" />
+                    </Button>
+                </Dropdown>
+                <Dropdown overlay={menuZIndex}>
+                    <Button size="small">
+                        图层 <Icon type="down" />
+                    </Button>
+                </Dropdown>&nbsp;
+                <Button
+                    size="small"
+                    onClick={() => this.fireCommand(CommandMap.CANVAS_UNDO)}
+                >
+                    撤销
+                </Button>
+                <Button
+                    size="small"
+                    onClick={() => this.fireCommand(CommandMap.CANVAS_REDO)}
+                >
+                    重做
+                </Button>
+                <Button
+                    size="small"
+                    onClick={() => this.fireCommand(CommandMap.COMMENTS_ADD)}
+                >
+                    批注
+                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <Button
+                    type="primary"
+                    size="small"
+                    onClick={() => this.doSaveData()}
+                >
+                    保存
+                </Button>
             </div>
         );
     }
@@ -282,7 +272,7 @@ const ListTypeControls: any = (props: any) => {
     );
 
     return (
-        <Dropdown.Button onClick={props.onToggle} overlay={menu}>
+        <Dropdown.Button onClick={props.onToggle} overlay={menu} size="small">
             {props.type}
         </Dropdown.Button>
     );
@@ -291,7 +281,7 @@ const ListTypeControls: any = (props: any) => {
 const TEXT_ALIGN = ['left', 'center', 'right'];
 const TextAlignControls: any = (props: any) => {
     return (
-        <Radio.Group onChange={props.onToggle}>
+        <Radio.Group onChange={props.onToggle} size="small">
             {
                 TEXT_ALIGN.map(
                     (align: any) => {

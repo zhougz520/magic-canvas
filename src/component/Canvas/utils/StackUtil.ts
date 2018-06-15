@@ -45,5 +45,6 @@ export class StackUtil {
         }
 
         this._canvas._undoStack = currentUndoStack;
+        this._canvas._isDirty = true;
     }
 }

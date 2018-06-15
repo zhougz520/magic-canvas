@@ -83,6 +83,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _undoStack: Stack<IStack> = Stack();             // 撤销栈
     public _redoStack: Stack<IStack> = Stack();             // 重做栈
     public _isAddCommentsMode: boolean = false;             // 是否新增批注模式
+    public _isDirty: boolean = false;                       // 画布是否弄脏
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -270,11 +271,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             }
         };
 
-        // tslint:disable:no-console
-        console.log(detail);
-        console.log(JSON.stringify(detail));
-
         return detail;
+    }
+
+    getIsDirty = (): boolean => {
+        return this._isDirty;
     }
 
     componentDidMount() {

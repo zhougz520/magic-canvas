@@ -13,6 +13,8 @@ export interface ICanvasComponent {
 
     getSaveData: () => any;
 
+    getIsDirty: () => boolean;
+
     /**
      * 执行命令
      */

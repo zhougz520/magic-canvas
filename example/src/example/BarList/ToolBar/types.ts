@@ -7,6 +7,7 @@ export interface IToolbarProps {
     highPerformance: (value: boolean) => void;
     // 发送命令
     onCommandEmitted: (cmd: any) => void;
+    getSaveData: () => void;
 }
 
 export interface IToolbarState {

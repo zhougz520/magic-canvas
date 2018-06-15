@@ -75,6 +75,13 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         }
     }
 
+    getSaveData = () => {
+        const saveData = this.getStage().getCanvasSaveData();
+        console.log(JSON.stringify(saveData));
+        const isDirty = this.getStage().getCanvasIsDirty();
+        console.log(isDirty);
+    }
+
     render() {
         return (
             <div className="main-editor">
@@ -85,6 +92,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     highPerformance={this.highPerformance}
+                    getSaveData={this.getSaveData}
                 />
                 <Stage
                     config={config}
