@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IFont } from '../BaseComponent';
-import { DraftPublic } from './Draft';
+import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils, FbjsUtils } = DraftPublic;
 const { cx } = FbjsUtils;
 

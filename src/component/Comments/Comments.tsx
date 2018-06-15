@@ -18,7 +18,8 @@ import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToB
 import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
 
-import { DraftPublic, blockStyleFn } from '../RichEdit';
+import { blockStyleFn } from '../RichEdit';
+import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
 
 import { OrderedSet, Map } from 'immutable';

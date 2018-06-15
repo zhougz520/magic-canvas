@@ -15,7 +15,7 @@ import {
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { HyperlinkState, IHyperlinkState } from './HyperlinkState';
-import { PropertiesEnum } from '../types';
+import { PropertiesEnum } from '../model/types';
 import { IProperty } from '../model/types';
 import { BoxType } from '../../util';
 

@@ -1,4 +1,5 @@
-import { IComponent } from '../..';
+import { IComponent } from '../BaseComponent';
+import { IProperty } from '../UniversalComponents';
 import { Map } from 'immutable';
 
 /**
@@ -18,6 +19,5 @@ export interface ICanvasComponent {
     executeCommand: (cmd: any) => void;
     executeProperties: (pKey: string, pValue: any) => void;
     getSelectedProperties: (currentSelectedComponents: Map<string, any>) =>
-        Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> | undefined;
-    CommandMap: any;
+        IProperty[] | undefined;
 }
