@@ -23,6 +23,7 @@ import { convertFromBaseStateToData } from './encoding/convertFromBaseStateToDat
 import { HandleModes } from './handlers/HandleModes';
 import { HandlerMap } from './handlers/canvas/HandlerMap';
 import { pageActions } from './command/pageActions';
+import { CommandMap } from './command/CommandEmitted';
 
 // import { StackUtil } from '../utils/StackUtil';
 import { Map, OrderedSet, Stack } from 'immutable';
@@ -84,6 +85,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _redoStack: Stack<IStack> = Stack();             // 重做栈
     public _isAddCommentsMode: boolean = false;             // 是否新增批注模式
 
+    CommandMap = CommandMap;
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
      * @param props ICanvasProps
