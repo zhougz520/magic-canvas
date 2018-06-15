@@ -70,9 +70,9 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
         this.fireSelectChange(e);
     }
     public render() {
-        const { showMenu, pageMode, map_sm } = this.props;
+        const { showMenu, pageMode, map_sm, childData } = this.props;
         const { title } = this.state;
-        const childData = this.getCustomState().toJS();
+        // const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
         if (childData !== undefined && childData.components.length > 0) {
             this.initCom(childData.components);
         }
@@ -96,6 +96,7 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                 selectComChange={this.selectComChange}
                 selectedId={this.state.selectedId}
                 pageMode={pageMode}
+                data={childData}
             >
                 <div
                     className="ps-map"
