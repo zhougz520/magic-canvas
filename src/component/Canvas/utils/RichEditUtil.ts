@@ -1,6 +1,6 @@
 import { Canvas } from '../Canvas';
 import { IComponent, ISize, IPosition, IFont, IRichEditOption, EditType } from '../../BaseComponent';
-import { DraftPublic } from '../../RichEdit';
+import { DraftPublic } from 'xprst-draft';
 const { EditorState, BlockUtils } = DraftPublic;
 
 export class RichEditUtil {

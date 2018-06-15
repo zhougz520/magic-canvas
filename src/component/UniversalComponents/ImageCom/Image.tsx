@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { ImageState } from './ImageState';
-import { PropertiesEnum } from '../types';
+import { PropertiesEnum } from '../model/types';
 import { IProperty } from '../model/types';
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';

@@ -19,7 +19,8 @@ export {
 } from './component/Draw';
 
 export {
-    PropertiesEnum
+    PropertiesEnum,
+    IProperty
 } from './component/UniversalComponents';
 
 export {
@@ -36,3 +37,7 @@ export {
     countAnchorPoint,
     findAnchorPoint
 } from './component/util';
+
+export {
+    getListStyleTypeMap
+} from './component/RichEdit';

@@ -16,7 +16,7 @@ import {
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { InputState, IInputState } from './InputState';
-import { PropertiesEnum } from '../types';
+import { PropertiesEnum } from '../model/types';
 import { IProperty } from '../model/types';
 
 import { Map } from 'immutable';

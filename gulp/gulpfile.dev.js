@@ -17,8 +17,7 @@ const runDevServer = () => {
                 'react',
                 'react-dom'
             ],
-            example: './example/src/example.tsx',
-            exampleCon: './example/src/exampleCon.tsx'
+            example: './example/src/example.tsx'
         },
         output: {
             filename: '[name].js',

@@ -16,7 +16,7 @@ import {
 import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
 
 import { RadioState, IRadioState } from './RadioState';
-import { PropertiesEnum } from '../types';
+import { PropertiesEnum } from '../model/types';
 import { IProperty } from '../model/types';
 import { BoxType } from '../../util';
 

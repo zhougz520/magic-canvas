@@ -89,7 +89,11 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                 <Stage
                     config={config}
                     ref={(render) => this.stage = render}
+<<<<<<< HEAD
                     components={detail1.content.components as ComponentsType}
+=======
+                    components={detail.content.components as ComponentsType}
+>>>>>>> eb33b23c56d2aacdf3f3c0dae0339de69e0039d4
                     onCommandProperties={this.onCommandProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     clearSelectedProperty={this.clearSelectedProperty}
@@ -103,7 +107,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 export const detail = {
     content: {
         components: [
-
             {
                 t: 'MapComponent/map/AppGridContainer',
                 p: {
@@ -115,7 +118,90 @@ export const detail = {
                     t: 150,
                     zIndex: 4,
                     comType: 'Map',
-                    customState: null,
+                    customState: {
+                        components: [
+                            {
+                                t: 'MapComponent/map/grid/ProjectDDTree',
+                                p: {
+                                    id: 'cs1.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/grid/AppView',
+                                p: {
+                                    id: 'cs1.cs2'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/grid/AppFind',
+                                p: {
+                                    id: 'cs1.cs3'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/grid/AppGridMenu',
+                                p: {
+                                    id: 'cs1.cs4',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/grid/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs1.cs4.cs1',
+                                                    map_mi_txt: '新增'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/grid/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs1.cs4.cs2',
+                                                    map_mi_txt: '删除'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/grid/AppGridMenuItem',
+                                                p: {
+                                                    id: 'cs1.cs4.cs3',
+                                                    map_mi_sa: true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/grid/AppGrid',
+                                p: {
+                                    id: 'cs1.cs5',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/grid/AppGridTitle',
+                                                p: {
+                                                    id: 'cs1.cs5.cs1',
+                                                    map_gt_txt: 'AAA'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/grid/AppGridTitle',
+                                                p: {
+                                                    id: 'cs1.cs5.cs2',
+                                                    map_gt_txt: 'BBB'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/grid/AppGridTitle',
+                                                p: {
+                                                    id: 'cs1.cs5.cs3',
+                                                    map_gt_txt: 'CCC'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
                     commentsList: List(),
                     p: {
                         components: [
@@ -213,6 +299,174 @@ export const detail = {
                     l: 250,
                     t: 250,
                     zIndex: 4,
+                    comType: 'Map',
+                    customState: {
+                        components: [
+                            {
+                                t: 'MapComponent/map/form/AppFormMenu',
+                                p: {
+                                    id: 'cs2.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/map/form/AppForm',
+                                p: {
+                                    id: 'cs2.cs2',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/map/form/NavBarItem',
+                                                p: {
+                                                    id: 'cs2.cs2.cs1',
+                                                    p: {
+                                                        components: [
+                                                            {
+                                                                t: 'MapComponent/map/form/TabForm',
+                                                                p: {
+                                                                    id: 'cs2.cs2.cs1.cs1',
+                                                                    p: {
+                                                                        components: [
+                                                                            {
+                                                                                t: 'MapComponent/map/form/TabItem',
+                                                                                p: {
+                                                                                    id: 'cs2.cs2.cs1.cs1.cs1',
+                                                                                    p: {
+                                                                                        components: [
+                                                                                            {
+                                                                                                t: 'MapComponent/map/form/SectionForm',
+                                                                                                p: {
+                                                                                                    id: 'cs2.cs2.cs1.cs1.cs1.cs1',
+                                                                                                    p: {
+                                                                                                        components: [
+                                                                                                            {
+                                                                                                                t: 'MapComponent/map/form/Section',
+                                                                                                                p: {
+                                                                                                                    id: 'cs2.cs2.cs1.cs1.cs1.cs1.cs1'
+                                                                                                                }
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                t: 'MapComponent/map/form/TabItem',
+                                                                                p: {
+                                                                                    id: 'cs2.cs2.cs1.cs1.cs2',
+                                                                                    p: {
+                                                                                        components: [
+                                                                                            {
+                                                                                                t: 'MapComponent/map/form/SectionForm',
+                                                                                                p: {
+                                                                                                    id: 'cs2.cs2.cs1.cs1.cs2.cs1',
+                                                                                                    p: {
+                                                                                                        components: [
+                                                                                                            {
+                                                                                                                t: 'MapComponent/map/form/Section',
+                                                                                                                p: {
+                                                                                                                    id: 'cs2.cs2.cs1.cs1.cs2.cs1.cs1'
+                                                                                                                }
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                t: 'MapComponent/map/form/TabItem',
+                                                                                p: {
+                                                                                    id: 'cs2.cs2.cs1.cs1.cs3'
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/form/NavBarItem',
+                                                p: {
+                                                    id: 'cs2.cs2.cs2',
+                                                    p: {
+                                                        components: [
+                                                            {
+                                                                t: 'MapComponent/map/form/TabForm',
+                                                                p: {
+                                                                    id: 'cs2.cs2.cs2.cs1',
+                                                                    p: {
+                                                                        components: [
+                                                                            {
+                                                                                t: 'MapComponent/map/form/TabItem',
+                                                                                p: {
+                                                                                    id: 'cs2.cs2.cs2.cs1.cs1'
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                t: 'MapComponent/map/form/TabItem',
+                                                                                p: {
+                                                                                    id: 'cs2.cs2.cs2.cs1.cs2',
+                                                                                    p: {
+                                                                                        components: [
+                                                                                            {
+                                                                                                t: 'MapComponent/map/form/SectionForm',
+                                                                                                p: {
+                                                                                                    id: 's2.cs2.cs2.cs1.cs2.cs1'
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/map/form/NavBarItem',
+                                                p: {
+                                                    id: 'cs2.cs2.cs3',
+                                                    p: {
+                                                        components: [
+                                                            {
+                                                                t: 'MapComponent/map/form/TabForm',
+                                                                p: {
+                                                                    id: 'cs2.cs2.cs3.cs1',
+                                                                    p: {
+                                                                        components: [
+                                                                            {
+                                                                                t: 'MapComponent/map/form/TabItem',
+                                                                                p: {
+                                                                                    id: 'cs2.cs2.cs3.cs1.cs1'
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    commentsList: List(),
                     p: {
                         components: [
                             {

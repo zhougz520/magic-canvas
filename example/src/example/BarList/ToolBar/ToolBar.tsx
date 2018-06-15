@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { DraftPublic } from '../../../../../src/component/RichEdit/Draft';
-const { DefaultDraftBlockStyle } = DraftPublic;
 
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
-import { CommandMap } from '../../../../../src';
+import { CommandMap, getListStyleTypeMap } from '../../../../../src';
 
 import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio } from 'antd';
 import ColorPicker from 'rc-color-picker';
@@ -268,8 +266,8 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
 
 }
 
-const UL_TYPE = DefaultDraftBlockStyle.listStyleTypeMap.get('unordered-list-item').toJS();
-const OL_TYPE = DefaultDraftBlockStyle.listStyleTypeMap.get('ordered-list-item').toJS();
+const UL_TYPE = getListStyleTypeMap().get('unordered-list-item').toJS();
+const OL_TYPE = getListStyleTypeMap().get('ordered-list-item').toJS();
 const ListTypeControls: any = (props: any) => {
     const menu = (
         <Menu onClick={props.onToggle}>

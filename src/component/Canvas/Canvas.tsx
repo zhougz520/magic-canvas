@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RichEdit, Wingman } from '../RichEdit';
+import { IProperty } from '../UniversalComponents';
 
 import { BaseState, IComponent, IComData } from '../BaseComponent';
 import { ICanvasState } from './ICanvasState';
@@ -23,9 +24,7 @@ import { convertFromBaseStateToData } from './encoding/convertFromBaseStateToDat
 import { HandleModes } from './handlers/HandleModes';
 import { HandlerMap } from './handlers/canvas/HandlerMap';
 import { pageActions } from './command/pageActions';
-import { CommandMap } from './command/CommandEmitted';
 
-// import { StackUtil } from '../utils/StackUtil';
 import { Map, OrderedSet, Stack } from 'immutable';
 
 /**
@@ -85,7 +84,6 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _redoStack: Stack<IStack> = Stack();             // 重做栈
     public _isAddCommentsMode: boolean = false;             // 是否新增批注模式
 
-    CommandMap = CommandMap;
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
      * @param props ICanvasProps
@@ -209,9 +207,8 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     // 获取canvas编辑中的组件的属性
-    getSelectedProperties = (currentSelectedComponents: Map<string, any>)
-        : Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> | undefined => {
-        let propertyResult: Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> = [];
+    getSelectedProperties = (currentSelectedComponents: Map<string, any>): IProperty[] | undefined => {
+        let propertyResult: IProperty[] = [];
         // 多个选中的组件 则获取共同的属性
         if (currentSelectedComponents.size > 1) {
             const components = currentSelectedComponents.toArray();

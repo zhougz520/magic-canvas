@@ -1,6 +1,8 @@
-import { DraftPublic } from '../Draft';
-const { FbjsUtils } = DraftPublic;
+import { DraftPublic } from 'xprst-draft';
+const { FbjsUtils, DefaultDraftBlockStyle } = DraftPublic;
 const { cx } = FbjsUtils;
+
+import { Map, List } from 'immutable';
 
 export function blockStyleFn(block: any): string {
     const blockAlignment = block.getData() && block.getData().get('text-align');
@@ -8,6 +10,10 @@ export function blockStyleFn(block: any): string {
     const styleOLType = block.getData() && block.getData().get('ordered-list-item');
 
     return getListItemClasses(blockAlignment, styleULType === undefined ? styleOLType : styleULType);
+}
+
+export function getListStyleTypeMap(): Map<string, List<string>> {
+    return DefaultDraftBlockStyle.listStyleTypeMap;
 }
 
 function getListItemClasses(align: string | undefined, styleType: string | undefined) {
