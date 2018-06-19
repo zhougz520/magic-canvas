@@ -2,36 +2,33 @@ import { Canvas } from '../Canvas';
 import { IRange, IStack, IComponentList } from '../model/types';
 import { Stack, Set, List, OrderedSet } from 'immutable';
 
-export const pageActions = {
-    bind(ins: any) {
-        for (const key in this) {
-            if (key !== 'bind') {
-                ins[key] = (this as any)[key].bind(ins);
-            }
-        }
-    },
+export class PageActions {
+    private _canvas: Canvas;
 
-    // 获得当前绑定的this
-    getThis(): Canvas {
-        return (this as any);
-    },
+    /**
+     * 构造函数，通过画布对象初始化
+     * @param canvas 画布对象
+     */
+    public constructor(canvas: Canvas) {
+        this._canvas = canvas;
+    }
 
     // 添加批注
-    addComments() {
-        this.getThis()._commentsUtil.startAddComments();
-    },
+    addComments = () => {
+        this._canvas._commentsUtil.startAddComments();
+    }
 
     // 画布撤销
-    undoCanvas() {
-        const undoStack: Stack<IStack> = this.getThis()._undoStack;
-        const redoStack: Stack<IStack> = this.getThis()._redoStack;
-        let currentComponentList: OrderedSet<IComponentList> = this.getThis().state.componentList;
+    undoCanvas = () => {
+        const undoStack: Stack<IStack> = this._canvas._undoStack;
+        const redoStack: Stack<IStack> = this._canvas._redoStack;
+        let currentComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
 
         const currentUndoStack: IStack = undoStack.peek();
         if (!currentUndoStack) {
             return;
         }
-        this.getThis()._drawUtil.clearSelected();
+        this._canvas._drawUtil.clearSelected();
 
         let resetCurrentUndoStack: IStack;
         let resetComponentList: List<IComponentList> = List();
@@ -42,7 +39,7 @@ export const pageActions = {
                 let cids: Set<string> = Set();
                 componentList.map(
                     (component: IComponentList) => {
-                        const com = this.getThis().getComponent(component.cid);
+                        const com = this._canvas.getComponent(component.cid);
                         if (com) {
                             resetComponentList = resetComponentList.push(
                                 {
@@ -58,12 +55,12 @@ export const pageActions = {
                         cids = cids.add(component.cid);
                     }
                 );
-                this.getThis()._componentsUtil.deleteCanvasComponent(cids, false);
+                this._canvas._componentsUtil.deleteCanvasComponent(cids, false);
                 break;
             case 'modify':
                 componentList.map(
                     (component: IComponentList) => {
-                        const com = this.getThis().getComponent(component.cid);
+                        const com = this._canvas.getComponent(component.cid);
                         if (com) {
                             resetComponentList = resetComponentList.push(component);
                             com.undo();
@@ -78,7 +75,7 @@ export const pageActions = {
                         currentComponentList = currentComponentList.add(component);
                     }
                 );
-                this.getThis().setState({
+                this._canvas.setState({
                     componentList: currentComponentList
                 });
                 break;
@@ -91,21 +88,21 @@ export const pageActions = {
             operationType,
             componentList: resetComponentList
         };
-        this.getThis()._undoStack = undoStack.shift();
-        this.getThis()._redoStack = redoStack.push(resetCurrentUndoStack);
-    },
+        this._canvas._undoStack = undoStack.shift();
+        this._canvas._redoStack = redoStack.push(resetCurrentUndoStack);
+    }
 
     // 画布重做
-    redoCanvas() {
-        const undoStack: Stack<IStack> = this.getThis()._undoStack;
-        const redoStack: Stack<IStack> = this.getThis()._redoStack;
-        let currentComponentList: OrderedSet<IComponentList> = this.getThis().state.componentList;
+    redoCanvas = () => {
+        const undoStack: Stack<IStack> = this._canvas._undoStack;
+        const redoStack: Stack<IStack> = this._canvas._redoStack;
+        let currentComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
 
         const currentRedoStack: IStack = redoStack.peek();
         if (!currentRedoStack) {
             return;
         }
-        this.getThis()._drawUtil.clearSelected();
+        this._canvas._drawUtil.clearSelected();
 
         let resetCurrentRedoStack: IStack;
         let resetComponentList: List<IComponentList> = List();
@@ -119,14 +116,14 @@ export const pageActions = {
                         currentComponentList = currentComponentList.add(component);
                     }
                 );
-                this.getThis().setState({
+                this._canvas.setState({
                     componentList: currentComponentList
                 });
                 break;
             case 'modify':
                 componentList.map(
                     (component: IComponentList) => {
-                        const com = this.getThis().getComponent(component.cid);
+                        const com = this._canvas.getComponent(component.cid);
                         if (com) {
                             resetComponentList = resetComponentList.push(component);
                             com.redo();
@@ -138,7 +135,7 @@ export const pageActions = {
                 let cids: Set<string> = Set();
                 componentList.map(
                     (component: IComponentList) => {
-                        const com = this.getThis().getComponent(component.cid);
+                        const com = this._canvas.getComponent(component.cid);
                         if (com) {
                             resetComponentList = resetComponentList.push(
                                 {
@@ -154,7 +151,7 @@ export const pageActions = {
                         cids = cids.add(component.cid);
                     }
                 );
-                this.getThis()._componentsUtil.deleteCanvasComponent(cids, false);
+                this._canvas._componentsUtil.deleteCanvasComponent(cids, false);
                 break;
             default:
                 break;
@@ -165,213 +162,213 @@ export const pageActions = {
             operationType,
             componentList: resetComponentList
         };
-        this.getThis()._undoStack = undoStack.push(resetCurrentRedoStack);
-        this.getThis()._redoStack = redoStack.shift();
-    },
+        this._canvas._undoStack = undoStack.push(resetCurrentRedoStack);
+        this._canvas._redoStack = redoStack.shift();
+    }
 
     // 上移一层
-    upperCom() {
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(1, 1);
-    },
+    upperCom = () => {
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex(1, 1);
+    }
 
     // 下移一层
-    lowerCom() {
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(-1, -1);
-    },
+    lowerCom = () => {
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex(-1, -1);
+    }
 
     // 置于顶层
-    frontCom() {
-        const selectedComponentsZIndexRange = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange();
+    frontCom = () => {
+        const selectedComponentsZIndexRange = this._canvas._componentsUtil.getSelectedComponentsZIndexRange();
         const selectedComponentZIndexMin: number = selectedComponentsZIndexRange.minZIndex;
-        const maxZIndex: number = this.getThis()._maxZIndex + 1;
+        const maxZIndex: number = this._canvas._maxZIndex + 1;
         const selectedCommentsZIndexMin: number = selectedComponentsZIndexRange.minCommentsZIndex;
-        const maxCommentsZIndex: number = this.getThis()._maxCommentsZIndex + 1;
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin, maxCommentsZIndex - selectedCommentsZIndexMin);
-    },
+        const maxCommentsZIndex: number = this._canvas._maxCommentsZIndex + 1;
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin, maxCommentsZIndex - selectedCommentsZIndexMin);
+    }
 
     // 置于底层
-    backCom() {
-        const selectedComponentsZIndexRange = this.getThis()._componentsUtil.getSelectedComponentsZIndexRange();
+    backCom = () => {
+        const selectedComponentsZIndexRange = this._canvas._componentsUtil.getSelectedComponentsZIndexRange();
         const selectedComponentZIndexMax: number = selectedComponentsZIndexRange.maxZIndex;
-        const minZIndex: number = this.getThis()._minZIndex - 1;
+        const minZIndex: number = this._canvas._minZIndex - 1;
         const selectedCommentsZIndexMax: number = selectedComponentsZIndexRange.maxCommentsZIndex;
-        const minCommentsZIndex: number = this.getThis()._minCommentsZIndex - 1;
-        this.getThis()._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax, minCommentsZIndex - selectedCommentsZIndexMax);
-    },
+        const minCommentsZIndex: number = this._canvas._minCommentsZIndex - 1;
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax, minCommentsZIndex - selectedCommentsZIndexMax);
+    }
 
     // 左对齐
-    leftCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Left');
-    },
+    leftCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Left');
+    }
 
     // 水平居中
-    centerCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Center');
-    },
+    centerCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Center');
+    }
 
     // 右对齐
-    rightCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Right');
-    },
+    rightCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Right');
+    }
 
     // 顶对齐
-    topCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Top');
-    },
+    topCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Top');
+    }
 
     // 垂直居中
-    middleCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Middle');
-    },
+    middleCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Middle');
+    }
 
     // 底对齐
-    bottomCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Bottom');
-    },
+    bottomCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Bottom');
+    }
 
     // 水平等间距
-    horizontalCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Horizontal');
-    },
+    horizontalCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Horizontal');
+    }
 
     // 垂直等间距
-    verticalCom() {
-        const range: IRange = this.getThis()._componentsUtil.getSelectedComponentsRange();
-        this.getThis()._componentsUtil.updateSelectedComponentsPosition(range, 'Vertical');
-    },
+    verticalCom = () => {
+        const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
+        this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Vertical');
+    }
 
     // 加粗
-    boldEditor() {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
+    boldEditor = () => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
         if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
+            const { richEditType } = this._canvas.getEditor().state;
             switch (richEditType) {
                 case 'RichEdit':
-                    this.getThis().getEditor().toggleInlineStyle('BOLD');
+                    this._canvas.getEditor().toggleInlineStyle('BOLD');
                     break;
                 case 'Text':
-                    this.getThis().getEditor().toggleFontWeightForText('bold');
-                    break;
-            }
-        }
-    },
-
-    // 斜体
-    italicEditor() {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
-            switch (richEditType) {
-                case 'RichEdit':
-                    this.getThis().getEditor().toggleInlineStyle('ITALIC');
-                    break;
-                case 'Text':
-                    this.getThis().getEditor().toggleFontStyleForText('italic');
-                    break;
-            }
-        }
-    },
-
-    // 下划线
-    underlineEditor() {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
-            switch (richEditType) {
-                case 'RichEdit':
-                    this.getThis().getEditor().toggleInlineStyle('UNDERLINE');
-                    break;
-                case 'Text':
-                    this.getThis().getEditor().toggleTextDecorationForText('underline');
-                    break;
-            }
-        }
-    },
-
-    // 删除
-    strikethroughEditor() {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
-            switch (richEditType) {
-                case 'RichEdit':
-                    this.getThis().getEditor().toggleInlineStyle('STRIKETHROUGH');
-                    break;
-                case 'Text':
-                    this.getThis().getEditor().toggleTextDecorationForText('line-through');
-                    break;
-            }
-        }
-    },
-
-    // 字体颜色
-    fontColorEditor(color: any) {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
-            switch (richEditType) {
-                case 'RichEdit':
-                    this.getThis().getEditor().toggleFontColor(color);
-                    break;
-                case 'Text':
-                    this.getThis().getEditor().toggleFontColorForText(color);
-                    break;
-            }
-        }
-    },
-
-    // 字体大小
-    fontSizeEditor(size: any) {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
-            switch (richEditType) {
-                case 'RichEdit':
-                    this.getThis().getEditor().toggleFontSize(size);
-                    break;
-                case 'Text':
-                    this.getThis().getEditor().toggleFontSizeForText(size);
-                    break;
-            }
-        }
-    },
-
-    // 有序列表
-    olEditor(e: any) {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleOLBlockTypeClass(e);
-        }
-    },
-
-    // 无序列表
-    ulEditor(e: any) {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            this.getThis().getEditor().toggleULBlockTypeClass(e);
-        }
-    },
-
-    // 文本对齐
-    textAlignEditor(textAlign: any) {
-        const isRichEditMode: boolean = this.getThis()._isRichEditMode;
-        if (isRichEditMode === true) {
-            const { richEditType } = this.getThis().getEditor().state;
-            switch (richEditType) {
-                case 'RichEdit':
-                    this.getThis().getEditor().toggleTextAlign(textAlign);
-                    break;
-                case 'Text':
-                    this.getThis().getEditor().toggleTextAlignForText(textAlign);
+                    this._canvas.getEditor().toggleFontWeightForText('bold');
                     break;
             }
         }
     }
-};
+
+    // 斜体
+    italicEditor = () => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            const { richEditType } = this._canvas.getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().toggleInlineStyle('ITALIC');
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().toggleFontStyleForText('italic');
+                    break;
+            }
+        }
+    }
+
+    // 下划线
+    underlineEditor = () => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            const { richEditType } = this._canvas.getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().toggleInlineStyle('UNDERLINE');
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().toggleTextDecorationForText('underline');
+                    break;
+            }
+        }
+    }
+
+    // 删除
+    strikethroughEditor = () => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            const { richEditType } = this._canvas.getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().toggleInlineStyle('STRIKETHROUGH');
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().toggleTextDecorationForText('line-through');
+                    break;
+            }
+        }
+    }
+
+    // 字体颜色
+    fontColorEditor = (color: any) => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            const { richEditType } = this._canvas.getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().toggleFontColor(color);
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().toggleFontColorForText(color);
+                    break;
+            }
+        }
+    }
+
+    // 字体大小
+    fontSizeEditor = (size: any) => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            const { richEditType } = this._canvas.getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().toggleFontSize(size);
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().toggleFontSizeForText(size);
+                    break;
+            }
+        }
+    }
+
+    // 有序列表
+    olEditor = (e: any) => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            this._canvas.getEditor().toggleOLBlockTypeClass(e);
+        }
+    }
+
+    // 无序列表
+    ulEditor = (e: any) => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            this._canvas.getEditor().toggleULBlockTypeClass(e);
+        }
+    }
+
+    // 文本对齐
+    textAlignEditor = (textAlign: any) => {
+        const isRichEditMode: boolean = this._canvas._isRichEditMode;
+        if (isRichEditMode === true) {
+            const { richEditType } = this._canvas.getEditor().state;
+            switch (richEditType) {
+                case 'RichEdit':
+                    this._canvas.getEditor().toggleTextAlign(textAlign);
+                    break;
+                case 'Text':
+                    this._canvas.getEditor().toggleTextAlignForText(textAlign);
+                    break;
+            }
+        }
+    }
+}

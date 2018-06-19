@@ -19,11 +19,12 @@ import { PositionUtil } from './utils/PositionUtil';
 import { RichEditUtil } from './utils/RichEditUtil';
 import { StackUtil } from './utils/StackUtil';
 
+import { PageActions } from './command/PageActions';
+
 import { convertFromDataToBaseState } from './encoding/convertFromDataToBaseState';
 import { convertFromBaseStateToData } from './encoding/convertFromBaseStateToData';
 import { HandleModes } from './handlers/HandleModes';
 import { HandlerMap } from './handlers/canvas/HandlerMap';
-import { pageActions } from './command/pageActions';
 
 import { Map, OrderedSet, Stack } from 'immutable';
 
@@ -41,6 +42,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     canvas: HTMLDivElement | null = null;
     editor: RichEdit | null = null;
     wingman: Wingman | null = null;
+
+    /**
+     * 画布命令
+     */
+    public _pageActions: PageActions;
 
     /**
      * 画布的工具包
@@ -93,6 +99,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         super(props);
 
         /**
+         * 初始化画布命令
+         */
+        this._pageActions = new PageActions(this);
+
+        /**
          * 初始化画布工具包
          */
         this._canvasGlobalParam = new CanvasGlobalParam(this);
@@ -126,9 +137,6 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             cursor: 'default',
             componentList
         };
-
-        // 绑定操作动作（模仿.net partial）
-        pageActions.bind(this);
     }
 
     getEditor = (): RichEdit => {
@@ -188,7 +196,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         // eg：e.addComments
         const cmdParams = cmd.t.split('.');
         if (cmdParams[0] === 'e') {
-            (this as any)[cmdParams[1]](cmd.d);
+            (this._pageActions as any)[cmdParams[1]](cmd.d);
         }
     }
 
@@ -197,6 +205,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         const currentSelectedComponent: Map<string, any> = this._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com) => {
+                // TODO 优化代码
                 com.setPropertiesFromProperty(pKey, pValue);
                 if (pKey === 'borderWidth') {
                     setTimeout(() => {
@@ -208,7 +217,8 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     // 获取canvas编辑中的组件的属性
-    getSelectedProperties = (currentSelectedComponents: Map<string, any>): IProperty[] | undefined => {
+    // TODO 优化代码
+    getSelectedProperties = (currentSelectedComponents: Map<string, IComponent>): IProperty[] | undefined => {
         let propertyResult: IProperty[] = [];
         // 多个选中的组件 则获取共同的属性
         if (currentSelectedComponents.size > 1) {

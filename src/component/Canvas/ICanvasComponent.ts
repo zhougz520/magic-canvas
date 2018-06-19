@@ -20,6 +20,6 @@ export interface ICanvasComponent {
      */
     executeCommand: (cmd: any) => void;
     executeProperties: (pKey: string, pValue: any) => void;
-    getSelectedProperties: (currentSelectedComponents: Map<string, any>) =>
+    getSelectedProperties: (currentSelectedComponents: Map<string, IComponent>) =>
         IProperty[] | undefined;
 }
