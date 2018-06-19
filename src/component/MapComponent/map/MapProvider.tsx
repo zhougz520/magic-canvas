@@ -7,7 +7,8 @@ export interface IMapContextProps {
     map_sm?: string;                // 皮肤
     selectedId?: string;            // 当前选中的控件id
     pageMode?: string;              // 当前画布状态
-    data?: any;                     // 当前控件的整体数据
+    stateData?: any;                     // 当前控件的整体数据
+    refs?: any;                     // 整体ref
 }
 export class MapProvider extends React.PureComponent<IMapContextProps, any> {
     static defaultProps = {
@@ -17,14 +18,15 @@ export class MapProvider extends React.PureComponent<IMapContextProps, any> {
     };
 
     render() {
-        const { map_sm, selectedId, pageMode, updateProps, selectComChange, data } = this.props;
+        const { map_sm, selectedId, pageMode, updateProps, selectComChange, stateData, refs } = this.props;
         const value: any = {
             map_sm,
             selectedId,
             pageMode,
             updateProps,
             selectComChange,
-            data
+            stateData,
+            refs
         };
 
         return (

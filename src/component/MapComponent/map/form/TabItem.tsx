@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -11,7 +12,7 @@ export interface IMapProps extends IBaseProps {
     onChangeItem: (id: string) => void;
 }
 
-export class TabItem extends MapComponent<IMapProps, any> {
+export class TabItemClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_st_name: '标签页',
         map_mi_sa: false,
@@ -51,7 +52,7 @@ export class TabItem extends MapComponent<IMapProps, any> {
         );
 
         return (
-            <div onClick={this.onChangeItem} className="container">
+            <div ref={(ref) => this.com = ref} onMouseDown={this.onChangeItem} className="container">
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>
@@ -62,5 +63,5 @@ export class TabItem extends MapComponent<IMapProps, any> {
         this.props.onChangeItem(this.props.id);
         this.selectedCom(e);
     }
-
 }
+export const TabItem = MapConsumer(TabItemClass);
