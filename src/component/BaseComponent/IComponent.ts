@@ -5,6 +5,7 @@ import { ContentState } from './model/ContentState';
 import { BaseState } from './model/BaseState';
 import { EditType, IRichEditOption, ICommentsList, ComponentType, IFont } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
+import { IProperty } from '../UniversalComponents';
 
 import { IAnchor } from '../util';
 import { List } from 'immutable';
@@ -13,7 +14,11 @@ import { List } from 'immutable';
  * BaseComponent提供的方法接口
  */
 export interface IComponent {
+    /**
+     * 获取组件的baseProps
+     */
     getBaseProps: () => IBaseProps;
+
     /**
      * 获取、设置组件的baseState
      */
@@ -44,6 +49,9 @@ export interface IComponent {
     getCustomState: () => any;
     setCustomState: (newCustomState: any) => void;
 
+    /**
+     * 获取、设置组件的批注锚点
+     */
     getCommentsList: () => List<ICommentsList>;
     setCommentsList: (newCommentsList: List<ICommentsList>) => void;
 
@@ -59,7 +67,7 @@ export interface IComponent {
     setUndoStack: () => void;
 
     /**
-     * 组件层级
+     * 获取、设置组件层级
      */
     setHierarchy: (zIndex: number) => void;
     getHierarchy: () => number;
@@ -148,13 +156,6 @@ export interface IComponent {
      */
     stretchFrameData: (item: IBaseData) => IReactData;
 
-    getPropertiesToProperty: () =>  Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
-
+    getPropertiesToProperty: () =>  IProperty[];
     setPropertiesFromProperty: (pKey: string, pValue: any) => void;
-
-    getPropertiesToCommand: () => Array<{pTitle: string, pKey: string, pValue: any, pType: string}>;
-
-    setPropertiesFromCommand: (pKey: string, pValue: any) => void;
-
-    getComponentSettableCommands: () => string[];
 }

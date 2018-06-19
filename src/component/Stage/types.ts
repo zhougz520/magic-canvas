@@ -30,11 +30,11 @@ export const ComponentsMap = {
     Demo: { t: 'BaseComponent/demo/Demo', p: { name: 'demo', w: 100, h: 100 } },
     Comments: { t: 'Comments/Comments', p: { name: '批注', w: 204, h: 170 } },
 
-    Universal_CheckBox: { t: 'UniversalComponents/CheckBox/CheckBox', p: { name: 'checkbox', w: 110, h: 24 } },
-    Universal_Radio: { t: 'UniversalComponents/Radio/Radio', p: { name: 'radio', w: 110, h: 24 } },
-    Universal_Button: { t: 'UniversalComponents/Button/Button', p: { name: 'button', w: 82, h: 32 } },
-    Universal_Hyperlink: { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: 'hyperlink', w: 80, h: 25 } },
-    Universal_Selector: { t: 'UniversalComponents/Selector/Selector', p: { name: 'selector', w: 120, h: 32 } },
-    Universal_Input: { t: 'UniversalComponents/Input/Input', p: { name: 'input', w: 200, h: 32 } },
-    Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: 'textarea', w: 280, h: 73 } }
+    Universal_CheckBox: { t: 'UniversalComponents/CheckBox/CheckBox', p: { name: '多选', w: 110, h: 24 } },
+    Universal_Radio: { t: 'UniversalComponents/Radio/Radio', p: { name: '单选', w: 110, h: 24 } },
+    Universal_Button: { t: 'UniversalComponents/Button/Button', p: { name: '按钮', w: 82, h: 32 } },
+    Universal_Hyperlink: { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: '超链接', w: 80, h: 25 } },
+    Universal_Selector: { t: 'UniversalComponents/Selector/Selector', p: { name: '下拉框', w: 120, h: 32 } },
+    Universal_Input: { t: 'UniversalComponents/Input/Input', p: { name: '单行输入', w: 200, h: 32 } },
+    Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: '多行输入', w: 280, h: 73 } }
 };

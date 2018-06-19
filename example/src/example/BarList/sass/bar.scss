@@ -70,3 +70,30 @@
     right: 24px;
     border-right: 1px solid #fafafa;
 }
+
+.rUl {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    list-style: none;
+    user-select: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.rLi {
+    margin-top: -1px;
+    margin-left: -1px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(238, 238, 238);
+    border-image: initial;
+    overflow: hidden;
+    width: 61px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
