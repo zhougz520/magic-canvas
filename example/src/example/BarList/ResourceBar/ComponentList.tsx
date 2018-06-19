@@ -43,7 +43,9 @@ export default class ComponentList extends React.PureComponent<IComListProps, IC
                 });
                 panels.push(
                     <Panel header={item.category} key={item.categoryKey}>
-                        {componentItems}
+                        <ul className="rUl">
+                            {componentItems}
+                        </ul>
                     </Panel>
                 );
                 if (item.expanded) activeKeys.push(item.categoryKey);
