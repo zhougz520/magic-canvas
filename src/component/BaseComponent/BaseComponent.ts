@@ -14,6 +14,7 @@ import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType, 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
+import { IProperty, PropertiesEnum } from '../UniversalComponents';
 import { Stack, List } from 'immutable';
 
 /**
@@ -449,12 +450,12 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取组件的属性，传给属性工具条
      */
-    public getPropertiesToProperty = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
+    public getPropertiesToProperty = (): IProperty[] => {
         return [{
             pTitle: '',
             pKey: '',
             pValue: '',
-            pType: 'text'
+            pType: PropertiesEnum.INPUT_TEXT
         }];
     }
 
@@ -463,32 +464,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         // const num: number = 1 + 1;
-    }
-
-    /**
-     * 获取组件的属性，传给命令工具条
-     */
-    public getPropertiesToCommand = (): Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> => {
-        return [{
-            pTitle: '',
-            pKey: '',
-            pValue: '',
-            pType: 'text'
-        }];
-    }
-
-    /**
-     * 获取命令工具条的单条属性，传给组件并设置组件
-     */
-    public setPropertiesFromCommand = (pKey: string, pValue: any) => {
-        // const num: number = 1 + 1;
-    }
-
-    /**
-     * 获取基础组件的可设置文本命令
-     */
-    public getComponentSettableCommands = (): string[] => {
-        return ['Color', 'fontStyle', 'textDecoration', 'fontSize', 'fontWeight', 'textAlign'];
     }
 
     /**
