@@ -373,7 +373,10 @@ export class PageAction {
         }
     }
 
-    setPropsCom = (param: any) => {
+    /**
+     * 属性工具栏设置组件属性
+     */
+    setPropsCom = (param: { pKey: string; pValue: any; }) => {
         const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com: IComponent) => {
