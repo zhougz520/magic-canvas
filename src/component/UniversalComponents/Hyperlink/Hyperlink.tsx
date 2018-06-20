@@ -12,7 +12,7 @@ import {
     IBaseUniversalComponentProps,
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+import { MaskLayer } from '../../BaseComponent';
 
 import { HyperlinkState, IHyperlinkState } from './HyperlinkState';
 import { PropertiesEnum } from '../model/types';

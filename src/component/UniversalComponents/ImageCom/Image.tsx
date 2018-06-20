@@ -4,7 +4,7 @@ import { ImageState } from './ImageState';
 import { PropertiesEnum } from '../model/types';
 import { IProperty } from '../model/types';
 import { Map } from 'immutable';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+import { MaskLayer } from '../../BaseComponent';
 
 export default class Image extends BaseComponent<IBaseProps, IBaseState> {
     static defaultProps = {
