@@ -54,7 +54,8 @@ const basePage: IBasePage[] = [
         expanded: false,
         components: [
             // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
-            { t: 'MapComponent/demo/BtnChildDemo', p: { name: 'BtnChildDemo'} },
+            { t: 'MapComponent/map/AppFormContainer', p: { name: '表单', w: 600, h: 400, type: 'base'} },
+            { t: 'MapComponent/map/AppGridContainer', p: { name: '列表', w: 600, h: 400, type: 'base'} },
             { t: 'MapComponent/map/grid/AppGridMenuItem', p: { name: 'grid菜单'} },
             { t: 'MapComponent/map/form/AppFormMenuItem', p: { name: 'form菜单'} },
             { t: 'MapComponent/map/form/NavBarItem', p: { name: 'NavBarItem'} },

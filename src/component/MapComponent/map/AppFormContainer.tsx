@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
 import { AppFormMenu, AppForm } from './form/index';
+import { formDetail } from './StructureDemo';
 import { MapProvider } from './MapProvider';
 
 import '../sass/AppForm.scss';
@@ -33,12 +34,18 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     private _isCanMove: boolean = false;
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
-
         this.state = {
             baseState: this.initBaseStateWithCustomState(props.childData)
         };
     }
-
+    componentDidMount() {
+        const cid = this.getCid();
+        let initData: any = this.props.childData;
+        if (initData === undefined) {
+            initData = JSON.stringify(formDetail.p).replace(/【cs】/g, cid);
+            this.setCustomState(JSON.parse(initData));
+        }
+    }
     public isCanMove = () => {
         return this._isCanMove;
     }
@@ -70,9 +77,9 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
         this.fireSelectChange(e);
     }
     public render() {
-        const { showMenu, pageMode, map_sm, childData } = this.props;
+        const { showMenu, pageMode, map_sm } = this.props;
         const { title } = this.state;
-        // const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
+        const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
         if (childData !== undefined && childData.components.length > 0) {
             this.initCom(childData.components);
         }
