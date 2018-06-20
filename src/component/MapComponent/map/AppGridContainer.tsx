@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
 import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './grid/index';
 import { MapProvider } from './MapProvider';
-// import { fromJS } from 'immutable';
+import { gridDetail } from './StructureDemo';
 
 import '../sass/Map.scss';
 import '../sass/Field.scss';
@@ -44,7 +44,14 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
             baseState: this.initBaseStateWithCustomState(props.childData)
         };
     }
-
+    componentDidMount() {
+        const cid = this.getCid();
+        let initData: any = this.props.childData;
+        if (initData === undefined) {
+            initData = JSON.stringify(gridDetail.p).replace(/【cs】/g, cid);
+            this.setCustomState(JSON.parse(initData));
+        }
+    }
     public isCanMove = () => {
         return this._isCanMove;
     }
@@ -67,9 +74,9 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         });
     }
     public render() {
-        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid, map_sm, pageMode, childData } = this.props;
+        const { showProj, showView, showAppFind, showAppGridMenu, showAppGrid, map_sm, pageMode } = this.props;
         const { title } = this.state;
-        // const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
+        const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
         // const { p, w, h, map_sm } = data;
         if (childData !== undefined && childData.components.length > 0) {
             this.initCom(childData.components);
