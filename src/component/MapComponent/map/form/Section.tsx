@@ -9,6 +9,7 @@ import {
     // LookUpField,
     // NullField
 } from '../form/field';
+import { MapConsumer } from '../MapConsumer';
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-wrap-multiline
 // tslint:disable:jsx-no-multiline-js
@@ -21,7 +22,7 @@ export interface IMapProps extends IBaseProps {
     index?: number;
 }
 
-export class Section extends MapComponent<IMapProps, any> {
+export class SectionClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_ss: true,
         map_form_ss_name: '分组',
@@ -312,3 +313,4 @@ export class Section extends MapComponent<IMapProps, any> {
         background: isDraggingOver ? 'lightblue' : ''
     })
 }
+export const Section = MapConsumer(SectionClass);

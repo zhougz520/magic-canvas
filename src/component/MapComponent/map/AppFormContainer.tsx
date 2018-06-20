@@ -103,7 +103,8 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                 selectComChange={this.selectComChange}
                 selectedId={this.state.selectedId}
                 pageMode={pageMode}
-                data={childData}
+                stateData={childData}
+                refs={this.refs}
             >
                 <div
                     className="ps-map"

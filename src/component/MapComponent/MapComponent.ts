@@ -20,6 +20,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (this.com !== null) {
             // if(this.hasHandle){
             this.com.addEventListener('drop', this.handleDropAddComponent);
+            this.com.addEventListener('keydown', this.deleteComponentsById);
             // }
             this.com.addEventListener('mousedown', this.selectedCom);
             const currMaskLayer = document.getElementById(this.props.id);
@@ -45,9 +46,61 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         }
     }
     /**
+     *  drop 添加控件
+     */
+    public handleDropAddComponent = (e: any) => {
+        const data: any = this.getAddComponent();
+        this.setState({
+            hover: {}
+        });
+        // 校验是否能被添加
+        if (!this.componentCanBeAdded(data.t)) {
+            e.stopPropagation();
+
+            return;
+        }
+        // 添加控件
+        this.addChildComponent(this.props, data);
+        e.stopPropagation();
+    }
+    /**
      * 添加子控件
      */
     public addChildComponent = (data: any, addData: any): any => {
+        let props: any = data;
+        props = this.prepareChildrenComponents(props);
+        // 获取新id
+        let childId: string = `${data.id}.cs1`;
+        childId = this.newComponentsId(data.p.components, `${data.id}.cs`);
+        data.p.components.push({
+            t: addData.t,
+            p: Object.assign({}, addData.props, { id: childId })
+        });
+        this.props.updateProps(data.id, { p: data.p });
+
+        return data;
+    }
+    /**
+     * 当新增子控件，并且需要增加子控件的子控件时，需要用到
+     */
+    public getChildComponent = (currId: string, data: any, addData: any): any => {
+        let props: any = this.findComponentProps(data, currId);
+        props = this.prepareChildrenComponents(props);
+        // 获取新id
+        let childId: string = `${props.id}.cs1`;
+        childId = this.newComponentsId(props.p.components, `${props.id}.cs`);
+        props.p.components.push({
+            t: addData.t,
+            p: Object.assign({}, addData.p, { id: childId })
+        });
+        const newItem = props.p.components.find((component: any) => component.p.id === childId);
+
+        return newItem;
+    }
+    /**
+     * 添加子控件
+     */
+    public updateChildComponent = (data: any, addData: any): any => {
         // 获取新id
         let childId: string = `${data.id}.cs1`;
         let currP: any = {
@@ -66,14 +119,65 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             });
             currP = data.p;
         }
-        this.props.updateProps(data.id, { p: currP });
 
         return data;
     }
     /**
+     * 初始化控件结构
+     */
+    public prepareChildrenComponents = (props: any): any => {
+        if (GlobalUtil.isUndefined(props.p)) {
+            props.p = {};
+        }
+        if (GlobalUtil.isUndefined(props.p.components)) {
+            props.p.components = [];
+        }
+
+        return props;
+    }
+    /**
+     * 获取当前控件的props
+     */
+    public findComponentProps = (data: any, id: any) => {
+        const ids = id.split('.');
+        if (data.id === id || ids.length < 3) {
+            return data;
+        }
+        // 因为现在第一层是baseComponent
+        // 所以所有控件id从第二层开始
+        // 第二层开始
+        let tmpId = `${ids[0]}.${ids[1]}`;
+        let props: any = ``;
+        tmpId = `${tmpId}.${ids[2]}`;
+        props = data.p.components.find((p: any) => p.p.id === tmpId);
+        if (GlobalUtil.isUndefined(props)) return;
+        for (let idx = 3; idx < ids.length; idx++) {
+            tmpId = `${tmpId}.${ids[idx]}`;
+            if (props.p === undefined || props.p.p === undefined || props.p.p.components === undefined) return;
+            props = props.p.p.components.find((p: any) => p.p.id === tmpId);
+            if (GlobalUtil.isUndefined(props)) return;
+        }
+
+        return props.p;
+    }
+    /**
      * 删除控件
      */
-    public deleteComponentsById = (cid: string): any => {
+    public deleteComponentsById = (): any => {
+        const cid = this.props.selectedId;
+        const state = this.props.stateData;
+        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) return;
+        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return;
+
+        const parent = this.findComponentParent(state, cid);
+        if (!GlobalUtil.isUndefined(parent)) {
+            const idx = parent.findIndex((com: any) => com.p.id === cid);
+            if (idx >= 0) {
+                parent.splice(idx, 1);
+            }
+        }
+        const parentId = cid.substring(0, cid.lastIndexOf('.'));
+        this.props.updateProps(parentId, { p: { components: parent } });
 
         return cid;
     }
@@ -98,7 +202,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取添加控件的信息
      */
-    protected getAddComponent() {
+    public getAddComponent() {
         if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) return;
         if (localStorage.__dnd_type !== 'dragging_map') return;
 
@@ -108,8 +212,8 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 选择子控件
      */
-    protected selectedCom = (e: any) => {
-        GlobalUtil.debugLog(this.props, 'props');
+    public selectedCom = (e: any) => {
+        // GlobalUtil.debugLog(this.props, 'props');
         const { id, selectComChange } = this.props;
         selectComChange(e, id);
     }
@@ -117,7 +221,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      *  控件在容器上方，容器背景颜色变化
      */
-    protected handleOver = (e: any) => {
+    public handleOver = (e: any) => {
         const data: any = this.getAddComponent();
         if (data === undefined) return;
         if (!this.componentCanBeAdded(data.t)) return;
@@ -130,7 +234,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      *  控件离开容器范围，容器颜色消失
      */
-    protected handleLeave = (e: any) => {
+    public handleLeave = (e: any) => {
         this.setState({
             hover: {}
         });
@@ -140,52 +244,22 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      *  控件离开容器范围，容器颜色消失
      */
-    protected scrollHandle = (e: any) => {
+    public scrollHandle = (e: any) => {
         this.props.updateProps(this.props.id, { scroll: e.target.scrollLeft });
         e.preventDefault();
     }
 
     /**
-     *  drop 添加控件
-     */
-    protected handleDropAddComponent = (e: any) => {
-        const data: any = this.getAddComponent();
-        this.setState({
-            hover: {}
-        });
-        // 校验是否能被添加
-        if (!this.componentCanBeAdded(data.t)) {
-            e.stopPropagation();
-
-            return;
-        }
-        // console.log('add_com', this.com);
-        // console.log('add_refs', this.refs);
-        // for (let idx = intersects.length - 1; idx >= 0; idx--) {
-        //     const intersect = intersects[idx];
-        //     if (!isUndefined(intersect.addComponent)) {
-        //         newState = intersect.addComponent(state, cs, csp, pos);
-        //         if (newState !== undefined) {
-        //             return newState;
-        //         }
-        //     }
-        // }
-        // 添加控件
-        this.addChildComponent(this.props, data);
-        e.stopPropagation();
-    }
-
-    /**
      *  校验控件是否可以被添加
      */
-    protected componentCanBeAdded(t: string) {
+    public componentCanBeAdded(t: string) {
         return false;
     }
 
     /**
      * 拖动处理
      */
-    protected onDragEnd = (result: any) => {
+    public onDragEnd = (result: any) => {
         if (result.type === 'field-row') {
             this.onDragEndBoard(result);
         }
@@ -208,7 +282,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 字段拖拽处理
      */
-    protected onDragEndBoard = (result: any) => {
+    public onDragEndBoard = (result: any) => {
         if (this.rowList !== null) {
             const { source, destination } = result;
             const { p, id } = this.props;
@@ -240,7 +314,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
 
         }
     }
-    protected getAllCom = (dataList: any[]) => {
+    public getAllCom = (dataList: any[]) => {
         let coms: any[] = [];
         dataList.forEach((data: any) => {
             coms = coms.concat(data);
@@ -249,7 +323,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         return coms;
     }
     // TODO:这里是查找当前id对应的父级别数组(还没找完，明天继续)
-    protected findComponentParent = (p: any, id: string) => {
+    public findComponentParent = (p: any, id: string) => {
         const ids = id.split('.');
         if (ids.length === 1) {
             return p.components;
@@ -266,14 +340,14 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
 
         return parent;
     }
-    protected reorder = (list: any, startIndex: any, endIndex: any) => {
+    public reorder = (list: any, startIndex: any, endIndex: any) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
 
         return result;
     }
-    protected move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
+    public move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
         const sourceClone = Array.from(source);
         const destClone = Array.from(destination);
         const [removed] = sourceClone.splice(droppableSource.index, 1);

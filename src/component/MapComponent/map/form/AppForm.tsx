@@ -3,6 +3,7 @@ import { MapComponent, IBaseProps } from '../../index';
 import { NavBarItem, TabForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     showNavBar: boolean;
@@ -12,7 +13,7 @@ export interface IMapProps extends IBaseProps {
 
 // tslint:disable-next-line:no-empty-interface
 // tslint:disable:jsx-no-string-ref
-export class AppForm extends MapComponent<IMapProps, any> {
+export class AppFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         selectedId: undefined,
         showNavBar: true,
@@ -127,4 +128,28 @@ export class AppForm extends MapComponent<IMapProps, any> {
             map_form_sni: navBarId
         });
     }
+    /**
+     * override
+     */
+    public addChildComponent = (data: any, addData: any): any => {
+
+        if (addData.t === 'MapComponent/map/form/NavBarItem') {
+            const newNavBarItem = this.getChildComponent(data.id, data, addData);
+            let childId = newNavBarItem.p.id;
+            const tabForm = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/TabForm' });
+            childId = tabForm.p.id;
+            const tabItem = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/TabItem' });
+            childId = tabItem.p.id;
+            const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/SectionForm' });
+            childId = sectionForm.p.id;
+            const section = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/Section' });
+            childId = section.p.id;
+            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/InputField' });
+        }
+
+        this.props.updateProps(data.id, { p: data.p });
+
+        return data;
+    }
 }
+export const AppForm = MapConsumer(AppFormClass);

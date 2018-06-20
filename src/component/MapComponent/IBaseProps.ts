@@ -11,5 +11,6 @@ export interface IBaseProps {
     w?: number;
     h?: number;
     updateProps: (id: string, data: any) => void;
-    state?: any;
+    stateData?: any;
+    refs?: any;
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -12,7 +13,7 @@ export interface IMapProps extends IBaseProps {
     onChangeItem: (id: string) => void;
 }
 
-export class NavBarItem extends MapComponent<IMapProps, any> {
+export class NavBarItemClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_sn_name: '标签页',
         map_form_sn_icon: '',
@@ -53,7 +54,7 @@ export class NavBarItem extends MapComponent<IMapProps, any> {
         );
 
         return (
-            <div onClick={this.onChangeItem} className="container">
+            <div ref={(ref) => this.com = ref} onMouseDown={this.onChangeItem} className="container">
                 <Draggable key={id} draggableId={id} index={index}>
                     {initDrag}
                 </Draggable>
@@ -66,3 +67,4 @@ export class NavBarItem extends MapComponent<IMapProps, any> {
     }
 
 }
+export const NavBarItem = MapConsumer(NavBarItemClass);

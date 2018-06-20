@@ -3,7 +3,7 @@ import { MapComponent, IBaseProps } from '../../index';
 import { TabItem, SectionForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { MapContext } from '../MapProvider';
+import { MapConsumer } from '../MapConsumer';
 
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-no-multiline-js
@@ -15,7 +15,7 @@ export interface IMapProps extends IBaseProps {
 
 // tslint:disable-next-line:no-empty-interface
 // tslint:disable:jsx-no-string-ref
-export class TabForm extends MapComponent<IMapProps, any> {
+export class TabFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         selectedId: undefined,
         showNavBar: true,
@@ -73,19 +73,18 @@ export class TabForm extends MapComponent<IMapProps, any> {
                         (sec: any) => {
                             if (sec.t === 'MapComponent/map/form/SectionForm') {
                                 this.sectionForm = (
-                                    <MapContext.Consumer>
-                                        {(value: any) => {
-                                            return <SectionForm
-                                                ref={`c.${sec.p.id}`}
-                                                selectedId={selectedId}
-                                                updateProps={updateProps}
-                                                selectComChange={selectComChange}
-                                                {...sec.p}
-                                                showTabItems={showTabItems}
-                                                state={value.data}
-                                            />;
-                                        }}
-                                    </MapContext.Consumer>
+                                    <SectionForm
+                                        ref={
+                                            () => {
+                                                return `c.${sec.p.id}`;
+                                            }
+                                        }
+                                        selectedId={selectedId}
+                                        updateProps={updateProps}
+                                        selectComChange={selectComChange}
+                                        {...sec.p}
+                                        showTabItems={showTabItems}
+                                    />
                                 );
                             }
                         }
@@ -135,3 +134,4 @@ export class TabForm extends MapComponent<IMapProps, any> {
         });
     }
 }
+export const TabForm = MapConsumer(TabFormClass);
