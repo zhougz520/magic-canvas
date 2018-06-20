@@ -90,13 +90,6 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         }
     }
 
-    // 将propertyTool的修改的属性传给canvas 设置对应的选中控件
-    onFireProperties = (pKey: string, pValue: any) => {
-        if (this.canvas) {
-            this.canvas.executeProperties(pKey, pValue);
-        }
-    }
-
     /**
      * 修改画布大小
      */

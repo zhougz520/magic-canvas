@@ -14,7 +14,6 @@ export interface IBarProps {
     onCommandEmitted: (cmd: any) => void;
     onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
         void;
-    onFireProperties: (pKey: string, pValue: any) => void;
     getSaveData: () => void;
 }
 
@@ -76,10 +75,10 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     ref={(render) => this.propertyTool = render}
                     collapsed={propsBarCollapsed}
                     titleBarCollapsed={titleBarCollapsed}
+                    onCommandEmitted={this.props.onCommandEmitted}
                     // tslint:disable-next-line:jsx-no-lambda
                     onPropsBarCollapse={(collapsed) => this.collapseBar(undefined, undefined, collapsed)}
                     onPropertyProperties={this.props.onPropertyProperties}
-                    onFireProperties={this.props.onFireProperties}
                     // objectlist={this.props.objectlist}
                 />
                 <ContributorBar />

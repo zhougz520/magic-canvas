@@ -19,7 +19,7 @@ import { PositionUtil } from './utils/PositionUtil';
 import { RichEditUtil } from './utils/RichEditUtil';
 import { StackUtil } from './utils/StackUtil';
 
-import { PageActions } from './command/PageActions';
+import { PageAction } from './command/PageAction';
 
 import { convertFromDataToBaseState } from './encoding/convertFromDataToBaseState';
 import { convertFromBaseStateToData } from './encoding/convertFromBaseStateToData';
@@ -46,7 +46,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     /**
      * 画布命令
      */
-    public _pageActions: PageActions;
+    public _pageAction: PageAction;
 
     /**
      * 画布的工具包
@@ -101,7 +101,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         /**
          * 初始化画布命令
          */
-        this._pageActions = new PageActions(this);
+        this._pageAction = new PageAction(this);
 
         /**
          * 初始化画布工具包
@@ -196,24 +196,8 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         // eg：e.addComments
         const cmdParams = cmd.t.split('.');
         if (cmdParams[0] === 'e') {
-            (this._pageActions as any)[cmdParams[1]](cmd.d);
+            (this._pageAction as any)[cmdParams[1]](cmd.d);
         }
-    }
-
-    // 给canvas编辑中的组件设置propertyTool中的属性
-    executeProperties = (pKey: string, pValue: any) => {
-        const currentSelectedComponent: Map<string, any> = this._canvasGlobalParam.getSelectedComponents();
-        currentSelectedComponent.map(
-            (com) => {
-                // TODO 优化代码
-                com.setPropertiesFromProperty(pKey, pValue);
-                if (pKey === 'borderWidth') {
-                    setTimeout(() => {
-                        this._drawUtil.repaintSelected();
-                    }, 0);
-                }
-            }
-        );
     }
 
     // 获取canvas编辑中的组件的属性
@@ -356,6 +340,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);
+        document.addEventListener('contextmenu', this._onDocMouseUp);
     }
 
     /**

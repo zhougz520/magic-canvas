@@ -4,8 +4,8 @@ import { BarList, IBarListComponent } from './BarList';
 import { Stage, ComponentsType, ICompos } from '../../../src';
 import './solution.css';
 import { config } from './config';
-import { detail1, detail2 } from './data';
-import { Map, List } from 'immutable';
+// import { detail1, detail2 } from './data';
+import { Map } from 'immutable';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -45,7 +45,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
 
     // 获取命令，并传给canvas
     onCommandEmitted = (cmd: any) => {
-        this.getStage().getCanvas().executeCommand(cmd);
+        this.getStage().onCommandEmitted(cmd);
     }
 
     // 获取选中的组件集合并传给CommandBar
@@ -61,11 +61,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
         if (this.barList && compProperty !== undefined) {
             this.barList.setPropertyState(compProperty);
         }
-    }
-
-    // 将propertyTool的修改的属性传给canvas 设置对应的选中控件
-    onFireProperties = (pKey: string, pValue: any) => {
-        this.getStage().getCanvas().executeProperties(pKey, pValue);
     }
 
     // 清除属性工具栏状态
@@ -89,7 +84,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     ref={(render) => this.barList = render}
                     changeStageOffset={this.changeStageOffset}
                     onCommandEmitted={this.onCommandEmitted}
-                    onFireProperties={this.onFireProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     highPerformance={this.highPerformance}
                     getSaveData={this.getSaveData}

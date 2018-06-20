@@ -57,8 +57,8 @@ export default class ComponentItem extends React.PureComponent<IComItemProps, IC
         if (this.dragElement !== null) {
             const itemPos = GlobalUtil.getDomLocation(this.dragElement);
             offset = {
-                x: comWidth * (evt.pageX - itemPos.leftWithScroll) / 61,
-                y: comHeight * (evt.pageY - itemPos.topWithScroll) / 60
+                x: Math.ceil(comWidth * (evt.pageX - itemPos.leftWithScroll) / 61),
+                y: Math.ceil(comHeight * (evt.pageY - itemPos.topWithScroll) / 60)
             };
         }
         localStorage.__dnd_type = 'dragging_cs';

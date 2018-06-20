@@ -51,5 +51,8 @@ export const CommandMap = {
     // 无序列表
     EDITOR_UL: 'e.ulEditor',
     // 对齐
-    EDITOR_TEXTALIGN: 'e.textAlignEditor'
+    EDITOR_TEXTALIGN: 'e.textAlignEditor',
+
+    // 设置组件属性
+    COM_SETPROPS: 'e.setPropsCom'
 };
