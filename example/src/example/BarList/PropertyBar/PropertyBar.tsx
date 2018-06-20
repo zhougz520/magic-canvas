@@ -1,7 +1,7 @@
 import * as React from 'react';
 import 'rc-color-picker/assets/index.css';
 import { Button, Input, Switch, Slider} from 'antd';
-import { PropertiesEnum } from '../../../../../src';
+import { PropertiesEnum, CommandMap } from '../../../../../src';
 import { List, fromJS, Map } from 'immutable';
 import ColorPicker from 'rc-color-picker';
 
@@ -10,11 +10,11 @@ const {TextArea} = Input;
 export interface IPropertyProps {
     collapsed: boolean;
     titleBarCollapsed: boolean;
+    // 发送命令
+    onCommandEmitted: (cmd: any) => void;
     onPropsBarCollapse: (collapsed: boolean) => void;
     onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
         void;
-
-    onFireProperties: (pKey: string, pValue: any) => void;
 }
 
 export interface IPropertyState {
@@ -41,6 +41,18 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             propsContent: List()
         };
         this.HandleChangeTextValue = this.HandleChangeTextValue.bind(this);
+    }
+
+    /**
+     * 发射命令
+     */
+    fireCommand = (cmd: any, param: any = null) => {
+        this.props.onCommandEmitted(
+            {
+                t: cmd,
+                d: param
+            }
+        );
     }
 
     setPropertyState = (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => {
@@ -73,13 +85,12 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     }
 
     onBlur = (e: any) => {
-
-        this.props.onFireProperties( e.target.name, e.target.value);
+        this.fireCommand(CommandMap.COM_SETPROPS, { pKey: e.target.name, pValue: e.target.value });
     }
     onSwitchChange = (e: any) => {
         const pKey = e.target.parentNode.id;
         const checkValue = e.target.className.indexOf('checked') === -1 ? true : false;
-        this.props.onFireProperties(pKey, checkValue);
+        this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue: checkValue });
     }
 
     render() {
@@ -326,7 +337,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         const index = properties.indexOf(optionProperty);
         const optionPropertyValue = optionProperty.get('pValue');
         if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
-            this.props.onFireProperties(e.target.id.split('*')[0], fromJS(optionList));
+            this.fireCommand(CommandMap.COM_SETPROPS, { pKey: e.target.id.split('*')[0], pValue: fromJS(optionList) });
 
             properties = properties.setIn([index, 'pValue'], fromJS(optionList));
             this.setState({propsContent: properties});
@@ -342,7 +353,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             properties = properties.setIn([index, 'pValue'], newOptionPropertyValue);
             this.setState({propsContent: properties});
 
-            this.props.onFireProperties(pKeyContent, newOptionPropertyValue);
+            this.fireCommand(CommandMap.COM_SETPROPS, { pKey: pKeyContent, pValue: newOptionPropertyValue });
         }
 
     }
@@ -375,7 +386,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         const optionPropertyValue = optionProperty.get('pValue');
         // TODO optionPropertyValue.toArray is not a function
         if ( typeof(optionPropertyValue.toArray()[0]) === 'string') {
-            this.props.onFireProperties(e.target.id.split('*')[0], fromJS(optionList));
+            this.fireCommand(CommandMap.COM_SETPROPS, { pKey: e.target.id.split('*')[0], pValue: fromJS(optionList) });
 
             properties = properties.setIn([index, 'pValue'], fromJS(optionList));
             this.setState({propsContent: properties});
@@ -391,7 +402,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             properties = properties.setIn([index, 'pValue'], newOptionPropertyValue);
             this.setState({propsContent: properties});
 
-            this.props.onFireProperties(pKeyContent, newOptionPropertyValue);
+            this.fireCommand(CommandMap.COM_SETPROPS, { pKey: pKeyContent, pValue: newOptionPropertyValue });
         }
 
     }
@@ -404,7 +415,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         const index = properties.indexOf(optionProperty);
         properties = properties.setIn([index, 'pValue'], e.target.value);
         this.setState({propsContent: properties});
-        this.props.onFireProperties(pKeyContent, e.target.value);
+        this.fireCommand(CommandMap.COM_SETPROPS, { pKey: pKeyContent, pValue: e.target.value });
 
     }
 
@@ -423,7 +434,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             const index = properties.indexOf(optionProperty);
             properties = properties.setIn([index, 'pValue'], colorPicker.color);
             this.setState({propsContent: properties});
-            this.props.onFireProperties(this.activeKey, colorPicker.color);
+            this.fireCommand(CommandMap.COM_SETPROPS, { pKey: this.activeKey, pValue: colorPicker.color });
             this.activeKey = '';
         }
     }
@@ -438,7 +449,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             const index = properties.indexOf(optionProperty);
             properties = properties.setIn([index, 'pValue'], this.activeValue);
             this.setState({propsContent: properties});
-            this.props.onFireProperties(pKey, this.activeValue);
+            this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue: this.activeValue });
             this.activeValue = undefined;
         }
     }

@@ -1,8 +1,9 @@
 import { Canvas } from '../Canvas';
+import { IComponent } from '../../BaseComponent';
 import { IRange, IStack, IComponentList } from '../model/types';
-import { Stack, Set, List, OrderedSet } from 'immutable';
+import { Stack, Set, List, OrderedSet, Map } from 'immutable';
 
-export class PageActions {
+export class PageAction {
     private _canvas: Canvas;
 
     /**
@@ -370,5 +371,20 @@ export class PageActions {
                     break;
             }
         }
+    }
+
+    setPropsCom = (param: any) => {
+        const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
+        currentSelectedComponent.map(
+            (com: IComponent) => {
+                // TODO 优化代码
+                com.setPropertiesFromProperty(param.pKey, param.pValue);
+                if (param.pKey === 'borderWidth') {
+                    setTimeout(() => {
+                        this._canvas._drawUtil.repaintSelected();
+                    }, 0);
+                }
+            }
+        );
     }
 }
