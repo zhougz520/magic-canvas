@@ -94,7 +94,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                 selectComChange={this.selectComChange}
                 selectedId={this.state.selectedId}
                 pageMode={pageMode}
-                data={childData}
+                stateData={childData}
             >
                 <div
                     className="ps-map"

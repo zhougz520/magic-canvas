@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { Section } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -11,7 +12,7 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
-export class SectionForm extends MapComponent<IMapProps, any> {
+class SectionFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
         selectedId: undefined
@@ -29,7 +30,7 @@ export class SectionForm extends MapComponent<IMapProps, any> {
     }
     render() {
         const { hover } = this.state;
-
+        // console.log('refs', this.props.refs);
         const {
             updateProps,
             p,
@@ -87,4 +88,24 @@ export class SectionForm extends MapComponent<IMapProps, any> {
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/map/form/Section');
     }
+
+    // 更新控件属性
+    private updateComProps = (data: any, id: string, prop: any) => {
+        let newData: any = data;
+        data.components.forEach((com: any) => {
+            if (com.p.id === id) {
+                com.p = Object.assign({}, com.p, prop);
+                newData = data;
+
+                return newData;
+            }
+            // 如果存在子控件，则
+            if (com.p.p !== undefined && com.p.p.components !== undefined) {
+                this.updateComProps(com.p.p, id, prop);
+            }
+        });
+
+        return newData;
+    }
 }
+export const SectionForm = MapConsumer(SectionFormClass);

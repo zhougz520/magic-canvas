@@ -9,7 +9,7 @@ export interface IComponent {
     /**
      * 获取最新的控件id
      */
-    deleteComponentsById: (pid: string) => any;
+    deleteComponentsById: (data: any, pid: string) => any;
     /**
      * 获取最新的控件id
      */

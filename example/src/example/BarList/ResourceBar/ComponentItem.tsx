@@ -62,7 +62,7 @@ export default class ComponentItem extends React.PureComponent<IComItemProps, IC
             };
         }
         localStorage.__dnd_type = 'dragging_cs';
-        if (this.props.componentType.indexOf('MapComponent') !== -1) {
+        if (this.props.componentType.indexOf('MapComponent') !== -1 && componentProps.type === undefined) {
             localStorage.__dnd_type = 'dragging_map';
         }
         localStorage.__dnd_value = JSON.stringify({
