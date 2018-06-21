@@ -150,6 +150,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                 <Canvas
                     ref={(render) => this.canvas = render}
                     onContextMenu={this.props.onContextMenu}
+                    setPageDirty={this.props.setPageDirty}
                     getDraw={this.getDraw}
                     pageMode={this.props.pageMode}
                     highPerformance={highPerformance}
