@@ -200,9 +200,15 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             }
         );
 
+        // 先清空画布，再加载新数据
         this.setState({
             cursor: 'default',
-            componentList
+            componentList: OrderedSet()
+        }, () => {
+            this.setState({
+                cursor: 'default',
+                componentList
+            });
         });
     }
 
