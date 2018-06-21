@@ -16,6 +16,8 @@ export interface ICanvasProps {
     // canvas默认的宽高
     canvasSize: { width: number, height: number };
 
+    // 设置页签变脏
+    setPageDirty?: () => void;
     // 右键菜单
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
 

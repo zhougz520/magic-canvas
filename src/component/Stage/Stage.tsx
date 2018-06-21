@@ -125,10 +125,12 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         };
     }
 
-    getCanvasIsDirty = (): boolean => {
-        const isDirty: boolean = this.getCanvas().getIsDirty();
+    setCanvasIsDirty = (isDirty: boolean): void => {
+        this.getCanvas().setIsDirty(isDirty);
+    }
 
-        return isDirty;
+    initCanvasData = (components: any): void => {
+        this.getCanvas().initCanvas(components);
     }
 
     render() {

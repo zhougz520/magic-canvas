@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ComponentsType } from '../Stage';
 import { RichEdit, Wingman } from '../RichEdit';
 import { IProperty } from '../UniversalComponents';
 
@@ -140,6 +141,68 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         };
     }
 
+    /**
+     * 初始化画布数据，切换标签页时调用
+     */
+    initCanvas = (components: ComponentsType): void => {
+        /**
+         * 初始化画布命令
+         */
+        this._pageAction = new PageAction(this);
+
+        /**
+         * 初始化画布工具包
+         */
+        this._canvasGlobalParam = new CanvasGlobalParam(this);
+        this._canvasUtil = new CanvasUtil(this);
+        this._commentsUtil = new CommentsUtil(this);
+        this._componentsUtil = new ComponentsUtil(this);
+        this._drawUtil = new DrawUtil(this);
+        this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
+        this._positionUtil = new PositionUtil(this);
+        this._richEditUtil = new RichEditUtil(this);
+        this._stackUtil = new StackUtil(this);
+
+        /**
+         * 全局变量
+         */
+        this._maxZIndex = 0;
+        this._minZIndex = 0;
+        this._maxComIndex = 0;
+        this._maxCommentsZIndex = 100000;
+        this._minCommentsZIndex = 100000;
+        this._maxCommentsIndex = 0;
+        this._newComponentCid = null;
+        this._isWingmanFocus = false;
+        this._isRichEditMode = false;
+        this._undoStack = Stack();
+        this._redoStack = Stack();
+        this._isAddCommentsMode = false;
+        this._isDirty = false;
+
+        // 把props的components的数据转译为baseState
+        let componentList: OrderedSet<IComponentList> = OrderedSet();
+        components.map(
+            (component) => {
+                const comData: IComData = this._componentsUtil.convertComponentToData(component);
+                const baseState: BaseState = convertFromDataToBaseState(comData, component.t);
+
+                componentList = componentList.add({
+                    cid: comData.id,
+                    comPath: component.t,
+                    baseState,
+                    childData: comData.p,
+                    initType: 'Init'
+                });
+            }
+        );
+
+        this.setState({
+            cursor: 'default',
+            componentList
+        });
+    }
+
     getEditor = (): RichEdit => {
         return (this.editor as RichEdit);
     }
@@ -269,8 +332,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         return detail;
     }
 
-    getIsDirty = (): boolean => {
-        return this._isDirty;
+    /**
+     * 设置画布是否变脏
+     */
+    setIsDirty = (isDirty: boolean): void => {
+        this._isDirty = isDirty;
     }
 
     componentDidMount() {
