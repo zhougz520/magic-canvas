@@ -5,6 +5,8 @@ import { IComponent } from '../../../BaseComponent';
 import { Map } from 'immutable';
 
 export function docContextMenu(canvas: Canvas, e: any): void {
+    e.preventDefault();
+
     if (canvas.props.onContextMenu) {
         let contextMenuItems: IContextMenuItems[] = [];
         const mouseEventType: string = canvas._mouseAndKeyUtil.onMouseEventType(e);

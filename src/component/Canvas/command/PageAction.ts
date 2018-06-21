@@ -209,7 +209,7 @@ export class PageAction {
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Left');
     }
 
-    // 水平居中
+    // 左右居中
     centerCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Center');
@@ -221,31 +221,31 @@ export class PageAction {
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Right');
     }
 
-    // 顶对齐
+    // 顶端对齐
     topCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Top');
     }
 
-    // 垂直居中
+    // 上下居中
     middleCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Middle');
     }
 
-    // 底对齐
+    // 底端对齐
     bottomCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Bottom');
     }
 
-    // 水平等间距
+    // 横向分布
     horizontalCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Horizontal');
     }
 
-    // 垂直等间距
+    // 纵向分布
     verticalCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Vertical');

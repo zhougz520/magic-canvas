@@ -145,6 +145,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 初始化画布数据，切换标签页时调用
      */
     initCanvas = (components: ComponentsType): void => {
+        // 清除选中
+        this._drawUtil.clearSelected();
+
         /**
          * 初始化画布命令
          */
@@ -407,7 +410,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);
-        (this.canvas as HTMLDivElement).addEventListener('contextmenu', (e) => { this._onDocMouseUp(e); this._onDocContextMenu(e); });
+        (this.canvas as HTMLDivElement).addEventListener('contextmenu', (e) => {
+            this._onDocMouseUp(e);
+            this._onDocContextMenu(e);
+        });
     }
 
     /**
