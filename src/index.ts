@@ -28,7 +28,8 @@ export {
     IConfig,
     ICompos,
     ComponentsType,
-    ComponentsMap
+    ComponentsMap,
+    IContextMenuItems
 } from './component/Stage';
 
 export {

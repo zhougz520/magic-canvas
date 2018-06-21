@@ -19,6 +19,12 @@ export class PageAction {
         this._canvas._commentsUtil.startAddComments();
     }
 
+    // 添加批注锚点
+    addCommentsRect = (cid: string) => {
+        this._canvas._commentsUtil._currentCommentsCid = cid;
+        this._canvas._commentsUtil.startAddComments(true);
+    }
+
     // 画布撤销
     undoCanvas = () => {
         const undoStack: Stack<IStack> = this._canvas._undoStack;
@@ -373,7 +379,10 @@ export class PageAction {
         }
     }
 
-    setPropsCom = (param: any) => {
+    /**
+     * 属性工具栏设置组件属性
+     */
+    setPropsCom = (param: { pKey: string; pValue: any; }) => {
         const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com: IComponent) => {

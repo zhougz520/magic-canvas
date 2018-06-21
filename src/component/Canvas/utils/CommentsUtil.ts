@@ -11,7 +11,8 @@ export class CommentsUtil {
         startPoint: null,
         endPoint: null
     };                                                          // 添加批注框的位置
-    public _currentCommentsCid: string | null = null;        // 当前添加的批注的cid
+    public _currentCommentsCid: string | null = null;           // 当前添加的批注的cid
+    public _isAddRect: boolean =  false;                        // 是否添加锚点
 
     private _canvas: Canvas;
 
@@ -25,8 +26,10 @@ export class CommentsUtil {
 
     /**
      * 开始添加批注
+     * @param isAddRect 是否是添加锚点
      */
-    startAddComments = () => {
+    startAddComments = (isAddRect: boolean = false) => {
+        this._isAddRect = isAddRect;
         this._canvas._isAddCommentsMode = true;
         this._canvas.setState({ cursor: 'crosshair' });
     }
@@ -35,7 +38,11 @@ export class CommentsUtil {
      * 结束添加批注
      */
     stopAddComments = () => {
-        this.doAddComments();
+        if (this._isAddRect) {
+            this.doAddCommentsRect();
+        } else {
+            this.doAddComments();
+        }
 
         this._canvas._isAddCommentsMode = false;
         this._canvas.setState({ cursor: 'default' });
@@ -49,6 +56,8 @@ export class CommentsUtil {
             startPoint: null,
             endPoint: null
         };
+        this._currentCommentsCid = null;
+        this._isAddRect = false;
     }
 
     /**

@@ -14,7 +14,7 @@ import {
     IBaseUniversalComponentProps,
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+import { MaskLayer } from '../../BaseComponent';
 
 import { SelectorState, ISelectorState } from './SelectorState';
 import { PropertiesEnum } from '../model/types';

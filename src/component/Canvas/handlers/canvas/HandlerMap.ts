@@ -6,6 +6,7 @@ import { docKeyDown } from './docKeyDown';
 import { docKeyUp } from './docKeyUp';
 import { canDrop } from './canDrop';
 import { canDragOver } from './canDragOver';
+import { docContextMenu } from './docContextMenu';
 
 export const HandlerMap = {
     onDocMouseMove: docMouseMove,
@@ -15,5 +16,6 @@ export const HandlerMap = {
     onDocKeyDown: docKeyDown,
     onDocKeyUp: docKeyUp,
     onCanDrop: canDrop,
-    onCanDragOver: canDragOver
+    onCanDragOver: canDragOver,
+    onDocContextMenu: docContextMenu
 };

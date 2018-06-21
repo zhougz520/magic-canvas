@@ -13,7 +13,7 @@ import {
     IBaseUniversalComponentProps,
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+import { MaskLayer } from '../../BaseComponent';
 
 import { CheckBoxState, ICheckBoxState } from './CheckBoxState';
 import { PropertiesEnum } from '../model/types';

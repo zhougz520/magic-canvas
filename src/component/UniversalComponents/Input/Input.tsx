@@ -13,7 +13,7 @@ import {
     IBaseUniversalComponentProps,
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
-import { MaskLayer } from '../../BaseComponent/mask/MaskLayer';
+import { MaskLayer } from '../../BaseComponent';
 
 import { InputState, IInputState } from './InputState';
 import { PropertiesEnum } from '../model/types';

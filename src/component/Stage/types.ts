@@ -38,3 +38,11 @@ export const ComponentsMap = {
     Universal_Input: { t: 'UniversalComponents/Input/Input', p: { name: '单行输入', w: 200, h: 32 } },
     Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: '多行输入', w: 280, h: 73 } }
 };
+
+export type ContextMenuType = 'menu' | 'separator';
+
+export interface IContextMenuItems {
+    type: ContextMenuType;
+    label?: string;
+    click?: () => void;
+}

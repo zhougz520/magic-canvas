@@ -6,6 +6,7 @@ import { BaseState } from './model/BaseState';
 import { EditType, IRichEditOption, ICommentsList, ComponentType, IFont } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
 import { IProperty } from '../UniversalComponents';
+import { IContextMenuItems } from '../Stage';
 
 import { IAnchor } from '../util';
 import { List } from 'immutable';
@@ -145,6 +146,11 @@ export interface IComponent {
      * 是否可以挤开其他组件
      */
     isCanPushOpenOtherComponent: () => boolean;
+
+    /**
+     * 获取组件的右键菜单
+     */
+    getContextMenuItems: () => IContextMenuItems[];
 
     /**
      * 选中框属性

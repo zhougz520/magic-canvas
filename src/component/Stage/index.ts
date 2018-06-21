@@ -1,2 +1,2 @@
 export { Stage } from './Stage';
-export { ICompos, IConfig, ComponentsType, ComponentsMap, PageMode } from './types';
+export { ICompos, IConfig, ComponentsType, ComponentsMap, PageMode, IContextMenuItems } from './types';
