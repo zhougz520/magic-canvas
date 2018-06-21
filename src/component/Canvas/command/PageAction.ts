@@ -19,6 +19,12 @@ export class PageAction {
         this._canvas._commentsUtil.startAddComments();
     }
 
+    // 添加批注锚点
+    addCommentsRect = (cid: string) => {
+        this._canvas._commentsUtil._currentCommentsCid = cid;
+        this._canvas._commentsUtil.startAddComments(true);
+    }
+
     // 画布撤销
     undoCanvas = () => {
         const undoStack: Stack<IStack> = this._canvas._undoStack;

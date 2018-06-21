@@ -15,6 +15,7 @@ import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
 import { IProperty, PropertiesEnum } from '../UniversalComponents';
+import { IContextMenuItems } from '../Stage';
 import { Stack, List } from 'immutable';
 
 /**
@@ -411,6 +412,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public isCanPushOpenOtherComponent = (): boolean => {
         return false;
+    }
+
+    /**
+     * 获取组件的右键菜单
+     * 默认：空，组件自己重写
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        return [];
     }
 
     /**

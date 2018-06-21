@@ -73,6 +73,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _onDocKeyUp: any = this._buildHandler('onDocKeyUp');
     public _onCanDrop: any = this._buildHandler('onCanDrop');
     public _onCanDragOver: any = this._buildHandler('onCanDragOver');
+    public _onDocContextMenu: any = this._buildHandler('onDocContextMenu');
 
     /**
      * 全局变量
@@ -340,7 +341,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);
-        document.addEventListener('contextmenu', this._onDocMouseUp);
+        (this.canvas as HTMLDivElement).addEventListener('contextmenu', (e) => { this._onDocMouseUp(e); this._onDocContextMenu(e); });
     }
 
     /**

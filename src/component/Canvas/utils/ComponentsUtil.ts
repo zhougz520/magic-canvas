@@ -147,7 +147,8 @@ export class ComponentsUtil {
                         dbClickToBeginEdit: this._canvas._richEditUtil.dbClickToBeginEdit,
                         getComponent: this._canvas.getComponent,
                         resetMaxAndMinZIndex: this._canvas._canvasUtil.resetZIndexAndComIndex,
-                        setCanvasUndoStack: this._canvas._stackUtil.setCanvasUndoStack
+                        setCanvasUndoStack: this._canvas._stackUtil.setCanvasUndoStack,
+                        executeCommand: this._canvas.executeCommand
                     })
                 );
             }
