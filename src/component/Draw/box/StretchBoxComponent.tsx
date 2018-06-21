@@ -20,8 +20,8 @@ const createStretch = (props: IStretchProps) => {
         props.type,
         pointX,
         pointY,
-        width,
-        height,
+        svgWidth,
+        svgHeight,
         undefined
     );
 

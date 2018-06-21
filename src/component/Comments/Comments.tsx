@@ -12,7 +12,8 @@ import {
     PositionState,
     SizeState,
     IComData,
-    IFont
+    IFont,
+    MaskLayer
 } from '../BaseComponent';
 import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState, CommandMap } from '../Canvas';
 import { IContextMenuItems } from '../Stage';
@@ -148,6 +149,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     onDoubleClick={this.doDbClickToEdit}
                     style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 >
+                    <MaskLayer id={this.getCid()} />
                     <Editor
                         editorState={editorState}
                         inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}

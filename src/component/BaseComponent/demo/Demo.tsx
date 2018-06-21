@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../index';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle, MaskLayer } from '../index';
 import { Button, Icon, Radio } from 'antd';
-const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 import '../sass/Demo.scss';
@@ -29,14 +28,6 @@ export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
         };
     }
 
-    // public isCanPushOpenOtherComponent = (): boolean => {
-    //     return true;
-    // }
-
-    // public isCanMove = (): boolean => {
-    //     return false;
-    // }
-
     public render() {
         const richChildNode = this.getRichChildNode();
 
@@ -47,7 +38,7 @@ export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
                 onDoubleClick={this.doDbClickToEdit}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
-                {/* <MaskLayer /> */}
+                <MaskLayer id={this.getCid()} />
                 <div
                     id="demoSass"
                 >
@@ -64,12 +55,11 @@ export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
                 <br />
                 <RadioGroup
                     defaultValue="a"
-                    options={[{label: 'radio1', value: 1}, {label: 'radio2', value: 2}, {label: 'radio3', value: 3}]}
                 >
-                    <RadioButton value="a">Hangzhou</RadioButton>
-                    <RadioButton value="b">Shanghai</RadioButton>
-                    <RadioButton value="c">Beijing</RadioButton>
-                    <RadioButton value="d">Chengdu</RadioButton>
+                    <Radio value="a">Hangzhou</Radio>
+                    <Radio value="b">Shanghai</Radio>
+                    <Radio value="c">Beijing</Radio>
+                    <Radio value="d">Chengdu</Radio>
                 </RadioGroup>
             </div>
         );

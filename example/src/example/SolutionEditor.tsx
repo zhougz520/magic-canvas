@@ -73,8 +73,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     getSaveData = () => {
         const saveData = this.getStage().getCanvasSaveData();
         console.log(JSON.stringify(saveData));
-        const isDirty = this.getStage().getCanvasIsDirty();
-        console.log(isDirty);
     }
 
     render() {
