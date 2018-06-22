@@ -1,6 +1,6 @@
 {
   "name": "xprst-com",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "component base for xpresentation",
   "main": "./dist/index.js",
   "types": "./@types/index.d.ts",
@@ -56,7 +56,7 @@
     "keycode": "^2.1.9",
     "react-addons-create-fragment": "^15.6.2",
     "react-beautiful-dnd": "^7.1.0",
-    "xprst-draft": "^0.0.2"
+    "xprst-draft": "^0.0.3"
   },
   "devDependencies": {
     "@types/debug": "^0.0.30",
