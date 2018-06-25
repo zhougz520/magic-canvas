@@ -1,3 +1,13 @@
+// 属性栏定义
+$props-title-height: 8px;
+$props-collapse-header-height:32px;
+$props-collapse-header-arrow-margin: -4px;
+$props-item-height:28px;
+$props-item-input-margin-top: 2px;
+$props-item-switch-margin-top: 6px;
+$props-col-2-input-width: 55px;
+$props-col-1-input-width: 130px;
+
 .main-editor .title-bar{
     position: absolute;
     top: 0;
@@ -66,9 +76,57 @@
 }
 
 .main-editor .props-bar .bar {
+    position: absolute;
     left: 0;
     right: 24px;
     border-right: 1px solid #fafafa;
+
+    .props-col-1 {
+        height: $props-item-height;
+        line-height: $props-item-height;
+        position: relative;
+        > div, > input,> label{
+            width: $props-col-1-input-width;
+            position: absolute;
+            right: 0;
+            top: $props-item-input-margin-top;
+        }
+        > div {
+            &.ant-slider {
+            margin: 6px;
+            width: $props-col-1-input-width - 12;
+            }
+        }
+        > span {
+            &.ant-switch {
+                position: absolute;
+                right: 0;
+                top: $props-item-switch-margin-top;                
+            }
+        }
+        > div {
+            &.colorButton {
+                padding: 5px;
+                background: #fff;
+                border-radius: 1px;
+                box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+                display: inline-block;
+                cursor: pointer;
+                width: auto;
+
+                > div {
+                    &.colorButton-inner {
+                        width: 24px;
+                        height: 14px;
+                        border-radius: 2px;
+                    }
+                }
+            }
+        }
+        &.group-end {
+            margin-bottom: $props-title-height;
+        }
+    }
 }
 
 .rUl {
@@ -96,4 +154,26 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.main-editor .command-bar {
+    > div {
+        &.colorButton {
+            padding: 5px;
+            background: #fff;
+            border-radius: 1px;
+            box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+            display: inline-block;
+            cursor: pointer;
+            width: auto;
+
+            > div {
+                &.colorButton-inner {
+                    width: 24px;
+                    height: 14px;
+                    border-radius: 2px;
+                }
+            }
+        }
+    }
 }

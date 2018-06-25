@@ -121,7 +121,7 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
                 pType: PropertiesEnum.INPUT_TEXT
             },
             {
-                pTitle: '输入框提示',
+                pTitle: '提示信息',
                 pKey: 'placeholder',
                 pValue: this.getCustomState().getPlaceholder(),
                 pType: PropertiesEnum.INPUT_TEXT

@@ -3,15 +3,15 @@ import * as React from 'react';
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
 import { CommandMap, getListStyleTypeMap } from '../../../../../src';
 
-import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio } from 'antd';
-import ColorPicker from 'rc-color-picker';
+import { SketchPicker } from 'react-color';
+import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio, Popover } from 'antd';
+
 import { Map } from 'immutable';
 
 import '../sass/bar.scss';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
-    _colorPickerCount: number = 0;
     constructor(props: IToolbarProps) {
         super(props);
         this.state = {
@@ -102,12 +102,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
     }
 
     changeColor = (color: any) => {
-        this._colorPickerCount += 1;
-        if (this._colorPickerCount % 2 === 0) {
-            // TODO 还组件
-        } else {
-            this.fireCommand(CommandMap.EDITOR_FONTCOLOR, color.color);
-        }
+        this.fireCommand(CommandMap.EDITOR_FONTCOLOR, color);
     }
 
     doSaveData = () => {
@@ -146,6 +141,12 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
             </Menu>
         );
 
+        const colorPicker = (
+            <SketchPicker
+                onChangeComplete={(color) => this.changeColor(color.hex)}
+            />
+        );
+
         return (
             <div className={`command-bar ${titleBarCollapsed ? 'title-bar-collapsed' : ''}`}>
                 <div onClick={this.onClick}>折叠</div>
@@ -181,17 +182,16 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 >
                     删除线
                 </Button>
-                <ColorPicker
-                    onChange={this.changeColor}
-                    enableAlpha={false}
-                >
-                    <Button
-                        type="primary"
-                        size="small"
-                    >
-                        字体颜色
-                    </Button>
-                </ColorPicker>
+                <Popover placement="rightTop" content={colorPicker} trigger="click">
+                    <div className="colorButton">
+                        <div
+                            className="colorButton-inner"
+                            style={{
+                                background: 'red'
+                            }}
+                        />
+                    </div>
+                </Popover>
                 <InputNumber
                     min={1}
                     max={100}

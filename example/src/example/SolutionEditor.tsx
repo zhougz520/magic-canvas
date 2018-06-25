@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarList';
-import { Stage, ComponentsType, ICompos } from '../../../src';
+import { Stage, ComponentsType, ICompos, IPropertyGroup } from '../../../src';
 import './solution.css';
 import { config } from './config';
 // import { detail1, detail2 } from './data';
-import { Map } from 'immutable';
+import { Map, OrderedSet } from 'immutable';
 
 export interface ISolutionProp {
     [key: string]: any;
@@ -56,17 +56,9 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
     }
 
     // 将输入参数：编辑中的组件属性，传给propertyTool
-    onPropertyProperties = (compProperty: Array<{ pTitle: string, pKey: string, pValue: any, pType: string }> | undefined
-    ): void => {
-        if (this.barList && compProperty !== undefined) {
-            this.barList.setPropertyState(compProperty);
-        }
-    }
-
-    // 清除属性工具栏状态
-    clearSelectedProperty = () => {
+    onPropertyProperties = (propertyGroup: OrderedSet<IPropertyGroup>): void => {
         if (this.barList) {
-            this.barList.clearPropertyState();
+            this.barList.setPropertyState(propertyGroup);
         }
     }
 
@@ -82,7 +74,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     ref={(render) => this.barList = render}
                     changeStageOffset={this.changeStageOffset}
                     onCommandEmitted={this.onCommandEmitted}
-                    onPropertyProperties={this.onPropertyProperties}
                     highPerformance={this.highPerformance}
                     getSaveData={this.getSaveData}
                 />
@@ -92,7 +83,6 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     components={detail.content.components as ComponentsType}
                     onCommandProperties={this.onCommandProperties}
                     onPropertyProperties={this.onPropertyProperties}
-                    clearSelectedProperty={this.clearSelectedProperty}
                     pageMode={'Edit'}
                 />
             </div>

@@ -117,7 +117,7 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
                 pType: PropertiesEnum.INPUT_TEXT
             },
             {
-                pTitle: '输入框提示',
+                pTitle: '提示信息',
                 pKey: 'placeholder',
                 pValue: this.getCustomState().getPlaceholder(),
                 pType: PropertiesEnum.INPUT_TEXT
