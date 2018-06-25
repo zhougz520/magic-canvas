@@ -396,4 +396,11 @@ export class PageAction {
             }
         );
     }
+
+    /**
+     * 设置僚机焦点
+     */
+    setFocusWingman = () => {
+        this._canvas.getWingman().setFocus();
+    }
 }

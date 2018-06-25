@@ -29,7 +29,6 @@ export class DrawUtil {
             // 向CommandBar传递当前选中的组件集合
             this._canvas.props.onCommandProperties(this._canvas._canvasGlobalParam.getSelectedComponents());
             // 向PropertyBar传递当前选中的组件属性
-            this._canvas.props.clearSelectedProperty();
             this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(this._canvas._canvasGlobalParam.getSelectedComponents()));
         }
     }
@@ -62,8 +61,7 @@ export class DrawUtil {
             this.hideSelected();
             // 向CommandBar传递当前选中的组件集合
             this._canvas.props.onCommandProperties(Map());
-            this._canvas.props.onPropertyProperties(undefined);
-            this._canvas.props.clearSelectedProperty();
+            this._canvas.props.onPropertyProperties(OrderedSet());
 
         }
     }

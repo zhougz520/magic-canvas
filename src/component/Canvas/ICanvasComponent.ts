@@ -1,7 +1,7 @@
 import { IComponent } from '../BaseComponent';
-import { IProperty } from '../UniversalComponents';
+import { IPropertyGroup } from '../UniversalComponents';
 import { ComponentsType } from '../Stage';
-import { Map } from 'immutable';
+import { Map, OrderedSet } from 'immutable';
 
 /**
  * CanvasComponent提供的方法接口
@@ -25,6 +25,8 @@ export interface ICanvasComponent {
      */
     executeCommand: (cmd: any) => void;
 
-    getSelectedProperties: (currentSelectedComponents: Map<string, IComponent>) =>
-        IProperty[] | undefined;
+    /**
+     * 获取选中组件的属性集合
+     */
+    getSelectedProperties: (selectedComs: Map<string, IComponent>) => OrderedSet<IPropertyGroup>;
 }

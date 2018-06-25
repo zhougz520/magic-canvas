@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ComponentsType } from '../Stage';
 import { RichEdit, Wingman } from '../RichEdit';
-import { IProperty } from '../UniversalComponents';
+import { IPropertyGroup } from '../UniversalComponents';
 
 import { BaseState, IComponent, IComData } from '../BaseComponent';
 import { ICanvasState } from './ICanvasState';
@@ -275,38 +275,47 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
 
     // 获取canvas编辑中的组件的属性
     // TODO 优化代码
-    getSelectedProperties = (currentSelectedComponents: Map<string, IComponent>): IProperty[] | undefined => {
-        let propertyResult: IProperty[] = [];
-        // 多个选中的组件 则获取共同的属性
-        if (currentSelectedComponents.size > 1) {
-            const components = currentSelectedComponents.toArray();
-            for (let i = 0; i < currentSelectedComponents.size; i++) {
-                const property = components[i].getPropertiesToProperty();
-                if (i === 0) {
-                    propertyResult = property;
-                } else {
-                    for (let x = propertyResult.length - 1; x > -1; x--) {
-                        let isNeedDelete: boolean = true;
-                        for (let y = property.length - 1; y > -1; y--) {
-                            if (propertyResult[x].pKey === property[y].pKey
-                                && propertyResult[x].pType === property[y].pType) {
-                                isNeedDelete = false;
-                            }
-                        }
-                        if (isNeedDelete) {
-                            propertyResult.splice(x, 1);
-                        }
-                    }
-                }
-            }
+    // getSelectedProperties = (currentSelectedComponents: Map<string, IComponent>): IProperty[] | undefined => {
+    //     let propertyResult: IProperty[] = [];
+    //     // 多个选中的组件 则获取共同的属性
+    //     if (currentSelectedComponents.size > 1) {
+    //         const components = currentSelectedComponents.toArray();
+    //         for (let i = 0; i < currentSelectedComponents.size; i++) {
+    //             const property = components[i].getPropertiesToProperty();
+    //             if (i === 0) {
+    //                 propertyResult = property;
+    //             } else {
+    //                 for (let x = propertyResult.length - 1; x > -1; x--) {
+    //                     let isNeedDelete: boolean = true;
+    //                     for (let y = property.length - 1; y > -1; y--) {
+    //                         if (propertyResult[x].pKey === property[y].pKey
+    //                             && propertyResult[x].pType === property[y].pType) {
+    //                             isNeedDelete = false;
+    //                         }
+    //                     }
+    //                     if (isNeedDelete) {
+    //                         propertyResult.splice(x, 1);
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            return propertyResult;
-        } else if (currentSelectedComponents.size === 1) {
-            // 一个选中的组件 则获取该组件的属性
-            return propertyResult = currentSelectedComponents.first().getPropertiesToProperty();
-        } else {
-            return undefined;
+    //         return propertyResult;
+    //     } else if (currentSelectedComponents.size === 1) {
+    //         // 一个选中的组件 则获取该组件的属性
+    //         return propertyResult = currentSelectedComponents.first().getPropertiesToProperty();
+    //     } else {
+    //         return undefined;
+    //     }
+    // }
+    getSelectedProperties = (selectedComs: Map<string, IComponent>): OrderedSet<IPropertyGroup> => {
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        if (selectedComs.size === 1) {
+            propertyGroup = selectedComs.first().getPropertiesToProperty();
         }
+
+        return propertyGroup;
     }
 
     /**

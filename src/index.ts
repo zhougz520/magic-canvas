@@ -20,7 +20,8 @@ export {
 
 export {
     PropertiesEnum,
-    IProperty
+    IProperty,
+    IPropertyGroup
 } from './component/UniversalComponents';
 
 export {

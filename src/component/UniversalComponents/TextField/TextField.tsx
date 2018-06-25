@@ -17,9 +17,9 @@ import { MaskLayer } from '../../BaseComponent';
 
 import { TextFieldState, ITextFieldState } from './TextFieldState';
 import { PropertiesEnum } from '../model/types';
-import { IProperty } from '../model/types';
+import { IPropertyGroup, IProperty } from '../model/types';
 
-import { Map } from 'immutable';
+import { Map, OrderedSet, List } from 'immutable';
 
 // tslint:disable:jsx-no-multiline-js
 export default class TextField extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
@@ -75,14 +75,13 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): IProperty[] => {
-        return [
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 外观
+        propertyList = propertyList.push(
             {
-                pTitle: '输入框提示',
-                pKey: 'placeholder',
-                pValue: this.getCustomState().getPlaceholder(),
-                pType: PropertiesEnum.INPUT_STRING
-            }, {
                 pTitle: '背景颜色',
                 pKey: 'backgroundColor',
                 pValue: this.getCustomState().getBackgroundColor(),
@@ -98,7 +97,43 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
                 pValue: this.getCustomState().getBorderWidth(),
                 pType: PropertiesEnum.SLIDER
             }
-        ];
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '外观',
+                groupKey: 'exterior',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        // 字段设置
+        propertyList = propertyList.push(
+            {
+                pTitle: '文字内容',
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
+                pType: PropertiesEnum.INPUT_TEXT
+            },
+            {
+                pTitle: '输入框提示',
+                pKey: 'placeholder',
+                pValue: this.getCustomState().getPlaceholder(),
+                pType: PropertiesEnum.INPUT_TEXT
+            }
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '字段设置',
+                groupKey: 'field',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        return propertyGroup;
     }
 
     /**

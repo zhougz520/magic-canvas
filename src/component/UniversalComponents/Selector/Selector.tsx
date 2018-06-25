@@ -18,10 +18,10 @@ import { MaskLayer } from '../../BaseComponent';
 
 import { SelectorState, ISelectorState } from './SelectorState';
 import { PropertiesEnum } from '../model/types';
-import { IProperty } from '../model/types';
+import { IPropertyGroup, IProperty } from '../model/types';
 import { BoxType } from '../../util';
 
-import { Map, List } from 'immutable';
+import { Map, OrderedSet, List } from 'immutable';
 
 // tslint:disable:jsx-no-multiline-js
 export default class Selector extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
@@ -88,25 +88,54 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): IProperty[] => {
-        return [
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 外观
+        propertyList = propertyList.push(
             {
-                pTitle: '选项',
-                pKey: 'options',
-                pValue: this.getCustomState().getOptions(),
-                pType: PropertiesEnum.INPUT_OBJECT_LIST
-            }, {
-                pTitle: '选中项',
-                pKey: 'textValue',
-                pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_STRING
-            }, {
                 pTitle: '是否禁用',
                 pKey: 'disabled',
                 pValue: this.getCustomState().getDisabled(),
                 pType: PropertiesEnum.SWITCH
             }
-        ];
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '外观',
+                groupKey: 'exterior',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        // 字段设置
+        propertyList = propertyList.push(
+            {
+                pTitle: '选项',
+                pKey: 'options',
+                pValue: this.getCustomState().getOptions(),
+                pType: PropertiesEnum.INPUT_LIST
+            }, {
+                pTitle: '选中项',
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
+                pType: PropertiesEnum.INPUT_TEXT
+            }
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '字段设置',
+                groupKey: 'field',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        return propertyGroup;
     }
 
     /**

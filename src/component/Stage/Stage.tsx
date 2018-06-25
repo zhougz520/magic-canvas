@@ -22,69 +22,11 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         };
     }
 
-    getStage = (): HTMLDivElement => {
-        return (this.stage as HTMLDivElement);
-    }
-
-    getDraw = (): IDrawComponent => {
-        return (this.draw as IDrawComponent);
-    }
-
-    getCanvas = (): ICanvasComponent => {
-        return (this.canvas as ICanvasComponent);
-    }
-
-    StageStyle = () => {
-        const stageOffset = this.state.componentPosition.stageOffset;
-
-        return {
-            top: `${stageOffset.top}px`,
-            left: `${stageOffset.left}px`,
-            right: `${stageOffset.right}px`,
-            bottom: `${stageOffset.bottom}px`
-        } as React.CSSProperties;
-    }
-
-    // 获取stage上滚动条的偏移量
-    getStageScroll = () => {
-        let scrollLeft: number = 0;
-        let scrollTop: number = 0;
-        scrollLeft = this.getStage().scrollLeft;
-        scrollTop = this.getStage().scrollTop;
-
-        return { scrollLeft, scrollTop };
-    }
-
-    // 修改滚动条
-    setStageScroll = (offset: IOffset) => {
-        this.getStage().scrollLeft += offset.x;
-        this.getStage().scrollTop += offset.y;
-    }
-
-    // 获取stage的边界范围
-    getStageBoundary = () => {
-        const stageOffset = this.state.componentPosition.stageOffset;
-        const width = this.getStage().offsetWidth;
-        const height = this.getStage().offsetHeight;
-
-        return {
-            startPoint: { x: stageOffset.left, y: stageOffset.top },
-            endPoint: {
-                x: stageOffset.left + width,
-                y: stageOffset.top + height
-            }
-        } as IBoundary;
-    }
-
-    getStageSize = () => {
-        const width = this.getStage().offsetWidth;
-        const height = this.getStage().offsetHeight;
-
-        return { width, height };
-    }
-
-    // 获取命令，并传给canvas
-    onCommandEmitted = (cmd: any) => {
+    /**
+     * 获取命令，并传给canvas
+     * @param cmd 命令参数
+     */
+    public onCommandEmitted = (cmd: any) => {
         if (this.canvas) {
             this.canvas.executeCommand(cmd);
         }
@@ -92,13 +34,17 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
 
     /**
      * 修改画布大小
+     * @param width 宽
+     * @param height 高
      */
-    updateCanvasSize = (width: number, height: number) => {
+    public updateCanvasSize = (width: number, height: number) => {
         this.setState({ canvasSize: { width, height } });
     }
 
-    // 修改画布的偏移量
-    changeStageOffset = (leftCollapsed: boolean, rightCollapsed: boolean) => {
+    /**
+     * 修改画布左右偏移量
+     */
+    public changeStageOffset = (leftCollapsed: boolean, rightCollapsed: boolean) => {
         const newStageOffset = Object.assign({}, this.state.componentPosition.stageOffset, {
             left: leftCollapsed ? 0 : this.props.config.componentPosition.stageOffset.left,
             right: rightCollapsed ? 0 : this.props.config.componentPosition.stageOffset.right
@@ -108,13 +54,19 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         });
     }
 
-    changeHighPerformance = (value: boolean) => {
+    /**
+     * 切换高低效果模式
+     */
+    public changeHighPerformance = (value: boolean) => {
         this.setState({
             highPerformance: value
         });
     }
 
-    getCanvasSaveData = () => {
+    /**
+     * 获取画布保存数据
+     */
+    public getCanvasSaveData = () => {
         const { width, height } = this.state.canvasSize;
         const detail = this.getCanvas().getSaveData();
 
@@ -125,20 +77,25 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         };
     }
 
-    setCanvasIsDirty = (isDirty: boolean): void => {
+    /**
+     * 设置画布是否变脏
+     */
+    public setCanvasIsDirty = (isDirty: boolean): void => {
         this.getCanvas().setIsDirty(isDirty);
     }
 
-    initCanvasData = (components: any): void => {
+    /**
+     * 加载画布数据
+     */
+    public initCanvasData = (components: any): void => {
         this.getCanvas().initCanvas(components);
     }
 
     render() {
         const { componentPosition, canvasSize, highPerformance } = this.state;
-        const stateStyle = this.StageStyle();
 
         return (
-            <div id="stage" ref={(render) => this.stage = render} className="stage" style={stateStyle}>
+            <div id="stage" ref={(render) => this.stage = render} className="stage" style={this.StageStyle()}>
                 <Draw
                     ref={(render) => this.draw = render}
                     getCanvas={this.getCanvas}
@@ -164,9 +121,91 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     components={this.props.components}
                     onCommandProperties={this.props.onCommandProperties}
                     onPropertyProperties={this.props.onPropertyProperties}
-                    clearSelectedProperty={this.props.clearSelectedProperty}
                 />
             </div>
         );
+    }
+
+    /**
+     * 获取draw对象
+     */
+    private getDraw = (): IDrawComponent => {
+        return (this.draw as IDrawComponent);
+    }
+
+    /**
+     * 获取canvas对象
+     */
+    private getCanvas = (): ICanvasComponent => {
+        return (this.canvas as ICanvasComponent);
+    }
+
+    /**
+     * Stage样式
+     */
+    private StageStyle = (): React.CSSProperties => {
+        const stageOffset = this.state.componentPosition.stageOffset;
+
+        return {
+            top: stageOffset.top,
+            left: stageOffset.left,
+            right: stageOffset.right,
+            bottom: stageOffset.bottom
+        };
+    }
+
+    /**
+     * 获取stage上滚动条的偏移量
+     */
+    private getStageScroll = () => {
+        let scrollLeft: number = 0;
+        let scrollTop: number = 0;
+        if (this.stage) {
+            scrollLeft = this.stage.scrollLeft;
+            scrollTop = this.stage.scrollTop;
+        }
+
+        return { scrollLeft, scrollTop };
+    }
+
+    /**
+     * 获取stage的边界范围
+     */
+    private getStageBoundary = () => {
+        const stageOffset = this.state.componentPosition.stageOffset;
+        const { width, height } = this.getStageSize();
+
+        return {
+            startPoint: { x: stageOffset.left, y: stageOffset.top },
+            endPoint: {
+                x: stageOffset.left + width,
+                y: stageOffset.top + height
+            }
+        } as IBoundary;
+    }
+
+    /**
+     * 获取stage的大小
+     */
+    private getStageSize = () => {
+        let width: number = 0;
+        let height: number = 0;
+        if (this.stage) {
+            width = this.stage.offsetWidth;
+            height = this.stage.offsetHeight;
+        }
+
+        return { width, height };
+    }
+
+    /**
+     * 修改滚动条
+     * @param offset 偏移量{ x: 0, y: 0 }
+     */
+    private setStageScroll = (offset: IOffset) => {
+        if (this.stage) {
+            this.stage.scrollLeft += offset.x;
+            this.stage.scrollTop += offset.y;
+        }
     }
 }

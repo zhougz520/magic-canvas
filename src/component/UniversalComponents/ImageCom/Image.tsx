@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
 import { ImageState } from './ImageState';
-import { PropertiesEnum } from '../model/types';
-import { IProperty } from '../model/types';
+// import { PropertiesEnum } from '../model/types';
+// import { IProperty } from '../model/types';
 import { Map } from 'immutable';
 import { MaskLayer } from '../../BaseComponent';
 
@@ -68,36 +68,36 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
         );
     }
 
-    public getPropertiesToProperty = (): IProperty[] => {
-        return [
-            {
-                pTitle: '链接地址',
-                pKey: 'alt',
-                pValue: this.getCustomState().getAlt(),
-                pType: PropertiesEnum.INPUT_STRING
-                // }, {
-                //     pTitle: '字体',
-                //     pKey: 'fontSize',
-                //     pValue: this.getCustomState().get(),
-                //     pType: PropertiesEnum.INPUT_NUMBER
-            }, {
-                pTitle: '背景颜色',
-                pKey: 'backgroundColor',
-                pValue: this.getCustomState().getBackgroundColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框颜色',
-                pKey: 'borderColor',
-                pValue: this.getCustomState().getBorderColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框宽度',
-                pKey: 'borderWidth',
-                pValue: this.getCustomState().getBorderWidth(),
-                pType: PropertiesEnum.SLIDER
-            }
-        ];
-    }
+    // public getPropertiesToProperty = (): IProperty[] => {
+    //     return [
+    //         {
+    //             pTitle: '链接地址',
+    //             pKey: 'alt',
+    //             pValue: this.getCustomState().getAlt(),
+    //             pType: PropertiesEnum.INPUT_STRING
+    //             // }, {
+    //             //     pTitle: '字体',
+    //             //     pKey: 'fontSize',
+    //             //     pValue: this.getCustomState().get(),
+    //             //     pType: PropertiesEnum.INPUT_NUMBER
+    //         }, {
+    //             pTitle: '背景颜色',
+    //             pKey: 'backgroundColor',
+    //             pValue: this.getCustomState().getBackgroundColor(),
+    //             pType: PropertiesEnum.COLOR_PICKER
+    //         }, {
+    //             pTitle: '边框颜色',
+    //             pKey: 'borderColor',
+    //             pValue: this.getCustomState().getBorderColor(),
+    //             pType: PropertiesEnum.COLOR_PICKER
+    //         }, {
+    //             pTitle: '边框宽度',
+    //             pKey: 'borderWidth',
+    //             pValue: this.getCustomState().getBorderWidth(),
+    //             pType: PropertiesEnum.SLIDER
+    //         }
+    //     ];
+    // }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();

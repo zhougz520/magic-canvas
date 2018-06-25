@@ -34,8 +34,6 @@ export function docMouseDown(canvas: Canvas, e: any): void {
                 // 非多选模式下，清楚所有组件选中状态
                 if (!canvas._canvasGlobalParam.isMultiselect()) {
                     canvas._drawUtil.clearSelected();
-                    // 清除组件选中状态 清除属性工具栏
-                    // canvas.props.clearSelectedProperty();
                 }
 
                 if (canvas._isAddCommentsMode === true) {

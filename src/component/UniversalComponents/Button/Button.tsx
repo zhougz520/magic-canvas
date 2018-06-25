@@ -17,9 +17,9 @@ import { MaskLayer } from '../../BaseComponent';
 
 import { ButtonState, IButtonState } from './ButtonState';
 import { PropertiesEnum } from '../model/types';
-import { IProperty } from '../model/types';
+import { IPropertyGroup, IProperty } from '../model/types';
 
-import { Map } from 'immutable';
+import { Map, OrderedSet, List } from 'immutable';
 
 // tslint:disable:jsx-no-multiline-js
 export default class Button extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
@@ -77,35 +77,73 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
     /**
      * 获取组件属性列表
      */
-    public getPropertiesToProperty = (): IProperty[] => {
-        return [
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 外观
+        propertyList = propertyList.push(
             {
-                pTitle: '是否为圆形按钮',
+                pTitle: '是否圆形',
                 pKey: 'isCircle',
                 pValue: this.getCustomState().getIsCircle(),
                 pType: PropertiesEnum.SWITCH
-            }, {
-                pTitle: '文字内容',
-                pKey: 'textValue',
-                pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_STRING
-            }, {
+            },
+            {
+                pTitle: '是否禁用',
+                pKey: 'disabled',
+                pValue: this.getCustomState().getDisabled(),
+                pType: PropertiesEnum.SWITCH
+            },
+            {
                 pTitle: '背景颜色',
                 pKey: 'backgroundColor',
                 pValue: this.getCustomState().getBackgroundColor(),
                 pType: PropertiesEnum.COLOR_PICKER
-            }, {
+            },
+            {
                 pTitle: '边框颜色',
                 pKey: 'borderColor',
                 pValue: this.getCustomState().getBorderColor(),
                 pType: PropertiesEnum.COLOR_PICKER
-            }, {
+            },
+            {
                 pTitle: '边框宽度',
                 pKey: 'borderWidth',
                 pValue: this.getCustomState().getBorderWidth(),
                 pType: PropertiesEnum.SLIDER
             }
-        ];
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '外观',
+                groupKey: 'exterior',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        // 字段设置
+        propertyList = propertyList.push(
+            {
+                pTitle: '文字内容',
+                pKey: 'textValue',
+                pValue: this.getCustomState().getTextValue(),
+                pType: PropertiesEnum.INPUT_TEXT
+            }
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '字段设置',
+                groupKey: 'field',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        return propertyGroup;
     }
 
     /**
@@ -121,6 +159,7 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
 
     render() {
         const { hidden } = this.state;
+        const disabled: boolean = this.getCustomState().getDisabled();
 
         return (
             <div
@@ -133,13 +172,13 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
                     style={{
                         width: '100%',
                         height: '100%',
-                        backgroundColor: this.getCustomState().getBackgroundColor(),
-                        borderColor: this.getCustomState().getBorderColor(),
+                        backgroundColor: disabled ? undefined : this.getCustomState().getBackgroundColor(),
+                        borderColor: disabled ? undefined : this.getCustomState().getBorderColor(),
                         borderWidth: this.getCustomState().getBorderWidth()
                     }}
                     type={this.getCustomState().getType()}
                     shape={this.getCustomState().getIsCircle() ? 'circle' : undefined}
-                    disabled={this.getCustomState().getDisabled()}
+                    disabled={disabled}
                 >
                     <div
                         style={{
@@ -147,7 +186,7 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
                             display: 'inline-block',
                             width: '100%',
                             textAlign: this.getCustomState().getTextAlign(),
-                            color: this.getCustomState().getFontColor(),
+                            color: disabled ? undefined : this.getCustomState().getFontColor(),
                             fontStyle: this.getCustomState().getFontStyle(),
                             textDecoration: this.getCustomState().getTextDecoration(),
                             fontSize: this.getCustomState().getFontSize(),

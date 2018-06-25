@@ -14,9 +14,9 @@ import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType, 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
-import { IProperty, PropertiesEnum } from '../UniversalComponents';
+import { IPropertyGroup } from '../UniversalComponents';
 import { IContextMenuItems } from '../Stage';
-import { Stack, List } from 'immutable';
+import { Stack, List, OrderedSet } from 'immutable';
 
 /**
  * 基类
@@ -458,14 +458,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 获取组件的属性，传给属性工具条
+     * 默认：空，组件自己重写
      */
-    public getPropertiesToProperty = (): IProperty[] => {
-        return [{
-            pTitle: '',
-            pKey: '',
-            pValue: '',
-            pType: PropertiesEnum.INPUT_TEXT
-        }];
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        return OrderedSet();
     }
 
     /**
