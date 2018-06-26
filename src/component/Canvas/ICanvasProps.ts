@@ -1,8 +1,9 @@
 import { IDrawComponent } from '../Draw';
+import { ICompos, ComponentsType, PageMode, IContextMenuItems } from '../Stage';
+import { IPropertyGroup } from '../UniversalComponents';
 
-import { ICompos, ComponentsType, PageMode } from '../Stage';
 import { IBoundary, IOffset } from './model/types';
-import { Map } from 'immutable';
+import { Map, OrderedSet } from 'immutable';
 
 export interface ICanvasProps {
     // 页面模式
@@ -16,14 +17,17 @@ export interface ICanvasProps {
     // canvas默认的宽高
     canvasSize: { width: number, height: number };
 
+    // 设置页签变脏
+    setPageDirty?: () => void;
+    // 右键菜单
+    onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
+
     getDraw: () => IDrawComponent | null;
     getStageScroll: () => { scrollLeft: number, scrollTop: number };
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
     getStageSize: () => undefined | { width: number, height: number };
     onCommandProperties: (selectedComs: Map<string, any>) => void;
-    onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>| undefined
-        ) => void;
+    onPropertyProperties: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
     updateCanvasSize: (width: number, height: number) => void;
-    clearSelectedProperty: () => void;
 }

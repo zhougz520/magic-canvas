@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { IPropertyGroup } from '../../../../src';
 
 import { TitleBar } from './TitleBar';
 import { ToolBar, IToolbarComponent } from './ToolBar';
@@ -6,14 +7,12 @@ import { PropertyBar, IPropertyComponent } from './PropertyBar';
 import { ContributorBar } from './ContributorBar';
 import Resource from './ResourceBar';
 
-import { Map } from 'immutable';
+import { Map, OrderedSet } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (leftCollapsed: boolean, rightCollapsed: boolean) => void;
     highPerformance: (value: boolean) => void;
     onCommandEmitted: (cmd: any) => void;
-    onPropertyProperties: (compProperty: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) =>
-        void;
     getSaveData: () => void;
 }
 
@@ -26,9 +25,8 @@ export interface IBarState {
 }
 
 export interface IBarListComponent {
-    setPropertyState: (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => void;
+    setPropertyState: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
     setCommandState: (selectedComs: Map<string, any>) => void;
-    clearPropertyState: () => void;
 }
 
 /* tslint:disable:no-console */
@@ -78,8 +76,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     onCommandEmitted={this.props.onCommandEmitted}
                     // tslint:disable-next-line:jsx-no-lambda
                     onPropsBarCollapse={(collapsed) => this.collapseBar(undefined, undefined, collapsed)}
-                    onPropertyProperties={this.props.onPropertyProperties}
-                    // objectlist={this.props.objectlist}
+                // objectlist={this.props.objectlist}
                 />
                 <ContributorBar />
             </React.Fragment>
@@ -96,9 +93,9 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
         this.props.changeStageOffset(resourceBarCollapsed, propsBarCollapsed);
     }
 
-    setPropertyState = (properties: Array<{pTitle: string, pKey: string, pValue: any, pType: string}>) => {
+    setPropertyState = (propertyGroup: OrderedSet<IPropertyGroup>) => {
         if (this.propertyTool) {
-            this.propertyTool.setPropertyState(properties);
+            this.propertyTool.setPropertyState(propertyGroup);
         }
 
     }
@@ -106,12 +103,6 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
     setCommandState = (selectedComs: Map<string, any>): void => {
         if (this.toolbar) {
             this.toolbar.setCommandState(selectedComs);
-        }
-    }
-
-    clearPropertyState = (): void => {
-        if (this.propertyTool) {
-            this.propertyTool.clearPropertyState();
         }
     }
 }

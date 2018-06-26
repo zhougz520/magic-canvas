@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { ComponentsType } from '../Stage';
 import { RichEdit, Wingman } from '../RichEdit';
-import { IProperty } from '../UniversalComponents';
+import { IPropertyGroup } from '../UniversalComponents';
 
 import { BaseState, IComponent, IComData } from '../BaseComponent';
 import { ICanvasState } from './ICanvasState';
@@ -73,6 +74,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _onDocKeyUp: any = this._buildHandler('onDocKeyUp');
     public _onCanDrop: any = this._buildHandler('onCanDrop');
     public _onCanDragOver: any = this._buildHandler('onCanDragOver');
+    public _onDocContextMenu: any = this._buildHandler('onDocContextMenu');
 
     /**
      * 全局变量
@@ -139,6 +141,77 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         };
     }
 
+    /**
+     * 初始化画布数据，切换标签页时调用
+     */
+    initCanvas = (components: ComponentsType): void => {
+        // 清除选中
+        this._drawUtil.clearSelected();
+
+        /**
+         * 初始化画布命令
+         */
+        this._pageAction = new PageAction(this);
+
+        /**
+         * 初始化画布工具包
+         */
+        this._canvasGlobalParam = new CanvasGlobalParam(this);
+        this._canvasUtil = new CanvasUtil(this);
+        this._commentsUtil = new CommentsUtil(this);
+        this._componentsUtil = new ComponentsUtil(this);
+        this._drawUtil = new DrawUtil(this);
+        this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
+        this._positionUtil = new PositionUtil(this);
+        this._richEditUtil = new RichEditUtil(this);
+        this._stackUtil = new StackUtil(this);
+
+        /**
+         * 全局变量
+         */
+        this._maxZIndex = 0;
+        this._minZIndex = 0;
+        this._maxComIndex = 0;
+        this._maxCommentsZIndex = 100000;
+        this._minCommentsZIndex = 100000;
+        this._maxCommentsIndex = 0;
+        this._newComponentCid = null;
+        this._isWingmanFocus = false;
+        this._isRichEditMode = false;
+        this._undoStack = Stack();
+        this._redoStack = Stack();
+        this._isAddCommentsMode = false;
+        this._isDirty = false;
+
+        // 把props的components的数据转译为baseState
+        let componentList: OrderedSet<IComponentList> = OrderedSet();
+        components.map(
+            (component) => {
+                const comData: IComData = this._componentsUtil.convertComponentToData(component);
+                const baseState: BaseState = convertFromDataToBaseState(comData, component.t);
+
+                componentList = componentList.add({
+                    cid: comData.id,
+                    comPath: component.t,
+                    baseState,
+                    childData: comData.p,
+                    initType: 'Init'
+                });
+            }
+        );
+
+        // 先清空画布，再加载新数据
+        this.setState({
+            cursor: 'default',
+            componentList: OrderedSet()
+        }, () => {
+            this.setState({
+                cursor: 'default',
+                componentList
+            });
+        });
+    }
+
     getEditor = (): RichEdit => {
         return (this.editor as RichEdit);
     }
@@ -202,38 +275,47 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
 
     // 获取canvas编辑中的组件的属性
     // TODO 优化代码
-    getSelectedProperties = (currentSelectedComponents: Map<string, IComponent>): IProperty[] | undefined => {
-        let propertyResult: IProperty[] = [];
-        // 多个选中的组件 则获取共同的属性
-        if (currentSelectedComponents.size > 1) {
-            const components = currentSelectedComponents.toArray();
-            for (let i = 0; i < currentSelectedComponents.size; i++) {
-                const property = components[i].getPropertiesToProperty();
-                if (i === 0) {
-                    propertyResult = property;
-                } else {
-                    for (let x = propertyResult.length - 1; x > -1; x--) {
-                        let isNeedDelete: boolean = true;
-                        for (let y = property.length - 1; y > -1; y--) {
-                            if (propertyResult[x].pKey === property[y].pKey
-                                && propertyResult[x].pType === property[y].pType) {
-                                isNeedDelete = false;
-                            }
-                        }
-                        if (isNeedDelete) {
-                            propertyResult.splice(x, 1);
-                        }
-                    }
-                }
-            }
+    // getSelectedProperties = (currentSelectedComponents: Map<string, IComponent>): IProperty[] | undefined => {
+    //     let propertyResult: IProperty[] = [];
+    //     // 多个选中的组件 则获取共同的属性
+    //     if (currentSelectedComponents.size > 1) {
+    //         const components = currentSelectedComponents.toArray();
+    //         for (let i = 0; i < currentSelectedComponents.size; i++) {
+    //             const property = components[i].getPropertiesToProperty();
+    //             if (i === 0) {
+    //                 propertyResult = property;
+    //             } else {
+    //                 for (let x = propertyResult.length - 1; x > -1; x--) {
+    //                     let isNeedDelete: boolean = true;
+    //                     for (let y = property.length - 1; y > -1; y--) {
+    //                         if (propertyResult[x].pKey === property[y].pKey
+    //                             && propertyResult[x].pType === property[y].pType) {
+    //                             isNeedDelete = false;
+    //                         }
+    //                     }
+    //                     if (isNeedDelete) {
+    //                         propertyResult.splice(x, 1);
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            return propertyResult;
-        } else if (currentSelectedComponents.size === 1) {
-            // 一个选中的组件 则获取该组件的属性
-            return propertyResult = currentSelectedComponents.first().getPropertiesToProperty();
-        } else {
-            return undefined;
+    //         return propertyResult;
+    //     } else if (currentSelectedComponents.size === 1) {
+    //         // 一个选中的组件 则获取该组件的属性
+    //         return propertyResult = currentSelectedComponents.first().getPropertiesToProperty();
+    //     } else {
+    //         return undefined;
+    //     }
+    // }
+    getSelectedProperties = (selectedComs: Map<string, IComponent>): OrderedSet<IPropertyGroup> => {
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        if (selectedComs.size === 1) {
+            propertyGroup = selectedComs.first().getPropertiesToProperty();
         }
+
+        return propertyGroup;
     }
 
     /**
@@ -268,8 +350,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         return detail;
     }
 
-    getIsDirty = (): boolean => {
-        return this._isDirty;
+    /**
+     * 设置画布是否变脏
+     */
+    setIsDirty = (isDirty: boolean): void => {
+        this._isDirty = isDirty;
     }
 
     componentDidMount() {
@@ -340,7 +425,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);
-        document.addEventListener('contextmenu', this._onDocMouseUp);
+        (this.canvas as HTMLDivElement).addEventListener('contextmenu', (e) => {
+            this._onDocMouseUp(e);
+            this._onDocContextMenu(e);
+        });
     }
 
     /**

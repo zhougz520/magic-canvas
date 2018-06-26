@@ -29,7 +29,6 @@ export class DrawUtil {
             // 向CommandBar传递当前选中的组件集合
             this._canvas.props.onCommandProperties(this._canvas._canvasGlobalParam.getSelectedComponents());
             // 向PropertyBar传递当前选中的组件属性
-            this._canvas.props.clearSelectedProperty();
             this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(this._canvas._canvasGlobalParam.getSelectedComponents()));
         }
     }
@@ -62,8 +61,7 @@ export class DrawUtil {
             this.hideSelected();
             // 向CommandBar传递当前选中的组件集合
             this._canvas.props.onCommandProperties(Map());
-            this._canvas.props.onPropertyProperties(undefined);
-            this._canvas.props.clearSelectedProperty();
+            this._canvas.props.onPropertyProperties(OrderedSet());
 
         }
     }
@@ -103,8 +101,8 @@ export class DrawUtil {
      */
     clearChoiceBox = (e: any) => {
         if (this._canvas._canvasGlobalParam.getDragType() === DragType.Choice) {
-            const pointStart = this._canvas._canvasGlobalParam.getPointerStart('dom');
-            const pointA = this._canvas._positionUtil.getPositionRelativeCanvas(pointStart.x, pointStart.y);
+            const pointStart = this._canvas._canvasGlobalParam.getPointerStart('canvas');
+            const pointA = { x: pointStart.x, y: pointStart.y };
             const pointB = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
             const start = {
                 x: Math.min(pointA.x, pointB.x),

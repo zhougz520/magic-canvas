@@ -39,6 +39,6 @@ export interface IBaseData {
     cid: string;
     type: string;
     anchorKey: string;
-    position: { left: number, top: number, right?: number, bottom?: number };
+    position: { left: number, top: number };
     size: { width: number, height: number };
 }

@@ -1,1 +1,1 @@
-export { PropertiesEnum, IProperty } from './model/types';
+export { PropertiesEnum, IProperty, IPropertyGroup } from './model/types';

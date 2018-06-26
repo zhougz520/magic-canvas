@@ -4,8 +4,8 @@ import {
 } from '../../BaseComponent';
 
 import { AttachmentState } from './AttachmentState';
-import { PropertiesEnum } from '../model/types';
-import { IProperty } from '../model/types';
+// import { PropertiesEnum } from '../model/types';
+// import { IProperty } from '../model/types';
 import { Map } from 'immutable';
 import '../../UniversalComponents/sass/UComponents.scss';
 
@@ -72,42 +72,42 @@ export default class Attachment extends BaseComponent<IBaseProps, IBaseState> {
         window.open(att_url);
     }
 
-    public getPropertiesToProperty = (): IProperty[]  => {
-        return [
-                // {
-                //     pTitle: '是否选中',
-                //     pKey: 'isCheck',
-                //     pValue: this.getCustomState().getIsCheck(),
-                //     pType: PropertiesEnum.SWITCH
-                // }, {
-                //     pTitle: '文字内容',
-                //     pKey: 'option',
-                //     pValue: this.getCustomState().getOption(),
-                //     pType: PropertiesEnum.INPUT_STRING
-                // },
-                {
-                    pTitle: '字体大小',
-                    pKey: 'fontSize',
-                    pValue: this.getCustomState().getFontSize(),
-                    pType: PropertiesEnum.INPUT_NUMBER
-                }, {
-                    pTitle: '背景颜色',
-                    pKey: 'backgroundColor',
-                    pValue: this.getCustomState().getBackgroundColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框颜色',
-                    pKey: 'borderColor',
-                    pValue: this.getCustomState().getBorderColor(),
-                    pType: PropertiesEnum.COLOR_PICKER
-                }, {
-                    pTitle: '边框宽度',
-                    pKey: 'borderWidth',
-                    pValue: this.getCustomState().getBorderWidth(),
-                    pType: PropertiesEnum.SLIDER
-                }
-            ];
-    }
+    // public getPropertiesToProperty = (): IProperty[]  => {
+    //     return [
+    //             // {
+    //             //     pTitle: '是否选中',
+    //             //     pKey: 'isCheck',
+    //             //     pValue: this.getCustomState().getIsCheck(),
+    //             //     pType: PropertiesEnum.SWITCH
+    //             // }, {
+    //             //     pTitle: '文字内容',
+    //             //     pKey: 'option',
+    //             //     pValue: this.getCustomState().getOption(),
+    //             //     pType: PropertiesEnum.INPUT_STRING
+    //             // },
+    //             {
+    //                 pTitle: '字体大小',
+    //                 pKey: 'fontSize',
+    //                 pValue: this.getCustomState().getFontSize(),
+    //                 pType: PropertiesEnum.INPUT_NUMBER
+    //             }, {
+    //                 pTitle: '背景颜色',
+    //                 pKey: 'backgroundColor',
+    //                 pValue: this.getCustomState().getBackgroundColor(),
+    //                 pType: PropertiesEnum.COLOR_PICKER
+    //             }, {
+    //                 pTitle: '边框颜色',
+    //                 pKey: 'borderColor',
+    //                 pValue: this.getCustomState().getBorderColor(),
+    //                 pType: PropertiesEnum.COLOR_PICKER
+    //             }, {
+    //                 pTitle: '边框宽度',
+    //                 pKey: 'borderWidth',
+    //                 pValue: this.getCustomState().getBorderWidth(),
+    //                 pType: PropertiesEnum.SLIDER
+    //             }
+    //         ];
+    // }
 
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();

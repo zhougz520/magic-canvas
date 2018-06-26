@@ -36,4 +36,6 @@ export interface IBaseProps {
     resetMaxAndMinZIndex: () => void;
     // 设置画布撤销栈
     setCanvasUndoStack: (timeStamp: number, operationType: OperationType, componentList: List<IComponentList>) => void;
+    // 执行命令
+    executeCommand: (cmd: any) => void;
 }

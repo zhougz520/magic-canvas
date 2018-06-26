@@ -3,15 +3,15 @@ import * as React from 'react';
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
 import { CommandMap, getListStyleTypeMap } from '../../../../../src';
 
-import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio } from 'antd';
-import ColorPicker from 'rc-color-picker';
+import { SketchPicker } from 'react-color';
+import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio, Popover } from 'antd';
+
 import { Map } from 'immutable';
 
 import '../sass/bar.scss';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda */
 export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
-    _colorPickerCount: number = 0;
     constructor(props: IToolbarProps) {
         super(props);
         this.state = {
@@ -102,12 +102,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
     }
 
     changeColor = (color: any) => {
-        this._colorPickerCount += 1;
-        if (this._colorPickerCount % 2 === 0) {
-            // TODO 还组件
-        } else {
-            this.fireCommand(CommandMap.EDITOR_FONTCOLOR, color.color);
-        }
+        this.fireCommand(CommandMap.EDITOR_FONTCOLOR, color);
     }
 
     doSaveData = () => {
@@ -136,14 +131,20 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
         const menuAlign = (
             <Menu onClick={this.handleAlignMenuClick}>
                 <Menu.Item key="leftCom">左对齐</Menu.Item>
-                <Menu.Item key="centerCom">水平居中</Menu.Item>
+                <Menu.Item key="centerCom">左右居中</Menu.Item>
                 <Menu.Item key="rightCom">右对齐</Menu.Item>
-                <Menu.Item key="topCom">顶对齐</Menu.Item>
-                <Menu.Item key="middleCom">垂直居中</Menu.Item>
-                <Menu.Item key="bottomCom">底对齐</Menu.Item>
-                <Menu.Item key="horizontalCom">水平等间距</Menu.Item>
-                <Menu.Item key="verticalCom">垂直等间距</Menu.Item>
+                <Menu.Item key="topCom">顶端对齐</Menu.Item>
+                <Menu.Item key="middleCom">上下居中</Menu.Item>
+                <Menu.Item key="bottomCom">底端对齐</Menu.Item>
+                <Menu.Item key="horizontalCom">横向分布</Menu.Item>
+                <Menu.Item key="verticalCom">纵向分布</Menu.Item>
             </Menu>
+        );
+
+        const colorPicker = (
+            <SketchPicker
+                onChangeComplete={(color) => this.changeColor(color.hex)}
+            />
         );
 
         return (
@@ -181,17 +182,16 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 >
                     删除线
                 </Button>
-                <ColorPicker
-                    onChange={this.changeColor}
-                    enableAlpha={false}
-                >
-                    <Button
-                        type="primary"
-                        size="small"
-                    >
-                        字体颜色
-                    </Button>
-                </ColorPicker>
+                <Popover placement="rightTop" content={colorPicker} trigger="click">
+                    <div className="colorButton">
+                        <div
+                            className="colorButton-inner"
+                            style={{
+                                background: 'red'
+                            }}
+                        />
+                    </div>
+                </Popover>
                 <InputNumber
                     min={1}
                     max={100}

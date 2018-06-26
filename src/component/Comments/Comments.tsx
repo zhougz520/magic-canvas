@@ -12,9 +12,11 @@ import {
     PositionState,
     SizeState,
     IComData,
-    IFont
+    IFont,
+    MaskLayer
 } from '../BaseComponent';
-import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState } from '../Canvas';
+import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState, CommandMap } from '../Canvas';
+import { IContextMenuItems } from '../Stage';
 import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
 
@@ -100,6 +102,23 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         return true;
     }
 
+    /**
+     * 获取组件的右键菜单
+     * 默认：空，组件自己重写
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        return [
+            {
+                type: 'menu',
+                label: '添加锚点',
+                click: () => { this.props.executeCommand({
+                    t: CommandMap.COMMENTSRECT_ADD,
+                    d: this.getCid()
+                }); }
+            }
+        ];
+    }
+
     public getEncodeCustomState = (): ICustomState => {
         return this.getCustomState().toObject();
     }
@@ -130,6 +149,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     onDoubleClick={this.doDbClickToEdit}
                     style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 >
+                    <MaskLayer id={this.getCid()} />
                     <Editor
                         editorState={editorState}
                         inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
@@ -157,7 +177,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
             selectionChanging,
             getComponent,
             resetMaxAndMinZIndex,
-            setCanvasUndoStack
+            setCanvasUndoStack,
+            executeCommand
         } = this.props;
 
         if (commentsRectList) {
@@ -179,6 +200,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                                 repaintCanvas={repaintCanvas}
                                 selectionChanging={selectionChanging}
                                 getComponent={getComponent}
+                                executeCommand={executeCommand}
                                 resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                                 setCanvasUndoStack={setCanvasUndoStack}
                             />

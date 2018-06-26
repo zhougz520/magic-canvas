@@ -20,7 +20,8 @@ export {
 
 export {
     PropertiesEnum,
-    IProperty
+    IProperty,
+    IPropertyGroup
 } from './component/UniversalComponents';
 
 export {
@@ -28,7 +29,8 @@ export {
     IConfig,
     ICompos,
     ComponentsType,
-    ComponentsMap
+    ComponentsMap,
+    IContextMenuItems
 } from './component/Stage';
 
 export {

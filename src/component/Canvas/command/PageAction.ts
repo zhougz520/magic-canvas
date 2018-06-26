@@ -19,6 +19,12 @@ export class PageAction {
         this._canvas._commentsUtil.startAddComments();
     }
 
+    // 添加批注锚点
+    addCommentsRect = (cid: string) => {
+        this._canvas._commentsUtil._currentCommentsCid = cid;
+        this._canvas._commentsUtil.startAddComments(true);
+    }
+
     // 画布撤销
     undoCanvas = () => {
         const undoStack: Stack<IStack> = this._canvas._undoStack;
@@ -203,7 +209,7 @@ export class PageAction {
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Left');
     }
 
-    // 水平居中
+    // 左右居中
     centerCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Center');
@@ -215,31 +221,31 @@ export class PageAction {
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Right');
     }
 
-    // 顶对齐
+    // 顶端对齐
     topCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Top');
     }
 
-    // 垂直居中
+    // 上下居中
     middleCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Middle');
     }
 
-    // 底对齐
+    // 底端对齐
     bottomCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Bottom');
     }
 
-    // 水平等间距
+    // 横向分布
     horizontalCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Horizontal');
     }
 
-    // 垂直等间距
+    // 纵向分布
     verticalCom = () => {
         const range: IRange = this._canvas._componentsUtil.getSelectedComponentsRange();
         this._canvas._componentsUtil.updateSelectedComponentsPosition(range, 'Vertical');
@@ -373,7 +379,10 @@ export class PageAction {
         }
     }
 
-    setPropsCom = (param: any) => {
+    /**
+     * 属性工具栏设置组件属性
+     */
+    setPropsCom = (param: { pKey: string; pValue: any; }) => {
         const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com: IComponent) => {
@@ -386,5 +395,12 @@ export class PageAction {
                 }
             }
         );
+    }
+
+    /**
+     * 设置僚机焦点
+     */
+    setFocusWingman = () => {
+        this._canvas.getWingman().setFocus();
     }
 }

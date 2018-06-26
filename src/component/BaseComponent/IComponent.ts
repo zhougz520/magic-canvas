@@ -5,10 +5,11 @@ import { ContentState } from './model/ContentState';
 import { BaseState } from './model/BaseState';
 import { EditType, IRichEditOption, ICommentsList, ComponentType, IFont } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
-import { IProperty } from '../UniversalComponents';
+import { IPropertyGroup } from '../UniversalComponents';
+import { IContextMenuItems } from '../Stage';
 
 import { IAnchor } from '../util';
-import { List } from 'immutable';
+import { List, OrderedSet } from 'immutable';
 
 /**
  * BaseComponent提供的方法接口
@@ -147,6 +148,11 @@ export interface IComponent {
     isCanPushOpenOtherComponent: () => boolean;
 
     /**
+     * 获取组件的右键菜单
+     */
+    getContextMenuItems: () => IContextMenuItems[];
+
+    /**
      * 选中框属性
      */
     selectedFrameData: () => IReactData;
@@ -156,6 +162,9 @@ export interface IComponent {
      */
     stretchFrameData: (item: IBaseData) => IReactData;
 
-    getPropertiesToProperty: () =>  IProperty[];
+    /**
+     * 获取组件的属性，传给属性工具条
+     */
+    getPropertiesToProperty: () =>  OrderedSet<IPropertyGroup>;
     setPropertiesFromProperty: (pKey: string, pValue: any) => void;
 }
