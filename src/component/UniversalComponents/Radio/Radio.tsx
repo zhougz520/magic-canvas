@@ -24,7 +24,7 @@ import { Map, OrderedSet, List } from 'immutable';
 
 // tslint:disable:jsx-no-multiline-js
 export default class Radio extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
-    private _padding: number = 24;
+    private _padding: number = 30;
 
     constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
@@ -176,7 +176,8 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
                         backgroundColor: this.getCustomState().getBackgroundColor(),
                         borderColor: this.getCustomState().getBorderColor(),
                         borderWidth: this.getCustomState().getBorderWidth(),
-                        borderStyle: 'solid'
+                        borderStyle: 'solid',
+                        paddingLeft: '6px'
                     }}
                     checked={this.getCustomState().getIsCheck()}
                     disabled={this.getCustomState().getDisabled()}
