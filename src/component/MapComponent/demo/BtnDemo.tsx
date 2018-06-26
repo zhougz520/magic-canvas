@@ -94,7 +94,7 @@ export default class BtnDemo extends MapComponent<IMapProps, any> {
         if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) return;
         if (localStorage.__dnd_type !== 'dragging_cs') return;
         const data = JSON.parse(localStorage.__dnd_value);
-        this.addChildComponent(this.state.data, data);
+        this.addChildComponent(this.state.data.id, this.state.data, data);
         e.stopPropagation();
     }
 

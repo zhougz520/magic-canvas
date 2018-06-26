@@ -133,5 +133,21 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
             map_form_sti: tabId
         });
     }
+    /**
+     * override
+     */
+    public addChildComponent = (id: string, data: any, addData: any): any => {
+        if (addData.t === 'MapComponent/map/form/TabItem') {
+            const tabItem = this.getChildComponent(id, data, addData);
+            let childId = tabItem.p.id;
+            const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/SectionForm' });
+            childId = sectionForm.p.id;
+            const section = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/Section' });
+            childId = section.p.id;
+            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
+        }
+
+        this.props.updateProps('', data);
+    }
 }
 export const TabForm = MapConsumer(TabFormClass);

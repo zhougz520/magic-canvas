@@ -169,8 +169,14 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     protected updateProps = (id: string, props: any) => {
         // 获取当前数据
         const childData = this.getCustomState().toJS();
-        // 通过id查找到数据节点
-        const newData = this.updateComProps(childData, id, props);
+        let newData: any;
+        if (id === '') {
+            // 当没有id的时候，直接更新整体data(新增组件的时候，直接更新整个CustomState)
+            newData = props.p;
+        } else {
+            // 通过id查找到数据节点
+            newData = this.updateComProps(childData, id, props);
+        }
         // 更新数据到CustomState
         this.setCustomState(newData);
     }

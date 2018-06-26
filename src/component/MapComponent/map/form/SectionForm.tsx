@@ -88,7 +88,19 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/map/form/Section');
     }
+    /**
+     * override
+     */
+    public addChildComponent = (id: string, data: any, addData: any): any => {
+        if (addData.t === 'MapComponent/map/form/Section') {
+            const section = this.getChildComponent(id, data, addData);
+            let childId = section.p.id;
+            childId = section.p.id;
+            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
+        }
 
+        this.props.updateProps('', data);
+    }
     // 更新控件属性
     private updateComProps = (data: any, id: string, prop: any) => {
         let newData: any = data;
