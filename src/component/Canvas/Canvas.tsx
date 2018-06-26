@@ -137,14 +137,15 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
 
         this.state = {
             cursor: 'default',
-            componentList
+            componentList,
+            canvasSize: this.props.canvasSize
         };
     }
 
     /**
      * 初始化画布数据，切换标签页时调用
      */
-    initCanvas = (components: ComponentsType): void => {
+    initCanvas = (components: ComponentsType, canvasSize: { width: number; height: number; }): void => {
         // 清除选中
         this._drawUtil.clearSelected();
 
@@ -203,12 +204,15 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         // 先清空画布，再加载新数据
         this.setState({
             cursor: 'default',
-            componentList: OrderedSet()
+            componentList: OrderedSet(),
+            canvasSize: { width: 2560, height: 1440 }
         }, () => {
             this.setState({
                 cursor: 'default',
-                componentList
+                componentList,
+                canvasSize
             });
+            this._drawUtil.setDrawCanvasSize(canvasSize);
         });
     }
 
@@ -321,8 +325,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     /**
      * 收集保存数据
      */
-    getSaveData = (): any => {
+    getSaveData = (): { width: number; height: number, detail: any } => {
         const componentList = this.state.componentList;
+        const { width, height } = this.state.canvasSize;
+
         const components: any[] = [];
         componentList.map(
             (component: IComponentList) => {
@@ -347,7 +353,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             }
         };
 
-        return detail;
+        return {
+            width,
+            height,
+            detail
+        };
     }
 
     /**
@@ -382,9 +392,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     render() {
-        const { componentPosition, canvasSize } = this.props;
+        const { componentPosition } = this.props;
+        const { canvasSize, componentList } = this.state;
+
         const canvasOffset = componentPosition.canvasOffset;
-        const children = this._componentsUtil.getChildrenComponent(this.state.componentList);
+        const children = this._componentsUtil.getChildrenComponent(componentList);
         const cursor = this.state.cursor;
 
         return (

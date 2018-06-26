@@ -10,4 +10,6 @@ export interface ICanvasState {
     cursor: string;
     // 画布当前组件集合
     componentList: OrderedSet<IComponentList>;
+    // 画布大小
+    canvasSize: { width: number, height: number };
 }

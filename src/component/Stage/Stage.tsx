@@ -17,8 +17,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
 
         this.state = {
             highPerformance: props.config.highPerformance,
-            componentPosition: props.config.componentPosition,
-            canvasSize: props.config.canvasSize
+            componentPosition: props.config.componentPosition
         };
     }
 
@@ -30,15 +29,6 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         if (this.canvas) {
             this.canvas.executeCommand(cmd);
         }
-    }
-
-    /**
-     * 修改画布大小
-     * @param width 宽
-     * @param height 高
-     */
-    public updateCanvasSize = (width: number, height: number) => {
-        this.setState({ canvasSize: { width, height } });
     }
 
     /**
@@ -67,8 +57,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
      * 获取画布保存数据
      */
     public getCanvasSaveData = () => {
-        const { width, height } = this.state.canvasSize;
-        const detail = this.getCanvas().getSaveData();
+        const { width, height, detail } = this.getCanvas().getSaveData();
 
         return {
             detail,
@@ -87,40 +76,48 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
     /**
      * 加载画布数据
      */
-    public initCanvasData = (components: any): void => {
-        this.getCanvas().initCanvas(components);
+    public initCanvasData = (components: any, canvasSize: { width: number; height: number; }): void => {
+        this.getCanvas().initCanvas(components, canvasSize);
     }
 
     render() {
-        const { componentPosition, canvasSize, highPerformance } = this.state;
+        const { componentPosition, highPerformance } = this.state;
+        const {
+            pageMode,
+            canvasSize,
+            components,
+            onContextMenu,
+            setPageDirty,
+            onCommandProperties,
+            onPropertyProperties
+        } = this.props;
 
         return (
             <div id="stage" ref={(render) => this.stage = render} className="stage" style={this.StageStyle()}>
                 <Draw
                     ref={(render) => this.draw = render}
                     getCanvas={this.getCanvas}
-                    pageMode={this.props.pageMode}
+                    pageMode={pageMode}
                     canvasSize={canvasSize}
                     componentPosition={componentPosition}
                     getStageScroll={this.getStageScroll}
                 />
                 <Canvas
                     ref={(render) => this.canvas = render}
-                    onContextMenu={this.props.onContextMenu}
-                    setPageDirty={this.props.setPageDirty}
-                    getDraw={this.getDraw}
-                    pageMode={this.props.pageMode}
-                    highPerformance={highPerformance}
+                    pageMode={pageMode}
                     canvasSize={canvasSize}
+                    components={components}
                     componentPosition={componentPosition}
+                    highPerformance={highPerformance}
+                    setPageDirty={setPageDirty}
+                    getDraw={this.getDraw}
                     getStageScroll={this.getStageScroll}
                     setStageScroll={this.setStageScroll}
                     getStageBoundary={this.getStageBoundary}
                     getStageSize={this.getStageSize}
-                    updateCanvasSize={this.updateCanvasSize}
-                    components={this.props.components}
-                    onCommandProperties={this.props.onCommandProperties}
-                    onPropertyProperties={this.props.onPropertyProperties}
+                    onContextMenu={onContextMenu}
+                    onCommandProperties={onCommandProperties}
+                    onPropertyProperties={onPropertyProperties}
                 />
             </div>
         );

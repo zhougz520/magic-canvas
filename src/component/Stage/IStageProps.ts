@@ -6,6 +6,8 @@ import { Map, OrderedSet } from 'immutable';
 export interface IStageProps {
     // 组件数据集合
     components: ComponentsType;
+    // 画布大小
+    canvasSize: { width: number, height: number };
     // config配置
     config: IConfig;
     // 页面模式

@@ -7,13 +7,20 @@ import { Map, OrderedSet } from 'immutable';
  * CanvasComponent提供的方法接口
  */
 export interface ICanvasComponent {
-    initCanvas: (components: ComponentsType) => void;
+    /**
+     * 加载画布数据
+     */
+    initCanvas: (components: ComponentsType, canvasSize: { width: number; height: number; }) => void;
+
     /**
      * 获取组件对象
      */
     getComponent: (cid: string) => IComponent | null;
 
-    getSaveData: () => any;
+    /**
+     * 获取保存数据
+     */
+    getSaveData: () => { width: number; height: number, detail: any };
 
     /**
      * 设置画布是否变脏

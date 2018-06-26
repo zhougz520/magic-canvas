@@ -19,7 +19,8 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
         super(props, context);
         this.state = {
             rectList: [],
-            choiceBox: null
+            choiceBox: null,
+            canvasSize: this.props.canvasSize
         };
     }
 
@@ -77,26 +78,35 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
         this.setState({ choiceBox });
     }
 
+    /**
+     * 设置画布大小
+     */
+    setCanvasSize = (canvasSize: { width: number; height: number; }) => {
+        this.setState({ canvasSize });
+    }
+
     render() {
+        const { rectList, choiceBox, canvasSize } = this.state;
+
         return (
             // tslint:disable-next-line:jsx-no-string-ref
-            <div className="draw" style={DrawStyle(this.props.canvasSize)} ref={(draw) => this.draw = draw}>
+            <div className="draw" style={DrawStyle(canvasSize)} ref={(draw) => this.draw = draw}>
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
-                    {this.state.rectList}
-                    {this.state.choiceBox === null ? '' : <ChoiceBox key="canvas" data={this.state.choiceBox} />}
+                    {rectList}
+                    {choiceBox === null ? '' : <ChoiceBox key="canvas" data={choiceBox} />}
                 </svg>
             </div>
         );
     }
 }
 
-    /**
-     *  本组件是用svg画图的合集，实际操作中发现svg画出的图像偏大，不是真实的像素值，
-     *  经过查资料得出以下结论：
-     *  1.通过调整颜色和与背景的颜色差。比如纯白背景，纯黑线条就很清晰。
-     *  2.画布上的坐标并未对应网页里的像素，在绘制这个1px的横线，它会把这个1px劈成两半，
-     * 然后显示器根据你传来的东西会显示成模糊结果。
-     * 解决办法：
-     * 如果横线，那就在y值上加个0.5。
-     * 如果竖线，那就在x值上加个0.5。
-     */
+/**
+ *  本组件是用svg画图的合集，实际操作中发现svg画出的图像偏大，不是真实的像素值，
+ *  经过查资料得出以下结论：
+ *  1.通过调整颜色和与背景的颜色差。比如纯白背景，纯黑线条就很清晰。
+ *  2.画布上的坐标并未对应网页里的像素，在绘制这个1px的横线，它会把这个1px劈成两半，
+ *  然后显示器根据你传来的东西会显示成模糊结果。
+ *  解决办法：
+ *  如果横线，那就在y值上加个0.5。
+ *  如果竖线，那就在x值上加个0.5。
+ */

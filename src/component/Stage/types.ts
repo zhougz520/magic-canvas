@@ -17,7 +17,6 @@ export interface ICompos {
 export interface IConfig {
     highPerformance: boolean;   // 高性能模式
     componentPosition: ICompos; // 画布的初始偏移量
-    canvasSize: { width: number, height: number };  // 画布初始的宽高
 }
 
 // 数据库存储的数据结构

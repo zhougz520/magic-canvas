@@ -5,6 +5,4 @@ export interface IStageState {
     highPerformance: boolean;
     // 画布偏移量，bar隐藏和显示时修改
     componentPosition: ICompos;
-    // 画布大小
-    canvasSize: { width: number, height: number };
 }

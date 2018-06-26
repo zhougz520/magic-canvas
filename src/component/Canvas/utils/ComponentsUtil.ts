@@ -77,7 +77,10 @@ export class ComponentsUtil {
 
         this._canvas.setState({
             componentList
-        }, callback);
+        }, () => {
+            callback && callback();
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+        });
     }
 
     /**

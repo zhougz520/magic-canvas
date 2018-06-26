@@ -10,12 +10,12 @@ export interface ICanvasProps {
     pageMode: PageMode;
     // 组件数据
     components: ComponentsType;
+    // 画布大小
+    canvasSize: { width: number, height: number };
     // 高性能模式
     highPerformance: boolean;
     // 画布偏移量
     componentPosition: ICompos;
-    // canvas默认的宽高
-    canvasSize: { width: number, height: number };
 
     // 设置页签变脏
     setPageDirty?: () => void;
@@ -32,5 +32,4 @@ export interface ICanvasProps {
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
     getStageSize: () => undefined | { width: number, height: number };
-    updateCanvasSize: (width: number, height: number) => void;
 }

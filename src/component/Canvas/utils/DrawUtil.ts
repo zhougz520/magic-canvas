@@ -205,4 +205,14 @@ export class DrawUtil {
     repaintSelected = () => {
         this.drawSelected(this._canvas._canvasGlobalParam.getSelectedCids());
     }
+
+    /**
+     * 设置Draw的画布大小
+     */
+    setDrawCanvasSize = (canvasSize: { width: number; height: number; }) => {
+        const draw = this._canvas.props.getDraw();
+        if (draw !== null) {
+            draw.setCanvasSize(canvasSize);
+        }
+    }
 }
