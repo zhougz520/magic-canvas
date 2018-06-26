@@ -167,4 +167,12 @@ export class CanvasUtil {
         }
     }
 
+    /**
+     * 退出批注添加模式
+     */
+    exitAddCommentsMode = () => {
+        this._canvas._isAddCommentsMode = false;
+        this._canvas.setState({ cursor: 'default' });
+    }
+
 }

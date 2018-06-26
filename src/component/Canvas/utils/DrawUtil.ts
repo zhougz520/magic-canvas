@@ -27,9 +27,9 @@ export class DrawUtil {
         // 单选的时候一个个传递
         if (multiselect === false) {
             // 向CommandBar传递当前选中的组件集合
-            this._canvas.props.onCommandProperties(this._canvas._canvasGlobalParam.getSelectedComponents());
+            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(this._canvas._canvasGlobalParam.getSelectedComponents());
             // 向PropertyBar传递当前选中的组件属性
-            this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(this._canvas._canvasGlobalParam.getSelectedComponents()));
+            this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(this._canvas._canvasGlobalParam.getSelectedComponents()));
         }
     }
 
@@ -60,8 +60,8 @@ export class DrawUtil {
             this._canvas._canvasGlobalParam.clearSelectedComponent();
             this.hideSelected();
             // 向CommandBar传递当前选中的组件集合
-            this._canvas.props.onCommandProperties(Map());
-            this._canvas.props.onPropertyProperties(OrderedSet());
+            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(Map());
+            this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(OrderedSet());
 
         }
     }
@@ -134,8 +134,8 @@ export class DrawUtil {
             // 框选的时候：有选中组件才做提交
             const selectedComponents = this._canvas._canvasGlobalParam.getSelectedComponents();
             if (selectedComponents.size > 0) {
-                this._canvas.props.onCommandProperties(selectedComponents);
-                this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(selectedComponents));
+                this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(selectedComponents);
+                this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(selectedComponents));
             }
 
             // 通知绘画层清理选择框

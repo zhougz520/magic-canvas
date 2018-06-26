@@ -17,7 +17,7 @@ export interface IStageProps {
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
 
     // 获取选中的组件集合并传给ToolBar
-    onCommandProperties: (selectedComs: Map<string, any>) => void;
-    // 将输入参数：编辑中的组件属性，传给propertyTool
-    onPropertyProperties: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
+    onCommandProperties?: (selectedComs: Map<string, any>) => void;
+    // 获取选中的组件属性，传给PropertyTool
+    onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
 }

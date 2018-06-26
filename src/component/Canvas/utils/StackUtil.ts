@@ -49,9 +49,7 @@ export class StackUtil {
         // 如果画布是干净的，设置画布已经变脏
         if (this._canvas._isDirty === false) {
             this._canvas.setIsDirty(true);
-            if (this._canvas.props.setPageDirty) {
-                this._canvas.props.setPageDirty();
-            }
+            this._canvas.props.setPageDirty && this._canvas.props.setPageDirty();
         }
     }
 }

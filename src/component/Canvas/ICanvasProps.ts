@@ -22,12 +22,15 @@ export interface ICanvasProps {
     // 右键菜单
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
 
+    // 获取选中的组件集合并传给ToolBar
+    onCommandProperties?: (selectedComs: Map<string, any>) => void;
+    // 获取选中的组件属性，传给PropertyTool
+    onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
+
     getDraw: () => IDrawComponent | null;
     getStageScroll: () => { scrollLeft: number, scrollTop: number };
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
     getStageSize: () => undefined | { width: number, height: number };
-    onCommandProperties: (selectedComs: Map<string, any>) => void;
-    onPropertyProperties: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
     updateCanvasSize: (width: number, height: number) => void;
 }
