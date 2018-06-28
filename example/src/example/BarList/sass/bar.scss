@@ -115,7 +115,7 @@ $props-col-1-input-width: 130px;
         > div {
             &.colorButton {
                 padding: 5px;
-                background: #fff;
+                background: #f6f7f8;
                 border-radius: 1px;
                 box-shadow: 0 0 0 1px rgba(0,0,0,.1);
                 display: inline-block;
@@ -127,6 +127,7 @@ $props-col-1-input-width: 130px;
                         width: 24px;
                         height: 14px;
                         border-radius: 2px;
+                        box-shadow: 0 0 0 1px rgba(0,0,0,.1);
                     }
                 }
             }

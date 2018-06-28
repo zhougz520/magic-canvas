@@ -214,7 +214,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                 element = (
                     <div className="props-col-1 group-end" key={property.pKey}>
                         {property.pTitle}
-                        <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`)} trigger="click">
+                        <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`)} trigger="hover">
                             <div className="colorButton">
                                 <div
                                     className="colorButton-inner"
