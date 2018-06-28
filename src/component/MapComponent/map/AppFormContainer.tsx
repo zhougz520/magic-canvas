@@ -19,6 +19,7 @@ export interface IDemoProps extends IBaseProps {
 export interface IDemoState extends IBaseState {
     selectedId?: string;  // 先...只能单选，后面看情况在调整
     title?: string;
+    refs?: any;
 }
 // tslint:disable:jsx-no-string-ref
 export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoState> {
@@ -35,7 +36,8 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     constructor(props: IDemoProps, context?: any) {
         super(props, context);
         this.state = {
-            baseState: this.initBaseStateWithCustomState(props.childData)
+            baseState: this.initBaseStateWithCustomState(props.childData),
+            refs: this.refs
         };
     }
     componentDidMount() {
@@ -45,6 +47,14 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
             initData = JSON.stringify(formDetail.p).replace(/【cs】/g, cid);
             this.setCustomState(JSON.parse(initData));
         }
+    }
+    componentDidUpdate() {
+        // console.log('refs', this.refs);
+        // if (JSON.stringify(this.refs) !== JSON.stringify(this.state.refs)) {
+        this.setState({
+            refs: this.refs
+        });
+        // }
     }
     public isCanMove = () => {
         return this._isCanMove;

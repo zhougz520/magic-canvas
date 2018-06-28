@@ -74,11 +74,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                             if (sec.t === 'MapComponent/map/form/SectionForm') {
                                 this.sectionForm = (
                                     <SectionForm
-                                        ref={
-                                            () => {
-                                                return `c.${sec.p.id}`;
-                                            }
-                                        }
+                                        ref={`c.${sec.p.id}`}
                                         selectedId={selectedId}
                                         updateProps={updateProps}
                                         selectComChange={selectComChange}

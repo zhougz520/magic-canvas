@@ -28,6 +28,7 @@ export class MapProvider extends React.PureComponent<IMapContextProps, any> {
             stateData,
             refs
         };
+        console.log('MapContext.Provider refs', refs);
 
         return (
             <MapContext.Provider value={value}>
