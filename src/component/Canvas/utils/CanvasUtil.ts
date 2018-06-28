@@ -71,11 +71,11 @@ export class CanvasUtil {
      * 根据画布上的组件重算_maxZIndex和_minZIndex
      */
     resetZIndexAndComIndex = (isResetComIndex: boolean = false): void => {
-        const zIndexList: number[] = [];
-        const comIndexList: number[] = [];
+        const zIndexList: number[] = [0];
+        const comIndexList: number[] = [0];
 
-        const commentsZIndexList: number[] = [];
-        const commentsIndexList: number[] = [];
+        const commentsZIndexList: number[] = [100000];
+        const commentsIndexList: number[] = [0];
 
         const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         componentList.map(
