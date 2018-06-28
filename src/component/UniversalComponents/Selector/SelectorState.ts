@@ -1,23 +1,23 @@
-import { Record, List, fromJS} from 'immutable';
+import { Record, List } from 'immutable';
 import { IFontState } from '../model/types';
 
 export interface ISelectorState extends IFontState {
     disabled: boolean;
-    options: List<Map<any, any>>;
+    options: any[];
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
 }
 
 const initOptions = [
-    {label: 'option1', value: 'option1'},
-    {label: 'option2', value: 'option2'},
-    {label: 'option3', value: 'option3'}
+    'option1',
+    'option2',
+    'option3'
 ];
 
 const defaultRecord: ISelectorState = {
     disabled: false,
-    options: fromJS(initOptions),
+    options: initOptions,
     backgroundColor: '#FFF',
     borderColor: '#d9d9d9',
     borderWidth: 1,
