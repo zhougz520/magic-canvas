@@ -109,15 +109,18 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     components={components}
                     componentPosition={componentPosition}
                     highPerformance={highPerformance}
-                    setPageDirty={setPageDirty}
                     getDraw={this.getDraw}
                     getStageScroll={this.getStageScroll}
                     setStageScroll={this.setStageScroll}
                     getStageBoundary={this.getStageBoundary}
                     getStageSize={this.getStageSize}
-                    onContextMenu={onContextMenu}
                     onCommandProperties={onCommandProperties}
                     onPropertyProperties={onPropertyProperties}
+                    setPageDirty={setPageDirty}
+                    onContextMenu={onContextMenu}
+                    copyToClipboard={this.props.copyToClipboard}
+                    readFromClipboard={this.props.readFromClipboard}
+                    checkClipboard={this.props.checkClipboard}
                 />
             </div>
         );

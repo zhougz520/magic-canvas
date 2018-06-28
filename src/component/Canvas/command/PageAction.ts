@@ -1,6 +1,7 @@
 import { Canvas } from '../Canvas';
 import { IComponent } from '../../BaseComponent';
 import { IRange, IStack, IComponentList } from '../model/types';
+import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
 import { Stack, Set, List, OrderedSet, Map } from 'immutable';
 
 export class PageAction {
@@ -402,5 +403,71 @@ export class PageAction {
      */
     setFocusWingman = () => {
         this._canvas.getWingman().setFocus();
+    }
+
+    /**
+     * 复制组件
+     */
+    copyCom = () => {
+        const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
+
+        const components: any[] = [];
+        currentSelectedComponent.map(
+            (component: IComponent) => {
+                components.push(
+                    convertFromBaseStateToData(
+                        component.getBaseState(),
+                        {
+                            comPath: component.getBaseProps().comPath,
+                            childData: component.getBaseProps().childData
+                        }
+                    )
+                );
+            }
+        );
+
+        const detail = {
+            type: 'BaseComponent',
+            content: {
+                components
+            }
+        };
+
+        this._canvas.props.copyToClipboard && this._canvas.props.copyToClipboard({
+            text: JSON.stringify(detail)
+        });
+        this._canvas._componentsUtil._pasteNum = 0;
+    }
+
+    /**
+     * 粘贴
+     */
+    pasteCom = () => {
+        try {
+            const clipboardTypes: string[] | undefined = this._canvas.props.checkClipboard && this._canvas.props.checkClipboard();
+            const data = this._canvas.props.readFromClipboard && this._canvas.props.readFromClipboard();
+
+            if (clipboardTypes && data) {
+                // text
+                if (clipboardTypes.includes('text') && data.text && data.text !== '') {
+                    const detail = JSON.parse(data.text);
+                    const type = detail.type;
+                    const content = detail.content;
+                    if (content && type && type === 'BaseComponent') {
+                        const components = content.components;
+                        this._canvas._componentsUtil.pasteCancasComponent(components);
+                    }
+                }
+
+                // image
+                if (clipboardTypes.includes('image') && data.image) {
+                    const imageData = data.image;
+                    const { dataUrl, size } = imageData;
+                    this._canvas._componentsUtil.pasteImage(dataUrl, size);
+                }
+            }
+        } catch (err) {
+            // do nothing
+        }
     }
 }

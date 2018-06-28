@@ -14,6 +14,9 @@ import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseSta
 import { Map, OrderedSet, Set, List } from 'immutable';
 
 export class ComponentsUtil {
+    // 粘贴次数
+    public _pasteNum: number = 0;
+
     private _canvas: Canvas;
 
     /**
@@ -122,6 +125,119 @@ export class ComponentsUtil {
         });
         this._canvas._drawUtil.clearSelected();
         this._canvas._drawUtil.clearDragBox();
+    }
+
+    /**
+     * 画布粘贴组件
+     * @param dataList 组件的数据流List
+     * @param position 组件在画布上添加的位置
+     */
+    pasteCancasComponent = (
+        dataList: any[],
+        isSetUndoStack: boolean = true
+    ): void => {
+        this._pasteNum += 1;
+        let addComponentList: List<IComponentList> = List();
+        const timeStamp: number = new Date().getTime();
+
+        let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        dataList.map(
+            (data: any) => {
+                data.offset = { x: 0, y: 0 };
+                const { l, t } = data.p;
+                const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, { x: l + 10 * this._pasteNum, y: t + 10 * this._pasteNum }, data.p.customState);
+                const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
+                const component: IComponentList = {
+                    cid: comData.id,
+                    comPath: data.t,
+                    baseState,
+                    childData: comData.p,
+                    initType: 'Paste'
+                };
+
+                componentList = componentList.add(component);
+                addComponentList = addComponentList.push(component);
+                this._canvas._newComponentCid = comData.id;
+            }
+        );
+
+        // 添加撤销栈
+        if (isSetUndoStack === true) {
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'create',
+                addComponentList
+            );
+        }
+
+        this._canvas.setState({
+            componentList
+        }, () => {
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+        });
+    }
+
+    /**
+     * 粘贴截图
+     * @param dataUrl 图片的dataUrl
+     * @param size 图片大小
+     */
+    pasteImage = (
+        dataUrl: string,
+        size: { width: number; height: number; }
+    ): void => {
+        const currentMousePosition = this._canvas._canvasGlobalParam.currentMousePosition;
+        const data = {
+            t: 'UniversalComponents/ImageCom/Image',
+            p: {
+                name: '图片',
+                w: size.width,
+                h: size.height,
+                l: currentMousePosition ? currentMousePosition.x : 100,
+                t: currentMousePosition ? currentMousePosition.y : 100,
+                customState: {
+                    src: dataUrl,
+                    backgroundColor: '#FFF',
+                    borderColor: '#FFF',
+                    borderWidth: 0
+                }
+            },
+            offset: {
+                x: 0,
+                y: 0
+            }
+        };
+
+        this._pasteNum += 1;
+        let addComponentList: List<IComponentList> = List();
+        const timeStamp: number = new Date().getTime();
+        let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+
+        const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, { x: data.p.l, y: data.p.t }, data.p.customState);
+        const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
+        const component: IComponentList = {
+            cid: comData.id,
+            comPath: data.t,
+            baseState,
+            childData: comData.p,
+            initType: 'Paste'
+        };
+
+        componentList = componentList.add(component);
+        addComponentList = addComponentList.push(component);
+        this._canvas._newComponentCid = comData.id;
+
+        this._canvas._stackUtil.setCanvasUndoStack(
+            timeStamp,
+            'create',
+            addComponentList
+        );
+
+        this._canvas.setState({
+            componentList
+        }, () => {
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+        });
     }
 
     /**

@@ -1,5 +1,6 @@
 import { Canvas } from '../../Canvas';
 import { IKeyArgs } from '../../utils/MouseAndKeyUtil';
+import { CommandMap } from '../../command/CommandEmitted';
 
 export function docKeyDown(canvas: Canvas, e: any): void {
     const args = canvas._mouseAndKeyUtil.keyArgs(e);
@@ -15,8 +16,26 @@ export function docKeyDown(canvas: Canvas, e: any): void {
             return;
         }
 
+        const cmd: any = {};
         if (ctrl) {
             canvas._canvasGlobalParam.ctrlPress = true;
+
+            switch (key) {
+                case 'c':
+                    if (canvas._canvasGlobalParam.isSelectedComponent()) {
+                        cmd.t = CommandMap.COM_COPY;
+                    }
+                    break;
+                case 'v':
+                    canvas._canvasGlobalParam.ctrlPress = false;
+                    cmd.t = CommandMap.COM_PASTE;
+                    break;
+            }
+            if (cmd.t !== undefined) {
+                canvas.executeCommand(cmd);
+
+                return;
+            }
         }
 
         switch (key) {

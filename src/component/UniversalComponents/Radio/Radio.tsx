@@ -16,8 +16,7 @@ import {
 import { MaskLayer } from '../../BaseComponent';
 
 import { RadioState, IRadioState } from './RadioState';
-import { PropertiesEnum } from '../model/types';
-import { IPropertyGroup, IProperty } from '../model/types';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
 import { BoxType } from '../../util';
 
 import { Map, OrderedSet, List } from 'immutable';

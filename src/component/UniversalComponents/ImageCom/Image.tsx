@@ -1,25 +1,13 @@
 import * as React from 'react';
-import { BaseComponent, BaseStyle, IBaseProps, IBaseState } from '../../BaseComponent';
+import { BaseComponent, BaseStyle, IBaseProps, IBaseState, MaskLayer } from '../../BaseComponent';
+
 import { ImageState } from './ImageState';
-// import { PropertiesEnum } from '../model/types';
-// import { IProperty } from '../model/types';
-import { Map } from 'immutable';
-import { MaskLayer } from '../../BaseComponent';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
 
+import { Map, OrderedSet, List } from 'immutable';
+
+// tslint:disable:jsx-no-multiline-js
 export default class Image extends BaseComponent<IBaseProps, IBaseState> {
-    static defaultProps = {
-        data: {
-            id: 'cs6',
-            txt_v: '我是测试组件6',
-            w: 300,
-            h: 200,
-            l: 300,
-            t: 10
-        }
-    };
-
-    com: HTMLElement | null = null;
-
     constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
@@ -28,77 +16,44 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
         };
     }
 
-    render() {
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
-        // const { w, h, att_url, att_n} = this.props;
-
-        return (
-            <div
-                onMouseDown={this.fireSelectChange}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
-                ref={(handler) => this.com = handler}
-            >
-                <MaskLayer id={this.getCid()} />
-                <div
-                    // tslint:disable-next-line:jsx-no-multiline-js
-                    style={{
-                        width: '100%', height: '100%',
-                        fontStyle: this.getCustomState().getFontStyle(), fontSize: this.getCustomState().getFontSize() + 'px',
-                        fontWeight: this.getCustomState().getFontWeight(), backgroundColor: this.getCustomState().getBackgroundColor(), borderStyle: 'solid',
-                        borderColor: this.getCustomState().getBorderColor(), borderWidth: this.getCustomState().getBorderWidth() + 'px'
-                    }}
-                >
-                    <a href="javascript:void(0)" title={'att_n'}>
-                        <img
-                            // tslint:disable-next-line:jsx-no-multiline-js
-                            style={{
-                                width: '100%', height: '100%', color: this.getCustomState().getFontColor(),
-                                textDecoration: this.getCustomState().getTextDecoration(), display: 'inline-block',
-                                textAlign: this.getCustomState().getTextAlign()
-                            }}
-                            src={this.getCustomState().getSrc()}
-                            alt={this.getCustomState().getAlt()}
-                            // width={this.getCustomState().getWidth()}
-                            // height={this.getCustomState().getHeight()}
-                            key={'img'}
-                        />
-                    </a>
-                </div>
-            </div>
+        // 外观
+        propertyList = propertyList.push(
+            {
+                pTitle: '边框颜色',
+                pKey: 'borderColor',
+                pValue: this.getCustomState().getBorderColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            },
+            {
+                pTitle: '边框宽度',
+                pKey: 'borderWidth',
+                pValue: this.getCustomState().getBorderWidth(),
+                pType: PropertiesEnum.SLIDER
+            }
         );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '外观',
+                groupKey: 'exterior',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        return propertyGroup;
     }
 
-    // public getPropertiesToProperty = (): IProperty[] => {
-    //     return [
-    //         {
-    //             pTitle: '链接地址',
-    //             pKey: 'alt',
-    //             pValue: this.getCustomState().getAlt(),
-    //             pType: PropertiesEnum.INPUT_STRING
-    //             // }, {
-    //             //     pTitle: '字体',
-    //             //     pKey: 'fontSize',
-    //             //     pValue: this.getCustomState().get(),
-    //             //     pType: PropertiesEnum.INPUT_NUMBER
-    //         }, {
-    //             pTitle: '背景颜色',
-    //             pKey: 'backgroundColor',
-    //             pValue: this.getCustomState().getBackgroundColor(),
-    //             pType: PropertiesEnum.COLOR_PICKER
-    //         }, {
-    //             pTitle: '边框颜色',
-    //             pKey: 'borderColor',
-    //             pValue: this.getCustomState().getBorderColor(),
-    //             pType: PropertiesEnum.COLOR_PICKER
-    //         }, {
-    //             pTitle: '边框宽度',
-    //             pKey: 'borderWidth',
-    //             pValue: this.getCustomState().getBorderWidth(),
-    //             pType: PropertiesEnum.SLIDER
-    //         }
-    //     ];
-    // }
-
+    /**
+     * 设置属性
+     */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
@@ -107,4 +62,38 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
         this.setCustomState(newImageState);
     }
 
+    render() {
+        return (
+            <div
+                style={{
+                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                    backgroundColor: this.getCustomState().getBackgroundColor(),
+                    borderColor: this.getCustomState().getBorderColor(),
+                    borderWidth: this.getCustomState().getBorderWidth(),
+                    borderStyle: 'solid'
+                }}
+                onMouseDown={this.fireSelectChange}
+            >
+                <MaskLayer id={this.getCid()} />
+                <img
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'inline-block'
+                    }}
+                    src={this.getCustomState().getSrc()}
+                />
+            </div>
+        );
+    }
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：ImageState
+ */
+export function convertFromDataToCustomState(
+    customData: ImageState
+): any {
+    return new ImageState(customData);
 }

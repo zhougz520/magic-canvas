@@ -60,5 +60,11 @@ export enum CommandMap {
     COM_SETPROPS = 'e.setPropsCom',
 
     // 设置僚机焦点
-    WINGMAN_FOCUS = 'e.setFocusWingman'
+    WINGMAN_FOCUS = 'e.setFocusWingman',
+
+    // 复制
+    COM_COPY = 'e.copyCom',
+
+    // 粘贴
+    COM_PASTE = 'e.pasteCom'
 }
