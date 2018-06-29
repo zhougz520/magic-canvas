@@ -387,13 +387,12 @@ export class PageAction {
         const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         currentSelectedComponent.map(
             (com: IComponent) => {
-                // TODO 优化代码
                 com.setPropertiesFromProperty(param.pKey, param.pValue);
-                if (param.pKey === 'borderWidth') {
-                    setTimeout(() => {
-                        this._canvas._drawUtil.repaintSelected();
-                    }, 0);
-                }
+                // if (param.pKey === 'borderWidth') {
+                //     setTimeout(() => {
+                //         this._canvas._drawUtil.repaintSelected();
+                //     }, 0);
+                // }
             }
         );
     }

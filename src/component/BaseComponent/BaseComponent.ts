@@ -466,9 +466,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 获取属性工具条的单条属性，传给组件并设置组件
+     * 默认：空，组件自己重写
      */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
-        // const num: number = 1 + 1;
+        return;
     }
 
     /**
