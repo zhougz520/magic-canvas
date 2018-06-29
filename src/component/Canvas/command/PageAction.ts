@@ -439,6 +439,13 @@ export class PageAction {
         this._canvas._componentsUtil._pasteNum = 0;
     }
 
+    // 剪切
+    cutCom = () => {
+        this.copyCom();
+        this._canvas._componentsUtil.deleteCanvasComponent(this._canvas._canvasGlobalParam.getSelectedCids());
+        this._canvas._componentsUtil._pasteNum = -1;
+    }
+
     /**
      * 粘贴
      */

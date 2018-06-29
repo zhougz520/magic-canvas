@@ -21,18 +21,31 @@ export function docKeyDown(canvas: Canvas, e: any): void {
             canvas._canvasGlobalParam.ctrlPress = true;
 
             switch (key) {
-                case 'c':
+                case 'c':   // 复制
                     if (canvas._canvasGlobalParam.isSelectedComponent()) {
                         cmd.t = CommandMap.COM_COPY;
                     }
                     break;
-                case 'v':
+                case 'x':   // 剪切
+                    if (canvas._canvasGlobalParam.isSelectedComponent()) {
+                        cmd.t = CommandMap.COM_CUT;
+                    }
+                    break;
+                case 'v':   // 粘贴
                     canvas._canvasGlobalParam.ctrlPress = false;
                     cmd.t = CommandMap.COM_PASTE;
+                    break;
+                case 'z':   // 撤销
+                    cmd.t = CommandMap.CANVAS_UNDO;
+                    break;
+                case 'y':   // 重做
+                    cmd.t = CommandMap.CANVAS_REDO;
                     break;
             }
             if (cmd.t !== undefined) {
                 canvas.executeCommand(cmd);
+                e.stopPropagation();
+                e.preventDefault();
 
                 return;
             }

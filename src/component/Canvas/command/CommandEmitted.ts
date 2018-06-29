@@ -65,6 +65,9 @@ export enum CommandMap {
     // 复制
     COM_COPY = 'e.copyCom',
 
+    // 剪切
+    COM_CUT = 'e.cutCom',
+
     // 粘贴
     COM_PASTE = 'e.pasteCom'
 }
