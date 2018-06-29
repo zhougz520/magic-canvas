@@ -131,10 +131,9 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
     /**
      * override
      */
-    public addChildComponent = (data: any, addData: any): any => {
-
+    public addChildComponent = (id: string, data: any, addData: any): any => {
         if (addData.t === 'MapComponent/map/form/NavBarItem') {
-            const newNavBarItem = this.getChildComponent(data.id, data, addData);
+            const newNavBarItem = this.getChildComponent(id, data, addData);
             let childId = newNavBarItem.p.id;
             const tabForm = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/TabForm' });
             childId = tabForm.p.id;
@@ -144,12 +143,10 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
             childId = sectionForm.p.id;
             const section = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/Section' });
             childId = section.p.id;
-            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/InputField' });
+            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
         }
 
-        this.props.updateProps(data.id, { p: data.p });
-
-        return data;
+        this.props.updateProps('', data);
     }
 }
 export const AppForm = MapConsumer(AppFormClass);

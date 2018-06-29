@@ -101,7 +101,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/map/form/field/TextAreaField') ||
             (t === 'MapComponent/map/form/field/UploadFiles');
     }
-
     private initFieldList = (data: any) => {
         const { map_form_ss_unit, selectComChange, updateProps, selectedId } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;

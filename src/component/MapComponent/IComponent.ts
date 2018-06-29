@@ -5,7 +5,7 @@ export interface IComponent {
     /**
      * 添加子控件
      */
-    addChildComponent: (data: any, addData: any) => any;
+    addChildComponent: (id: string, data: any, addData: any) => any;
     /**
      * 获取最新的控件id
      */

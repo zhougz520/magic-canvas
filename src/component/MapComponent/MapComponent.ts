@@ -22,7 +22,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             this.com.addEventListener('drop', this.handleDropAddComponent);
             this.com.addEventListener('keydown', this.deleteComponentsById);
             // }
-            this.com.addEventListener('mousedown', this.selectedCom);
+            // this.com.addEventListener('mousedown', this.selectedCom);
             const currMaskLayer = document.getElementById(this.props.id);
             // console.log('id', this.props.id);
             if (currMaskLayer !== null) {
@@ -46,54 +46,113 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         }
     }
     /**
+     *  获取当前控件的refs
+     */
+    public findComponentRef = () => {
+        return (GlobalUtil.isUndefined(this.com)) ? undefined : this.com;
+    }
+    // /**
+    //  *  drop 添加控件
+    //  */
+    // public handleDropAddComponent = (e: any) => {
+    //     const data: any = this.getAddComponent();
+    //     this.setState({
+    //         hover: {}
+    //     });
+    //     // 校验是否能被添加
+    //     if (!this.componentCanBeAdded(data.t)) {
+    //         e.stopPropagation();
+
+    //         return;
+    //     }
+    //     GlobalUtil.debugLog(this.findComponentRef(), ' this.findComponentRef()');
+    //     // 添加控件
+    //     this.addChildComponent(this.props.id, { p: this.props.stateData }, data);
+    //     e.stopPropagation();
+    // }
+    /**
+     * 获取当前控件的ref对象
+     */
+    public getCurrRef = (currId: string) => {
+        const refs: any = this.props.refs;
+        const currRsf = this.loopRefs(currId, refs);
+
+        return currRsf;
+    }
+    /**
+     * 递归获取当前的ref对象
+     */
+    public loopRefs = (id: string, refs: any) => {
+        let currRef = refs[`${id}`];
+        if (currRef === undefined) {
+            const refArr: any[] = [];
+            // tslint:disable-next-line:forin
+            for (const refId in refs) {
+                refArr.push(refs[`${refId}`]);
+            }
+            refArr.forEach((ref: any) => {
+                currRef = this.loopRefs(id, ref.refs);
+            });
+        }
+
+        return currRef;
+    }
+    /**
      *  drop 添加控件
      */
     public handleDropAddComponent = (e: any) => {
         const data: any = this.getAddComponent();
+        if (data === undefined) return;
         this.setState({
             hover: {}
         });
-        // 校验是否能被添加
-        if (!this.componentCanBeAdded(data.t)) {
-            e.stopPropagation();
 
-            return;
+        // 获取refs（context中的）
+        const id: string = this.props.id;
+        const ids: string[] = id.split('.');
+        let currId: string = `c.${id}`;
+        let currRef: any;
+        for (let i = ids.length - 1; i > 0; i--) {
+            currRef = this.getCurrRef(currId);
+            if (currRef !== undefined && currRef.componentCanBeAdded(data.t)) {
+                currRef.addChildComponent(currRef.props.id, { p: this.props.stateData }, data);
+                // e.stopPropagation();
+                // 跳出循环
+                break;
+            }
+            currId = currId.substring(0, currId.length - `.${ids[i]}`.length);
         }
-        // 添加控件
-        this.addChildComponent(this.props, data);
         e.stopPropagation();
+    }
+    public initChildComponent = (id: string, data: any, addData: any): any => {
+        let props: any = this.findComponentProps(data, id);
+        props = this.prepareChildrenComponents(props);
+        // 获取新id
+        let childId: string = `${id}.cs1`;
+        childId = this.newComponentsId(props.p.p.components, `${id}.cs`);
+        props.p.p.components.push({
+            t: addData.t,
+            p: Object.assign({}, addData.p, { id: childId })
+        });
+
+        return {
+            props,
+            childId
+        };
     }
     /**
      * 添加子控件
      */
-    public addChildComponent = (data: any, addData: any): any => {
-        let props: any = data;
-        props = this.prepareChildrenComponents(props);
-        // 获取新id
-        let childId: string = `${data.id}.cs1`;
-        childId = this.newComponentsId(data.p.components, `${data.id}.cs`);
-        data.p.components.push({
-            t: addData.t,
-            p: Object.assign({}, addData.props, { id: childId })
-        });
-        this.props.updateProps(data.id, { p: data.p });
-
-        return data;
+    public addChildComponent = (id: string, data: any, addData: any): any => {
+        data = this.initChildComponent(id, data, addData).props;
+        this.props.updateProps(id, { p: data.p.p });
     }
     /**
      * 当新增子控件，并且需要增加子控件的子控件时，需要用到
      */
     public getChildComponent = (currId: string, data: any, addData: any): any => {
-        let props: any = this.findComponentProps(data, currId);
-        props = this.prepareChildrenComponents(props);
-        // 获取新id
-        let childId: string = `${props.id}.cs1`;
-        childId = this.newComponentsId(props.p.components, `${props.id}.cs`);
-        props.p.components.push({
-            t: addData.t,
-            p: Object.assign({}, addData.p, { id: childId })
-        });
-        const newItem = props.p.components.find((component: any) => component.p.id === childId);
+        data = this.initChildComponent(currId, data, addData);
+        const newItem = data.props.p.p.components.find((component: any) => component.p.id === data.childId);
 
         return newItem;
     }
@@ -129,8 +188,11 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (GlobalUtil.isUndefined(props.p)) {
             props.p = {};
         }
-        if (GlobalUtil.isUndefined(props.p.components)) {
-            props.p.components = [];
+        if (GlobalUtil.isUndefined(props.p.p)) {
+            props.p.p = {};
+        }
+        if (GlobalUtil.isUndefined(props.p.p.components)) {
+            props.p.p.components = [];
         }
 
         return props;
@@ -138,27 +200,25 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取当前控件的props
      */
-    public findComponentProps = (data: any, id: any) => {
-        const ids = id.split('.');
-        if (data.id === id || ids.length < 3) {
-            return data;
-        }
+    public findComponentProps = (data: any, currId: string) => {
+        const ids = currId.split('.');
         // 因为现在第一层是baseComponent
         // 所以所有控件id从第二层开始
         // 第二层开始
         let tmpId = `${ids[0]}.${ids[1]}`;
         let props: any = ``;
-        tmpId = `${tmpId}.${ids[2]}`;
         props = data.p.components.find((p: any) => p.p.id === tmpId);
+        if (ids.length < 3) return props;
+        // tmpId = `${tmpId}.${ids[2]}`;
         if (GlobalUtil.isUndefined(props)) return;
-        for (let idx = 3; idx < ids.length; idx++) {
+        for (let idx = 2; idx < ids.length; idx++) {
             tmpId = `${tmpId}.${ids[idx]}`;
             if (props.p === undefined || props.p.p === undefined || props.p.p.components === undefined) return;
             props = props.p.p.components.find((p: any) => p.p.id === tmpId);
             if (GlobalUtil.isUndefined(props)) return;
         }
 
-        return props.p;
+        return props;
     }
     /**
      * 删除控件
