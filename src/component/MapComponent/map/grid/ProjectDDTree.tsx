@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { TreeSelect } from 'antd';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -9,7 +10,7 @@ export interface IMapProps extends IBaseProps {
     map_pddt_o?: string[];
 }
 
-export class ProjectDDTree extends MapComponent<IMapProps, any> {
+export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_pddt_txt: '组织架构',
         map_pddt_o: [],
@@ -76,3 +77,4 @@ export class ProjectDDTree extends MapComponent<IMapProps, any> {
         });
     }
 }
+export const ProjectDDTree = MapConsumer(ProjectDDTreeClass);

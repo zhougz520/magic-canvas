@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
-import { Draggable, Droppable, DraggableProvided, DraggableStateSnapshot, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import {
     InputField,
     // InputNumberField,
@@ -32,10 +32,16 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
-            hover: {}
+            hover: {},
+            fieldList: this.props.p !== undefined ? this.props.p.components : []
         };
     }
-
+    componentWillReceiveProps(nextProps: any) {
+        // 当接收到新的props的时候，将字段列表更新
+        this.setState({
+            fieldList: nextProps.p !== undefined ? nextProps.p.components : []
+        });
+    }
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
@@ -46,28 +52,25 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     })
 
     public render() {
-        const { hover } = this.state;
-        const { map_form_ss_name, selectedId, id, index, p } = this.props;
-
-        const fieldList = this.initFieldList(p);
+        const { hover, fieldList } = this.state;
+        const { map_form_ss_name, selectedId, id, index } = this.props;
+        const currFieldList = this.initFieldList(fieldList);
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                className={`${id === selectedId ? ' map-selected' : ''}`}
             >
                 <div
                     className={`section-title`}
                     onClick={this.selectedCom}
                     {...provided.dragHandleProps}
+                    key={'title'}
                 >
                     {map_form_ss_name}
                 </div>
-                <Droppable
-                    droppableId={`${index}`}
-                >
-                    {fieldList}
-                </Droppable>
+                {currFieldList}
                 {provided.placeholder}
             </div >
         );
@@ -75,7 +78,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
         return (
             <div
                 ref={(ref) => this.com = ref}
-                className={`section ${selectedId === id ? 'map-selected' : ''}`}
+                className={`section`}
                 style={Object.assign({}, { width: '100%' }, hover)}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
@@ -101,10 +104,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/map/form/field/TextAreaField') ||
             (t === 'MapComponent/map/form/field/UploadFiles');
     }
-    private initFieldList = (data: any) => {
+    private initFieldList = (currFieldList: any) => {
         const { map_form_ss_unit, selectComChange, updateProps, selectedId } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
-        const components = data === undefined ? undefined : data.components;
+        const components = currFieldList === undefined ? undefined : currFieldList;
         const fieldList: any[] = [];
         const currComList: any[] = [];
         const currRowList: any[] = [];
@@ -136,6 +139,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
                     case 'MapComponent/map/form/field/InputNumberField':
@@ -274,42 +278,27 @@ export class SectionClass extends MapComponent<IMapProps, any> {
         }
         fieldList.forEach((row: any, index: number) => {
             currRowList.push(
-                <Droppable
+                <div
+                    className="field-list"
                     key={index}
-                    droppableId={`${index}`}
-                    direction="horizontal"
-                    type={'field-row'}
                 >
-                    {
-                        (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
-                            (
-                                <div
-                                    className="field-list"
-                                    ref={provided.innerRef}
-                                    style={this.getListStyle(snapshot.isDraggingOver)}
-                                >
-                                    {row}
-                                </div>
-                            )
-                    }
-                </Droppable>
+                    {row}
+                </div>
             );
         });
         this.rowList = currComList;
 
-        return (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
-            (
-                <div
-                    className={`section-content`}
-                    ref={provided.innerRef}
-                >
-                    {currRowList}
-                </div>
-            );
+        return (
+            <div
+                className={`section-content`}
+            >
+                {currRowList}
+            </div>
+        );
     }
 
-    private getListStyle = (isDraggingOver: any) => ({
-        background: isDraggingOver ? 'lightblue' : ''
-    })
+    private dragChangeField = (newFieldList: any) => {
+        this.props.updateProps(this.props.id, { p: { components: newFieldList } });
+    }
 }
 export const Section = MapConsumer(SectionClass);

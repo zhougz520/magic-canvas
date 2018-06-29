@@ -44,8 +44,9 @@ export class NavBarItemClass extends MapComponent<IMapProps, any> {
                 ref={provided.innerRef}
                 {...provided.dragHandleProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                className={`${id === selectedId ? ' map-selected' : ''}`}
             >
-                <div className={`lbItem${id === selectOn ? ' lbOn' : ''}${id === selectedId ? ' map-selected' : ''}`} >
+                <div className={`lbItem${id === selectOn ? ' lbOn' : ''}`} >
                     <div className={`ico ${map_form_sn_icon}`} />
                     {map_form_sn_name}
                 </div>

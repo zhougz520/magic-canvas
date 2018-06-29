@@ -62,11 +62,11 @@ export class AppFormMenuItemClass extends MapComponent<IMapProps, any> {
                 ref={provided.innerRef}
                 {...provided.dragHandleProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                // className={``}
             >
                 <MaskLayer id={id} />
                 <Dropdown overlay={menu} trigger={['click']}>
                     <div
-                        ref={(ref) => this.com = ref}
                         className={`menu-item ${selectedId === id ? 'map-selected' : ''}`}
                     >
                         <span className="line" style={{ display: map_mi_line ? `block` : `none` }}>|</span>
@@ -85,8 +85,8 @@ export class AppFormMenuItemClass extends MapComponent<IMapProps, any> {
 
         return (
             <div
-                className={`menu-item`}
                 onMouseDown={this.selectedCom}
+                ref={(ref) => this.com = ref}
             >
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}

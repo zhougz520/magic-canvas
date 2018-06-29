@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { AppGridMenuItem } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -11,7 +12,7 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
-export class AppGridMenu extends MapComponent<IMapProps, any> {
+export class AppGridMenuClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
         selectedId: undefined
@@ -93,3 +94,4 @@ export class AppGridMenu extends MapComponent<IMapProps, any> {
         return (t === 'MapComponent/map/grid/AppGridMenuItem');
     }
 }
+export const AppGridMenu = MapConsumer(AppGridMenuClass);

@@ -41,9 +41,10 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
                 ref={provided.innerRef}
                 {...provided.dragHandleProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                className={`${id === selectedId ? ' map-selected' : ''}`}
             >
                 <span
-                    className={`tab${id === selectOn ? ' tabOn' : ''}${id === selectedId ? ' map-selected' : ''}`}
+                    className={`tab${id === selectOn ? ' tabOn' : ''}`}
                 >
                     {map_form_st_name}
                 </span>
@@ -52,7 +53,7 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
         );
 
         return (
-            <div ref={(ref) => this.com = ref} onMouseDown={this.onChangeItem} className="container">
+            <div ref={(ref) => this.com = ref} onMouseDown={this.onChangeItem} className={`container`}>
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>

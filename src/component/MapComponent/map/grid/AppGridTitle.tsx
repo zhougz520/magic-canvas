@@ -3,6 +3,7 @@ import { MapComponent, IBaseProps } from '../../index';
 // import { GlobalUtil } from '../../../util';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 // import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -13,7 +14,7 @@ export interface IMapProps extends IBaseProps {
 }
 // tslint:disable:jsx-no-lambda
 // tslint:disable:jsx-no-multiline-js
-export class AppGridTitle extends MapComponent<IMapProps, any> {
+export class AppGridTitleClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gt_txt: '标题',
         w: 50,
@@ -115,3 +116,4 @@ export class AppGridTitle extends MapComponent<IMapProps, any> {
         }
     }
 }
+export const AppGridTitle = MapConsumer(AppGridTitleClass);

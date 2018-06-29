@@ -3,6 +3,7 @@ import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { Checkbox } from 'antd';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { AppGridTitle } from './index';
+import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -22,7 +23,7 @@ export interface IMapState extends IBaseState {
     dragonDrop?: any;
     // map_af_se: boolean;
 }
-export class AppGrid extends MapComponent<IMapProps, any> {
+export class AppGridClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_g_mc: false,
         map_g_sl: false,
@@ -59,7 +60,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
 
     public render() {
         // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
-        const { map_g_mc, map_g_tree, map_sm, selectedId, id, w, p } = this.props;
+        const { map_sm, selectedId, id, w, p } = this.props;
         const { hover } = this.state;
         // 加载 GridTitle
         this.initTitle(p);
@@ -75,12 +76,6 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                 style={Object.assign({}, hover)}
             >
                 <div className={`grid-title`} style={{ width: w - 20 }}>
-                    <div className="app-grid-title-item index">
-                        <div className={`grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
-                            {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
-                        </div>
-                        <div className="title-split no-ctrl" />
-                    </div>
                     <div className={`grid-title-content`} ref={(ref) => this.title = ref}>
                         <DragDropContext onDragEnd={this.onDragEnd} >
                             <Droppable droppableId="droppable" direction="horizontal">
@@ -89,7 +84,19 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                         </DragDropContext>
                     </div>
                 </div>
-            </div>
+                <div className={`grid-bottom`}>
+                    <div className={`grid-bottom-left`}>
+                        <span style={{ marginLeft: 8 }}>页次： <input /> /0</span>
+                        <span style={{ marginLeft: 8 }}>每页 <input /> 条/共0条</span>
+                    </div>
+                    <div className={`grid-bottom-right`}>
+                        <span className="g-bottom-page">[末页]</span>
+                        <span className="g-bottom-page">[下页]</span>
+                        <span className="g-bottom-page">[上页]</span>
+                        <span className="g-bottom-page">[首页]</span>
+                    </div>
+                </div>
+            </div >
         );
     }
     /*重载添加组件*/
@@ -98,7 +105,7 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
     // 初始化标题
     protected initTitle = (p: any) => {
-        const { selectComChange, selectedId, updateProps } = this.props;
+        const { selectComChange, selectedId, updateProps, map_g_tree, map_g_mc } = this.props;
         if (p !== undefined) {
             const currTitles: JSX.Element[] = [];
             p.components.forEach((com: any, index: number) => {
@@ -123,6 +130,16 @@ export class AppGrid extends MapComponent<IMapProps, any> {
                         className="title-list"
                         ref={provided.innerRef}
                     >
+                        <div
+                            className={`app-grid-title-item`}
+                        >
+                            <div>
+                                <div className={`title grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
+                                    {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
+                                </div>
+                            </div>
+                            <div className="title-split no-ctrl" />
+                        </div>
                         {currTitles}
                     </div>
                 );
@@ -130,3 +147,5 @@ export class AppGrid extends MapComponent<IMapProps, any> {
     }
 
 }
+
+export const AppGrid = MapConsumer(AppGridClass);
