@@ -121,12 +121,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             (property: IProperty) => {
                 const element: JSX.Element | null = this.buildPropertyElement(property, groupKey);
                 if (element !== null) {
-                    list.push(
-                        <div className="props-col-1 group-end" key={property.pKey}>
-                            {property.pTitle}
-                            {element}
-                        </div>
-                    );
+                    list.push(element);
                 }
             }
         );
@@ -143,86 +138,107 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         switch (property.pType) {
             case PropertiesEnum.INPUT_TEXT:
                 element = (
-                    <Input
-                        type="text"
-                        size="small"
-                        value={property.pValue}
-                        id={`${groupKey}.${property.pKey}`}
-                        onBlur={(e) => this.handleInputText(e, 'blur')}
-                        onPressEnter={(e) => this.handleInputText(e, 'enter')}
-                        onChange={this.changePropertyValue}
-                    />
+                    <div className="props-col-1 group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <Input
+                            type="text"
+                            size="small"
+                            value={property.pValue}
+                            id={`${groupKey}.${property.pKey}`}
+                            onBlur={(e) => this.handleInputText(e, 'blur')}
+                            onPressEnter={(e) => this.handleInputText(e, 'enter')}
+                            onChange={this.changePropertyValue}
+                        />
+                    </div>
                 );
                 break;
             case PropertiesEnum.INPUT_TEXTAREA:
                 element = (
-                    <TextArea
-                        rows={4}
-                        autosize={false}
-                        value={property.pValue}
-                        id={`${groupKey}.${property.pKey}`}
-                        onBlur={(e) => this.handleInputText(e, 'blur')}
-                        onChange={this.changePropertyValue}
-                    />
+                    <div className="props-col-cross group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <TextArea
+                            rows={4}
+                            autosize={false}
+                            value={property.pValue}
+                            id={`${groupKey}.${property.pKey}`}
+                            onBlur={(e) => this.handleInputText(e, 'blur')}
+                            onChange={this.changePropertyValue}
+                        />
+                    </div>
                 );
                 break;
             case PropertiesEnum.INPUT_NUMBER:
                 element = (
-                    <Input
-                        type="number"
-                        size="small"
-                        value={property.pValue}
-                        id={`${groupKey}.${property.pKey}`}
-                        onBlur={(e) => this.handleInputText(e, 'blur')}
-                        onPressEnter={(e) => this.handleInputText(e, 'enter')}
-                        onChange={this.changePropertyValue}
-                    />
+                    <div className="props-col-1 group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <Input
+                            type="number"
+                            size="small"
+                            value={property.pValue}
+                            id={`${groupKey}.${property.pKey}`}
+                            onBlur={(e) => this.handleInputText(e, 'blur')}
+                            onPressEnter={(e) => this.handleInputText(e, 'enter')}
+                            onChange={this.changePropertyValue}
+                        />
+                    </div>
                 );
                 break;
             case PropertiesEnum.INPUT_LIST:
                 element = (
-                    <TextArea
-                        rows={4}
-                        autosize={false}
-                        value={property.pValue}
-                        id={`${groupKey}.${property.pKey}`}
-                        onBlur={(e) => this.handleInputText(e, 'blur')}
-                        onChange={this.changePropertyValue}
-                    />
+                    <div className="props-col-cross group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <TextArea
+                            rows={4}
+                            autosize={false}
+                            value={property.pValue.join('\n')}
+                            id={`${groupKey}.${property.pKey}`}
+                            onBlur={(e) => this.handleInputList(e)}
+                            onChange={(e) => this.changePropertyValue(e, e.target.value.split(/[\r\n]/))}
+                        />
+                    </div>
                 );
                 break;
             case PropertiesEnum.SWITCH:
                 element = (
-                    <Switch
-                        size="small"
-                        checked={property.pValue}
-                        onChange={(value) => this.handleSwitch(value, `${groupKey}.${property.pKey}`)}
-                    />
+                    <div className="props-col-1 group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <Switch
+                            size="small"
+                            checked={property.pValue}
+                            onChange={(value) => this.handleSwitch(value, `${groupKey}.${property.pKey}`)}
+                        />
+                    </div>
                 );
                 break;
             case PropertiesEnum.COLOR_PICKER:
                 element = (
-                    <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`)} trigger="click">
-                        <div className="colorButton">
-                            <div
-                                className="colorButton-inner"
-                                style={{
-                                    background: property.pValue
-                                }}
-                            />
-                        </div>
-                    </Popover>
+                    <div className="props-col-1 group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`)} trigger="hover">
+                            <div className="colorButton">
+                                <div
+                                    className="colorButton-inner"
+                                    style={{
+                                        background: property.pValue
+                                    }}
+                                />
+                            </div>
+                        </Popover>
+                    </div>
                 );
                 break;
             case PropertiesEnum.SLIDER:
                 element = (
-                    <Slider
-                        min={0}
-                        max={10}
-                        value={property.pValue}
-                        onChange={(value) => this.changePropertyValue(null, value, `${groupKey}.${property.pKey}`)}
-                        onAfterChange={(value) => this.handleSlider(value, `${groupKey}.${property.pKey}`)}
-                    />
+                    <div className="props-col-1 group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <Slider
+                            min={0}
+                            max={10}
+                            value={property.pValue}
+                            onChange={(value) => this.changePropertyValue(null, value, `${groupKey}.${property.pKey}`)}
+                            onAfterChange={(value) => this.handleSlider(value, `${groupKey}.${property.pKey}`)}
+                        />
+                    </div>
                 );
                 break;
         }
@@ -292,6 +308,15 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                 this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
                 break;
         }
+    }
+
+    /**
+     * InputList值改变
+     */
+    private handleInputList = (e: any) => {
+        const pValue = e.target.value.split(/[\r\n]/);
+        const pKey = e.target.id.split('.')[1];
+        this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
     }
 
     /**

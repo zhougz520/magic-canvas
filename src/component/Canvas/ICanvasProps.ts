@@ -10,24 +10,41 @@ export interface ICanvasProps {
     pageMode: PageMode;
     // 组件数据
     components: ComponentsType;
+    // 画布大小
+    canvasSize: { width: number, height: number };
     // 高性能模式
     highPerformance: boolean;
     // 画布偏移量
     componentPosition: ICompos;
-    // canvas默认的宽高
-    canvasSize: { width: number, height: number };
 
     // 设置页签变脏
     setPageDirty?: () => void;
     // 右键菜单
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
 
+    /**
+     * 写入剪切板
+     * @param data
+     */
+    copyToClipboard?: (data: { text?: string, html?: string, image?: any }) => void;
+    /**
+     * 获取剪切板数据
+     * @param types 需要获取的剪切板类型
+     */
+    readFromClipboard?: (types?: string[]) => { text?: string, html?: string, image?: any };
+    /**
+     * 检查剪切板中是否有数据，并返回数据类型集合
+     */
+    checkClipboard?: () => string[];
+
+    // 获取选中的组件集合并传给ToolBar
+    onCommandProperties?: (selectedComs: Map<string, any>) => void;
+    // 获取选中的组件属性，传给PropertyTool
+    onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
+
     getDraw: () => IDrawComponent | null;
     getStageScroll: () => { scrollLeft: number, scrollTop: number };
     setStageScroll: (offset: IOffset) => void;
     getStageBoundary: () => undefined | IBoundary;
     getStageSize: () => undefined | { width: number, height: number };
-    onCommandProperties: (selectedComs: Map<string, any>) => void;
-    onPropertyProperties: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
-    updateCanvasSize: (width: number, height: number) => void;
 }

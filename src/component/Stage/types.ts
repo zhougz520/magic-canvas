@@ -17,7 +17,6 @@ export interface ICompos {
 export interface IConfig {
     highPerformance: boolean;   // 高性能模式
     componentPosition: ICompos; // 画布的初始偏移量
-    canvasSize: { width: number, height: number };  // 画布初始的宽高
 }
 
 // 数据库存储的数据结构
@@ -36,7 +35,8 @@ export const ComponentsMap = {
     Universal_Hyperlink: { t: 'UniversalComponents/Hyperlink/Hyperlink', p: { name: '超链接', w: 80, h: 25 } },
     Universal_Selector: { t: 'UniversalComponents/Selector/Selector', p: { name: '下拉框', w: 120, h: 32 } },
     Universal_Input: { t: 'UniversalComponents/Input/Input', p: { name: '单行输入', w: 200, h: 32 } },
-    Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: '多行输入', w: 280, h: 73 } }
+    Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: '多行输入', w: 280, h: 73 } },
+    Universal_Image: { t: 'UniversalComponents/ImageCom/Image', p: { name: '图片', w: 300, h: 200 } }
 };
 
 export type ContextMenuType = 'menu' | 'separator';

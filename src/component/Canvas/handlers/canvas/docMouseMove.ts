@@ -14,9 +14,11 @@ export function docMouseMove(canvas: Canvas, e: any): void {
         }
     } else {
         // 鼠标未按下时，计算鼠标位置
+        const relative = canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
+        canvas._canvasGlobalParam.currentMousePosition = relative;
+
         const isAddCommentsMode: boolean = canvas._isAddCommentsMode;
         if (isAddCommentsMode === false) {
-            const relative = canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
             const anchor: IAnchor | null = canvas._canvasGlobalParam.anchorCalc(relative.x, relative.y);
             canvas.setState({ cursor: anchor ? anchor.cursor : 'default' });
         }

@@ -26,7 +26,7 @@ export class CanvasGlobalParam {
             y: number;
         };
     };                                                          // 鼠标按下时的位置
-    public selectedComponents: Map<string, IComponent>;                // 当前选中的组件集合
+    public selectedComponents: Map<string, IComponent>;         // 当前选中的组件集合
     public currentComponentSize: {
         list: Map<string, {
             position: IPosition;
@@ -46,7 +46,8 @@ export class CanvasGlobalParam {
             offsetY: number;
         }): void;
     };                                                          // 当前画布canvas相对document的偏移量
-    public currentAnchor: IAnchor | null;                // 当前触发的锚点
+    public currentAnchor: IAnchor | null;                       // 当前触发的锚点
+    public currentMousePosition: { x: number; y: number; } | null;   // 当前鼠标位置
     public dragType: string;                                    // 当前鼠标移动的类型
     public dragDivList: Map<string, IDragDiv>;                  // 当前生成的组件位移框
     public TECellEditorActivateKeyRange: Array<{
@@ -113,6 +114,7 @@ export class CanvasGlobalParam {
             }
         };
         this.currentAnchor = null;
+        this.currentMousePosition = null;
         this.dragType = 'none';
         this.dragDivList = Map<string, IDragDiv>();
         this.TECellEditorActivateKeyRange = [

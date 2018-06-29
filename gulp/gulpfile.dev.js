@@ -44,7 +44,7 @@ const runDevServer = () => {
                         getCustomTransformers: () => ({
                             before: [tsImportPluginFactory({
                                 libraryName: 'antd',
-                                libraryDirectory: 'lib',
+                                libraryDirectory: 'es',
                                 style: true
                             })]
                         }),

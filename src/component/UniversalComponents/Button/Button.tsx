@@ -16,8 +16,7 @@ import {
 import { MaskLayer } from '../../BaseComponent';
 
 import { ButtonState, IButtonState } from './ButtonState';
-import { PropertiesEnum } from '../model/types';
-import { IPropertyGroup, IProperty } from '../model/types';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
 
 import { Map, OrderedSet, List } from 'immutable';
 

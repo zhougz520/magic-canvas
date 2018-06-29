@@ -34,9 +34,9 @@ export class CanvasUtil {
     /**
      * 重绘画布的大小
      */
-    repaintCanvas = (pointX: number, pointY: number) => {
-        const canvasSize: { width: number; height: number; } = this._canvas.props.canvasSize;
-        if (pointX > canvasSize.width || pointY > canvasSize.height) {
+    repaintCanvas = (pointX: number, pointY: number, isDirectRepaint: boolean = false) => {
+        const canvasSize: { width: number; height: number; } = this._canvas.state.canvasSize;
+        if (isDirectRepaint || pointX > canvasSize.width || pointY > canvasSize.height) {
             const pointXList: number[] = [canvasSize.width];
             const pointYList: number[] = [canvasSize.height];
 
@@ -54,19 +54,28 @@ export class CanvasUtil {
 
             const width = Math.max(...pointXList);
             const height = Math.max(...pointYList);
-            this._canvas.props.updateCanvasSize(width, height);
+
+            this.setCanvasSize({ width, height });
+            this._canvas._drawUtil.setDrawCanvasSize({ width, height });
         }
+    }
+
+    /**
+     * 设置画布大小
+     */
+    setCanvasSize = (canvasSize: { width: number; height: number; }) => {
+        this._canvas.setState({ canvasSize });
     }
 
     /**
      * 根据画布上的组件重算_maxZIndex和_minZIndex
      */
     resetZIndexAndComIndex = (isResetComIndex: boolean = false): void => {
-        const zIndexList: number[] = [];
-        const comIndexList: number[] = [];
+        const zIndexList: number[] = [0];
+        const comIndexList: number[] = [0];
 
-        const commentsZIndexList: number[] = [];
-        const commentsIndexList: number[] = [];
+        const commentsZIndexList: number[] = [100000];
+        const commentsIndexList: number[] = [0];
 
         const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         componentList.map(
@@ -165,6 +174,14 @@ export class CanvasUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 退出批注添加模式
+     */
+    exitAddCommentsMode = () => {
+        this._canvas._isAddCommentsMode = false;
+        this._canvas.setState({ cursor: 'default' });
     }
 
 }

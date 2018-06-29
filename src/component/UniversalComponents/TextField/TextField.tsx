@@ -16,8 +16,7 @@ import {
 import { MaskLayer } from '../../BaseComponent';
 
 import { TextFieldState, ITextFieldState } from './TextFieldState';
-import { PropertiesEnum } from '../model/types';
-import { IPropertyGroup, IProperty } from '../model/types';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
 
 import { Map, OrderedSet, List } from 'immutable';
 
@@ -114,7 +113,7 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
                 pTitle: '文字内容',
                 pKey: 'textValue',
                 pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_TEXT
+                pType: PropertiesEnum.INPUT_TEXTAREA
             },
             {
                 pTitle: '提示信息',

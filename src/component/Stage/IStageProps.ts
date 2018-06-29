@@ -6,6 +6,8 @@ import { Map, OrderedSet } from 'immutable';
 export interface IStageProps {
     // 组件数据集合
     components: ComponentsType;
+    // 画布大小
+    canvasSize: { width: number, height: number };
     // config配置
     config: IConfig;
     // 页面模式
@@ -16,8 +18,23 @@ export interface IStageProps {
     // 右键菜单
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
 
+    /**
+     * 写入剪切板
+     * @param data
+     */
+    copyToClipboard?: (data: { text?: string, html?: string, image?: any }) => void;
+    /**
+     * 获取剪切板数据
+     * @param types 需要获取的剪切板类型
+     */
+    readFromClipboard?: (types?: string[]) => { text?: string, html?: string, image?: any };
+    /**
+     * 检查剪切板中是否有数据，并返回数据类型集合
+     */
+    checkClipboard?: () => string[];
+
     // 获取选中的组件集合并传给ToolBar
-    onCommandProperties: (selectedComs: Map<string, any>) => void;
-    // 将输入参数：编辑中的组件属性，传给propertyTool
-    onPropertyProperties: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
+    onCommandProperties?: (selectedComs: Map<string, any>) => void;
+    // 获取选中的组件属性，传给PropertyTool
+    onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
 }

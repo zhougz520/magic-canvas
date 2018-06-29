@@ -1,33 +1,20 @@
 import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarList';
-import { Stage, ComponentsType, ICompos, IPropertyGroup } from '../../../src';
+import { Stage, ComponentsType, IPropertyGroup } from '../../../src';
 import './solution.css';
 import { config } from './config';
 // import { detail1, detail2 } from './data';
 import { Map, OrderedSet } from 'immutable';
 
-export interface ISolutionProp {
-    [key: string]: any;
-}
-
-export interface ISolutionState {
-    compos: ICompos;
-    canvasSize: { width: number, height: number };
-}
-
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
-export default class SolutionEditor extends React.PureComponent<ISolutionProp, ISolutionState> {
+export default class SolutionEditor extends React.PureComponent<any, any> {
     private stage: Stage | null = null;
     private barList: IBarListComponent | null = null;
 
-    constructor(props: ISolutionProp) {
+    constructor(props: any) {
         super(props);
-        this.state = {
-            compos: config.componentPosition,
-            canvasSize: config.canvasSize
-        };
     }
 
     getStage = (): Stage => {
@@ -81,6 +68,7 @@ export default class SolutionEditor extends React.PureComponent<ISolutionProp, I
                     config={config}
                     ref={(render) => this.stage = render}
                     components={detail.content.components as ComponentsType}
+                    canvasSize={{ width: 2560, height: 1440 }}
                     onCommandProperties={this.onCommandProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     pageMode={'Edit'}

@@ -14,6 +14,11 @@ import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseSta
 import { Map, OrderedSet, Set, List } from 'immutable';
 
 export class ComponentsUtil {
+    // 粘贴次数
+    public _pasteNum: number = 0;
+    // 同一批次添加组件次数
+    public _addNum: number = 0;
+
     private _canvas: Canvas;
 
     /**
@@ -65,6 +70,7 @@ export class ComponentsUtil {
                 }
             }
         );
+        this._addNum = 0;
 
         // 添加撤销栈
         if (isSetUndoStack === true) {
@@ -77,7 +83,10 @@ export class ComponentsUtil {
 
         this._canvas.setState({
             componentList
-        }, callback);
+        }, () => {
+            callback && callback();
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+        });
     }
 
     /**
@@ -122,6 +131,125 @@ export class ComponentsUtil {
     }
 
     /**
+     * 画布粘贴组件
+     * @param dataList 组件的数据流List
+     * @param position 组件在画布上添加的位置
+     */
+    pasteCancasComponent = (
+        dataList: any[],
+        isSetUndoStack: boolean = true
+    ): void => {
+        this._pasteNum += 1;
+        let addComponentList: List<IComponentList> = List();
+        const timeStamp: number = new Date().getTime();
+
+        let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        dataList.map(
+            (data: any) => {
+                data.offset = { x: 0, y: 0 };
+                const { l, t } = data.p;
+                const comType: ComponentType | null = this.getComponentType(data.t);
+                const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
+                    data,
+                    { x: l + 10 * this._pasteNum, y: t + 10 * this._pasteNum },
+                    comType === 'Comments' ? null : data.p.customState
+                );
+                const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
+                const component: IComponentList = {
+                    cid: comData.id,
+                    comPath: data.t,
+                    baseState,
+                    childData: comData.p,
+                    initType: 'Paste'
+                };
+
+                componentList = componentList.add(component);
+                addComponentList = addComponentList.push(component);
+                this._canvas._newComponentCid = comData.id;
+            }
+        );
+        this._addNum = 0;
+
+        // 添加撤销栈
+        if (isSetUndoStack === true) {
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'create',
+                addComponentList
+            );
+        }
+
+        this._canvas.setState({
+            componentList
+        }, () => {
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+        });
+    }
+
+    /**
+     * 粘贴截图
+     * @param dataUrl 图片的dataUrl
+     * @param size 图片大小
+     */
+    pasteImage = (
+        dataUrl: string,
+        size: { width: number; height: number; }
+    ): void => {
+        const currentMousePosition = this._canvas._canvasGlobalParam.currentMousePosition;
+        const data = {
+            t: 'UniversalComponents/ImageCom/Image',
+            p: {
+                name: '图片',
+                w: size.width,
+                h: size.height,
+                l: currentMousePosition ? currentMousePosition.x : 100,
+                t: currentMousePosition ? currentMousePosition.y : 100,
+                customState: {
+                    src: dataUrl,
+                    backgroundColor: '#FFF',
+                    borderColor: '#FFF',
+                    borderWidth: 0
+                }
+            },
+            offset: {
+                x: 0,
+                y: 0
+            }
+        };
+
+        this._pasteNum += 1;
+        let addComponentList: List<IComponentList> = List();
+        const timeStamp: number = new Date().getTime();
+        let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+
+        const comData: IComData = this._canvas._componentsUtil.convertComponentToData(data, { x: data.p.l, y: data.p.t }, data.p.customState);
+        const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
+        const component: IComponentList = {
+            cid: comData.id,
+            comPath: data.t,
+            baseState,
+            childData: comData.p,
+            initType: 'Paste'
+        };
+
+        componentList = componentList.add(component);
+        addComponentList = addComponentList.push(component);
+        this._canvas._newComponentCid = comData.id;
+
+        this._canvas._stackUtil.setCanvasUndoStack(
+            timeStamp,
+            'create',
+            addComponentList
+        );
+
+        this._canvas.setState({
+            componentList
+        }, () => {
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+        });
+    }
+
+    /**
      * 根据component数据创建画布上的组件
      */
     getChildrenComponent = (componentList: OrderedSet<IComponentList>): React.ReactFragment => {
@@ -138,18 +266,18 @@ export class ComponentsUtil {
                         comPath: com.comPath,
                         initType: com.initType
                     }, {
-                        ref: `c.${com.cid}`,
-                        pageMode: this._canvas.props.pageMode,
-                        componentPosition: this._canvas.props.componentPosition,
-                        selectionChanging: this._canvas.selectionChanging,
-                        repaintSelected: this._canvas._drawUtil.repaintSelected,
-                        repaintCanvas: this._canvas._canvasUtil.repaintCanvas,
-                        dbClickToBeginEdit: this._canvas._richEditUtil.dbClickToBeginEdit,
-                        getComponent: this._canvas.getComponent,
-                        resetMaxAndMinZIndex: this._canvas._canvasUtil.resetZIndexAndComIndex,
-                        setCanvasUndoStack: this._canvas._stackUtil.setCanvasUndoStack,
-                        executeCommand: this._canvas.executeCommand
-                    })
+                            ref: `c.${com.cid}`,
+                            pageMode: this._canvas.props.pageMode,
+                            componentPosition: this._canvas.props.componentPosition,
+                            selectionChanging: this._canvas.selectionChanging,
+                            repaintSelected: this._canvas._drawUtil.repaintSelected,
+                            repaintCanvas: this._canvas._canvasUtil.repaintCanvas,
+                            dbClickToBeginEdit: this._canvas._richEditUtil.dbClickToBeginEdit,
+                            getComponent: this._canvas.getComponent,
+                            resetMaxAndMinZIndex: this._canvas._canvasUtil.resetZIndexAndComIndex,
+                            setCanvasUndoStack: this._canvas._stackUtil.setCanvasUndoStack,
+                            executeCommand: this._canvas.executeCommand
+                        })
                 );
             }
         );
@@ -235,13 +363,14 @@ export class ComponentsUtil {
 
         let data: IComData;
         if (offset !== undefined) {
+            this._addNum += 1;
             const comPath: string = component.t;
             // TODO Map分包后需要修改
             const comType: ComponentType | null = this.getComponentType(comPath);
             // 添加新组件
             data = {
                 ...component.p,
-                id: comType === 'Comments' ? 'cm' + (this._canvas._maxCommentsIndex + 1) : 'cs' + (this._canvas._maxComIndex + 1),
+                id: comType === 'Comments' ? 'cm' + (this._canvas._maxCommentsIndex + this._addNum) : 'cs' + (this._canvas._maxComIndex + this._addNum),
                 l: position.x - offset.x,
                 t: position.y - offset.y,
                 zIndex: comType === 'Comments' ? this._canvas._maxCommentsZIndex + 1 : this._canvas._maxZIndex + 1,
@@ -308,10 +437,10 @@ export class ComponentsUtil {
         );
 
         return {
-            maxZIndex: isFinite(Math.max(...zIndexList))  === true ? Math.max(...zIndexList) : this._canvas._maxZIndex,
-            minZIndex: isFinite(Math.min(...zIndexList))  === true ? Math.min(...zIndexList) : this._canvas._minZIndex,
-            maxCommentsZIndex: isFinite(Math.max(...commentsZIndexList))  === true ? Math.max(...commentsZIndexList) : this._canvas._maxCommentsZIndex,
-            minCommentsZIndex: isFinite(Math.min(...commentsZIndexList))  === true ? Math.min(...commentsZIndexList) : this._canvas._minCommentsZIndex
+            maxZIndex: isFinite(Math.max(...zIndexList)) === true ? Math.max(...zIndexList) : this._canvas._maxZIndex,
+            minZIndex: isFinite(Math.min(...zIndexList)) === true ? Math.min(...zIndexList) : this._canvas._minZIndex,
+            maxCommentsZIndex: isFinite(Math.max(...commentsZIndexList)) === true ? Math.max(...commentsZIndexList) : this._canvas._maxCommentsZIndex,
+            minCommentsZIndex: isFinite(Math.min(...commentsZIndexList)) === true ? Math.min(...commentsZIndexList) : this._canvas._minCommentsZIndex
         };
     }
 
@@ -333,14 +462,14 @@ export class ComponentsUtil {
                     return com.getPosition().left;
                 }
             ) as Map<string, IComponent>;
-            spacing = (range.width - range.sumComWidth) / ( range.comNum - 1 );
+            spacing = (range.width - range.sumComWidth) / (range.comNum - 1);
         } else if (alignType === 'Vertical' && selectedComponents.size > 1) {
             selectedComponents = selectedComponents.sortBy(
                 (com: IComponent) => {
                     return com.getPosition().top;
                 }
             ) as Map<string, IComponent>;
-            spacing = (range.height - range.sumComHeight) / ( range.comNum - 1 );
+            spacing = (range.height - range.sumComHeight) / (range.comNum - 1);
         }
 
         selectedComponents.map(

@@ -182,7 +182,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 >
                     删除线
                 </Button>
-                <Popover placement="rightTop" content={colorPicker} trigger="click">
+                <Popover placement="rightTop" content={colorPicker} trigger="hover">
                     <div className="colorButton">
                         <div
                             className="colorButton-inner"

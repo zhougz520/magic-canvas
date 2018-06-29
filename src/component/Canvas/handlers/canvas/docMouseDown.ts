@@ -1,11 +1,19 @@
 import { Canvas } from '../../Canvas';
 
 export function docMouseDown(canvas: Canvas, e: any): void {
+    // 如果是鼠标右键点击
+    if (e.button === 2) {
+        // 退出批注添加模式
+        if (canvas._isAddCommentsMode === true) {
+            canvas._canvasUtil.exitAddCommentsMode();
+        }
+    }
+
     // 鼠标按下时，计算鼠标位置
     canvas._mouseAndKeyUtil.recordPointStart(e);
-
     // 锚点上点击
     const anchor = canvas._canvasGlobalParam.getCurrentAnchor();
+
     if (anchor) {
         // 如果是编辑模式：结束编辑模式
         if (canvas._isRichEditMode === true) {

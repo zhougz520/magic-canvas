@@ -17,8 +17,7 @@ import {
 import { MaskLayer } from '../../BaseComponent';
 
 import { SelectorState, ISelectorState } from './SelectorState';
-import { PropertiesEnum } from '../model/types';
-import { IPropertyGroup, IProperty } from '../model/types';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
 import { BoxType } from '../../util';
 
 import { Map, OrderedSet, List } from 'immutable';
@@ -179,16 +178,16 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
     }
 
     private optionElem = () => {
-        const optionList: List<Map<any, any>> = this.getCustomState().getOptions();
+        const optionList: any[] = this.getCustomState().getOptions();
 
         const res: any[] = [];
         optionList.map(
-            (option: Map<any, any>) => {
+            (option) => {
                 res.push(
                     <AntSelector.Option
-                        key={option.get('label')}
+                        key={option}
                     >
-                        {option.get('label')}
+                        {option}
                     </AntSelector.Option>
                 );
             }

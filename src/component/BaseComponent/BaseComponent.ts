@@ -506,6 +506,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             case 'Stack':
                 newBaseState = baseState;
                 break;
+            case 'Paste':
+                newBaseState = baseState;
+                break;
         }
 
         return newBaseState;
