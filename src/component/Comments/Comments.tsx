@@ -40,6 +40,7 @@ export interface ICustomState {
     maxRectId: number;
 }
 
+/* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
 export default class Comments extends BaseComponent<IBaseProps, ICommentsState> {
     private _padding: number = 8;
 
@@ -74,12 +75,12 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         const comFont: IFont = this.getFont();
 
         const position: IPosition = {
-            top: comPosition.top + this._padding,
+            top: comPosition.top + 24,
             left: comPosition.left + this._padding
         };
         const size: ISize = {
             width: comSize.width - 2 * this._padding,
-            height: comSize.height - 2 * this._padding
+            height: comSize.height - this._padding - 24
         };
         const font: IFont = comFont;
 
@@ -111,10 +112,12 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
             {
                 type: 'menu',
                 label: '添加锚点',
-                click: () => { this.props.executeCommand({
-                    t: CommandMap.COMMENTSRECT_ADD,
-                    d: this.getCid()
-                }); }
+                click: () => {
+                    this.props.executeCommand({
+                        t: CommandMap.COMMENTSRECT_ADD,
+                        d: this.getCid()
+                    });
+                }
             }
         ];
     }
@@ -150,15 +153,23 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 >
                     <MaskLayer id={this.getCid()} />
-                    <Editor
-                        editorState={editorState}
-                        inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
-                        // tslint:disable-next-line:jsx-no-lambda
-                        onChange={() => { return; }}
-                        readOnly
-                        customContentStyle={{padding: this._padding, visibility: hidden ? 'hidden' : 'visible'}}
-                        blockStyleFn={blockStyleFn}
-                    />
+                    <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>作者：</div>
+                    <div style={{ width: '100%', height: this.getSize().height - 24 }}>
+                        <Editor
+                            editorState={editorState}
+                            inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
+                            onChange={() => { return; }}
+                            readOnly
+                            customContentStyle={{
+                                paddingLeft: this._padding,
+                                paddingRight: this._padding,
+                                paddingBottom: this._padding,
+                                paddingTop: 0,
+                                visibility: hidden ? 'hidden' : 'visible'
+                            }}
+                            blockStyleFn={blockStyleFn}
+                        />
+                    </div>
                 </div>
             </React.Fragment>
         );
@@ -184,11 +195,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         if (commentsRectList) {
             commentsRectList.map(
                 (commentsRect: IComponentList) => {
-                    const commentsLine: ICommentsLineProps = this.buildLine(this.getBaseState(), commentsRect.baseState, {x: -2, y: 20});
+                    const commentsLine: ICommentsLineProps = this.buildLine(this.getBaseState(), commentsRect.baseState, { x: -2, y: 20 });
                     rectList.push(
                         <g key={commentsRect.cid}>
                             <CommentsRect
-                                // tslint:disable-next-line:jsx-no-string-ref
                                 ref={`c.${commentsRect.cid}`}
                                 pageMode={pageMode}
                                 childData={commentsRect.childData}
