@@ -391,6 +391,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         }
     }
 
+    componentWillUnmount() {
+        // 组件卸载时移除事件监听
+        this.removeEventListener();
+    }
+
     render() {
         const { componentPosition } = this.props;
         const { canvasSize, componentList } = this.state;
@@ -437,10 +442,21 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         document.addEventListener('mouseup', this._onDocMouseUp);
         document.addEventListener('keydown', this._onDocKeyDown);
         document.addEventListener('keyup', this._onDocKeyUp);
-        (this.canvas as HTMLDivElement).addEventListener('contextmenu', (e) => {
-            this._onDocMouseUp(e);
-            this._onDocContextMenu(e);
-        });
+        (this.canvas as HTMLDivElement).addEventListener('contextmenu', this._onDocContextMenu);
+    }
+
+    /**
+     * 初始化画布事件监听
+     * 事件触发顺序：false，由内而外；true，由外向内；react合成事件绑定在document节点上
+     */
+    public removeEventListener = (): void => {
+        document.removeEventListener('mousemove', this._onDocMouseMove);
+        document.removeEventListener('mouseleave', this._onDocMouseLeave);
+        (this.canvas as HTMLDivElement).removeEventListener('mousedown', this._onDocMouseDown);
+        document.removeEventListener('mouseup', this._onDocMouseUp);
+        document.removeEventListener('keydown', this._onDocKeyDown);
+        document.removeEventListener('keyup', this._onDocKeyUp);
+        (this.canvas as HTMLDivElement).removeEventListener('contextmenu', this._onDocContextMenu);
     }
 
     /**

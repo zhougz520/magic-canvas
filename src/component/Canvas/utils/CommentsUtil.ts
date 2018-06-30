@@ -165,7 +165,7 @@ export class CommentsUtil {
      */
     doAddCommentsRect = () => {
         if (this._currentCommentsCid === null) return;
-        const comComments = this._canvas.getComponent(this._currentCommentsCid);
+        const comComments: IComponent | null = this._canvas.getComponent(this._currentCommentsCid);
 
         if (comComments) {
             const commentsCustomState = comComments.getCustomState();
@@ -184,6 +184,7 @@ export class CommentsUtil {
                 { cid: this._addCommentsRectParam.component ? this._addCommentsRectParam.component.getCid() : null }
             );
             comData.id = comComments.getCid() + '.cr' + (commentsCustomState.get('maxRectId') + 1);
+            comData.comType = 'CommentsRect';
             comData.zIndex = 0;
 
             const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
@@ -225,6 +226,47 @@ export class CommentsUtil {
             const oldCommentsList = component.getCommentsList();
             const newCommentsList = oldCommentsList.push(newComments);
             component.setCommentsList(newCommentsList);
+        }
+    }
+
+    /**
+     * 删除锚点
+     */
+    doDeleteCommentsRect = (cid: string) => {
+        // 1.更新组件的锚点列表
+        // const comRect: IComponent | null = this._canvas.getComponent(cid);
+        // if (comRect) {
+        //     const comCid: string | null = comRect.getCustomState().get('cid');
+        //     const component: IComponent | null = comCid !== null ? this._canvas.getComponent(comCid) : null;
+        //     if (component) {
+        //         let commentsList: List<ICommentsList> = component.getCommentsList();
+        //         commentsList.map(
+        //             (comments: ICommentsList, key: number) => {
+        //                 if (cid === comments.cid) {
+        //                     commentsList = commentsList.delete(key);
+        //                 }
+        //             }
+        //         );
+        //         component.setCommentsList(commentsList);
+        //     }
+        // }
+
+        // 2.更新批注组件的锚点列表
+        const commentsCid: string = cid.split('.')[0];
+        const comComments: IComponent | null = this._canvas.getComponent(commentsCid);
+        if (comComments) {
+            let commentsRectList: OrderedSet<IComponentList> = comComments.getCustomState().get('commentsRectList');
+            commentsRectList.map(
+                (commentsRect: IComponentList) => {
+                    if (cid === commentsRect.cid) {
+                        commentsRectList = commentsRectList.delete(commentsRect);
+                    }
+                }
+            );
+            comComments.setCustomState({
+                commentsRectList,
+                maxRectId: comComments.getCustomState().get('maxRectId')
+            });
         }
     }
 }

@@ -268,7 +268,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             commentsList: newCommentsList
         }) as ContentState;
-        const newBaseState = BaseState.push(oldBaseState, newContent);
+        const newBaseState = BaseState.push(oldBaseState, newContent, false);
 
         this.setBaseState(newBaseState);
     }

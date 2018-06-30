@@ -6,6 +6,7 @@ import { Map } from 'immutable';
 
 export function docContextMenu(canvas: Canvas, e: any): void {
     e.preventDefault();
+    canvas._canvasGlobalParam.canvasMouseUp(e);
 
     if (canvas.props.onContextMenu) {
         let contextMenuItems: IContextMenuItems[] = [];

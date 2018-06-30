@@ -26,6 +26,13 @@ export class PageAction {
         this._canvas._commentsUtil.startAddComments(true);
     }
 
+    // 删除批注锚点
+    deleteCommentsRect = (cid: string) => {
+        this._canvas._commentsUtil.doDeleteCommentsRect(cid);
+        this._canvas._drawUtil.clearSelected();
+        this._canvas._drawUtil.clearDragBox();
+    }
+
     // 画布撤销
     undoCanvas = () => {
         const undoStack: Stack<IStack> = this._canvas._undoStack;

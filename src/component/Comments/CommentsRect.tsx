@@ -12,7 +12,8 @@ import {
     ICommentsList
 } from '../BaseComponent';
 import { IReactData, IBaseData } from '../Draw';
-import { IComponentList } from '../Canvas';
+import { IComponentList, CommandMap } from '../Canvas';
+import { IContextMenuItems } from '../Stage';
 
 import { OrderedSet, List } from 'immutable';
 
@@ -57,6 +58,23 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
             strokeWidth: 1,
             borderOffset: this.props.componentPosition.borderOffset.border * 2
         };
+    }
+
+    /**
+     * 获取组件的右键菜单
+     * 默认：空，组件自己重写
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        return [
+            {
+                type: 'menu',
+                label: '删除',
+                click: () => { this.props.executeCommand({
+                    t: CommandMap.COMMENTSRECT_DELETE,
+                    d: this.getCid()
+                }); }
+            }
+        ];
     }
 
     componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
