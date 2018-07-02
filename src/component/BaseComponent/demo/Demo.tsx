@@ -38,7 +38,7 @@ export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
                 onDoubleClick={this.doDbClickToEdit}
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <div
                     id="demoSass"
                 >

@@ -436,13 +436,24 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 事件触发顺序：false，由内而外；true，由外向内；react合成事件绑定在document节点上
      */
     public initEventListener = (): void => {
-        document.addEventListener('mousemove', this._onDocMouseMove);
-        document.addEventListener('mouseleave', this._onDocMouseLeave);
-        (this.canvas as HTMLDivElement).addEventListener('mousedown', this._onDocMouseDown);
-        document.addEventListener('mouseup', this._onDocMouseUp);
-        document.addEventListener('keydown', this._onDocKeyDown);
-        document.addEventListener('keyup', this._onDocKeyUp);
-        (this.canvas as HTMLDivElement).addEventListener('contextmenu', this._onDocContextMenu);
+        const { pageMode } = this.props;
+        switch (pageMode) {
+            case 'Edit':
+                document.addEventListener('mousemove', this._onDocMouseMove);
+                document.addEventListener('mouseleave', this._onDocMouseLeave);
+                (this.canvas as HTMLDivElement).addEventListener('mousedown', this._onDocMouseDown);
+                document.addEventListener('mouseup', this._onDocMouseUp);
+                document.addEventListener('keydown', this._onDocKeyDown);
+                document.addEventListener('keyup', this._onDocKeyUp);
+                (this.canvas as HTMLDivElement).addEventListener('contextmenu', this._onDocContextMenu);
+                break;
+            case 'Run':
+                document.addEventListener('mousemove', this._onDocMouseMove);
+                document.addEventListener('mouseleave', this._onDocMouseLeave);
+                (this.canvas as HTMLDivElement).addEventListener('mousedown', this._onDocMouseDown);
+                document.addEventListener('mouseup', this._onDocMouseUp);
+                break;
+        }
     }
 
     /**
@@ -450,13 +461,24 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 事件触发顺序：false，由内而外；true，由外向内；react合成事件绑定在document节点上
      */
     public removeEventListener = (): void => {
-        document.removeEventListener('mousemove', this._onDocMouseMove);
-        document.removeEventListener('mouseleave', this._onDocMouseLeave);
-        (this.canvas as HTMLDivElement).removeEventListener('mousedown', this._onDocMouseDown);
-        document.removeEventListener('mouseup', this._onDocMouseUp);
-        document.removeEventListener('keydown', this._onDocKeyDown);
-        document.removeEventListener('keyup', this._onDocKeyUp);
-        (this.canvas as HTMLDivElement).removeEventListener('contextmenu', this._onDocContextMenu);
+        const { pageMode } = this.props;
+        switch (pageMode) {
+            case 'Edit':
+                document.removeEventListener('mousemove', this._onDocMouseMove);
+                document.removeEventListener('mouseleave', this._onDocMouseLeave);
+                (this.canvas as HTMLDivElement).removeEventListener('mousedown', this._onDocMouseDown);
+                document.removeEventListener('mouseup', this._onDocMouseUp);
+                document.removeEventListener('keydown', this._onDocKeyDown);
+                document.removeEventListener('keyup', this._onDocKeyUp);
+                (this.canvas as HTMLDivElement).removeEventListener('contextmenu', this._onDocContextMenu);
+                break;
+            case 'Run':
+                document.removeEventListener('mousemove', this._onDocMouseMove);
+                document.removeEventListener('mouseleave', this._onDocMouseLeave);
+                (this.canvas as HTMLDivElement).removeEventListener('mousedown', this._onDocMouseDown);
+                document.removeEventListener('mouseup', this._onDocMouseUp);
+                break;
+        }
     }
 
     /**

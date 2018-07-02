@@ -627,7 +627,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         if (this.props.selectionChanging) {
             this.props.selectionChanging(cid);
         }
-        e.preventDefault();
+        // e.preventDefault();
     }
 
     /**
@@ -637,7 +637,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         if (this.props.dbClickToBeginEdit) {
             this.props.dbClickToBeginEdit(cid);
         }
-        e.preventDefault();
+        // e.preventDefault();
     }
 
     /**

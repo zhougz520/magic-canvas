@@ -159,7 +159,7 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <AntInput
                     style={{
                         width: '100%',

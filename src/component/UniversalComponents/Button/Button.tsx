@@ -166,7 +166,7 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <AntButton
                     style={{
                         width: '100%',

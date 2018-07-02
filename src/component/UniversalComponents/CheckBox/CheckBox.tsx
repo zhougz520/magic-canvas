@@ -166,7 +166,7 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <AntCheckbox
                     style={{
                         width: '100%',

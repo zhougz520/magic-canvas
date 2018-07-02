@@ -207,7 +207,6 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             }
             if (dragChangeField !== undefined) {
                 dragChangeField(items);
-                console.log('drop items', items);
             }
             e.stopPropagation();
 

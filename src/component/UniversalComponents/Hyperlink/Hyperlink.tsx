@@ -159,7 +159,7 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <a
                     href={this.getCustomState().getHerf()}
                 >

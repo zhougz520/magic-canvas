@@ -152,7 +152,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     onDoubleClick={this.doDbClickToEdit}
                     style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 >
-                    <MaskLayer id={this.getCid()} />
+                    <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                     <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>作者：</div>
                     <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                         <Editor

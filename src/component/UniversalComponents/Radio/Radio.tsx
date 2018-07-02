@@ -167,7 +167,7 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <AntRadio
                     style={{
                         width: '100%',

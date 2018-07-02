@@ -155,7 +155,7 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
                 style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
                 onMouseDown={this.fireSelectChange}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <AntSelector
                     style={{
                         width: '100%',

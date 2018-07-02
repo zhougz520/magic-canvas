@@ -1,8 +1,11 @@
 import * as React from 'react';
+
+import { PageMode } from '../../Stage';
 import '../sass/Component.scss';
 
 export interface IMaskLayerProps {
     id: string;          // id
+    pageMode?: PageMode;
 }
 
 export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
@@ -11,13 +14,31 @@ export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
     }
 
     public render() {
-        const { id } = this.props;
+        const { id, pageMode } = this.props;
 
-        return (
-            <div
-                className="mask-layer"
-                id={id}
-            />
-        );
+        let element;
+        switch (pageMode) {
+            case 'Edit':
+                element = (
+                    <div
+                        className="mask-layer"
+                        id={id}
+                    />
+                );
+                break;
+            case 'Run':
+                element = null;
+                break;
+            default:
+                element = (
+                    <div
+                        className="mask-layer"
+                        id={id}
+                    />
+                );
+                break;
+        }
+
+        return element;
     }
 }

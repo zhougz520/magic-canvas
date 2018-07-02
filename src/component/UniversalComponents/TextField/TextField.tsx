@@ -155,7 +155,7 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
                 <Input.TextArea
                     style={{
                         width: '100%',

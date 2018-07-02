@@ -97,9 +97,19 @@ export class RichEditUtil {
 
     // 双击编辑
     dbClickToBeginEdit = (cid: string) => {
+        const { pageMode } = this._canvas.props;
         const com: IComponent | null = this._canvas.getComponent(cid);
         if (com) {
-            const isDbClickToEdit: boolean = com.isDbClickToEdit();
+            let isDbClickToEdit: boolean = false;
+            switch (pageMode) {
+                case 'Edit':
+                    isDbClickToEdit = com.isDbClickToEdit();
+                    break;
+                case 'Run':
+                    isDbClickToEdit = false;
+                    break;
+            }
+
             if (isDbClickToEdit && this._canvas._isRichEditMode === false) {
                 this._dbClickComponentCid = cid;
                 this.beginEdit();
