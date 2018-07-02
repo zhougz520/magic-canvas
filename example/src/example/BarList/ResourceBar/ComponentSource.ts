@@ -64,7 +64,7 @@ const basePage: IBasePage[] = [
             { t: 'MapComponent/map/form/TabItem', p: { name: 'TabItem' } },
             { t: 'MapComponent/map/form/Section', p: { name: 'Section' } },
             { t: 'MapComponent/map/form/field/InputField', p: { name: '输入框' } },
-            { t: 'MapComponent/map/AppGridTitle', p: { name: '列表-列' } }
+            { t: 'MapComponent/map/grid/AppGridTitle', p: { name: '列表-列' } }
         ]
     },
     {

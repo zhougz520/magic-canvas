@@ -21,6 +21,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             // if(this.hasHandle){
             this.com.addEventListener('drop', this.handleDropAddComponent);
             this.com.addEventListener('keydown', this.deleteComponentsById);
+            // this.com.addEventListener('mouseover', () => { alert(this.com); });
             // }
             // this.com.addEventListener('mousedown', this.selectedCom);
             const currMaskLayer = document.getElementById(this.props.id);
@@ -33,7 +34,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             }
         }
     }
-    componentWillUpdate() {
+    componentWillUpdate(nextProps: any, nextState: any) {
         if (this.com !== null) {
             const currMaskLayer = document.getElementById(this.props.id);
             // console.log('id', this.props.id);
@@ -98,14 +99,120 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         return currRef;
     }
     /**
+     * 获取Dom元素的尺寸和位置（相对于文档）
+     */
+    public getDomBounds = (dom: any) => {
+        if (GlobalUtil.isUndefined(dom)) return undefined;
+        const size = this.getDomSize(dom);
+        const location = this.getDomLocation(dom);
+
+        return Object.assign(size, location);
+    }
+    /**
+     * 获取Dom元素的尺寸
+     */
+    public getDomSize = (dom: any) => {
+        if (GlobalUtil.isUndefined(dom)) return undefined;
+
+        return {
+            width: dom.offsetWidth,
+            height: dom.offsetHeight
+        };
+    }
+
+    /**
+     * 获取Dom元素的位置
+     */
+    public getDomLocation = (dom: any) => {
+        if (GlobalUtil.isUndefined(dom)) return undefined;
+        let offsetTop = dom.offsetTop;
+        let offsetLeft = dom.offsetLeft;
+        let offsetTopWithScroll = offsetTop;
+        let offsetLeftWithScroll = offsetLeft;
+        let offsetParent = dom.offsetParent;
+        while (offsetParent !== null && offsetParent !== undefined) {
+            offsetTop += offsetParent.offsetTop;
+            offsetLeft += offsetParent.offsetLeft;
+            offsetTopWithScroll += offsetParent.offsetTop - offsetParent.scrollTop;
+            offsetLeftWithScroll += offsetParent.offsetLeft - offsetParent.scrollLeft;
+            offsetParent = offsetParent.offsetParent;
+        }
+
+        return {
+            top: offsetTop,
+            left: offsetLeft,
+            topWithScroll: offsetTopWithScroll,
+            leftWithScroll: offsetLeftWithScroll,
+            width: dom.offsetWidth,
+            height: dom.offsetHeight,
+            scrollWidth: dom.scrollWidth, // 有滚动条时的实际宽度
+            scrollHeight: dom.scrollHeight  // 有滚动条时的实际高度
+        };
+    }
+    /**
      *  drop 添加控件
      */
     public handleDropAddComponent = (e: any) => {
         const data: any = this.getAddComponent();
-        if (data === undefined) return;
         this.setState({
             hover: {}
         });
+        if (data === undefined) {
+            const { selectedId, stateData, dragChangeField } = this.props;
+            // 判断是否是字段换位置
+            const items = this.findComponentParent(stateData, selectedId);
+            let targetIndex = -1;
+            let appendTo = false;
+
+            let currDomRef;
+            let bds;
+            const mousePosX = e.pageX;
+            for (let idx = 0; idx < items.length; idx++) {
+                currDomRef = this.getCurrRef(`c.${items[idx].p.id}`);
+                bds = this.getDomBounds(currDomRef.com);
+                if (bds !== undefined) {
+                    // 判断是否移动到最前面
+                    if (idx === 0 && mousePosX < bds.left) {
+                        targetIndex = 0;
+                        appendTo = false;
+                        break;
+                    }
+                    // 判断是否移动到最后面
+                    if (idx === items.length - 1 && mousePosX > (bds.left + (bds.width / 2))) {
+                        targetIndex = items.length - 1;
+                        appendTo = true;
+                        break;
+                    }
+                    if (mousePosX >= bds.left && mousePosX <= bds.left + bds.width / 2) {
+                        targetIndex = idx;
+                        appendTo = false;
+                        break;
+                    } else if (mousePosX < bds.left + bds.width && mousePosX > bds.left + bds.width / 2) {
+                        targetIndex = idx;
+                        appendTo = true;
+                        break;
+                    }
+                }
+            }
+
+            const currentIndex = items.findIndex((item: any) => item.p.id === selectedId);
+            // let lastTargetIndex = items.findIndex((item: any) => item.p.id === e.target.id);
+            if (targetIndex !== -1 && currentIndex !== targetIndex) {
+                if (appendTo) targetIndex++;
+                // if (lastTargetIndex === targetIndex) return;
+                // lastTargetIndex = targetIndex;
+                const item = items[currentIndex];
+                items.splice(targetIndex, 0, item);
+                items.splice(targetIndex < currentIndex ? (currentIndex + 1) : currentIndex, 1);
+            }
+            if (dragChangeField !== undefined) {
+                dragChangeField(items);
+                console.log('drop items', items);
+            }
+            e.stopPropagation();
+
+            return;
+        }
 
         // 获取refs（context中的）
         const id: string = this.props.id;
@@ -291,6 +398,17 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         e.preventDefault();
     }
 
+    /**
+     * 控件在容器上方，容器背景颜色变化
+     */
+    public handleFieldOver = (e: any) => {
+        const data: any = this.getAddComponent();
+        if (data !== undefined) return;
+        this.setState({
+            hover: { backgroundColor: '#007ACC' }
+        });
+        e.preventDefault();
+    }
     /**
      *  控件离开容器范围，容器颜色消失
      */

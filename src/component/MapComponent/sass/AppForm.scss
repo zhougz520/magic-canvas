@@ -3,15 +3,18 @@ table {
 }
 
 .map-selected {
-    border: 2px solid blue !important;
+    border: 2px dashed blue !important;
+    padding: 1px !important;
+    position: relative;
 }
 
 .ps-map {
+    overflow: hidden !important;
     font: 12px !important;
     color: #000000 !important;
     display: flex;
     flex-direction: column;
-    .title {
+    .ps-map-title {
         width: 100%;
         height: 30px;
         background-color: #f0f0ff;
@@ -34,10 +37,13 @@ table {
                     font-size: 12px;
                     color: #fff;
                     .menu-list {
-                        float: left !important;
+                        display: flex;
                         padding-left: 5px;
                         padding-right: 5px;
-                        padding-top: 2px;
+                        >div {
+                            // flex: 1;
+                            flex-direction: row;
+                        }
                     }
                     .head {
                         float: left !important;
@@ -49,28 +55,27 @@ table {
                         margin-right: 5px;
                         margin-top: 6px;
                     }
-                }
-                .menu-item {
-                    float: left !important;
-                    height: 26px;
-                    padding-left: 5px;
-                    padding-right: 5px;
-                    padding-top: 2px;
+                    .menu-item {
+                        margin-left: 5px;
+                        margin-right: 5px;
+                        padding-top: 3px;
+                    }
                 }
             }
         }
         .form-content {
-            border: 1px solid #000000;
+            border: 1px solid #E6E6E6;
             flex: 1;
             display: flex;
             flex-direction: row;
             padding: 10px 5px 10px 10px;
+            background-color: #FBFBFB;
             .form-navBar {
-                width: 140px;
-                height: 100%;
-                border: 1px solid #000000;
+                width: 125px;
+                height: 100%; // border: 1px solid #000000;
                 display: flex;
                 flex-direction: column;
+                margin-right: 10px;
                 .container {
                     width: 100%;
                     margin-bottom: 5px;
@@ -90,7 +95,7 @@ table {
                         border-left: 1px none #89bdea;
                         border-bottom: 1px none #89bdea;
                     }
-                    div:hover {
+                    .lbItem:hover {
                         color: #ffffff;
                         background-color: #4683c4;
                     }
@@ -99,14 +104,12 @@ table {
             .form-tab {
                 flex: 1;
                 display: flex;
-                flex-direction: column;
-                border: 1px solid #000000;
+                flex-direction: column; // border: 1px solid #000000;
                 .form-tabItems {
                     height: 25px;
                     width: 100%;
                     display: flex;
-                    flex-direction: row;
-                    border: 1px solid #000000;
+                    flex-direction: row; // border: 1px solid #000000;
                     .tab {
                         color: black;
                         font-size: 12px;
@@ -128,7 +131,7 @@ table {
                         background-color: #fbfbfb;
                         border-bottom: 1px solid #fbfbfb;
                         border-top: 3px solid #4e95da;
-                        padding-bottom: 7px;
+                        padding-bottom: 5px;
                         cursor: default;
                     }
                     span:hover {
@@ -137,7 +140,9 @@ table {
                 }
                 .form-sectionForm {
                     flex: 1;
-                    border: 1px solid #000000;
+                    border: 1px solid #E6E6E6;
+                    background-color: #FFFFFF;
+                    padding: 10px;
                     .section {
                         width: 100%;
                         display: flex;

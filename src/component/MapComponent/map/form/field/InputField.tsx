@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../../index';
-import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { Input } from 'antd';
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
+import { MapConsumer } from '../../MapConsumer';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
@@ -20,7 +20,7 @@ export interface IMapProps extends IBaseProps {
 	index: number;
 }
 
-export class InputField extends MapComponent<IMapProps, any> {
+export class InputFieldClass extends MapComponent<IMapProps, any> {
 	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
@@ -46,7 +46,8 @@ export class InputField extends MapComponent<IMapProps, any> {
 
 		this.state = {
 			currX: 0,
-			resizing: false
+			resizing: false,
+			hover: {}
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -62,27 +63,32 @@ export class InputField extends MapComponent<IMapProps, any> {
 			map_form_f_title,
 			map_form_f_default,
 			id,
-			index,
 			titleWidth,
 			map_form_f_disabled,
 			unit,
 			currUnit,
 			selectedId
 		} = this.props;
+		const { hover } = this.state;
 		let borderClass = '';
 		if (map_form_f_disabled) {
 			borderClass = ' read-only';
 		}
-		const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+
+		return (
 			<div
+				ref={(ref) => this.com = ref}
+				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
+				className={`field-bar `}
 				onMouseDown={this.selectedCom}
-				ref={provided.innerRef}
-				{...provided.draggableProps}
-				{...provided.dragHandleProps}
-				style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+				draggable
+				onDragOver={this.handleFieldOver}
+				// onDragOver={this.onDrageOver}
+				onDragLeave={this.handleLeave}
+				onDragEnd={this.handleLeave}
 			>
 				<MaskLayer id={id} />
-				<table className={`field-tb ${selectedId === id ? 'selectecd' : ''}`}>
+				<table className={`field-tb ${selectedId === id ? 'map-selected' : ''}`}>
 					<tbody>
 						<tr>
 							<td className={`field-title`} style={{ width: titleWidth }}>
@@ -102,21 +108,8 @@ export class InputField extends MapComponent<IMapProps, any> {
 						</tr>
 					</tbody>
 				</table>
-				{provided.placeholder}
-			</div>
-		);
-
-		return (
-			<div
-				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` })}
-				className={`field-bar `}
-				onMouseDown={this.selectedCom}
-			>
-				<Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
-					{initDrag}
-				</Draggable>
 			</div>
 		);
 	}
 }
+export const InputField = MapConsumer(InputFieldClass);

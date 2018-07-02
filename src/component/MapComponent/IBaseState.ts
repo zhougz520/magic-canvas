@@ -4,4 +4,5 @@
  */
 export interface IBaseState {
     hover?: any;
+    mouseBgnPosition?: any;
 }

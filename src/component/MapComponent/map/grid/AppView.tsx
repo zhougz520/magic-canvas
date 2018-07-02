@@ -2,6 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Select } from 'antd';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
+import { MapConsumer } from '../MapConsumer';
 
 const Option = Select.Option;
 
@@ -11,7 +12,7 @@ export interface IMapProps extends IBaseProps {
     map_v_o?: any;
 }
 
-export class AppView extends MapComponent<IMapProps, any> {
+export class AppViewClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_v_txt: '视图',
         map_v_o: '',
@@ -83,3 +84,4 @@ export class AppView extends MapComponent<IMapProps, any> {
         return currProps;
     }
 }
+export const AppView = MapConsumer(AppViewClass);

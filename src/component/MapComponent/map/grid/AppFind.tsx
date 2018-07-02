@@ -11,6 +11,8 @@ import {
     // NullField
 } from '../form/field';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
+import { MapConsumer } from '../MapConsumer';
+
 const Option = Select.Option;
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-wrap-multiline
@@ -32,7 +34,7 @@ export interface IMapState extends IBaseState {
     h: number;
     // map_af_se: boolean;
 }
-export class AppFind extends MapComponent<IMapProps, any> {
+export class AppFindClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_af_se: false,
         map_af_o: [],
@@ -48,6 +50,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
             hover: {}
         };
     }
+
     // 如果需要特殊遮罩，则在componentDidUpdate中处理
     componentDidUpdate() {
         if (this.com !== null) {
@@ -393,3 +396,5 @@ export class AppFind extends MapComponent<IMapProps, any> {
         background: isDraggingOver ? 'lightblue' : ''
     })
 }
+
+export const AppFind = MapConsumer(AppFindClass);

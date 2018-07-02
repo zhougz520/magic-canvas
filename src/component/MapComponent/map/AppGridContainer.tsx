@@ -20,6 +20,7 @@ export interface IDemoProps extends IBaseProps {
 export interface IDemoState extends IBaseState {
     selectedId?: string;  // 先...只能单选，后面看情况在调整
     title?: string;
+    refs?: any;
 }
 export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoState> {
     static defaultProps = {
@@ -41,7 +42,8 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(props.childData)
+            baseState: this.initBaseStateWithCustomState(props.childData),
+            refs: this.refs
         };
     }
     componentDidMount() {
@@ -51,6 +53,11 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
             initData = JSON.stringify(gridDetail.p).replace(/【cs】/g, cid);
             this.setCustomState(JSON.parse(initData));
         }
+    }
+    componentDidUpdate() {
+        this.setState({
+            refs: this.refs
+        });
     }
     public isCanMove = () => {
         return this._isCanMove;
@@ -102,6 +109,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                 selectedId={this.state.selectedId}
                 pageMode={pageMode}
                 stateData={childData}
+                refs={this.refs}
             >
                 <div
                     className="ps-map"
@@ -110,7 +118,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                 // onMouseDown={this.selectComTitle}
                 >
                     <div
-                        className="title"
+                        className="ps-map-title"
                         onMouseDown={this.ontitleMouseDown}
                     // onMouseUp={this.ontitleMouseUp}
                     >

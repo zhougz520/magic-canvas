@@ -49,12 +49,9 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
         }
     }
     componentDidUpdate() {
-        // console.log('refs', this.refs);
-        // if (JSON.stringify(this.refs) !== JSON.stringify(this.state.refs)) {
         this.setState({
             refs: this.refs
         });
-        // }
     }
     public isCanMove = () => {
         return this._isCanMove;
@@ -122,7 +119,7 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                     ref={(ref) => this.com = ref}
                 >
                     <div
-                        className="title"
+                        className="ps-map-title"
                         onMouseDown={this.ontitleMouseDown}
                     >
                         {title === undefined ? '标题' : title}

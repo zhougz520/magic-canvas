@@ -13,4 +13,5 @@ export interface IBaseProps {
     updateProps: (id: string, data: any) => void;
     stateData?: any;
     refs?: any;
+    dragChangeField?: (fieldList: any) => void;
 }
