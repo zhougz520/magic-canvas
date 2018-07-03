@@ -5,7 +5,7 @@ import { ContentState } from './model/ContentState';
 import { BaseState } from './model/BaseState';
 import { EditType, IRichEditOption, ICommentsList, ComponentType, IFont } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
-import { IPropertyGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup } from '../UniversalComponents';
 import { IContextMenuItems } from '../Stage';
 
 import { IAnchor } from '../util';
@@ -163,8 +163,13 @@ export interface IComponent {
     stretchFrameData: (item: IBaseData) => IReactData;
 
     /**
-     * 获取组件的属性，传给属性工具条
+     * 获取组件的属性，传给属性栏
      */
     getPropertiesToProperty: () =>  OrderedSet<IPropertyGroup>;
     setPropertiesFromProperty: (pKey: string, pValue: any) => void;
+
+    /**
+     * 获取组件的字体属性，传给工具栏
+     */
+    getFontPropsToTool: () => IToolButtonGroup;
 }

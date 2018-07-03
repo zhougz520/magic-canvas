@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IPropertyGroup } from '../../../../src';
+import { IPropertyGroup, IToolButtonGroup } from '../../../../src';
 
 import { TitleBar } from './TitleBar';
 import { ToolBar, IToolbarComponent } from './ToolBar';
@@ -7,7 +7,7 @@ import { PropertyBar, IPropertyComponent } from './PropertyBar';
 import { ContributorBar } from './ContributorBar';
 import Resource from './ResourceBar';
 
-import { Map, OrderedSet } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (leftCollapsed: boolean, rightCollapsed: boolean) => void;
@@ -26,7 +26,7 @@ export interface IBarState {
 
 export interface IBarListComponent {
     setPropertyState: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
-    setCommandState: (selectedComs: Map<string, any>) => void;
+    setCommandState: (buttonGroup: IToolButtonGroup) => void;
 }
 
 /* tslint:disable:no-console */
@@ -100,9 +100,9 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
 
     }
 
-    setCommandState = (selectedComs: Map<string, any>): void => {
+    setCommandState = (buttonGroup: IToolButtonGroup): void => {
         if (this.toolbar) {
-            this.toolbar.setCommandState(selectedComs);
+            this.toolbar.setCommandState(buttonGroup);
         }
     }
 }

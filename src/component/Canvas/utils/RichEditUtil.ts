@@ -48,6 +48,7 @@ export class RichEditUtil {
                     }, () => { this._canvas.getEditor().setFocus(); });
                     break;
                 case 'Text':
+                case 'TextArea':
                     currentSelectedComponent.hiddenEditorDom(true);
                     this._canvas.getEditor().setEditState({
                         position,
@@ -81,6 +82,7 @@ export class RichEditUtil {
                     this._dbClickComponentCid = null;
                     break;
                 case 'Text':
+                case 'TextArea':
                     this._canvas.getEditor().setEditState(this._canvas.getEditor().getDefaultEditState());
                     currentSelectedComponent.setRichChildNode({
                         value: editValue,

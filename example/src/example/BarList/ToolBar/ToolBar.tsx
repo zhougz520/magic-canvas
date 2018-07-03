@@ -1,12 +1,10 @@
 import * as React from 'react';
 
 import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
-import { CommandMap, getListStyleTypeMap } from '../../../../../src';
+import { CommandMap, getListStyleTypeMap, IToolButtonGroup, emptyButtonGroup } from '../../../../../src';
 
 import { SketchPicker } from 'react-color';
 import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio, Popover } from 'antd';
-
-import { Map } from 'immutable';
 
 import '../sass/bar.scss';
 
@@ -14,9 +12,7 @@ import '../sass/bar.scss';
 export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> implements IToolbarComponent {
     constructor(props: IToolbarProps) {
         super(props);
-        this.state = {
-            selectedComs: Map()
-        };
+        this.state = emptyButtonGroup;
     }
 
     // 折叠
@@ -93,10 +89,10 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
      * 设置选中组件，由画布调用
      * @param selectedComs 选中的组件集合
      */
-    setCommandState = (selectedComs: Map<string, any>) => {
+    setCommandState = (buttonGroup: IToolButtonGroup) => {
         this.setState(
             {
-                selectedComs
+                ...buttonGroup
             }
         );
     }
@@ -111,13 +107,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
 
     render() {
         const { titleBarCollapsed } = this.props;
-        const { selectedComs } = this.state;
-        const comList: any = [];
-        selectedComs.map(
-            (com, key) => {
-                comList.push(key);
-            }
-        );
+        const { fontSize, fontColor } = this.state;
 
         const menuZIndex = (
             <Menu onClick={this.handleZIndexMenuClick}>
@@ -154,9 +144,6 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     <span>高性能</span>
                     <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked onChange={this.onChange} />
                 </div>
-                <div>
-                    当前选中组件：{comList.join('|')}
-                </div>
 
                 <Button
                     onClick={() => this.fireCommand(CommandMap.EDITOR_BOLD)}
@@ -187,7 +174,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                         <div
                             className="colorButton-inner"
                             style={{
-                                background: 'red'
+                                background: fontColor.value
                             }}
                         />
                     </div>
@@ -197,6 +184,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     max={100}
                     style={{width: 50}}
                     size="small"
+                    defaultValue={fontSize.value}
                     onChange={(value: any) => this.fireCommand(CommandMap.EDITOR_FONTSIZE, value)}
                 />&nbsp;
                 <ListTypeControls

@@ -21,7 +21,10 @@ export {
 export {
     PropertiesEnum,
     IProperty,
-    IPropertyGroup
+    IPropertyGroup,
+    IEditToolButtonType,
+    IToolButtonGroup,
+    emptyButtonGroup
 } from './component/UniversalComponents';
 
 export {

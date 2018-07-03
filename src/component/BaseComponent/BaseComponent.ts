@@ -14,7 +14,7 @@ import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType, 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
-import { IPropertyGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup, emptyButtonGroup } from '../UniversalComponents';
 import { IContextMenuItems } from '../Stage';
 import { Stack, List, OrderedSet } from 'immutable';
 
@@ -457,7 +457,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件的属性，传给属性工具条
+     * 获取组件的属性，传给属性栏
      * 默认：空，组件自己重写
      */
     public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
@@ -470,6 +470,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public setPropertiesFromProperty = (pKey: string, pValue: any) => {
         return;
+    }
+
+    /**
+     * 获取组件的字体属性，传给工具栏
+     * 默认：空，组件自己重写
+     */
+    public getFontPropsToTool = (): IToolButtonGroup => {
+        return emptyButtonGroup;
     }
 
     /**

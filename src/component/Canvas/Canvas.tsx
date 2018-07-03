@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ComponentsType } from '../Stage';
 import { RichEdit, Wingman } from '../RichEdit';
-import { IPropertyGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup, emptyButtonGroup } from '../UniversalComponents';
 
 import { BaseState, IComponent, IComData } from '../BaseComponent';
 import { ICanvasState } from './ICanvasState';
@@ -322,6 +322,16 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         return propertyGroup;
     }
 
+    getSelectedToolButtons = (selectedComs: Map<string, IComponent>): IToolButtonGroup => {
+        let buttonGroup: IToolButtonGroup = emptyButtonGroup;
+
+        if (selectedComs.size === 1) {
+            buttonGroup = selectedComs.first().getFontPropsToTool();
+        }
+
+        return buttonGroup;
+    }
+
     /**
      * 收集保存数据
      */
@@ -422,6 +432,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 </div>
                 <RichEdit
                     ref={(handler) => this.editor = handler}
+                    onPressEnter={this._richEditUtil.endEdit}
                 />
                 <Wingman
                     ref={(handler) => this.wingman = handler}

@@ -1,5 +1,5 @@
 import { IComponent } from '../BaseComponent';
-import { IPropertyGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup } from '../UniversalComponents';
 import { ComponentsType } from '../Stage';
 import { Map, OrderedSet } from 'immutable';
 
@@ -36,4 +36,9 @@ export interface ICanvasComponent {
      * 获取选中组件的属性集合
      */
     getSelectedProperties: (selectedComs: Map<string, IComponent>) => OrderedSet<IPropertyGroup>;
+
+    /**
+     * 获取选中组件的工具栏集合
+     */
+    getSelectedToolButtons: (selectedComs: Map<string, IComponent>) => IToolButtonGroup;
 }

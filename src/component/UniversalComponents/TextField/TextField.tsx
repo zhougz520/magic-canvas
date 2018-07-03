@@ -6,7 +6,8 @@ import {
     IRichEditOption,
     IFont,
     IPosition,
-    ISize
+    ISize,
+    EditType
 } from '../../BaseComponent';
 import {
     BaseUniversalComponent,
@@ -29,6 +30,13 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
             baseState: this.initBaseStateWithCustomState(new TextFieldState()),
             hidden: false
         };
+    }
+
+    /**
+     * 调用富文本编辑器
+     */
+    public getRichEditType = (): EditType => {
+        return 'TextArea';
     }
 
     /**

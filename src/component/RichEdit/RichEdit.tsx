@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as keycode from 'keycode';
 import { IFont } from '../BaseComponent';
 import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils, FbjsUtils } = DraftPublic;
@@ -307,6 +308,25 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
         }
     }
 
+    onKeyDown = (e: any) => {
+        const { richEditType } = this.state;
+        const key: string = keycode(e);
+
+        switch (richEditType) {
+            case 'RichEdit':
+                break;
+            case 'Text':
+                if (key === 'enter') {
+                    this.props.onPressEnter && this.props.onPressEnter();
+                }
+                break;
+            case 'TextArea':
+                break;
+            case 'none':
+                break;
+        }
+    }
+
     render() {
         const { position, size, font, style, richEditType, editorState, value } = this.state;
         const editStyle: IEditStyle = {
@@ -335,7 +355,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
                 <div
                     className="RichText-root"
                     style={{
-                        display: richEditType === 'Text' ? 'block' : 'none'
+                        display: richEditType === 'Text' || richEditType === 'TextArea' ? 'block' : 'none'
                     }}
                 >
                     <textarea
@@ -351,6 +371,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
                             fontSize: font.fontSize as any,
                             fontWeight: font.fontWeight as any
                         }}
+                        onKeyDown={this.onKeyDown}
                     />
                 </div>
             </div>

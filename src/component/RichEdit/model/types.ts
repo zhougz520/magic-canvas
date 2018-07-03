@@ -12,6 +12,7 @@ export interface IEditState {
 
 // tslint:disable-next-line:no-empty-interface
 export interface IEditProps {
+    onPressEnter?: () => void;
 }
 
 export interface IEditStyle {

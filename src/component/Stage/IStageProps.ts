@@ -1,7 +1,7 @@
-import { IPropertyGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup } from '../UniversalComponents';
 
 import { ComponentsType, IConfig, PageMode, IContextMenuItems } from './types';
-import { Map, OrderedSet } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 export interface IStageProps {
     // 组件数据集合
@@ -34,7 +34,7 @@ export interface IStageProps {
     checkClipboard?: () => string[];
 
     // 获取选中的组件集合并传给ToolBar
-    onCommandProperties?: (selectedComs: Map<string, any>) => void;
+    onCommandProperties?: (buttonGroup: IToolButtonGroup) => void;
     // 获取选中的组件属性，传给PropertyTool
     onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
 }

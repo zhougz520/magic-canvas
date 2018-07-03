@@ -1,8 +1,9 @@
 import { Canvas } from '../Canvas';
 import { IComponentList, DragType, IOffset } from '../model/types';
 import { IComponent } from '../../BaseComponent';
+import { emptyButtonGroup } from '../../UniversalComponents';
 
-import { Map, OrderedSet, Set } from 'immutable';
+import { OrderedSet, Set } from 'immutable';
 
 export class DrawUtil {
     private _canvas: Canvas;
@@ -27,7 +28,7 @@ export class DrawUtil {
         // 单选的时候一个个传递
         if (multiselect === false) {
             // 向CommandBar传递当前选中的组件集合
-            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(this._canvas._canvasGlobalParam.getSelectedComponents());
+            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(this._canvas.getSelectedToolButtons(this._canvas._canvasGlobalParam.getSelectedComponents()));
             // 向PropertyBar传递当前选中的组件属性
             this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(this._canvas._canvasGlobalParam.getSelectedComponents()));
         }
@@ -60,7 +61,7 @@ export class DrawUtil {
             this._canvas._canvasGlobalParam.clearSelectedComponent();
             this.hideSelected();
             // 向CommandBar传递当前选中的组件集合
-            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(Map());
+            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(emptyButtonGroup);
             this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(OrderedSet());
 
         }
@@ -74,7 +75,7 @@ export class DrawUtil {
         const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
-        const style = {fill: '#108ee9', fillOpacity: 0.05, stroke: '#108ee9', strokeWidth: 1};
+        const style = { fill: '#108ee9', fillOpacity: 0.05, stroke: '#108ee9', strokeWidth: 1 };
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
             draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
@@ -89,7 +90,7 @@ export class DrawUtil {
         const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
-        const style = {fill: '#fff', fillOpacity: 0, stroke: '#D0021B', strokeWidth: 1, rx: 5, ry: 5};
+        const style = { fill: '#fff', fillOpacity: 0, stroke: '#D0021B', strokeWidth: 1, rx: 5, ry: 5 };
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
             draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
@@ -134,7 +135,7 @@ export class DrawUtil {
             // 框选的时候：有选中组件才做提交
             const selectedComponents = this._canvas._canvasGlobalParam.getSelectedComponents();
             if (selectedComponents.size > 0) {
-                this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(selectedComponents);
+                this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(this._canvas.getSelectedToolButtons(selectedComponents));
                 this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(selectedComponents));
             }
 

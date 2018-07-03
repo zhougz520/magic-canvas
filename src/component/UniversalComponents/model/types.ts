@@ -31,6 +31,37 @@ export interface IPropertyGroup {
     propertyList: List<IProperty>;
 }
 
+/**
+ * 工具栏button属性
+ */
+export interface IEditToolButtonType {
+    disabled: boolean;              // 是否禁用
+    value: any;                     // 值（0:未选中；1:选中；其他）
+}
+
+/**
+ * 工具栏button分组
+ */
+export interface IToolButtonGroup {
+    bold: IEditToolButtonType;
+    italic: IEditToolButtonType;
+    underline: IEditToolButtonType;
+    strikethrough: IEditToolButtonType;
+    fontSize: IEditToolButtonType;
+    fontColor: IEditToolButtonType;
+    textAlign: IEditToolButtonType;
+}
+
+export const emptyButtonGroup = {
+    bold: { disabled: false, value: 0 },
+    italic: { disabled: false, value: 0 },
+    underline: { disabled: false, value: 0 },
+    strikethrough: { disabled: false, value: 0 },
+    fontSize: { disabled: false, value: 14 },
+    fontColor: { disabled: false, value: '#fff' },
+    textAlign: { disabled: false, value: null }
+};
+
 export interface IFontState {
     fontColor: string;
     fontStyle: string;

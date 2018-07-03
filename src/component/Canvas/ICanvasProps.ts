@@ -1,9 +1,9 @@
 import { IDrawComponent } from '../Draw';
 import { ICompos, ComponentsType, PageMode, IContextMenuItems } from '../Stage';
-import { IPropertyGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup } from '../UniversalComponents';
 
 import { IBoundary, IOffset } from './model/types';
-import { Map, OrderedSet } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 export interface ICanvasProps {
     // 页面模式
@@ -38,7 +38,7 @@ export interface ICanvasProps {
     checkClipboard?: () => string[];
 
     // 获取选中的组件集合并传给ToolBar
-    onCommandProperties?: (selectedComs: Map<string, any>) => void;
+    onCommandProperties?: (buttonGroup: IToolButtonGroup) => void;
     // 获取选中的组件属性，传给PropertyTool
     onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
 

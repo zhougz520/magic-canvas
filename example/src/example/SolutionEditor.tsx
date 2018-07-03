@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 import { BarList, IBarListComponent } from './BarList';
-import { Stage, ComponentsType, IPropertyGroup } from '../../../src';
+import { Stage, ComponentsType, IPropertyGroup, IToolButtonGroup } from '../../../src';
 import './solution.css';
 import { config } from './config';
 // import { detail1, detail2 } from './data';
-import { Map, OrderedSet } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 /* tslint:disable:no-console */
 /* tslint:disable:jsx-no-string-ref */
@@ -36,9 +36,9 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
     }
 
     // 获取选中的组件集合并传给CommandBar
-    onCommandProperties = (selectedComs: Map<string, any>): void => {
+    onCommandProperties = (buttonGroup: IToolButtonGroup): void => {
         if (this.barList) {
-            this.barList.setCommandState(selectedComs);
+            this.barList.setCommandState(buttonGroup);
         }
     }
 

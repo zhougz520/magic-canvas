@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { IToolButtonGroup } from '../../../../../src';
 
 export interface IToolbarProps {
     // 是否折叠的样式
@@ -10,14 +10,12 @@ export interface IToolbarProps {
     getSaveData: () => void;
 }
 
-export interface IToolbarState {
-    // 选中的组件集合
-    selectedComs: Map<string, any>;
-}
+// tslint:disable-next-line:no-empty-interface
+export interface IToolbarState extends IToolButtonGroup { }
 
 export interface IToolbarComponent {
     /**
      * 设置CommandBar的state
      */
-    setCommandState: (selectedComs: Map<string, any>) => void;
+    setCommandState: (buttonGroup: IToolButtonGroup) => void;
 }
