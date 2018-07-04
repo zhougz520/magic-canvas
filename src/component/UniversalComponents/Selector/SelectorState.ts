@@ -21,7 +21,7 @@ const defaultRecord: ISelectorState = {
     backgroundColor: '#FFF',
     borderColor: '#d9d9d9',
     borderWidth: 1,
-    fontColor: '#000',
+    fontColor: 'rgba(0, 0, 0, 0.65)',
     fontStyle: 'normal',
     fontSize: 14,
     fontWeight: 'normal',
