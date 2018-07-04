@@ -65,6 +65,20 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
      * Draft修改内容触发
      */
     onChange = (editorState: any) => {
+        const { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH } = InlineUtils.getSelectionInlineStyle(editorState);
+        const { COLOR, FONTSIZE } = InlineUtils.getSelectionCustomInlineStyle(editorState, ['COLOR', 'FONTSIZE']);
+        const TEXTALIGN = BlockUtils.getSelectedBlocksMetadata(editorState).get('text-align');
+
+        const fontProps: IToolButtonGroup = {
+            bold: { disabled: false, value: BOLD ? 1 : 0 },
+            italic: { disabled: false, value: ITALIC ? 1 : 0 },
+            underline: { disabled: false, value: UNDERLINE ? 1 : 0 },
+            strikethrough: { disabled: false, value: STRIKETHROUGH ? 1 : 0 },
+            fontSize: { disabled: false, value: FONTSIZE ? Number(FONTSIZE.substring(9)) : 14 },
+            fontColor: { disabled: false, value: COLOR ? COLOR.substring(6) : 'rgba(0, 0, 0, 0.65)' },
+            textAlign: { disabled: false, value: TEXTALIGN ? TEXTALIGN : 'left' }
+        };
+        this.props.onCommandProperties && this.props.onCommandProperties(fontProps);
         this.setState({ editorState });
     }
 
