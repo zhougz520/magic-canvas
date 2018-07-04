@@ -1,4 +1,5 @@
 import { IPosition, ISize, IFont, EditType } from '../../BaseComponent';
+import { IToolButtonGroup } from '../../UniversalComponents';
 
 export interface IEditState {
     position: IPosition;
@@ -13,6 +14,7 @@ export interface IEditState {
 // tslint:disable-next-line:no-empty-interface
 export interface IEditProps {
     onPressEnter?: () => void;
+    onCommandProperties?: (buttonGroup: IToolButtonGroup) => void;
 }
 
 export interface IEditStyle {

@@ -58,6 +58,8 @@ export enum CommandMap {
     EDITOR_UL = 'e.ulEditor',
     // 对齐
     EDITOR_TEXTALIGN = 'e.textAlignEditor',
+    // 设置第一个组件的属性值
+    EDITOR_SETFIRSTVALUE = 'e.setFirstValueEditor',
 
     // 设置组件属性
     COM_SETPROPS = 'e.setPropsCom',

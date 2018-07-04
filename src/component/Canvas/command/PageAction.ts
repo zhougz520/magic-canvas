@@ -6,6 +6,7 @@ import { Stack, Set, List, OrderedSet, Map } from 'immutable';
 
 export class PageAction {
     private _canvas: Canvas;
+    private _firstValue: any;
 
     /**
      * 构造函数，通过画布对象初始化
@@ -13,6 +14,7 @@ export class PageAction {
      */
     public constructor(canvas: Canvas) {
         this._canvas = canvas;
+        this._firstValue = '';
     }
 
     // 添加批注
@@ -272,6 +274,16 @@ export class PageAction {
                     this._canvas.getEditor().toggleFontWeightForText('bold');
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    if (key === 0) {
+                        component.setFontPropsFromTool('fontWeight', 'bold', key);
+                    } else {
+                        component.setFontPropsFromTool('fontWeight', this._firstValue, key);
+                    }
+                }
+            );
         }
     }
 
@@ -288,6 +300,16 @@ export class PageAction {
                     this._canvas.getEditor().toggleFontStyleForText('italic');
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    if (key === 0) {
+                        component.setFontPropsFromTool('fontStyle', 'italic', key);
+                    } else {
+                        component.setFontPropsFromTool('fontStyle', this._firstValue, key);
+                    }
+                }
+            );
         }
     }
 
@@ -304,6 +326,16 @@ export class PageAction {
                     this._canvas.getEditor().toggleTextDecorationForText('underline');
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    if (key === 0) {
+                        component.setFontPropsFromTool('textDecoration', 'underline', key);
+                    } else {
+                        component.setFontPropsFromTool('textDecoration', this._firstValue, key);
+                    }
+                }
+            );
         }
     }
 
@@ -320,6 +352,16 @@ export class PageAction {
                     this._canvas.getEditor().toggleTextDecorationForText('line-through');
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    if (key === 0) {
+                        component.setFontPropsFromTool('textDecoration', 'line-through', key);
+                    } else {
+                        component.setFontPropsFromTool('textDecoration', this._firstValue, key);
+                    }
+                }
+            );
         }
     }
 
@@ -336,6 +378,12 @@ export class PageAction {
                     this._canvas.getEditor().toggleFontColorForText(color);
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    component.setFontPropsFromTool('fontColor', color, key);
+                }
+            );
         }
     }
 
@@ -352,6 +400,12 @@ export class PageAction {
                     this._canvas.getEditor().toggleFontSizeForText(size);
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    component.setFontPropsFromTool('fontSize', size, key);
+                }
+            );
         }
     }
 
@@ -384,7 +438,22 @@ export class PageAction {
                     this._canvas.getEditor().toggleTextAlignForText(textAlign);
                     break;
             }
+        } else {
+            this._canvas._canvasGlobalParam.getSelectedComponents().toList().map(
+                (component: IComponent, key: number) => {
+                    if (key === 0) {
+                        component.setFontPropsFromTool('textAlign', textAlign, key);
+                    } else {
+                        component.setFontPropsFromTool('textAlign', this._firstValue, key);
+                    }
+                }
+            );
         }
+    }
+
+    // 设置第一个组件的属性值
+    setFirstValueEditor = (value: any) => {
+        this._firstValue = value;
     }
 
     /**

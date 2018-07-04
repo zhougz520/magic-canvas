@@ -48,7 +48,7 @@ export interface IComponent {
      * 获取、设置customState
      */
     getCustomState: () => any;
-    setCustomState: (newCustomState: any) => void;
+    setCustomState: (newCustomState: any, callback?: () => void) => void;
 
     /**
      * 获取、设置组件的批注锚点
@@ -166,10 +166,11 @@ export interface IComponent {
      * 获取组件的属性，传给属性栏
      */
     getPropertiesToProperty: () =>  OrderedSet<IPropertyGroup>;
-    setPropertiesFromProperty: (pKey: string, pValue: any) => void;
+    setPropertiesFromProperty: (pKey: string, pValue: any, callback?: () => void) => void;
 
     /**
      * 获取组件的字体属性，传给工具栏
      */
     getFontPropsToTool: () => IToolButtonGroup;
+    setFontPropsFromTool: (fontStyleType: string, value: any, key: number) => void;
 }

@@ -237,7 +237,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 设置组件自定义state
      */
-    public setCustomState = (newCustomState: any): void => {
+    public setCustomState = (newCustomState: any, callback?: () => void): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             customState: newCustomState
@@ -246,7 +246,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, () => this.callBackForRender('Custom'));
+        }, () => {
+            this.callBackForRender('Custom');
+            callback && callback();
+        });
     }
 
     /**
@@ -468,7 +471,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 获取属性工具条的单条属性，传给组件并设置组件
      * 默认：空，组件自己重写
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         return;
     }
 
@@ -478,6 +481,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     public getFontPropsToTool = (): IToolButtonGroup => {
         return emptyButtonGroup;
+    }
+
+    /**
+     * 工具栏设置字体样式
+     */
+    public setFontPropsFromTool = (fontStyleType: string, value: any, key: number) => {
+        return;
     }
 
     /**

@@ -325,7 +325,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     getSelectedToolButtons = (selectedComs: Map<string, IComponent>): IToolButtonGroup => {
         let buttonGroup: IToolButtonGroup = emptyButtonGroup;
 
-        if (selectedComs.size === 1) {
+        if (selectedComs.size > 0) {
             buttonGroup = selectedComs.first().getFontPropsToTool();
         }
 
@@ -433,6 +433,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 <RichEdit
                     ref={(handler) => this.editor = handler}
                     onPressEnter={this._richEditUtil.endEdit}
+                    onCommandProperties={this.props.onCommandProperties}
                 />
                 <Wingman
                     ref={(handler) => this.wingman = handler}

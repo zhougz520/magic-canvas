@@ -149,12 +149,12 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
     /**
      * 设置属性
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newCheckBoxState: CheckBoxState = CheckBoxState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newCheckBoxState);
+        this.setCustomState(newCheckBoxState, callback);
     }
 
     render() {

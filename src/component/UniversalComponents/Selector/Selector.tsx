@@ -140,12 +140,12 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
     /**
      * 设置属性
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newSelectorState);
+        this.setCustomState(newSelectorState, callback);
     }
 
     render() {

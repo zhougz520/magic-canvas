@@ -148,12 +148,12 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
     /**
      * 设置属性
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newButtonState);
+        this.setCustomState(newButtonState, callback);
     }
 
     render() {

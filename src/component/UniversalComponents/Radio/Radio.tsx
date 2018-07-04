@@ -149,13 +149,13 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
     /**
      * 设置属性
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         let propertiesMap = Map();
         propertiesMap = propertiesMap.set(pKey, pValue);
         const newRadioState: RadioState = RadioState.set(
             this.getCustomState(), propertiesMap
         );
-        this.setCustomState(newRadioState);
+        this.setCustomState(newRadioState, callback);
     }
 
     render() {

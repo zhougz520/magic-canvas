@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as keycode from 'keycode';
 import { IFont } from '../BaseComponent';
+import { IToolButtonGroup } from '../UniversalComponents';
 import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, RichUtils, InlineUtils, BlockUtils, FbjsUtils } = DraftPublic;
 const { cx } = FbjsUtils;
@@ -177,7 +178,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             ...currentFont,
             fontWeight: currentFont.fontWeight === fontWeight ? 'normal' : fontWeight
         };
-        this.setState({
+        this.setFontState({
             font: newFont
         });
     }
@@ -191,7 +192,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             ...currentFont,
             fontStyle: currentFont.fontStyle === fontStyle ? 'normal' : fontStyle
         };
-        this.setState({
+        this.setFontState({
             font: newFont
         });
     }
@@ -211,7 +212,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
                     (textDecoration !== 'line-through' && currentFont.textDecoration.includes('line-through') === true)
             })
         };
-        this.setState({
+        this.setFontState({
             font: newFont
         });
     }
@@ -225,7 +226,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             ...currentFont,
             fontColor
         };
-        this.setState({
+        this.setFontState({
             font: newFont
         });
     }
@@ -239,7 +240,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             ...currentFont,
             fontSize
         };
-        this.setState({
+        this.setFontState({
             font: newFont
         });
     }
@@ -253,7 +254,7 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
             ...currentFont,
             textAlign: currentFont.textAlign === textAlign ? 'left' : textAlign
         };
-        this.setState({
+        this.setFontState({
             font: newFont
         });
     }
@@ -264,6 +265,26 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
      */
     setEditState = (config: any, callback?: () => void): void => {
         this.setState(config, callback);
+    }
+
+    setFontState = (config: any): void => {
+        this.setState(config, () => {
+            this.props.onCommandProperties && this.props.onCommandProperties(this.getFontPropsToTool());
+        });
+    }
+
+    getFontPropsToTool = (): IToolButtonGroup => {
+        const { fontWeight, fontStyle, textDecoration, fontColor, fontSize, textAlign } = this.state.font;
+
+        return {
+            bold: { disabled: false, value: fontWeight === 'bold' ? 1 : 0 },
+            italic: { disabled: false, value: fontStyle === 'italic' ? 1 : 0 },
+            underline: { disabled: false, value: textDecoration.includes('underline') === true ? 1 : 0 },
+            strikethrough: { disabled: false, value: textDecoration.includes('line-through') === true ? 1 : 0 },
+            fontSize: { disabled: false, value: fontSize },
+            fontColor: { disabled: false, value: fontColor },
+            textAlign: { disabled: false, value: textAlign }
+        };
     }
 
     /**

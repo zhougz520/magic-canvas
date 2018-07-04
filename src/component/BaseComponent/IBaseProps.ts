@@ -2,6 +2,7 @@ import { IComponent } from './IComponent';
 import { BaseState } from './model/BaseState';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { PageMode, ICompos } from '../Stage';
+import { IToolButtonGroup } from '../UniversalComponents';
 
 import { List } from 'immutable';
 
@@ -38,4 +39,6 @@ export interface IBaseProps {
     setCanvasUndoStack: (timeStamp: number, operationType: OperationType, componentList: List<IComponentList>) => void;
     // 执行命令
     executeCommand: (cmd: any) => void;
+    // 反填工具栏样式
+    onCommandProperties?: (buttonGroup: IToolButtonGroup) => void;
 }

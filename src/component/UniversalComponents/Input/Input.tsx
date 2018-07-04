@@ -142,12 +142,12 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
     /**
      * 设置属性
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newInputState: InputState = InputState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState);
+        this.setCustomState(newInputState, callback);
     }
 
     render() {

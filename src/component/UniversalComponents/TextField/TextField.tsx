@@ -146,12 +146,12 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
     /**
      * 设置属性
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any) => {
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newTextFieldState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newTextFieldState);
+        this.setCustomState(newTextFieldState, callback);
     }
 
     render() {
