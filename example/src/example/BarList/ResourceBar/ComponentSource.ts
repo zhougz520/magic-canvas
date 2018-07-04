@@ -9,7 +9,8 @@ const {
     Universal_Radio,
     Universal_Selector,
     Universal_TextField,
-    Universal_Image
+    Universal_Image,
+    Universal_RichText
  } = ComponentsMap;
 
 export interface IBasePage {
@@ -47,7 +48,8 @@ const basePage: IBasePage[] = [
             Universal_Radio,
             Universal_Selector,
             Universal_TextField,
-            Universal_Image
+            Universal_Image,
+            Universal_RichText
         ]
     },
     {

@@ -26,7 +26,7 @@ export const InputRecord: Record.Class = Record(defaultRecord);
 
 export class InputState extends InputRecord {
     static create(inputState: IInputState): InputState {
-        return new InputState(InputState);
+        return new InputState(inputState);
     }
 
     static set(inputState: InputState, put: any): InputState {
