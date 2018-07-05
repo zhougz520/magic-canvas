@@ -206,6 +206,8 @@ export class ComponentsUtil {
                 t: currentMousePosition ? currentMousePosition.y : 100,
                 customState: {
                     src: dataUrl,
+                    width: size.width,
+                    height: size.height,
                     backgroundColor: '#FFF',
                     borderColor: '#FFF',
                     borderWidth: 0

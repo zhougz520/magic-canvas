@@ -5,6 +5,8 @@ const data = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQg
 
 export interface IImageState {
     src: string;
+    width: number;
+    height: number;
 
     backgroundColor: string;
     borderColor: string;
@@ -13,6 +15,8 @@ export interface IImageState {
 
 const defaultRecord: IImageState = {
     src: data,
+    width: 300,
+    height: 200,
 
     backgroundColor: '#FFF',
     borderColor: '#FFF',
@@ -38,6 +42,14 @@ export class ImageState extends ImageRecord {
 
     getSrc(): string {
         return this.get('src');
+    }
+
+    getWidth(): number {
+        return this.get('width');
+    }
+
+    getHeight(): number {
+        return this.get('height');
     }
 
     getBackgroundColor(): string {
