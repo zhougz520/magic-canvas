@@ -69,10 +69,12 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
             {
                 type: 'menu',
                 label: '删除',
-                click: () => { this.props.executeCommand({
-                    t: CommandMap.COMMENTSRECT_DELETE,
-                    d: this.getCid()
-                }); }
+                click: () => {
+                    this.props.executeCommand({
+                        t: CommandMap.COMMENTSRECT_DELETE,
+                        d: this.getCid()
+                    });
+                }
             }
         ];
     }

@@ -30,7 +30,7 @@ export interface ICommentsList {
 }
 
 // 组件类型
-export type ComponentType = 'Map' | 'Universal' | 'Comments' | 'CommentsRect';
+export type ComponentType = 'Map' | 'Universal' | 'Comments' | 'CommentsRect' | 'ImageMagnifier';
 
 export interface IComData {
     id: string;

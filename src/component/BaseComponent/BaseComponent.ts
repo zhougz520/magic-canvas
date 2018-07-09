@@ -27,30 +27,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
     componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
-        const currentContent: ContentState = this.state.baseState.getCurrentContent();
-        const prevContent: ContentState = prevState.baseState.getCurrentContent();
-
-        if (
-            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
-        ) {
-            // 如果有批注，更新批注的位置
-            const commentsList: List<ICommentsList> = this.getCommentsList();
-            const componentPosition: IPosition = this.getPosition();
-            commentsList.map(
-                (comments: ICommentsList) => {
-                    const relativePosition: IPosition = comments.relativePosition;
-                    const commentsRectPosition: IPosition = {
-                        top: componentPosition.top + relativePosition.top,
-                        left: componentPosition.left + relativePosition.left
-                    };
-
-                    const commentsRect: IComponent | null = this.props.getComponent(comments.cid);
-                    if (commentsRect !== null) {
-                        commentsRect.setPosition(commentsRectPosition);
-                    }
-                }
-            );
-        }
+        this.updateCommentsList(prevState);
     }
 
     /**
@@ -677,6 +654,36 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
                 timeStamp,
                 operationType,
                 componentList
+            );
+        }
+    }
+
+    /**
+     * 更新批注框位置
+     */
+    protected updateCommentsList = (prevState: IBaseState): void => {
+        const currentContent: ContentState = this.state.baseState.getCurrentContent();
+        const prevContent: ContentState = prevState.baseState.getCurrentContent();
+
+        if (
+            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
+        ) {
+            // 如果有批注，更新批注的位置
+            const commentsList: List<ICommentsList> = this.getCommentsList();
+            const componentPosition: IPosition = this.getPosition();
+            commentsList.map(
+                (comments: ICommentsList) => {
+                    const relativePosition: IPosition = comments.relativePosition;
+                    const commentsRectPosition: IPosition = {
+                        top: componentPosition.top + relativePosition.top,
+                        left: componentPosition.left + relativePosition.left
+                    };
+
+                    const commentsRect: IComponent | null = this.props.getComponent(comments.cid);
+                    if (commentsRect !== null) {
+                        commentsRect.setPosition(commentsRectPosition);
+                    }
+                }
             );
         }
     }

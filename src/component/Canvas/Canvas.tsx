@@ -15,6 +15,7 @@ import { CanvasUtil } from './utils/CanvasUtil';
 import { CommentsUtil } from './utils/CommentsUtil';
 import { ComponentsUtil } from './utils/ComponentsUtil';
 import { DrawUtil } from './utils/DrawUtil';
+import { ImageMagnifierUtil } from './utils/ImageMagnifierUtil';
 import { MouseAndKeyUtil } from './utils/MouseAndKeyUtil';
 import { PositionUtil } from './utils/PositionUtil';
 import { RichEditUtil } from './utils/RichEditUtil';
@@ -57,6 +58,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _commentsUtil: CommentsUtil;
     public _componentsUtil: ComponentsUtil;
     public _drawUtil: DrawUtil;
+    public _imageMagnifierUtil: ImageMagnifierUtil;
     public _mouseAndKeyUtil: MouseAndKeyUtil;
     public _positionUtil: PositionUtil;
     public _richEditUtil: RichEditUtil;
@@ -90,8 +92,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     public _isRichEditMode: boolean = false;                // 是否富文本编辑模式
     public _undoStack: Stack<IStack> = Stack();             // 撤销栈
     public _redoStack: Stack<IStack> = Stack();             // 重做栈
-    public _isAddCommentsMode: boolean = false;             // 是否新增批注模式
     public _isDirty: boolean = false;                       // 画布是否弄脏
+
+    public _isAddCommentsMode: boolean = false;             // 是否新增批注模式
+    public _isAddImageMagnifierMode: boolean = false;       // 是否新增图片放大镜模式
 
     /**
      * 由于使用的时PureComponent,所有不变的数据直接放在state中,变化的数据放过在CanvasStae中
@@ -113,6 +117,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this._commentsUtil = new CommentsUtil(this);
         this._componentsUtil = new ComponentsUtil(this);
         this._drawUtil = new DrawUtil(this);
+        this._imageMagnifierUtil = new ImageMagnifierUtil(this);
         this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
         this._positionUtil = new PositionUtil(this);
         this._richEditUtil = new RichEditUtil(this);
@@ -162,6 +167,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this._commentsUtil = new CommentsUtil(this);
         this._componentsUtil = new ComponentsUtil(this);
         this._drawUtil = new DrawUtil(this);
+        this._imageMagnifierUtil = new ImageMagnifierUtil(this);
         this._mouseAndKeyUtil = new MouseAndKeyUtil(this);
         this._positionUtil = new PositionUtil(this);
         this._richEditUtil = new RichEditUtil(this);
@@ -181,8 +187,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         this._isRichEditMode = false;
         this._undoStack = Stack();
         this._redoStack = Stack();
-        this._isAddCommentsMode = false;
         this._isDirty = false;
+
+        this._isAddCommentsMode = false;
+        this._isAddImageMagnifierMode = false;
 
         // 把props的components的数据转译为baseState
         let componentList: OrderedSet<IComponentList> = OrderedSet();

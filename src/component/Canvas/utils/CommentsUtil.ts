@@ -29,6 +29,7 @@ export class CommentsUtil {
      * @param isAddRect 是否是添加锚点
      */
     startAddComments = (isAddRect: boolean = false) => {
+        this._canvas._canvasUtil.exitCanvasMode();
         this._isAddRect = isAddRect;
         this._canvas._isAddCommentsMode = true;
         this._canvas.setState({ cursor: 'crosshair' });
@@ -44,8 +45,7 @@ export class CommentsUtil {
             this.doAddComments();
         }
 
-        this._canvas._isAddCommentsMode = false;
-        this._canvas.setState({ cursor: 'default' });
+        this._canvas._canvasUtil.exitCanvasMode();
         // 通知绘画层清理批注选择框
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {

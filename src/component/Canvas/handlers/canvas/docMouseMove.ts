@@ -11,14 +11,14 @@ export function docMouseMove(canvas: Canvas, e: any): void {
             case DragType.Stretch: return canvas._drawUtil.drawStretchBox(e);
             case DragType.Shift: return canvas._drawUtil.moveDragBox(e);
             case DragType.Comments: return canvas._drawUtil.drawChoiceBoxAddCommentsMode(e);
+            case DragType.Magnifier: return canvas._drawUtil.drawChoiceBoxAddImageMagnifierMode(e);
         }
     } else {
         // 鼠标未按下时，计算鼠标位置
         const relative = canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
         canvas._canvasGlobalParam.currentMousePosition = relative;
 
-        const isAddCommentsMode: boolean = canvas._isAddCommentsMode;
-        if (isAddCommentsMode === false) {
+        if (canvas._canvasUtil.isCanvasHaveMode() === false) {
             const anchor: IAnchor | null = canvas._canvasGlobalParam.anchorCalc(relative.x, relative.y);
             canvas.setState({ cursor: anchor ? anchor.cursor : 'default' });
         }

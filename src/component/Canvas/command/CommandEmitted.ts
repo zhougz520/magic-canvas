@@ -2,10 +2,8 @@
 export enum CommandMap {
     // 添加批注
     COMMENTS_ADD = 'e.addComments',
-
     // 添加批注锚点
     COMMENTSRECT_ADD = 'e.addCommentsRect',
-
     // 删除批注锚点
     COMMENTSRECT_DELETE = 'e.deleteCommentsRect',
 
@@ -74,5 +72,10 @@ export enum CommandMap {
     COM_CUT = 'e.cutCom',
 
     // 粘贴
-    COM_PASTE = 'e.pasteCom'
+    COM_PASTE = 'e.pasteCom',
+
+    // 添加图片放大镜
+    MAGNIFIER_ADD = 'e.addMagnifier',
+    // 删除图片放大镜
+    MAGNIFIER_DELETE = 'e.deleteMagnifier'
 }

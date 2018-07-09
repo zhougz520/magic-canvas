@@ -148,11 +148,11 @@ export class ComponentsUtil {
             (data: any) => {
                 data.offset = { x: 0, y: 0 };
                 const { l, t } = data.p;
-                const comType: ComponentType | null = this.getComponentType(data.t);
+                const getPasteCustomStateFun = require(`../../${data.t}`).getPasteCustomState;
                 const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                     data,
                     { x: l + 10 * this._pasteNum, y: t + 10 * this._pasteNum },
-                    comType === 'Comments' ? null : data.p.customState
+                    getPasteCustomStateFun ? getPasteCustomStateFun(data.p.customState) : data.p.customState
                 );
                 const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
                 const component: IComponentList = {
@@ -208,6 +208,8 @@ export class ComponentsUtil {
                     src: dataUrl,
                     width: size.width,
                     height: size.height,
+                    imageMagnifierList: OrderedSet(),
+                    maxMagnifierId: 0,
                     backgroundColor: '#FFF',
                     borderColor: '#FFF',
                     borderWidth: 0
@@ -237,6 +239,7 @@ export class ComponentsUtil {
         componentList = componentList.add(component);
         addComponentList = addComponentList.push(component);
         this._canvas._newComponentCid = comData.id;
+        this._addNum = 0;
 
         this._canvas._stackUtil.setCanvasUndoStack(
             timeStamp,
@@ -353,7 +356,6 @@ export class ComponentsUtil {
     /**
      * 把组件的jsonData转译成IComData结构的data
      * @param component jsonData
-     * @param zIndex 组件的z-Index
      * @param position 把组件拖拽进画布的偏移量
      * @param customState 组件的customState
      */

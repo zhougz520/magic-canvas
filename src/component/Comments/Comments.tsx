@@ -329,3 +329,7 @@ export function convertFromDataToRich(
 
     return richChildNode;
 }
+
+export function getPasteCustomState(customData: any): any {
+    return null;
+}

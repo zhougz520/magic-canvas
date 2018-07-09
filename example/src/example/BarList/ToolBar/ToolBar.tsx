@@ -232,6 +232,12 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     批注
                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button
+                    size="small"
+                    onClick={() => this.fireCommand(CommandMap.MAGNIFIER_ADD, 'cs1')}
+                >
+                    放大镜
+                </Button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <Button
                     type="primary"
                     size="small"
                     onClick={() => this.doSaveData()}

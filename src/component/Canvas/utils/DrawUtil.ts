@@ -83,7 +83,7 @@ export class DrawUtil {
     }
 
     /**
-     * 绘制鼠标选择框
+     * 绘制鼠标选择框-添加批注
      */
     drawChoiceBoxAddCommentsMode = (e: any) => {
         // 通知绘画层出现选择框
@@ -91,6 +91,21 @@ export class DrawUtil {
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
         const style = { fill: '#fff', fillOpacity: 0, stroke: '#D0021B', strokeWidth: 1, rx: 5, ry: 5 };
+        const draw = this._canvas.props.getDraw();
+        if (draw !== null) {
+            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
+        }
+    }
+
+    /**
+     * 绘制鼠标选择框-添加图片放大镜
+     */
+    drawChoiceBoxAddImageMagnifierMode = (e: any) => {
+        // 通知绘画层出现选择框
+        const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
+        const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
+        const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
+        const style = { fill: '#bbbbbb', fillOpacity: 0.10, stroke: '#bbbbbb', strokeWidth: 1, rx: 3, ry: 3 };
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
             draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });

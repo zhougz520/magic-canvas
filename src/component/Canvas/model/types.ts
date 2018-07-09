@@ -25,7 +25,8 @@ export enum DragType {
     Choice = 'choice',      // 鼠标拉选框
     Shift = 'shift',        // 组件位移框
     Stretch = 'stretch',    // 组件缩放框
-    Comments = 'comments'   // 添加批注
+    Comments = 'comments',  // 添加批注
+    Magnifier = 'magnifier' // 图片放大镜
 }
 
 export interface IDragDiv {
@@ -73,6 +74,11 @@ export type AlignType = 'Left' | 'Center' | 'Right' | 'Top' | 'Middle' | 'Bottom
 
 export interface IAddCommentsParam {
     component: IComponent | null;
+    startPoint: IOffset | null;
+    endPoint: IOffset | null;
+}
+
+export interface IAddImageMagnifierParam {
     startPoint: IOffset | null;
     endPoint: IOffset | null;
 }

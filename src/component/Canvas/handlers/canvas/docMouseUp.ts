@@ -16,7 +16,11 @@ export function docMouseUp(canvas: Canvas, e: any): void {
             break;
         case 'canvas':
             if (canvas._isAddCommentsMode === true) {
+                // 添加批注模式
                 canvas._canvasGlobalParam.canvasMouseUpAddCommentsMode(e);
+            } else if (canvas._isAddImageMagnifierMode === true) {
+                // 添加图片放大镜模式
+                canvas._canvasGlobalParam.canvasMouseUpAddImageMagnifierMode(e);
             } else {
                 canvas._canvasGlobalParam.canvasMouseUp(e);
             }

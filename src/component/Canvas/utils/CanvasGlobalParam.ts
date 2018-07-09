@@ -205,6 +205,13 @@ export class CanvasGlobalParam {
         this._canvas._commentsUtil.setMouseDownParam(e);
     }
 
+    // 添加放大镜模式，canvas上的鼠标点击事件
+    canvasMouseDownAddImageMagnifierMode(e: any) {
+        this.mouseDown = true;
+        this.dragType = DragType.Magnifier;
+        this._canvas._imageMagnifierUtil.setMouseDownParam(e);
+    }
+
     // canvas上的鼠标点击事件
     canvasMouseUp(e: any) {
         // 当组件经历过形状位置改变后，手动设置一次组件堆栈
@@ -221,6 +228,15 @@ export class CanvasGlobalParam {
         this.dragType = DragType.None;
         this._canvas._commentsUtil.setMouseUpParam(e);
         this._canvas._commentsUtil.stopAddComments();
+    }
+
+    // 添加放大镜模式，canvas上的鼠标点击事件
+    canvasMouseUpAddImageMagnifierMode(e: any) {
+        this.mouseDown = false;
+        this.dargging = false;
+        this.dragType = DragType.None;
+        this._canvas._imageMagnifierUtil.setMouseUpParam(e);
+        this._canvas._imageMagnifierUtil.stopAddMagnifier();
     }
 
     // 组件传递而来的鼠标点击事件

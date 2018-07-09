@@ -3,9 +3,9 @@ import { Canvas } from '../../Canvas';
 export function docMouseDown(canvas: Canvas, e: any): void {
     // 如果是鼠标右键点击
     if (e.button === 2) {
-        // 退出批注添加模式
-        if (canvas._isAddCommentsMode === true) {
-            canvas._canvasUtil.exitAddCommentsMode();
+        // 退出画布操作模式
+        if (canvas._canvasUtil.isCanvasHaveMode() === true) {
+            canvas._canvasUtil.exitCanvasMode();
         }
     }
 
@@ -45,7 +45,13 @@ export function docMouseDown(canvas: Canvas, e: any): void {
                 }
 
                 if (canvas._isAddCommentsMode === true) {
+                    // 添加批注模式
                     canvas._canvasGlobalParam.canvasMouseDownAddCommentsMode(e);
+                    e.stopPropagation();
+                    e.preventDefault();
+                } else if (canvas._isAddImageMagnifierMode === true) {
+                    // 添加图片放大镜模式
+                    canvas._canvasGlobalParam.canvasMouseDownAddImageMagnifierMode(e);
                     e.stopPropagation();
                     e.preventDefault();
                 } else {

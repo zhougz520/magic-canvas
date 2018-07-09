@@ -33,7 +33,7 @@ export class MouseAndKeyUtil {
      */
     onMouseEventType = (e: any): string => {
         // TODO 优化代码
-        if (this._canvas._isAddCommentsMode) return 'canvas';
+        if (this._canvas._canvasUtil.isCanvasHaveMode() === true) return 'canvas';
 
         if (e.target) {
             if (

@@ -521,9 +521,7 @@ export class PageAction {
         this._canvas._componentsUtil._pasteNum = -1;
     }
 
-    /**
-     * 粘贴
-     */
+    // 粘贴
     pasteCom = () => {
         try {
             const clipboardTypes: string[] | undefined = this._canvas.props.checkClipboard && this._canvas.props.checkClipboard();
@@ -551,5 +549,17 @@ export class PageAction {
         } catch (err) {
             // do nothing
         }
+    }
+
+    // 添加图片放大镜
+    addMagnifier = (cid: string) => {
+        this._canvas._imageMagnifierUtil.startAddMagnifier(cid);
+    }
+
+    // 删除图片放大镜
+    deleteMagnifier = (cid: string) => {
+        this._canvas._imageMagnifierUtil.doDeleteImageMagnifier(cid);
+        this._canvas._drawUtil.clearSelected();
+        this._canvas._drawUtil.clearDragBox();
     }
 }

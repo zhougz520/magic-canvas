@@ -177,11 +177,19 @@ export class CanvasUtil {
     }
 
     /**
-     * 退出批注添加模式
+     * 退出画布操作模式
      */
-    exitAddCommentsMode = () => {
+    exitCanvasMode = () => {
         this._canvas._isAddCommentsMode = false;
+        this._canvas._isAddImageMagnifierMode = false;
         this._canvas.setState({ cursor: 'default' });
+    }
+
+    /**
+     * 画布是否存在操作模式
+     */
+    isCanvasHaveMode = (): boolean => {
+        return this._canvas._isAddCommentsMode || this._canvas._isAddImageMagnifierMode;
     }
 
 }
