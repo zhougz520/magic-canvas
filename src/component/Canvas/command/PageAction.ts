@@ -489,24 +489,30 @@ export class PageAction {
         const components: any[] = [];
         currentSelectedComponent.map(
             (component: IComponent) => {
-                components.push(
-                    convertFromBaseStateToData(
-                        component.getBaseState(),
-                        {
-                            comPath: component.getBaseProps().comPath,
-                            childData: component.getBaseProps().childData
-                        }
-                    )
-                );
+                const isCanCopy: boolean = component.isCanCopy();
+                if (isCanCopy) {
+                    components.push(
+                        convertFromBaseStateToData(
+                            component.getBaseState(),
+                            {
+                                comPath: component.getBaseProps().comPath,
+                                childData: component.getBaseProps().childData
+                            }
+                        )
+                    );
+                }
             }
         );
 
-        const detail = {
-            type: 'BaseComponent',
-            content: {
-                components
-            }
-        };
+        let detail: {} = {};
+        if (components.length > 0) {
+            detail = {
+                type: 'BaseComponent',
+                content: {
+                    components
+                }
+            };
+        }
 
         this._canvas.props.copyToClipboard && this._canvas.props.copyToClipboard({
             text: JSON.stringify(detail)
@@ -527,7 +533,7 @@ export class PageAction {
             const clipboardTypes: string[] | undefined = this._canvas.props.checkClipboard && this._canvas.props.checkClipboard();
             const data = this._canvas.props.readFromClipboard && this._canvas.props.readFromClipboard();
 
-            if (clipboardTypes && data) {
+            if (clipboardTypes && clipboardTypes.length > 0 && data) {
                 // text
                 if (clipboardTypes.includes('text') && data.text && data.text !== '') {
                     const detail = JSON.parse(data.text);

@@ -395,6 +395,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 是否可以复制
+     * 默认：是，组件自己重写
+     */
+    public isCanCopy = (): boolean => {
+        return true;
+    }
+
+    /**
      * 获取组件的右键菜单
      * 默认：空，组件自己重写
      */

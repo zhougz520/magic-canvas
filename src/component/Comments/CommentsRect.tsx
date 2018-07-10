@@ -61,6 +61,13 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     /**
+     * 是否可以复制
+     */
+    public isCanCopy = (): boolean => {
+        return false;
+    }
+
+    /**
      * 获取组件的右键菜单
      * 默认：空，组件自己重写
      */

@@ -143,6 +143,11 @@ export interface IComponent {
     isCanMove: () => boolean;
 
     /**
+     * 是否可以复制
+     */
+    isCanCopy: () => boolean;
+
+    /**
      * 是否可以挤开其他组件
      */
     isCanPushOpenOtherComponent: () => boolean;
