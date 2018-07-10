@@ -568,4 +568,9 @@ export class PageAction {
         this._canvas._drawUtil.clearSelected();
         this._canvas._drawUtil.clearDragBox();
     }
+
+    // 保存数据
+    saveData = () => {
+        this._canvas.props.saveData && this._canvas.props.saveData();
+    }
 }

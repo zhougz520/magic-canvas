@@ -105,6 +105,7 @@ export class RichEditUtil {
             let isDbClickToEdit: boolean = false;
             switch (pageMode) {
                 case 'Edit':
+                case 'Guest':
                     isDbClickToEdit = com.isDbClickToEdit();
                     break;
                 case 'Run':

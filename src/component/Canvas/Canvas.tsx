@@ -459,6 +459,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         const { pageMode } = this.props;
         switch (pageMode) {
             case 'Edit':
+            case 'Guest':
                 document.addEventListener('mousemove', this._onDocMouseMove);
                 document.addEventListener('mouseleave', this._onDocMouseLeave);
                 (this.canvas as HTMLDivElement).addEventListener('mousedown', this._onDocMouseDown);
@@ -484,6 +485,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         const { pageMode } = this.props;
         switch (pageMode) {
             case 'Edit':
+            case 'Guest':
                 document.removeEventListener('mousemove', this._onDocMouseMove);
                 document.removeEventListener('mouseleave', this._onDocMouseLeave);
                 (this.canvas as HTMLDivElement).removeEventListener('mousedown', this._onDocMouseDown);

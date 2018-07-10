@@ -88,6 +88,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
             components,
             onContextMenu,
             setPageDirty,
+            saveData,
             onCommandProperties,
             onPropertyProperties
         } = this.props;
@@ -118,6 +119,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     onPropertyProperties={onPropertyProperties}
                     setPageDirty={setPageDirty}
                     onContextMenu={onContextMenu}
+                    saveData={saveData}
                     copyToClipboard={this.props.copyToClipboard}
                     readFromClipboard={this.props.readFromClipboard}
                     checkClipboard={this.props.checkClipboard}

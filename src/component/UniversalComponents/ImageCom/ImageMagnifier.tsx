@@ -5,7 +5,7 @@ import { IReactData } from '../../Draw';
 import { IContextMenuItems } from '../../Stage';
 
 import { ImageState } from './ImageState';
-import { ImageMagnifierState } from './ImageMagnifierState';
+import { ImageMagnifierState, IImageMagnifierState } from './ImageMagnifierState';
 
 import { OrderedSet } from 'immutable';
 
@@ -154,7 +154,7 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
  * @param customData 可能的类型：ImageState
  */
 export function convertFromDataToCustomState(
-    customData: ImageMagnifierState
+    customData: IImageMagnifierState
 ): any {
     return new ImageMagnifierState(customData);
 }

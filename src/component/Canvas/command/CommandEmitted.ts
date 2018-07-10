@@ -77,5 +77,8 @@ export enum CommandMap {
     // 添加图片放大镜
     MAGNIFIER_ADD = 'e.addMagnifier',
     // 删除图片放大镜
-    MAGNIFIER_DELETE = 'e.deleteMagnifier'
+    MAGNIFIER_DELETE = 'e.deleteMagnifier',
+
+    // 保存数据
+    DATA_SAVE = 'e.saveData'
 }

@@ -15,6 +15,9 @@ import { IReactData, IBaseData } from '../Draw';
 import { IComponentList, CommandMap } from '../Canvas';
 import { IContextMenuItems } from '../Stage';
 
+import { CommentsState } from './CommentsState';
+import { CommentsRectState, ICommentsRectState } from './CommentsRectState';
+
 import { OrderedSet, List } from 'immutable';
 
 export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
@@ -22,7 +25,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState()
+            baseState: this.initBaseStateWithCustomState(new CommentsRectState())
         };
     }
 
@@ -98,7 +101,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
             this.updateCommentsCustomState(this.getBaseState());
 
             // 更新组件客中存的相对位置
-            const cid: string | null = this.getCustomState().get('cid');
+            const cid: string | null = (this.getCustomState() as CommentsRectState).getCid();
             const component: IComponent | null = cid !== null ? this.props.getComponent(cid) : null;
             if (component) {
                 const componentPosition: IPosition = component.getPosition();
@@ -154,8 +157,8 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
         const commentsCid: string = this.getCid().split('.')[0];
         const comments = this.props.getComponent(commentsCid);
         if (comments) {
-            const oldCommentsRectList: OrderedSet<IComponentList> = comments.getCustomState().get('commentsRectList');
-            const oldMaxRectId: number = comments.getCustomState().get('maxRectId');
+            const commentsCustomState: CommentsState = comments.getCustomState();
+            const oldCommentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
             let newCommentsRectList: OrderedSet<IComponentList> = OrderedSet();
             oldCommentsRectList.map(
                 (commentsRect: IComponentList) => {
@@ -166,10 +169,21 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                 }
             );
 
-            comments.setCustomState({
-                commentsRectList: newCommentsRectList,
-                maxRectId: oldMaxRectId
-            });
+            comments.setCustomState(
+                CommentsState.set(commentsCustomState, {
+                    commentsRectList: newCommentsRectList
+                })
+            );
         }
     }
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：ImageState
+ */
+export function convertFromDataToCustomState(
+    customData: ICommentsRectState
+): any {
+    return new CommentsRectState(customData);
 }

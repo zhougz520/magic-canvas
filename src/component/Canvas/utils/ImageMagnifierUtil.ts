@@ -145,6 +145,7 @@ export class ImageMagnifierUtil {
                     backgroundPositionY: - cutPosition.top
                 }
             );
+            this._canvas._componentsUtil._addNum -= 1;
             comData.id = this._imageComponentCid + '.ci' + (imageCustomState.getMaxMagnifierId() + 1);
             comData.comType = 'ImageMagnifier';
             comData.zIndex = comImage.getHierarchy();

@@ -17,31 +17,24 @@ import {
 } from '../BaseComponent';
 import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState, CommandMap } from '../Canvas';
 import { IContextMenuItems } from '../Stage';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../UniversalComponents';
 import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
+import { CommentsState, ICommentsState } from './CommentsState';
 
 import { blockStyleFn } from '../RichEdit';
 import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
 
-import { OrderedSet, Map } from 'immutable';
+import { OrderedSet, List, Map } from 'immutable';
 import './sass/Comments.scss';
 
-export interface ICommentsState extends IBaseState {
+export interface ICommentsBaseState extends IBaseState {
     hidden: boolean;
 }
 
-/**
- * 批注的CustomState
- * 存批注框的信息+当前最大批注id
- */
-export interface ICustomState {
-    commentsRectList: OrderedSet<IComponentList>;
-    maxRectId: number;
-}
-
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
-export default class Comments extends BaseComponent<IBaseProps, ICommentsState> {
+export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseState> {
     private _padding: number = 8;
 
     constructor(props: IBaseProps, context?: any) {
@@ -49,10 +42,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
 
         this.state = {
             baseState: this.initBaseStateWithCustomState(
-                {
-                    commentsRectList: OrderedSet(),
-                    maxRectId: 0
-                } as ICustomState,
+                new CommentsState(),
                 EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n')
             ),
             hidden: false
@@ -104,6 +94,46 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
     }
 
     /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 外观
+        propertyList = propertyList.push(
+            {
+                pTitle: '背景颜色',
+                pKey: 'backgroundColor',
+                pValue: this.getCustomState().getBackgroundColor(),
+                pType: PropertiesEnum.COLOR_PICKER
+            }
+        );
+        propertyGroup = propertyGroup.add(
+            {
+                groupTitle: '外观',
+                groupKey: 'exterior',
+                colNum: 1,
+                propertyList
+            }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+
+    /**
+     * 设置属性
+     */
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
+        let properties = Map();
+        properties = properties.set(pKey, pValue);
+        const newCommentsState: CommentsState = CommentsState.set(this.getCustomState(), properties);
+
+        this.setCustomState(newCommentsState, callback);
+    }
+
+    /**
      * 获取组件的右键菜单
      * 默认：空，组件自己重写
      */
@@ -122,13 +152,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
         ];
     }
 
-    public getEncodeCustomState = (): ICustomState => {
-        return this.getCustomState().toObject();
-    }
-
     render() {
         const { hidden } = this.state;
-        const commentsRectList: OrderedSet<IComponentList> = this.getEncodeCustomState().commentsRectList;
+        const commentsCustomState: CommentsState = this.getCustomState();
+        const commentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
         const rectList: JSX.Element[] = this.buildRect(commentsRectList);
 
         const editorState = this.getRichChildNode();
@@ -150,10 +177,13 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
                     className="comments"
                     onMouseDown={this.fireSelectChange}
                     onDoubleClick={this.doDbClickToEdit}
-                    style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                    style={{
+                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                        backgroundColor: commentsCustomState.getBackgroundColor()
+                    }}
                 >
                     <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
-                    <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>作者：</div>
+                    <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
                     <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                         <Editor
                             editorState={editorState}
@@ -249,8 +279,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsState> 
  */
 export function convertFromCustomStateToData(customState: any): any {
     const components: any[] = [];
-    const encodeCustomState: ICustomState = customState.toObject();
-    const commentsRectList: OrderedSet<IComponentList> = encodeCustomState.commentsRectList;
+    const encodeCustomState: CommentsState = customState;
+    const commentsRectList: OrderedSet<IComponentList> = encodeCustomState.getCommentsRectList();
     commentsRectList.map(
         (commentsRect: IComponentList) => {
             components.push(
@@ -266,8 +296,11 @@ export function convertFromCustomStateToData(customState: any): any {
     );
 
     return {
+        author: encodeCustomState.getAuthor(),
+        userType: encodeCustomState.getUserType(),
         commentsRectList: components,
-        maxRectId: encodeCustomState.maxRectId
+        maxRectId: encodeCustomState.getCommentsRectList(),
+        backgroundColor: encodeCustomState.getBackgroundColor()
     };
 }
 
@@ -277,21 +310,29 @@ export function convertFromCustomStateToData(customState: any): any {
  */
 export function convertFromDataToCustomState(
     customData: {
+        author: string;
+        userType: 'Master' | 'Guest';
         commentsRectList: Array<{
             t: string;
             p: IComData;
         }>;
         maxRectId: number;
+        backgroundColor: string;
     } | any
 ): any {
-    let componentList: OrderedSet<IComponentList> = OrderedSet();
-    let maxRectId: number = 0;
-    if (customData && customData.commentsRectList && customData.maxRectId) {
+    const data: ICommentsState = {
+        author: '',
+        userType: 'Master',
+        commentsRectList: OrderedSet(),
+        maxRectId: 0,
+        backgroundColor: '#fffbba'
+    };
+    if (customData && customData.commentsRectList) {
         customData.commentsRectList.map(
             (commentsRect: any) => {
                 const baseState: BaseState = convertFromDataToBaseState(commentsRect.p, commentsRect.t);
 
-                componentList = componentList.add({
+                data.commentsRectList = data.commentsRectList.add({
                     cid: commentsRect.p.id,
                     comPath: commentsRect.t,
                     baseState,
@@ -301,13 +342,13 @@ export function convertFromDataToCustomState(
             }
         );
 
-        maxRectId = customData.maxRectId;
+        data.author = customData.author;
+        data.userType = customData.userType;
+        data.maxRectId = customData.maxRectId;
+        data.backgroundColor = customData.backgroundColor;
     }
 
-    return Map({
-        commentsRectList: componentList,
-        maxRectId
-    });
+    return CommentsState.create(data);
 }
 
 export function convertFromRichToData(

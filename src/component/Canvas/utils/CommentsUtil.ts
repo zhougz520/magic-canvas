@@ -3,6 +3,8 @@ import { BaseState, ISize, IPosition, IComData, IComponent, ICommentsList } from
 import { IAddCommentsParam, IComponentList, IOffset } from '../model/types';
 import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 
+import { CommentsState } from '../../Comments';
+
 import { OrderedSet, List } from 'immutable';
 
 export class CommentsUtil {
@@ -12,7 +14,7 @@ export class CommentsUtil {
         endPoint: null
     };                                                          // 添加批注框的位置
     public _currentCommentsCid: string | null = null;           // 当前添加的批注的cid
-    public _isAddRect: boolean =  false;                        // 是否添加锚点
+    public _isAddRect: boolean = false;                        // 是否添加锚点
 
     private _canvas: Canvas;
 
@@ -105,13 +107,19 @@ export class CommentsUtil {
      * @param offset 相对于选中框右上角的偏移量
      */
     getAddCommentsPosition = (offset: IOffset): IPosition | null => {
-        const { startPoint, endPoint } = this._addCommentsRectParam;
+        const { startPoint, endPoint, component } = this._addCommentsRectParam;
         if (startPoint === null || endPoint === null) return null;
 
-        const position: IPosition = {
+        let position: IPosition = {
             left: Math.max(startPoint.x, endPoint.x) + offset.x,
             top: Math.min(startPoint.y, endPoint.y) - offset.y
         };
+        if (component) {
+            position = {
+                left: component.getPosition().left + component.getSize().width + offset.x,
+                top: Math.min(startPoint.y, endPoint.y) - offset.y
+            };
+        }
 
         return position;
     }
@@ -168,7 +176,7 @@ export class CommentsUtil {
         const comComments: IComponent | null = this._canvas.getComponent(this._currentCommentsCid);
 
         if (comComments) {
-            const commentsCustomState = comComments.getCustomState();
+            const commentsCustomState: CommentsState = comComments.getCustomState();
             const rectPositionAndSize = this.getAddCommentsRectPositionAndSize();
             if (rectPositionAndSize === null) return;
             const { position, size } = rectPositionAndSize;
@@ -183,7 +191,8 @@ export class CommentsUtil {
                 { x: position.left, y: position.top },
                 { cid: this._addCommentsRectParam.component ? this._addCommentsRectParam.component.getCid() : null }
             );
-            comData.id = comComments.getCid() + '.cr' + (commentsCustomState.get('maxRectId') + 1);
+            this._canvas._componentsUtil._addNum -= 1;
+            comData.id = comComments.getCid() + '.cr' + (commentsCustomState.getMaxRectId() + 1);
             comData.comType = 'CommentsRect';
             comData.zIndex = 0;
 
@@ -197,11 +206,13 @@ export class CommentsUtil {
             };
 
             const commentsRectList: OrderedSet<IComponentList> =
-                commentsCustomState.get('commentsRectList').add(component);
-            comComments.setCustomState({
-                commentsRectList,
-                maxRectId: commentsCustomState.get('maxRectId') + 1
-            });
+                commentsCustomState.getCommentsRectList().add(component);
+            comComments.setCustomState(
+                CommentsState.set(commentsCustomState, {
+                    commentsRectList,
+                    maxRectId: commentsCustomState.getMaxRectId() + 1
+                })
+            );
 
             this.setComponentCommentsList(comData.id, { top: comData.t, left: comData.l });
         }
@@ -233,29 +244,12 @@ export class CommentsUtil {
      * 删除锚点
      */
     doDeleteCommentsRect = (cid: string) => {
-        // 1.更新组件的锚点列表
-        // const comRect: IComponent | null = this._canvas.getComponent(cid);
-        // if (comRect) {
-        //     const comCid: string | null = comRect.getCustomState().get('cid');
-        //     const component: IComponent | null = comCid !== null ? this._canvas.getComponent(comCid) : null;
-        //     if (component) {
-        //         let commentsList: List<ICommentsList> = component.getCommentsList();
-        //         commentsList.map(
-        //             (comments: ICommentsList, key: number) => {
-        //                 if (cid === comments.cid) {
-        //                     commentsList = commentsList.delete(key);
-        //                 }
-        //             }
-        //         );
-        //         component.setCommentsList(commentsList);
-        //     }
-        // }
-
-        // 2.更新批注组件的锚点列表
+        // 更新批注组件的锚点列表
         const commentsCid: string = cid.split('.')[0];
         const comComments: IComponent | null = this._canvas.getComponent(commentsCid);
         if (comComments) {
-            let commentsRectList: OrderedSet<IComponentList> = comComments.getCustomState().get('commentsRectList');
+            const commentsCustomState: CommentsState = comComments.getCustomState();
+            let commentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
             commentsRectList.map(
                 (commentsRect: IComponentList) => {
                     if (cid === commentsRect.cid) {
@@ -263,10 +257,13 @@ export class CommentsUtil {
                     }
                 }
             );
-            comComments.setCustomState({
-                commentsRectList,
-                maxRectId: comComments.getCustomState().get('maxRectId')
-            });
+
+            comComments.setCustomState(
+                CommentsState.set(commentsCustomState, {
+                    commentsRectList,
+                    maxRectId: commentsCustomState.getMaxRectId()
+                })
+            );
         }
     }
 }

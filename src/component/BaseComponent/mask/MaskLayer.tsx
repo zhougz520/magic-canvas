@@ -19,6 +19,7 @@ export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
         let element;
         switch (pageMode) {
             case 'Edit':
+            case 'Guest':
                 element = (
                     <div
                         className="mask-layer"

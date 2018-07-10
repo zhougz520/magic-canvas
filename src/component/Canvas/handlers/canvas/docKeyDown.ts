@@ -41,6 +41,9 @@ export function docKeyDown(canvas: Canvas, e: any): void {
                 case 'y':   // 重做
                     cmd.t = CommandMap.CANVAS_REDO;
                     break;
+                case 's':   // 保存
+                    cmd.t = CommandMap.DATA_SAVE;
+                    break;
             }
             if (cmd.t !== undefined) {
                 canvas.executeCommand(cmd);

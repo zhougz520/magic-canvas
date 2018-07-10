@@ -17,6 +17,8 @@ export interface IStageProps {
     setPageDirty?: () => void;
     // 右键菜单
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
+    // 保存数据
+    saveData?: () => void;
 
     /**
      * 写入剪切板

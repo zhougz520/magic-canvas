@@ -3,8 +3,9 @@ import { IComData } from '../BaseComponent';
 /**
  * 'Run'：运行模式
  * 'Edit'：编辑模式
+ * 'Guest'：访客模式
  */
-export type PageMode = 'Run' | 'Edit';
+export type PageMode = 'Run' | 'Edit' | 'Guest';
 
 // 画布的偏移量
 export interface ICompos {
