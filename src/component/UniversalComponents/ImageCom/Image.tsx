@@ -118,7 +118,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
                     }}
                     onMouseDown={this.fireSelectChange}
                 >
-                    <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                    <MaskLayer id={this.getCid()} />
                     <img
                         style={{
                             width: '100%',

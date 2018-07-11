@@ -23,6 +23,7 @@ export interface IBaseProps {
     initType: InitType;
     // 画布偏移量
     componentPosition: ICompos;
+
     // 改动组件大小的时候，调用画布的重绘选中框
     repaintSelected: () => void;
     // 改动组件位置的时候，调用画布的重置画布大小
@@ -35,8 +36,10 @@ export interface IBaseProps {
     getComponent: (cid: string) => IComponent | null;
     // z-Index改变时，调用画布重算最大最小z-Index
     resetMaxAndMinZIndex: () => void;
+
     // 设置画布撤销栈
     setCanvasUndoStack: (timeStamp: number, operationType: OperationType, componentList: List<IComponentList>) => void;
+
     // 执行命令
     executeCommand: (cmd: any) => void;
     // 反填工具栏样式

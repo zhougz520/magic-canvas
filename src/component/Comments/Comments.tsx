@@ -259,6 +259,9 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         return rectList;
     }
 
+    /**
+     * 构建连接线
+     */
     private buildLine = (commentsBaseState: BaseState, rectBaseState: BaseState, offset: IOffset): ICommentsLineProps => {
         const commentsPositionState: PositionState = commentsBaseState.getCurrentContent().getPositionState();
         const rectPositionState: PositionState = rectBaseState.getCurrentContent().getPositionState();
@@ -351,6 +354,10 @@ export function convertFromDataToCustomState(
     return CommentsState.create(data);
 }
 
+/**
+ * 把富文本转为保存数据
+ * @param richChildNode 富文本对象
+ */
 export function convertFromRichToData(
     richChildNode: any
 ): any {
@@ -359,6 +366,10 @@ export function convertFromRichToData(
     return convertFromDraftStateToRaw(contentState);
 }
 
+/**
+ * 包保存的文本数据转成富文本对象
+ * @param richChildData 富文本json
+ */
 export function convertFromDataToRich(
     richChildData: any
 ): any {
@@ -371,6 +382,10 @@ export function convertFromDataToRich(
     return richChildNode;
 }
 
+/**
+ * 获取粘贴的CustomData
+ * @param customData 自定义数据
+ */
 export function getPasteCustomState(customData: any): any {
     return null;
 }

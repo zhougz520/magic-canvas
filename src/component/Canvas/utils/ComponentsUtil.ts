@@ -257,20 +257,21 @@ export class ComponentsUtil {
     /**
      * 根据component数据创建画布上的组件
      */
-    getChildrenComponent = (componentList: OrderedSet<IComponentList>): React.ReactFragment => {
-        const array: { [key: string]: React.ReactElement<any> } = {};
+    getChildrenComponent = (componentList: OrderedSet<IComponentList>): any[] => {
+        const array: any[] = [];
 
         componentList.map(
             (com: IComponentList) => {
                 const comModule = this._canvas._componentsUtil.getComponentModule(com.comPath);
 
-                array[com.cid] = React.createElement(comModule,
+                array.push(React.createElement(comModule,
                     Object.assign({}, {
                         baseState: com.baseState,
                         childData: com.childData,
                         comPath: com.comPath,
                         initType: com.initType
                     }, {
+                            key: com.cid,
                             ref: `c.${com.cid}`,
                             pageMode: this._canvas.props.pageMode,
                             componentPosition: this._canvas.props.componentPosition,
@@ -284,12 +285,11 @@ export class ComponentsUtil {
                             executeCommand: this._canvas.executeCommand,
                             onCommandProperties: this._canvas.props.onCommandProperties
                         })
-                );
+                ));
             }
         );
-        const createFragment = require('react-addons-create-fragment');
 
-        return createFragment(array);
+        return array;
     }
 
     /**

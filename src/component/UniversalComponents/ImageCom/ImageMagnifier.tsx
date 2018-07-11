@@ -97,7 +97,7 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
                 }}
                 onMouseDown={this.fireSelectChange}
             >
-                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                <MaskLayer id={this.getCid()} />
                 <div
                     style={{
                         position: 'absolute',

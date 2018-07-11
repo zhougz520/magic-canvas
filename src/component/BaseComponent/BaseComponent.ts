@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 import { IComponent } from './IComponent';
 import { IBaseProps } from './IBaseProps';
@@ -31,7 +30,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件路径
+     * 获取组件的baseProps
      */
     public getBaseProps = (): IBaseProps => {
         return this.props;
@@ -105,53 +104,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件标识cid
-     */
-    public getCid = (): string => {
-        const baseState: BaseState = this.getBaseState();
-
-        return baseState.getCurrentContent().getCid();
-    }
-
-    /**
-     * 获取组件类型
-     */
-    public getComType = (): ComponentType | null => {
-        const baseState: BaseState = this.getBaseState();
-
-        return baseState.getCurrentContent().getComType();
-    }
-
-    /**
-     * 获取组件的选中框类型，成员函数
-     */
-    public getType(): string {
-        return BoxType.Base;
-    }
-
-    /**
-     * 获取组件的边界点
-     */
-    public getBoundaryPoint = () => {
-        const size = this.getSize();
-        const position = this.getPosition();
-
-        return {
-            pointX: position.left + size.width,
-            pointY: position.top + size.height
-        };
-    }
-
-    /**
-     * 获取组件的临时状态
-     */
-    public getTempContentState = (): ContentState => {
-        const baseState: BaseState = this.getBaseState();
-
-        return baseState.getTempContentState();
-    }
-
-    /**
      * 获取组件的zIndex
      */
     public getHierarchy = (): number => {
@@ -161,7 +113,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 设置组件的层级
+     * 设置组件的zIndex
+     * @param zIndex 组件z-Index
      */
     public setHierarchy = (zIndex: number) => {
         const oldBaseState: BaseState = this.getBaseState();
@@ -177,7 +130,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 获取组件富文本内容
-     * 返回：带格式的富文本内容（html）
+     * 返回：带格式的富文本内容
      */
     public getRichChildNode = (): any => {
         const baseState: BaseState = this.getBaseState();
@@ -187,7 +140,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 设置组件富文本内容
-     * @param richChildNode 带格式的富文本内容（html）
+     * @param richChildNode 带格式的富文本内容
      */
     public setRichChildNode = (richChildNode: any): void => {
         const oldBaseState: BaseState = this.getBaseState();
@@ -213,6 +166,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 设置组件自定义state
+     * @param newCustomState 新的CustomState
      */
     public setCustomState = (newCustomState: any, callback?: () => void): void => {
         const oldBaseState: BaseState = this.getBaseState();
@@ -251,6 +205,15 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newBaseState = BaseState.push(oldBaseState, newContent, false);
 
         this.setBaseState(newBaseState);
+    }
+
+    /**
+     * 获取组件的临时状态
+     */
+    public getTempContentState = (): ContentState => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getTempContentState();
     }
 
     /**
@@ -296,41 +259,27 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取鼠标处于该组件8个点的具体方位
+     * 获取组件标识cid
      */
-    public getPointerAnchor = (currentX: number, currentY: number): IAnchor | null => {
-        // 计算当前点击事件的触发位置
-        const positionState = this.getPositionState();
-        const sizeState = this.getSizeState();
-        const anchorList = countAnchorPoint(
-            this.getCid(),
-            this.getType(),
-            positionState.getLeft(),
-            positionState.getTop(),
-            sizeState.getWidth(),
-            sizeState.getHeight()
-        );
+    public getCid = (): string => {
+        const baseState: BaseState = this.getBaseState();
 
-        return findAnchorPoint(currentX, currentY, anchorList);
+        return baseState.getCurrentContent().getCid();
     }
 
     /**
-     * 获取组件的样式表
-     * @param com 组件对象
+     * 获取组件类型
      */
-    public getStyle = (com: any): CSSStyleDeclaration => {
-        const style = window.getComputedStyle(ReactDOM.findDOMNode(com) as Element);
+    public getComType = (): ComponentType | null => {
+        const baseState: BaseState = this.getBaseState();
 
-        return style;
+        return baseState.getCurrentContent().getComType();
     }
 
     /**
-     * 定义组件的富文本编辑方式，默认为无编辑
+     * 获取组件的字体样式
+     * 可以由组件自己重写
      */
-    public getRichEditType = (): EditType => {
-        return 'none';
-    }
-
     public getFont = (): IFont => {
         return {
             textAlign: 'center',
@@ -343,8 +292,16 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 定义组件的富文本编辑方式
+     * 默认：无编辑，组件自己重写
+     */
+    public getRichEditType = (): EditType => {
+        return 'none';
+    }
+
+    /**
      * 获取富文本编辑器的一些选项
-     * { position, size }
+     * 默认：{ position, size }，组件自己重写
      */
     public getRichEditOption = (): IRichEditOption => {
         return {
@@ -355,8 +312,17 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的右键菜单
+     * 默认：空，组件自己重写
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        return [];
+    }
+
+    /**
      * 隐藏可编辑部分，由组件自己重写
      * 呼出富文本编辑器时隐藏组件中被编辑部分
+     * @param isHidden 是否隐藏
      */
     public hiddenEditorDom = (isHidden: boolean): void => {
         return;
@@ -403,14 +369,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件的右键菜单
-     * 默认：空，组件自己重写
-     */
-    public getContextMenuItems = (): IContextMenuItems[] => {
-        return [];
-    }
-
-    /**
      * 选中框属性
      * 组件可以重写
      */
@@ -445,6 +403,46 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
+     * 获取组件的选中框类型
+     * 默认：Base，组件自己重写
+     */
+    public getType(): string {
+        return BoxType.Base;
+    }
+
+    /**
+     * 获取组件的边界点
+     */
+    public getBoundaryPoint = () => {
+        const size = this.getSize();
+        const position = this.getPosition();
+
+        return {
+            pointX: position.left + size.width,
+            pointY: position.top + size.height
+        };
+    }
+
+    /**
+     * 获取鼠标处于该组件8个点的具体方位
+     */
+    public getPointerAnchor = (currentX: number, currentY: number): IAnchor | null => {
+        // 计算当前点击事件的触发位置
+        const positionState = this.getPositionState();
+        const sizeState = this.getSizeState();
+        const anchorList = countAnchorPoint(
+            this.getCid(),
+            this.getType(),
+            positionState.getLeft(),
+            positionState.getTop(),
+            sizeState.getWidth(),
+            sizeState.getHeight()
+        );
+
+        return findAnchorPoint(currentX, currentY, anchorList);
+    }
+
+    /**
      * 获取组件的属性，传给属性栏
      * 默认：空，组件自己重写
      */
@@ -455,6 +453,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 获取属性工具条的单条属性，传给组件并设置组件
      * 默认：空，组件自己重写
+     * @param pKey 属性
+     * @param pValue 属性值
+     * @param callback 回调函数
      */
     public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
         return;
@@ -470,6 +471,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 工具栏设置字体样式
+     * @param fontStyleType 字体类型
+     * @param value 值
+     * @param key 循环的键
      */
     public setFontPropsFromTool = (fontStyleType: string, value: any, key: number) => {
         return;
@@ -477,7 +481,8 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * 初始化BaseSate
-     * @param customState 组件自定义State
+     * @param customState 组件自定义State，新增生效
+     * @param richChildNode 组件的文本内容，新增生效
      */
     protected initBaseStateWithCustomState(customState: any = null, richChildNode: any = null): BaseState {
         const initType: InitType = this.props.initType;
@@ -594,6 +599,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
     /**
      * setState后回掉总入口
+     * @param type 回调类型"Size" | "Position" | "ZIndex" | "Rich" | "Custom" | "Stack"
      */
     protected callBackForRender = (type: CallBackType): void => {
         switch (type) {
@@ -622,7 +628,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 组件自己不要处理选中状态，交有画布处理，因为选中状态由键盘和鼠标事件组成，
      * 每个组件自己记录，还要判断键盘事件，比较复杂，且选中状态对组件身意义不大，故交由画布决定
-     * @param cid 组件ref标识
+     * @param e 事件
      */
     protected fireSelectChange = (e: any): void => {
         // 获取当前控件ID

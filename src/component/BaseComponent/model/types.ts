@@ -11,6 +11,7 @@ export interface IRichEditOption {
     font: IFont;
 }
 
+// 可设置的文本类型
 export interface IFont {
     textAlign: string;
     fontColor: string;
@@ -32,6 +33,7 @@ export interface ICommentsList {
 // 组件类型
 export type ComponentType = 'Map' | 'Universal' | 'Comments' | 'CommentsRect' | 'ImageMagnifier';
 
+// 组件data
 export interface IComData {
     id: string;
     txt_v: any;

@@ -100,11 +100,6 @@ export interface IComponent {
     getTempContentState: () => ContentState;
 
     /**
-     * 获取组件样式表
-     */
-    getStyle: (com: any) => CSSStyleDeclaration;
-
-    /**
      * 获取组件富文本编辑模式
      * 返回值：富文本、普通文本、多行文本、无文本编辑
      */

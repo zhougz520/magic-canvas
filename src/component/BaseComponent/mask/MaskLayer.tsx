@@ -4,7 +4,7 @@ import { PageMode } from '../../Stage';
 import '../sass/Component.scss';
 
 export interface IMaskLayerProps {
-    id: string;          // id
+    id: string;
     pageMode?: PageMode;
 }
 
