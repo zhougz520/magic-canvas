@@ -12,6 +12,8 @@ export interface IStageProps {
     config: IConfig;
     // 页面模式
     pageMode: PageMode;
+    // 用户信息
+    userInfo?: { userId: string; userName: string; };
 
     // 设置页签变脏
     setPageDirty?: () => void;

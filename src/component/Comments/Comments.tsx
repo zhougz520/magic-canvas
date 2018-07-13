@@ -40,9 +40,18 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
     constructor(props: IBaseProps, context?: any) {
         super(props, context);
 
+        const { pageMode, userInfo } = this.props;
+        let author: string = '作者';
+        let authorId: string = '';
+        const userType: 'Master' | 'Guest' = pageMode === 'Guest' ? 'Guest' : 'Master';
+        const backgroundColor: string = pageMode === 'Guest' ? '#cafea5' : '#fffbba';
+        if (userInfo) {
+            author = userInfo.userName;
+            authorId = userInfo.userId;
+        }
         this.state = {
             baseState: this.initBaseStateWithCustomState(
-                new CommentsState(),
+                new CommentsState({ author, authorId, userType, backgroundColor }),
                 EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n')
             ),
             hidden: false
@@ -300,6 +309,7 @@ export function convertFromCustomStateToData(customState: any): any {
 
     return {
         author: encodeCustomState.getAuthor(),
+        authorId: encodeCustomState.getAuthorId(),
         userType: encodeCustomState.getUserType(),
         commentsRectList: components,
         maxRectId: encodeCustomState.getCommentsRectList(),
@@ -314,6 +324,7 @@ export function convertFromCustomStateToData(customState: any): any {
 export function convertFromDataToCustomState(
     customData: {
         author: string;
+        authorId: string;
         userType: 'Master' | 'Guest';
         commentsRectList: Array<{
             t: string;
@@ -324,7 +335,8 @@ export function convertFromDataToCustomState(
     } | any
 ): any {
     const data: ICommentsState = {
-        author: '',
+        author: '作者',
+        authorId: '',
         userType: 'Master',
         commentsRectList: OrderedSet(),
         maxRectId: 0,
@@ -346,6 +358,7 @@ export function convertFromDataToCustomState(
         );
 
         data.author = customData.author;
+        data.authorId = customData.authorId;
         data.userType = customData.userType;
         data.maxRectId = customData.maxRectId;
         data.backgroundColor = customData.backgroundColor;

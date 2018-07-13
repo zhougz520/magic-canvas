@@ -283,7 +283,8 @@ export class ComponentsUtil {
                             resetMaxAndMinZIndex: this._canvas._canvasUtil.resetZIndexAndComIndex,
                             setCanvasUndoStack: this._canvas._stackUtil.setCanvasUndoStack,
                             executeCommand: this._canvas.executeCommand,
-                            onCommandProperties: this._canvas.props.onCommandProperties
+                            onCommandProperties: this._canvas.props.onCommandProperties,
+                            userInfo: this._canvas.props.userInfo
                         })
                 ));
             }

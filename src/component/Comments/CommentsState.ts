@@ -4,6 +4,7 @@ import { Record, OrderedSet } from 'immutable';
 
 export interface ICommentsState {
     author: string;
+    authorId: string;
     userType: 'Master' | 'Guest';
     commentsRectList: OrderedSet<IComponentList>;
     maxRectId: number;
@@ -12,6 +13,7 @@ export interface ICommentsState {
 
 const defaultRecord: ICommentsState = {
     author: '作者',
+    authorId: '',
     userType: 'Master',
     commentsRectList: OrderedSet(),
     maxRectId: 0,
@@ -37,6 +39,10 @@ export class CommentsState extends CommentsRecord {
 
     getAuthor(): string {
         return this.get('author');
+    }
+
+    getAuthorId(): string {
+        return this.get('authorId');
     }
 
     getUserType(): 'Master' | 'Guest' {

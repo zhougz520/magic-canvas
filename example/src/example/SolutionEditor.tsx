@@ -72,6 +72,7 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
                     onCommandProperties={this.onCommandProperties}
                     onPropertyProperties={this.onPropertyProperties}
                     pageMode={'Edit'}
+                    userInfo={{ userId: 'zhougz@mingyuanyun.com', userName: '周冠舟' }}
                 />
             </div>
         );

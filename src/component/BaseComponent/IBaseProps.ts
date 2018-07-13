@@ -13,6 +13,8 @@ import { List } from 'immutable';
 export interface IBaseProps {
     // 页面模式
     pageMode: PageMode;
+    // 用户信息
+    userInfo?: { userId: string; userName: string; };
     // 子组件数据：component.p
     childData: any;
     // 组件的baseState，用来初始化

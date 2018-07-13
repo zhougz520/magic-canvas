@@ -8,6 +8,8 @@ import { OrderedSet } from 'immutable';
 export interface ICanvasProps {
     // 页面模式
     pageMode: PageMode;
+    // 用户信息
+    userInfo?: { userId: string; userName: string; };
     // 组件数据
     components: ComponentsType;
     // 画布大小

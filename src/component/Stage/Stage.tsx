@@ -90,7 +90,11 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
             setPageDirty,
             saveData,
             onCommandProperties,
-            onPropertyProperties
+            onPropertyProperties,
+            copyToClipboard,
+            readFromClipboard,
+            checkClipboard,
+            userInfo
         } = this.props;
 
         return (
@@ -120,9 +124,10 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     setPageDirty={setPageDirty}
                     onContextMenu={onContextMenu}
                     saveData={saveData}
-                    copyToClipboard={this.props.copyToClipboard}
-                    readFromClipboard={this.props.readFromClipboard}
-                    checkClipboard={this.props.checkClipboard}
+                    copyToClipboard={copyToClipboard}
+                    readFromClipboard={readFromClipboard}
+                    checkClipboard={checkClipboard}
+                    userInfo={userInfo}
                 />
             </div>
         );
