@@ -68,6 +68,9 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
+        // 1.更新批注框
+        this.updateCommentsList(prevState);
+        // 2.更新图片组件的CustomState
         this.updateImageCustomState(prevState);
     }
 

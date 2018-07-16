@@ -22,6 +22,7 @@ import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
 import { CommentsState, ICommentsState } from './CommentsState';
 
+import { GlobalUtil } from '../util';
 import { blockStyleFn } from '../RichEdit';
 import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
@@ -43,11 +44,24 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         const { pageMode, userInfo } = this.props;
         let author: string = '作者';
         let authorId: string = '';
-        const userType: 'Master' | 'Guest' = pageMode === 'Guest' ? 'Guest' : 'Master';
-        const backgroundColor: string = pageMode === 'Guest' ? '#cafea5' : '#fffbba';
-        if (userInfo) {
-            author = userInfo.userName;
-            authorId = userInfo.userId;
+        let userType: 'Master' | 'Guest' = 'Master';
+        let backgroundColor: string = '#fffbba';
+
+        switch (pageMode) {
+            case 'Edit':
+            case 'Run':
+                if (userInfo) {
+                    author = userInfo.userName;
+                    authorId = userInfo.userId;
+                }
+                break;
+            case 'Guest':
+                const guestUserName = GlobalUtil.getCookie('pdu_GuestUserName');
+                author = guestUserName === '' ? '访客' : guestUserName;
+                authorId = '';
+                userType = 'Guest';
+                backgroundColor = '#cafea5';
+                break;
         }
         this.state = {
             baseState: this.initBaseStateWithCustomState(
@@ -349,7 +363,7 @@ export function convertFromCustomStateToData(customState: any): any {
         authorId: encodeCustomState.getAuthorId(),
         userType: encodeCustomState.getUserType(),
         commentsRectList: components,
-        maxRectId: encodeCustomState.getCommentsRectList(),
+        maxRectId: encodeCustomState.getMaxRectId(),
         backgroundColor: encodeCustomState.getBackgroundColor()
     };
 }

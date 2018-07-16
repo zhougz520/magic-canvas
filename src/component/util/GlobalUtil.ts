@@ -39,5 +39,19 @@ export const GlobalUtil = {
     debugLog: (e: any, title: string): void => {
         console.log(title);
         console.log(e);
+    },
+    getCookie: (name: string): string => {
+        if (document.cookie.length > 0) {
+            let start: number = document.cookie.indexOf(name + '=');
+            if (start !== -1) {
+                start = start + name.length + 1;
+                let end: number = document.cookie.indexOf(';', start);
+                if (end === -1) end = document.cookie.length;
+
+                return unescape(document.cookie.substring(start, end));
+            }
+        }
+
+        return '';
     }
 };

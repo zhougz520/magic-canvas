@@ -4,6 +4,7 @@ import { IAddCommentsParam, IComponentList, IOffset } from '../model/types';
 import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 
 import { CommentsState } from '../../Comments';
+import { ComponentsMap } from '../../Stage';
 
 import { OrderedSet, List } from 'immutable';
 
@@ -76,10 +77,17 @@ export class CommentsUtil {
     setMouseUpParam = (e: any) => {
         const endPoint: IOffset = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
         this._addCommentsRectParam.endPoint = endPoint;
+
+        const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        this.updateParamComponent(componentList);
+    }
+
+    /**
+     * 更新参数中的组件
+     */
+    updateParamComponent = (componentList: OrderedSet<IComponentList>) => {
         const startPoint: IOffset = this._addCommentsRectParam.startPoint as IOffset;
 
-        // TODO 通过组件冒泡来更新component，循环影响性能
-        const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         componentList.map(
             (component: IComponentList) => {
                 const com = this._canvas.getComponent(component.cid);
@@ -92,10 +100,17 @@ export class CommentsUtil {
                         if (this._addCommentsRectParam.component === null) {
                             this._addCommentsRectParam.component = com;
                         } else {
-                            if (zIndex > this._addCommentsRectParam.component.getHierarchy()) {
+                            if (zIndex >= this._addCommentsRectParam.component.getHierarchy()) {
                                 this._addCommentsRectParam.component = com;
                             }
                         }
+                    }
+
+                    // 如果是图片组件
+                    const comPath = com.getBaseProps().comPath;
+                    if (comPath === ComponentsMap.Universal_Image.t) {
+                        const imageMagnifierList: OrderedSet<IComponentList> = com.getCustomState().getImageMagnifierList();
+                        this.updateParamComponent(imageMagnifierList);
                     }
                 }
             }
@@ -260,8 +275,7 @@ export class CommentsUtil {
 
             comComments.setCustomState(
                 CommentsState.set(commentsCustomState, {
-                    commentsRectList,
-                    maxRectId: commentsCustomState.getMaxRectId()
+                    commentsRectList
                 })
             );
         }

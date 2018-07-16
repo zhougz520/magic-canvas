@@ -71,6 +71,19 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     /**
+     * 重写Base方法，是否可以选中
+     */
+    public isCanSelected = (): boolean => {
+        const commentsCid: string = this.getCid().split('.')[0];
+        const comments = this.props.getComponent(commentsCid);
+        if (comments) {
+            return comments.isCanSelected();
+        }
+
+        return false;
+    }
+
+    /**
      * 获取组件的右键菜单
      * 默认：空，组件自己重写
      */
