@@ -77,22 +77,6 @@ export default class RichText extends BaseUniversalComponent<IBaseUniversalCompo
     }
 
     /**
-     * 隐藏富文本展示Div
-     */
-    public hiddenEditorDom = (isHidden: boolean): void => {
-        this.setState({
-            hidden: isHidden
-        });
-    }
-
-    /**
-     * 重写Base方法，是否可以双击修改
-     */
-    public isDbClickToEdit = (): boolean => {
-        return true;
-    }
-
-    /**
      * 获取组件属性列表
      */
     public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {

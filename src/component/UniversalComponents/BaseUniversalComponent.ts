@@ -38,13 +38,6 @@ export class BaseUniversalComponent<P extends IBaseUniversalComponentProps, S ex
     }
 
     /**
-     * 重写Base方法，是否可以双击修改
-     */
-    public isDbClickToEdit = (): boolean => {
-        return true;
-    }
-
-    /**
      * 获取组件文本
      */
     public getRichChildNode = (): any => {

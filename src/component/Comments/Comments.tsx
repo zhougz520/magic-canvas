@@ -98,8 +98,45 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
     /**
      * 重写Base方法，是否可以双击修改
      */
-    public isDbClickToEdit = (): boolean => {
-        return true;
+    public isCanDbClickToEdit = (): boolean => {
+        const { pageMode } = this.props;
+        const commentsCustomState: CommentsState = this.getCustomState();
+        const userType = commentsCustomState.getUserType();
+
+        switch (pageMode) {
+            case 'Edit':
+                return true;
+            case 'Guest':
+                if (userType === 'Guest') {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'Run':
+                return false;
+        }
+    }
+
+    /**
+     * 重写Base方法，是否可以选中
+     */
+    public isCanSelected = (): boolean => {
+        const { pageMode } = this.props;
+        const commentsCustomState: CommentsState = this.getCustomState();
+        const userType = commentsCustomState.getUserType();
+
+        switch (pageMode) {
+            case 'Edit':
+                return true;
+            case 'Guest':
+                if (userType === 'Guest') {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'Run':
+                return true;
+        }
     }
 
     /**

@@ -25,13 +25,6 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     /**
-     * 组件是否可以被选中
-     */
-    public isCanSelected = (): boolean => {
-        return false;
-    }
-
-    /**
      * 选中框属性
      * 组件可以重写
      */

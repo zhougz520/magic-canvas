@@ -268,7 +268,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
 
         const com = this.getComponent(cid);
         if (com) {
-            this._drawUtil.selectedComponent(cid, com, false);
+            const isCanSelected: boolean = com.isCanSelected();
+            if (isCanSelected) {
+                this._drawUtil.selectedComponent(cid, com, false);
+            }
         }
     }
 

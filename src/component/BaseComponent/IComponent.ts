@@ -125,7 +125,7 @@ export interface IComponent {
     /**
      * 是否可以双击修改
      */
-    isDbClickToEdit: () => boolean;
+    isCanDbClickToEdit: () => boolean;
 
     /**
      * 是否可以被选中，主要用于框选判断

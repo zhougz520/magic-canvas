@@ -332,8 +332,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 是否可以双击修改
      * 默认：否，组件自己重写
      */
-    public isDbClickToEdit = (): boolean => {
-        return false;
+    public isCanDbClickToEdit = (): boolean => {
+        const { pageMode } = this.props;
+        switch (pageMode) {
+            case 'Edit':
+                return true;
+            case 'Guest':
+                return false;
+            case 'Run':
+                return false;
+            default:
+                return true;
+        }
     }
 
     /**
@@ -341,7 +351,17 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 默认：是，组件自己重写
      */
     public isCanSelected = (): boolean => {
-        return true;
+        const { pageMode } = this.props;
+        switch (pageMode) {
+            case 'Edit':
+                return true;
+            case 'Guest':
+                return false;
+            case 'Run':
+                return true;
+            default:
+                return true;
+        }
     }
 
     /**

@@ -176,6 +176,8 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
                     }}
                     placeholder={hidden ? '' : this.getCustomState().getPlaceholder()}
                     value={hidden ? '' : this.getCustomState().getTextValue()}
+                    // tslint:disable-next-line:jsx-no-lambda no-empty
+                    onChange={() => {}}
                 />
             </div>
         );
