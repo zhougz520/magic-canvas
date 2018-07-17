@@ -7,9 +7,7 @@ import {
     IBaseState,
     ISize,
     IPosition,
-    ContentState,
-    IComponent,
-    ICommentsList
+    ContentState
 } from '../BaseComponent';
 import { IReactData, IBaseData } from '../Draw';
 import { IComponentList, CommandMap } from '../Canvas';
@@ -18,7 +16,7 @@ import { IContextMenuItems } from '../Stage';
 import { CommentsState } from './CommentsState';
 import { CommentsRectState, ICommentsRectState } from './CommentsRectState';
 
-import { OrderedSet, List } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
     constructor(props: IBaseProps, context?: any) {
@@ -112,9 +110,6 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
         ) {
             // 选中框位置大小改变，同时修改对应的批注组件的CustomState
             this.updateCommentsCustomState(this.getBaseState());
-
-            // 更新组件客中存的相对位置
-            this.updateComponentCommentsList();
         }
     }
 
@@ -166,38 +161,6 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                     commentsRectList: newCommentsRectList
                 })
             );
-        }
-    }
-
-    /**
-     * 更新批注框对应组件的锚点列表
-     */
-    private updateComponentCommentsList = () => {
-        const cid: string | null = (this.getCustomState() as CommentsRectState).getCid();
-        const component: IComponent | null = cid !== null ? this.props.getComponent(cid) : null;
-        if (component) {
-            const componentPosition: IPosition = component.getPosition();
-            const rectPosition: IPosition = this.getPosition();
-            const newComments: ICommentsList = {
-                cid: this.getCid(),
-                relativePosition: {
-                    top: rectPosition.top - componentPosition.top,
-                    left: rectPosition.left - componentPosition.left
-                }
-            };
-
-            const oldCommentsList = component.getCommentsList();
-            let newCommentsList: List<ICommentsList> = List();
-            oldCommentsList.map(
-                (oldComments: ICommentsList) => {
-                    if (oldComments.cid === this.getCid()) {
-                        newCommentsList = newCommentsList.push(newComments);
-                    } else {
-                        newCommentsList = newCommentsList.push(oldComments);
-                    }
-                }
-            );
-            component.setCommentsList(newCommentsList);
         }
     }
 }

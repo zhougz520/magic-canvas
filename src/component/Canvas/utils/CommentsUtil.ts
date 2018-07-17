@@ -239,13 +239,8 @@ export class CommentsUtil {
     setComponentCommentsList = (rectCid: string, rectPosition: IPosition) => {
         const component: IComponent | null = this._addCommentsRectParam.component;
         if (component !== null) {
-            const componentPosition: IPosition = component.getPosition();
             const newComments: ICommentsList = {
-                cid: rectCid,
-                relativePosition: {
-                    top: rectPosition.top - componentPosition.top,
-                    left: rectPosition.left - componentPosition.left
-                }
+                cid: rectCid
             };
 
             const oldCommentsList = component.getCommentsList();

@@ -202,7 +202,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             commentsList: newCommentsList
         }) as ContentState;
-        const newBaseState = BaseState.push(oldBaseState, newContent, false);
+        const newBaseState = BaseState.push(oldBaseState, newContent);
 
         this.setBaseState(newBaseState);
     }
@@ -707,14 +707,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             const componentPosition: IPosition = this.getPosition();
             commentsList.map(
                 (comments: ICommentsList) => {
-                    const relativePosition: IPosition = comments.relativePosition;
-                    const commentsRectPosition: IPosition = {
-                        top: componentPosition.top + relativePosition.top,
-                        left: componentPosition.left + relativePosition.left
-                    };
-
                     const commentsRect: IComponent | null = this.props.getComponent(comments.cid);
                     if (commentsRect !== null) {
+                        const rectPosition: IPosition = commentsRect.getPosition();
+                        const relativePosition: IPosition = {
+                            top: rectPosition.top - prevContent.getPositionState().getTop(),
+                            left: rectPosition.left - prevContent.getPositionState().getLeft()
+                        };
+
+                        const commentsRectPosition: IPosition = {
+                            top: componentPosition.top + relativePosition.top,
+                            left: componentPosition.left + relativePosition.left
+                        };
                         commentsRect.setPosition(commentsRectPosition);
                     }
                 }

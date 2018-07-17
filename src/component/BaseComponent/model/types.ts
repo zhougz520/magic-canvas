@@ -27,7 +27,6 @@ export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Custom' | 
 // 组件对应的批注锚点数据类型
 export interface ICommentsList {
     cid: string;
-    relativePosition: IPosition;
 }
 
 // 组件类型
