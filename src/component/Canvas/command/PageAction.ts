@@ -541,7 +541,7 @@ export class PageAction {
                     const content = detail.content;
                     if (content && type && type === 'BaseComponent') {
                         const components = content.components;
-                        this._canvas._componentsUtil.pasteCancasComponent(components);
+                        this._canvas._componentsUtil.pasteCanvasComponent(components);
                     }
                 }
 

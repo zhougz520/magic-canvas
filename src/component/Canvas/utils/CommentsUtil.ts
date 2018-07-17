@@ -174,10 +174,9 @@ export class CommentsUtil {
             p: { name: '批注', w: 204, h: 170 },
             t: 'Comments/Comments'
         };
-        this._canvas._componentsUtil.addCancasComponent(
+        this._canvas._componentsUtil.addCanvasComponent(
             List().push(data),
             { x: position.left, y: position.top },
-            undefined,
             undefined,
             this.doAddCommentsRect
         );

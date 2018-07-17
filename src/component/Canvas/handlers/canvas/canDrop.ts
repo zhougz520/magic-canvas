@@ -10,6 +10,6 @@ export function canDrop(canvas: Canvas, e: any): void {
     const data = JSON.parse(localStorage.__dnd_value);
     const position = canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
 
-    canvas._componentsUtil.addCancasComponent(List().push(data), position, undefined, true);
+    canvas._componentsUtil.addCanvasComponent(List().push(data), position, true);
     canvas._canvasGlobalParam.outsizeMouseUp(undefined);
 }

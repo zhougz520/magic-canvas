@@ -34,10 +34,9 @@ export class ComponentsUtil {
      * @param dataList 组件的数据流List
      * @param position 组件在画布上添加的位置
      */
-    addCancasComponent = (
+    addCanvasComponent = (
         dataList: List<any>,
         position: IOffset = { x: 0, y: 0 },
-        isSetUndoStack: boolean = true,
         isDrop: boolean = false,
         callback?: () => void
     ): void => {
@@ -72,20 +71,17 @@ export class ComponentsUtil {
         );
         this._addNum = 0;
 
-        // 添加撤销栈
-        if (isSetUndoStack === true) {
-            this._canvas._stackUtil.setCanvasUndoStack(
-                timeStamp,
-                'create',
-                addComponentList
-            );
-        }
-
         this._canvas.setState({
             componentList
         }, () => {
             callback && callback();
             this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+            // 添加撤销栈
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'create',
+                addComponentList
+            );
         });
     }
 
@@ -114,17 +110,17 @@ export class ComponentsUtil {
             }
         );
 
-        // 添加撤销栈
-        if (isSetUndoStack === true) {
-            this._canvas._stackUtil.setCanvasUndoStack(
-                timeStamp,
-                'remove',
-                delComponentList
-            );
-        }
-
         this._canvas.setState({
             componentList
+        }, () => {
+            // 添加撤销栈
+            if (isSetUndoStack === true) {
+                this._canvas._stackUtil.setCanvasUndoStack(
+                    timeStamp,
+                    'remove',
+                    delComponentList
+                );
+            }
         });
         this._canvas._drawUtil.clearSelected();
         this._canvas._drawUtil.clearDragBox();
@@ -135,9 +131,8 @@ export class ComponentsUtil {
      * @param dataList 组件的数据流List
      * @param position 组件在画布上添加的位置
      */
-    pasteCancasComponent = (
-        dataList: any[],
-        isSetUndoStack: boolean = true
+    pasteCanvasComponent = (
+        dataList: any[]
     ): void => {
         this._pasteNum += 1;
         let addComponentList: List<IComponentList> = List();
@@ -170,19 +165,16 @@ export class ComponentsUtil {
         );
         this._addNum = 0;
 
-        // 添加撤销栈
-        if (isSetUndoStack === true) {
+        this._canvas.setState({
+            componentList
+        }, () => {
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+            // 添加撤销栈
             this._canvas._stackUtil.setCanvasUndoStack(
                 timeStamp,
                 'create',
                 addComponentList
             );
-        }
-
-        this._canvas.setState({
-            componentList
-        }, () => {
-            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
         });
     }
 
@@ -241,16 +233,16 @@ export class ComponentsUtil {
         this._canvas._newComponentCid = comData.id;
         this._addNum = 0;
 
-        this._canvas._stackUtil.setCanvasUndoStack(
-            timeStamp,
-            'create',
-            addComponentList
-        );
-
         this._canvas.setState({
             componentList
         }, () => {
             this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+            // 添加撤销栈
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'create',
+                addComponentList
+            );
         });
     }
 
