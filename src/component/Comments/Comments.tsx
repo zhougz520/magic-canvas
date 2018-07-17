@@ -27,6 +27,7 @@ import { blockStyleFn } from '../RichEdit';
 import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
 
+import { Menu, Dropdown } from 'antd';
 import { OrderedSet, List, Map } from 'immutable';
 import './sass/Comments.scss';
 
@@ -213,10 +214,12 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
     }
 
     render() {
+        const { pageMode } = this.props;
         const { hidden } = this.state;
         const commentsCustomState: CommentsState = this.getCustomState();
         const commentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
         const rectList: JSX.Element[] = this.buildRect(commentsRectList);
+        const guestContextMenu: JSX.Element = this.buildGuestContextMenu();
 
         const editorState = this.getRichChildNode();
         InlineUtils.extractInlineStyle(editorState);
@@ -233,34 +236,67 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                 >
                     {rectList}
                 </svg>
-                <div
-                    className="comments"
-                    onMouseDown={this.fireSelectChange}
-                    onDoubleClick={this.doDbClickToEdit}
-                    style={{
-                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
-                        backgroundColor: commentsCustomState.getBackgroundColor()
-                    }}
-                >
-                    <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
-                    <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
-                    <div style={{ width: '100%', height: this.getSize().height - 24 }}>
-                        <Editor
-                            editorState={editorState}
-                            inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
-                            onChange={() => { return; }}
-                            readOnly
-                            customContentStyle={{
-                                paddingLeft: this._padding,
-                                paddingRight: this._padding,
-                                paddingBottom: this._padding,
-                                paddingTop: 0,
-                                visibility: hidden ? 'hidden' : 'visible'
+                {
+                    pageMode === 'Guest' ?
+                        <Dropdown overlay={guestContextMenu} trigger={['contextMenu']}>
+                            <div
+                                className="comments"
+                                onMouseDown={this.fireSelectChange}
+                                onDoubleClick={this.doDbClickToEdit}
+                                style={{
+                                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                                    backgroundColor: commentsCustomState.getBackgroundColor()
+                                }}
+                            >
+                                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                                <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
+                                <div style={{ width: '100%', height: this.getSize().height - 24 }}>
+                                    <Editor
+                                        editorState={editorState}
+                                        inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
+                                        onChange={() => { return; }}
+                                        readOnly
+                                        customContentStyle={{
+                                            paddingLeft: this._padding,
+                                            paddingRight: this._padding,
+                                            paddingBottom: this._padding,
+                                            paddingTop: 0,
+                                            visibility: hidden ? 'hidden' : 'visible'
+                                        }}
+                                        blockStyleFn={blockStyleFn}
+                                    />
+                                </div>
+                            </div>
+                        </Dropdown> :
+                        <div
+                            className="comments"
+                            onMouseDown={this.fireSelectChange}
+                            onDoubleClick={this.doDbClickToEdit}
+                            style={{
+                                ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                                backgroundColor: commentsCustomState.getBackgroundColor()
                             }}
-                            blockStyleFn={blockStyleFn}
-                        />
-                    </div>
-                </div>
+                        >
+                            <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                            <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
+                            <div style={{ width: '100%', height: this.getSize().height - 24 }}>
+                                <Editor
+                                    editorState={editorState}
+                                    inlineStyleRenderMap={InlineUtils.getDraftInlineStyleMap()}
+                                    onChange={() => { return; }}
+                                    readOnly
+                                    customContentStyle={{
+                                        paddingLeft: this._padding,
+                                        paddingRight: this._padding,
+                                        paddingBottom: this._padding,
+                                        paddingTop: 0,
+                                        visibility: hidden ? 'hidden' : 'visible'
+                                    }}
+                                    blockStyleFn={blockStyleFn}
+                                />
+                            </div>
+                        </div>
+                }
             </React.Fragment>
         );
     }
@@ -333,6 +369,31 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
             x2: rectPositionState.getLeft() + rectSizeState.getWidth(),
             y2: rectPositionState.getTop()
         };
+    }
+
+    /**
+     * 构建访客模式右键菜单
+     */
+    private buildGuestContextMenu = (): JSX.Element => {
+        return (
+            <Menu onClick={this.handleGuestContextMenuClick}>
+                <Menu.Item key="addCommentsRect">添加锚点</Menu.Item>
+            </Menu>
+        );
+    }
+
+    /**
+     * 访客菜单点击
+     */
+    private handleGuestContextMenuClick = (e: any) => {
+        switch (e.key) {
+            case 'addCommentsRect':
+                this.props.executeCommand({
+                    t: CommandMap.COMMENTSRECT_ADD,
+                    d: this.getCid()
+                });
+                break;
+        }
     }
 }
 
