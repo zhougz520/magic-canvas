@@ -52,7 +52,7 @@
     }
   },
   "dependencies": {
-    "antd": "^3.6.4",
+    "antd": "^3.7.0",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "react-beautiful-dnd": "^7.1.0",
