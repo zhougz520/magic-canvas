@@ -141,7 +141,7 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
         properties = properties.set(pKey, pValue);
         const newHyperlinkState: HyperlinkState = HyperlinkState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newHyperlinkState, callback);
+        this.setCustomState(newHyperlinkState, true, callback);
     }
 
     render() {

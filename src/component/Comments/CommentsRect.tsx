@@ -159,7 +159,8 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
             comments.setCustomState(
                 CommentsState.set(commentsCustomState, {
                     commentsRectList: newCommentsRectList
-                })
+                }),
+                false
             );
         }
     }

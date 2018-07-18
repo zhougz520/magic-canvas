@@ -97,10 +97,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
      * @param Position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public setPosition = (Position: IPosition): void => {
+    public setPosition = (Position: IPosition, isSetUndo: boolean = false): void => {
         const newPositionState: PositionState = PositionState.create(Position);
 
-        this.setPositionState(newPositionState);
+        this.setPositionState(newPositionState, isSetUndo);
     }
 
     /**
@@ -168,17 +168,17 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 设置组件自定义state
      * @param newCustomState 新的CustomState
      */
-    public setCustomState = (newCustomState: any, callback?: () => void): void => {
+    public setCustomState = (newCustomState: any, isSetUndo: boolean = true, callback?: () => void): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             customState: newCustomState
         }) as ContentState;
-        const newBaseState = BaseState.push(oldBaseState, newContent);
+        const newBaseState = BaseState.push(oldBaseState, newContent, isSetUndo);
 
         this.setState({
             baseState: newBaseState
         }, () => {
-            this.callBackForRender('Custom');
+            this.callBackForRender('Custom', isSetUndo);
             callback && callback();
         });
     }
@@ -204,7 +204,11 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
-        this.setBaseState(newBaseState);
+        this.setState({
+            baseState: newBaseState
+        }, () => {
+            this.callBackForRender('Comments');
+        });
     }
 
     /**
@@ -585,18 +589,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 设置组件的PositionState
      * @param newPositionState 构建好的新的PositionState
      */
-    protected setPositionState = (newPositionState: PositionState): void => {
+    protected setPositionState = (newPositionState: PositionState, isSetUndo: boolean = false): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             positionState: newPositionState
         }) as ContentState;
 
         // 不自动设置撤销栈，由画布手动设置
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, false);
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, isSetUndo);
 
         this.setState({
             baseState: newBaseState
-        }, () => this.callBackForRender('Position'));
+        }, () => this.callBackForRender('Position', isSetUndo));
     }
 
     /**
@@ -621,26 +625,30 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * setState后回掉总入口
      * @param type 回调类型"Size" | "Position" | "ZIndex" | "Rich" | "Custom" | "Stack"
      */
-    protected callBackForRender = (type: CallBackType): void => {
+    protected callBackForRender = (type: CallBackType, isSetUndo: boolean = true): void => {
         switch (type) {
             case 'Size':
                 this.callBackForSizeAndPosition();
                 break;
             case 'Position':
                 this.callBackForSizeAndPosition();
+                isSetUndo && this.setCanvasUndoStack();
                 break;
             case 'ZIndex':
                 this.callBackForZIndex();
-                this.setCanvasUndoStack();
+                isSetUndo && this.setCanvasUndoStack();
                 break;
             case 'Rich':
-                this.setCanvasUndoStack();
+                isSetUndo && this.setCanvasUndoStack();
                 break;
             case 'Custom':
-                this.setCanvasUndoStack();
+                isSetUndo && this.setCanvasUndoStack();
+                break;
+            case 'Comments':
+                isSetUndo && this.setCanvasUndoStack();
                 break;
             case 'Stack':
-                this.setCanvasUndoStack();
+                isSetUndo && this.setCanvasUndoStack();
                 break;
         }
     }

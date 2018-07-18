@@ -22,7 +22,7 @@ export interface IFont {
 }
 
 // baseState设置后回调类型
-export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Custom' | 'Stack';
+export type CallBackType = 'Size' | 'Position' | 'ZIndex' | 'Rich' | 'Custom' | 'Comments' | 'Stack';
 
 // 组件对应的批注锚点数据类型
 export interface ICommentsList {

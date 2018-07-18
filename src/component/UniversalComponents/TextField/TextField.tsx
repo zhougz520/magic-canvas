@@ -151,7 +151,7 @@ export default class TextField extends BaseUniversalComponent<IBaseUniversalComp
         properties = properties.set(pKey, pValue);
         const newTextFieldState: TextFieldState = TextFieldState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newTextFieldState, callback);
+        this.setCustomState(newTextFieldState, true, callback);
     }
 
     render() {

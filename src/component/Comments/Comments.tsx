@@ -191,7 +191,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         properties = properties.set(pKey, pValue);
         const newCommentsState: CommentsState = CommentsState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newCommentsState, callback);
+        this.setCustomState(newCommentsState, true, callback);
     }
 
     /**

@@ -138,7 +138,8 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
                 image.setCustomState(
                     ImageState.set(imageCustomState, {
                         imageMagnifierList: newImageMagnifierList
-                    })
+                    }),
+                    false
                 );
             }
         }

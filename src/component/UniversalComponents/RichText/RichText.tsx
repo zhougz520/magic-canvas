@@ -125,7 +125,7 @@ export default class RichText extends BaseUniversalComponent<IBaseUniversalCompo
         properties = properties.set(pKey, pValue);
         const newRichTextState: RichTextState = RichTextState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newRichTextState, callback);
+        this.setCustomState(newRichTextState, true, callback);
     }
 
     /**

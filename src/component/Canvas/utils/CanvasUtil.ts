@@ -165,7 +165,7 @@ export class CanvasUtil {
                                         currentCom.setPosition({
                                             top: currentComPosition.top + pushOffset.y,
                                             left: currentComPosition.left + pushOffset.x
-                                        });
+                                        }, true);
                                     }
                                 }
                             );

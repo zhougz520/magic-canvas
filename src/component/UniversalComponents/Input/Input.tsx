@@ -147,7 +147,7 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
         properties = properties.set(pKey, pValue);
         const newInputState: InputState = InputState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newInputState, callback);
+        this.setCustomState(newInputState, true, callback);
     }
 
     render() {

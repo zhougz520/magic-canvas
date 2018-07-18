@@ -38,10 +38,11 @@ export class ComponentsUtil {
         dataList: List<any>,
         position: IOffset = { x: 0, y: 0 },
         isDrop: boolean = false,
+        timeStampType: string = 'default',
         callback?: () => void
     ): void => {
         let addComponentList: List<IComponentList> = List();
-        const timeStamp: number = Date.parse(new Date().toString());
+        const timeStamp: number = timeStampType === 'accurate' ? new Date().getTime() : Date.parse(new Date().toString());
 
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         dataList.map(
@@ -524,7 +525,7 @@ export class ComponentsUtil {
                     top: position.top + comSize.height,
                     left: position.left + comSize.width
                 };
-                com.setPosition(position);
+                com.setPosition(position, true);
             }
         );
     }

@@ -36,7 +36,7 @@ export interface IComponent {
      * 获取、设置position属性
      */
     getPosition: () => IPosition;
-    setPosition: (position: IPosition) => void;
+    setPosition: (position: IPosition, isSetUndo?: boolean) => void;
 
     /**
      * 获取、设置richChildNode
@@ -48,7 +48,7 @@ export interface IComponent {
      * 获取、设置customState
      */
     getCustomState: () => any;
-    setCustomState: (newCustomState: any, callback?: () => void) => void;
+    setCustomState: (newCustomState: any, isSetUndo?: boolean, callback?: () => void) => void;
 
     /**
      * 获取、设置组件的批注锚点

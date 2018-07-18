@@ -73,7 +73,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
         properties = properties.set(pKey, pValue);
         const newImageState: ImageState = ImageState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newImageState, callback);
+        this.setCustomState(newImageState, true, callback);
     }
 
     /**

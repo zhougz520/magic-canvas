@@ -145,7 +145,7 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
         properties = properties.set(pKey, pValue);
         const newSelectorState: SelectorState = SelectorState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newSelectorState, callback);
+        this.setCustomState(newSelectorState, true, callback);
     }
 
     render() {

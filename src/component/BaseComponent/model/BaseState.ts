@@ -95,6 +95,7 @@ export class BaseState extends BaseStateRecord {
         const currentContent: ContentState = baseState.getCurrentContent();
         let tempContentState: ContentState = baseState.getTempContentState();
         let undoStack: Stack<ContentState> = baseState.getUndoStack();
+        const redoStack: Stack<ContentState> = baseState.getRedoStack();
         const newContent: ContentState = contentState;
 
         if (newContent !== currentContent && isSetUndo === true) {
@@ -106,7 +107,7 @@ export class BaseState extends BaseStateRecord {
             currentContent: newContent,
             tempContentState,
             undoStack,
-            redoStack: Stack()
+            redoStack
         };
 
         return BaseState.set(baseState, editorStateChanges);

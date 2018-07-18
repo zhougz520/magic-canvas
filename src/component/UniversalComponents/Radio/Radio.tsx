@@ -155,7 +155,7 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
         const newRadioState: RadioState = RadioState.set(
             this.getCustomState(), propertiesMap
         );
-        this.setCustomState(newRadioState, callback);
+        this.setCustomState(newRadioState, true, callback);
     }
 
     render() {

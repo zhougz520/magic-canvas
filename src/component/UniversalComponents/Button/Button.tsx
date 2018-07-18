@@ -153,7 +153,7 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
         properties = properties.set(pKey, pValue);
         const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newButtonState, callback);
+        this.setCustomState(newButtonState, true, callback);
     }
 
     render() {

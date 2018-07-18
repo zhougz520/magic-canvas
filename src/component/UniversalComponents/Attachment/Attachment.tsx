@@ -114,7 +114,7 @@ export default class Attachment extends BaseComponent<IBaseProps, IBaseState> {
         properties = properties.set(pKey, pValue);
         const newAttachmentState: AttachmentState = AttachmentState.set(this.getCustomState(), properties);
 
-        this.setCustomState(newAttachmentState, callback);
+        this.setCustomState(newAttachmentState, true, callback);
     }
 
 }
