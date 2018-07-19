@@ -18,8 +18,6 @@ export function docKeyDown(canvas: Canvas, e: any): void {
 
         const cmd: any = {};
         if (ctrl) {
-            canvas._canvasGlobalParam.ctrlPress = true;
-
             switch (key) {
                 case 'c':   // 复制
                     if (canvas._canvasGlobalParam.isSelectedComponent()) {
@@ -32,7 +30,6 @@ export function docKeyDown(canvas: Canvas, e: any): void {
                     }
                     break;
                 case 'v':   // 粘贴
-                    canvas._canvasGlobalParam.ctrlPress = false;
                     cmd.t = CommandMap.COM_PASTE;
                     break;
                 case 'z':   // 撤销

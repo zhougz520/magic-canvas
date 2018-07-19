@@ -10,7 +10,6 @@ export class CanvasGlobalParam {
     public body: HTMLBodyElement;
 
     public timer: any;
-    public ctrlPress: boolean;                                  // 是否按下ctrl键
     public mouseDown: boolean;                                  // 鼠标是否按下
     public dargging: boolean;                                   // 是否开始拖拽
     public pointStart: {
@@ -72,7 +71,6 @@ export class CanvasGlobalParam {
 
         this.body = document.getElementsByTagName('body')[0];
         this.timer = null;
-        this.ctrlPress = false;
         this.mouseDown = false;
         this.dargging = false;
         this.pointStart = {
@@ -153,11 +151,6 @@ export class CanvasGlobalParam {
     clearTimer() {
         clearInterval(this.timer);
         this.timer = null;
-    }
-
-    // 是否时多选状态
-    isMultiselect() {
-        return this.ctrlPress;
     }
 
     // 鼠标是否按下
@@ -359,7 +352,7 @@ export class CanvasGlobalParam {
     // 新增选中组件
     addSelectedComponent(cid: string, com: IComponent, multiselect: boolean) {
         let components = this.selectedComponents;
-        if (!this.isMultiselect() && !components.has(cid) && !multiselect) {
+        if (!components.has(cid) && !multiselect) {
             components = components.clear();
         }
         this.selectedComponents = components.set(cid, com);

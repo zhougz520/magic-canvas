@@ -1,6 +1,10 @@
 import { Canvas } from '../../Canvas';
+import { IPointerArgs, IKeyArgs } from '../../utils/MouseAndKeyUtil';
 
 export function docMouseDown(canvas: Canvas, e: any): void {
+    const args = canvas._mouseAndKeyUtil.pointerArgs(e);
+    const { ctrl } = (args as IPointerArgs).keyArgs as IKeyArgs;
+
     // 如果是鼠标右键点击
     if (e.button === 2) {
         // 退出画布操作模式
@@ -40,7 +44,7 @@ export function docMouseDown(canvas: Canvas, e: any): void {
                 }
 
                 // 非多选模式下，清楚所有组件选中状态
-                if (!canvas._canvasGlobalParam.isMultiselect()) {
+                if (ctrl === false) {
                     canvas._drawUtil.clearSelected();
                 }
 

@@ -16,7 +16,7 @@ import { CommentsUtil } from './utils/CommentsUtil';
 import { ComponentsUtil } from './utils/ComponentsUtil';
 import { DrawUtil } from './utils/DrawUtil';
 import { ImageMagnifierUtil } from './utils/ImageMagnifierUtil';
-import { MouseAndKeyUtil } from './utils/MouseAndKeyUtil';
+import { MouseAndKeyUtil, IPointerArgs, IKeyArgs } from './utils/MouseAndKeyUtil';
 import { PositionUtil } from './utils/PositionUtil';
 import { RichEditUtil } from './utils/RichEditUtil';
 import { StackUtil } from './utils/StackUtil';
@@ -257,7 +257,14 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 组件选中，画布不要记录组件的位置与大小信息，否则同步信息很乱
      * @param cid 组件ID
      */
-    selectionChanging = (cid: string): void => {
+    selectionChanging = (e: any, cid: string): void => {
+        let multiselect: boolean = false;
+        if (e !== null) {
+            const args = this._mouseAndKeyUtil.pointerArgs(e);
+            const { ctrl } = (args as IPointerArgs).keyArgs as IKeyArgs;
+            multiselect = ctrl;
+        }
+
         // 选中组件就把焦点给到编辑框，随时准备输入
         this.getWingman().setFocus();
 
@@ -270,7 +277,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         if (com) {
             const isCanSelected: boolean = com.isCanSelected();
             if (isCanSelected) {
-                this._drawUtil.selectedComponent(cid, com, false);
+                this._drawUtil.selectedComponent(cid, com, multiselect);
             }
         }
     }
@@ -400,7 +407,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     componentDidUpdate(prevProps: ICanvasProps, prevState: ICanvasState) {
         // 如果有新拖入的组件，选中新组件
         if (this._newComponentCid !== null) {
-            this.selectionChanging(this._newComponentCid);
+            this.selectionChanging(null, this._newComponentCid);
             this._canvasUtil.pushOpenOtherComponent(this._newComponentCid);
             // 清除新添加组件记录
             this._newComponentCid = null;

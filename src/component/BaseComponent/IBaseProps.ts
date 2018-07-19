@@ -31,7 +31,7 @@ export interface IBaseProps {
     // 改动组件位置的时候，调用画布的重置画布大小
     repaintCanvas: (pointX: number, pointY: number) => void;
     // 选中组件
-    selectionChanging: (cid: string) => void;
+    selectionChanging: (e: any, cid: string) => void;
     // 双击修改
     dbClickToBeginEdit?: (cid: string) => void;
     // 通过cid获取画布上其他组件

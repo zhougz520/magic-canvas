@@ -662,7 +662,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // 获取当前控件ID
         const cid = this.getCid();
         if (this.props.selectionChanging) {
-            this.props.selectionChanging(cid);
+            this.props.selectionChanging(e, cid);
         }
         // e.preventDefault();
     }
