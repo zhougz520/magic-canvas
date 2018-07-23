@@ -150,7 +150,7 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
         return (
             <div
                 style={{
-                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                     backgroundColor: this.getCustomState().getBackgroundColor(),
                     borderColor: this.getCustomState().getBorderColor(),
                     borderWidth: this.getCustomState().getBorderWidth(),
@@ -159,7 +159,7 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <a
                     href={this.getCustomState().getHerf()}
                 >

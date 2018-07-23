@@ -162,11 +162,11 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
 
         return (
             <div
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected())}
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <AntButton
                     style={{
                         width: '100%',

@@ -77,13 +77,14 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
     render() {
         const { width, height } = this.getSize();
         const { top, left } = this.getPosition();
+        const pointerEvents = this.isCanSelected() ? 'auto' : 'none';
 
         return (
             <div
                 style={{
                     background: '#f6f7f8',
                     position: 'absolute',
-                    pointerEvents: 'all',
+                    pointerEvents,
                     boxShadow: '0 0 8px 0 rgba(0, 0, 0, 0.2)',
                     borderRadius: '3px',
                     top,
@@ -93,11 +94,11 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
                 }}
                 onMouseDown={this.fireSelectChange}
             >
-                <MaskLayer id={this.getCid()} />
+                <MaskLayer id={this.getCid()} isCanSelected={this.isCanSelected()} />
                 <div
                     style={{
                         position: 'absolute',
-                        pointerEvents: 'all',
+                        pointerEvents,
                         boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
                         borderRadius: '3px',
                         width: width - 8,

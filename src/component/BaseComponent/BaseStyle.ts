@@ -7,7 +7,8 @@ export const BaseStyle = (
     position: PositionState,
     size: SizeState,
     zIndex: number,
-    hasBorder: boolean = true
+    hasBorder: boolean = true,
+    isCanSelected: boolean = true
 ): React.CSSProperties => {
     const styleObj: React.CSSProperties = {
         overflow: 'hidden',
@@ -20,6 +21,7 @@ export const BaseStyle = (
         top: position.getTop(),
         left: position.getLeft(),
         userSelect: 'none',
+        pointerEvents: isCanSelected ? 'auto' : 'none',
         zIndex
     };
 

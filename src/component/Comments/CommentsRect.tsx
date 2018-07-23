@@ -130,7 +130,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                 fillOpacity="0"
                 stroke="#D0021B"
                 strokeWidth="1"
-                pointerEvents="auto"
+                pointerEvents={this.isCanSelected() ? 'auto' : 'none'}
                 onMouseDown={this.fireSelectChange}
             />
         );

@@ -145,7 +145,7 @@ export default class RichText extends BaseUniversalComponent<IBaseUniversalCompo
         return (
             <div
                 style={{
-                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                     backgroundColor: this.getCustomState().getBackgroundColor(),
                     borderColor: this.getCustomState().getBorderColor(),
                     borderWidth: this.getCustomState().getBorderWidth(),
@@ -154,7 +154,7 @@ export default class RichText extends BaseUniversalComponent<IBaseUniversalCompo
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                     <Editor
                         editorState={editorState}

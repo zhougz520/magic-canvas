@@ -162,11 +162,11 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
 
         return (
             <div
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected())}
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
             >
-                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <AntCheckbox
                     style={{
                         width: '100%',

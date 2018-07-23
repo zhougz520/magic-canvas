@@ -6,6 +6,7 @@ import '../sass/Component.scss';
 export interface IMaskLayerProps {
     id: string;
     pageMode?: PageMode;
+    isCanSelected?: boolean;
 }
 
 export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
@@ -14,7 +15,8 @@ export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
     }
 
     public render() {
-        const { id, pageMode } = this.props;
+        const { id, pageMode, isCanSelected } = this.props;
+        const pointerEvents = isCanSelected === false ? 'none' : 'auto';
 
         let element;
         switch (pageMode) {
@@ -23,6 +25,7 @@ export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
                 element = (
                     <div
                         className="mask-layer"
+                        style={{ pointerEvents }}
                         id={id}
                     />
                 );
@@ -34,6 +37,7 @@ export class MaskLayer extends React.PureComponent<IMaskLayerProps, any> {
                 element = (
                     <div
                         className="mask-layer"
+                        style={{ pointerEvents }}
                         id={id}
                     />
                 );

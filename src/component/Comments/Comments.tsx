@@ -244,11 +244,11 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 onMouseDown={this.fireSelectChange}
                                 onDoubleClick={this.doDbClickToEdit}
                                 style={{
-                                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                                     backgroundColor: commentsCustomState.getBackgroundColor()
                                 }}
                             >
-                                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                                 <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
                                 <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                                     <Editor
@@ -273,11 +273,11 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                             onMouseDown={this.fireSelectChange}
                             onDoubleClick={this.doDbClickToEdit}
                             style={{
-                                ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                                ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                                 backgroundColor: commentsCustomState.getBackgroundColor()
                             }}
                         >
-                            <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                            <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                             <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
                             <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                                 <Editor

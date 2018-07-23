@@ -35,7 +35,7 @@ export default class Attachment extends BaseComponent<IBaseProps, IBaseState> {
                 className={'csr-pc-attachment' + type}
                 onMouseDown={this.fireSelectChange}
                 ref={(handler: HTMLElement | null) => this.com = handler}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false)}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected())}
                 onDoubleClick={this.HandleDBLClick}
             >
                 <a

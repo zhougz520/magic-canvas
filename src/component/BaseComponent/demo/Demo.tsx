@@ -36,9 +36,9 @@ export default class Demo extends BaseComponent<IBaseProps, IBaseState> {
                 ref={(handler: HTMLElement | null) => this.com = handler}
                 onMouseDown={this.fireSelectChange}
                 onDoubleClick={this.doDbClickToEdit}
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy())}
+                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected())}
             >
-                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} />
+                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <div
                     id="demoSass"
                 >

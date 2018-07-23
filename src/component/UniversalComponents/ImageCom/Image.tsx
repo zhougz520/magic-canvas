@@ -110,7 +110,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
             <React.Fragment>
                 <div
                     style={{
-                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false),
+                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                         backgroundColor: this.getCustomState().getBackgroundColor(),
                         borderColor: this.getCustomState().getBorderColor(),
                         borderWidth: this.getCustomState().getBorderWidth(),
@@ -118,7 +118,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
                     }}
                     onMouseDown={this.fireSelectChange}
                 >
-                    <MaskLayer id={this.getCid()} />
+                    <MaskLayer id={this.getCid()} isCanSelected={this.isCanSelected()} />
                     <img
                         style={{
                             width: '100%',
