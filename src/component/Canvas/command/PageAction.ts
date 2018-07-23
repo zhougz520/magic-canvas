@@ -571,6 +571,29 @@ export class PageAction {
         }
     }
 
+    // 全选
+    selectCom = () => {
+        const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        componentList.map(
+            (component: IComponentList) => {
+                const com = this._canvas.getComponent(component.cid);
+                if (com !== null) {
+                    const isCanSelected: boolean = com.isCanSelected();
+                    if (isCanSelected) {
+                        this._canvas._drawUtil.selectedComponent(component.cid, com, true);
+                    }
+                }
+            }
+        );
+
+        // 框选的时候：有选中组件才做提交
+        const selectedComponents = this._canvas._canvasGlobalParam.getSelectedComponents();
+        if (selectedComponents.size > 0) {
+            this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(this._canvas.getSelectedToolButtons(selectedComponents));
+            this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(this._canvas.getSelectedProperties(selectedComponents));
+        }
+    }
+
     // 添加图片放大镜
     addMagnifier = (cid: string) => {
         this._canvas._imageMagnifierUtil.startAddMagnifier(cid);
