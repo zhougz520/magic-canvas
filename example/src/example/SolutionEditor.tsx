@@ -4,7 +4,6 @@ import { BarList, IBarListComponent } from './BarList';
 import { Stage, ComponentsType, IPropertyGroup, IToolButtonGroup } from '../../../src';
 import './solution.css';
 import { config } from './config';
-// import { detail1, detail2 } from './data';
 import { OrderedSet } from 'immutable';
 
 /* tslint:disable:no-console */

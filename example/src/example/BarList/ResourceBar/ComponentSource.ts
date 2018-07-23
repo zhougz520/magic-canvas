@@ -1,7 +1,5 @@
 import { ComponentsMap } from '../../../../../src';
 const {
-    Demo,
-    Comments,
     Universal_Button,
     Universal_CheckBox,
     Universal_Hyperlink,
@@ -29,17 +27,13 @@ const basePage: IBasePage[] = [
     {
         category: '常用需求组件',
         categoryKey: 'common',
-        expanded: true,
-        components: [
-            // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
-            Demo,
-            Comments
-        ]
+        expanded: false,
+        components: []
     },
     {
         category: '基础组件',
         categoryKey: 'basic',
-        expanded: false,
+        expanded: true,
         components: [
             Universal_Button,
             Universal_CheckBox,

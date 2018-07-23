@@ -27,9 +27,6 @@ export type ComponentsType = Array<{
 }>;
 
 export const ComponentsMap = {
-    Demo: { t: 'BaseComponent/demo/Demo', p: { name: 'demo', w: 100, h: 100 } },
-    Comments: { t: 'Comments/Comments', p: { name: '批注', w: 204, h: 170 } },
-
     Universal_CheckBox: { t: 'UniversalComponents/CheckBox/CheckBox', p: { name: '多选', w: 110, h: 24 } },
     Universal_Radio: { t: 'UniversalComponents/Radio/Radio', p: { name: '单选', w: 110, h: 24 } },
     Universal_Button: { t: 'UniversalComponents/Button/Button', p: { name: '按钮', w: 82, h: 32 } },

@@ -162,7 +162,10 @@ $props-col-1-input-width: 130px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    cursor: default;
+    &:hover {
+        background: #f5f5f5;
+    }
 }
 
 .main-editor .command-bar {
