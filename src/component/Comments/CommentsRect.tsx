@@ -7,7 +7,9 @@ import {
     IBaseState,
     ISize,
     IPosition,
-    ContentState
+    ContentState,
+    IComponent,
+    ICommentsList
 } from '../BaseComponent';
 import { IReactData, IBaseData } from '../Draw';
 import { IComponentList, CommandMap } from '../Canvas';
@@ -16,8 +18,10 @@ import { IContextMenuItems } from '../Stage';
 import { CommentsState } from './CommentsState';
 import { CommentsRectState, ICommentsRectState } from './CommentsRectState';
 
-import { OrderedSet } from 'immutable';
+import { OrderedSet, List } from 'immutable';
+import { Menu, Dropdown } from 'antd';
 
+/* tslint:disable:jsx-wrap-multiline */
 export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
     constructor(props: IBaseProps, context?: any) {
         super(props, context);
@@ -72,13 +76,22 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
      * 重写Base方法，是否可以选中
      */
     public isCanSelected = (): boolean => {
-        const commentsCid: string = this.getCid().split('.')[0];
-        const comments = this.props.getComponent(commentsCid);
-        if (comments) {
-            return comments.isCanSelected();
-        }
+        const { pageMode } = this.props;
+        const commentsRectCustomState: CommentsRectState = this.getCustomState();
+        const userType = commentsRectCustomState.getUserType();
 
-        return false;
+        switch (pageMode) {
+            case 'Edit':
+                return true;
+            case 'Guest':
+                if (userType === 'Guest') {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'Run':
+                return true;
+        }
     }
 
     /**
@@ -113,27 +126,96 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
         }
     }
 
+    componentWillUnmount() {
+        const commentsCid: string = this.getCid().split('.')[0];
+        const comments = this.props.getComponent(commentsCid);
+
+        if (comments) {
+            const commentsRectCustomState: CommentsRectState = this.getCustomState();
+            const comCid: string | null = commentsRectCustomState.getCid();
+            if (comCid) {
+                const component: IComponent | null = this.props.getComponent(comCid);
+                if (component) {
+                    let commentsRectList: List<ICommentsList> = component.getCommentsList();
+                    commentsRectList.map(
+                        (commentsRect: ICommentsList, key: number) => {
+                            if (this.getCid() === commentsRect.cid) {
+                                commentsRectList = commentsRectList.delete(key);
+                            }
+                        }
+                    );
+                    component.setCommentsList(commentsRectList);
+                }
+            }
+        }
+    }
+
     render() {
+        const { pageMode } = this.props;
         const size: ISize = this.getSize();
         const position: IPosition = this.getPosition();
+        const guestContextMenu: JSX.Element = this.buildGuestContextMenu();
 
         return (
-            <rect
-                transform="translate(0.5,0.5)"
-                x={position.left}
-                y={position.top}
-                width={size.width}
-                height={size.height}
-                rx={5}
-                ry={5}
-                fill="#fff"
-                fillOpacity="0"
-                stroke="#D0021B"
-                strokeWidth="1"
-                pointerEvents={this.isCanSelected() ? 'auto' : 'none'}
-                onMouseDown={this.fireSelectChange}
-            />
+            pageMode === 'Guest' ?
+                <Dropdown overlay={guestContextMenu} trigger={['contextMenu']}>
+                    <rect
+                        transform="translate(0.5,0.5)"
+                        x={position.left}
+                        y={position.top}
+                        width={size.width}
+                        height={size.height}
+                        rx={5}
+                        ry={5}
+                        fill="#fff"
+                        fillOpacity="0"
+                        stroke="#D0021B"
+                        strokeWidth="1"
+                        pointerEvents={this.isCanSelected() ? 'auto' : 'none'}
+                        onMouseDown={this.fireSelectChange}
+                    />
+                </Dropdown> :
+                <rect
+                    transform="translate(0.5,0.5)"
+                    x={position.left}
+                    y={position.top}
+                    width={size.width}
+                    height={size.height}
+                    rx={5}
+                    ry={5}
+                    fill="#fff"
+                    fillOpacity="0"
+                    stroke="#D0021B"
+                    strokeWidth="1"
+                    pointerEvents={this.isCanSelected() ? 'auto' : 'none'}
+                    onMouseDown={this.fireSelectChange}
+                />
         );
+    }
+
+    /**
+     * 构建访客模式右键菜单
+     */
+    private buildGuestContextMenu = (): JSX.Element => {
+        return (
+            <Menu onClick={this.handleGuestContextMenuClick}>
+                <Menu.Item key="deleteCommentsRect">删除</Menu.Item>
+            </Menu>
+        );
+    }
+
+    /**
+     * 访客菜单点击
+     */
+    private handleGuestContextMenuClick = (e: any) => {
+        switch (e.key) {
+            case 'deleteCommentsRect':
+                this.props.executeCommand({
+                    t: CommandMap.COMMENTSRECT_DELETE,
+                    d: this.getCid()
+                });
+                break;
+        }
     }
 
     /**

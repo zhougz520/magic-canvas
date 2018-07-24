@@ -157,7 +157,8 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
             getComponent,
             resetMaxAndMinZIndex,
             setCanvasUndoStack,
-            executeCommand
+            executeCommand,
+            userInfo
         } = this.props;
 
         if (imageMagnifierList) {
@@ -180,6 +181,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
                             executeCommand={executeCommand}
                             resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                             setCanvasUndoStack={setCanvasUndoStack}
+                            userInfo={userInfo}
                         />
                     );
                 }

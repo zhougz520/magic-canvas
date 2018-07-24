@@ -2,10 +2,16 @@ import { Record } from 'immutable';
 
 export interface ICommentsRectState {
     cid: string | null;
+    author: string;
+    authorId: string;
+    userType: 'Master' | 'Guest';
 }
 
 const defaultRecord: ICommentsRectState = {
-    cid: null
+    cid: null,
+    author: '作者',
+    authorId: '',
+    userType: 'Master'
 };
 
 export const CommentsRectRecord: Record.Class = Record(defaultRecord);
@@ -27,5 +33,17 @@ export class CommentsRectState extends CommentsRectRecord {
 
     getCid(): string | null {
         return this.get('cid');
+    }
+
+    getAuthor(): string {
+        return this.get('author');
+    }
+
+    getAuthorId(): string {
+        return this.get('authorId');
+    }
+
+    getUserType(): 'Master' | 'Guest' {
+        return this.get('userType');
     }
 }

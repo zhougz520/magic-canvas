@@ -315,7 +315,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
             getComponent,
             resetMaxAndMinZIndex,
             setCanvasUndoStack,
-            executeCommand
+            executeCommand,
+            userInfo
         } = this.props;
 
         if (commentsRectList) {
@@ -339,6 +340,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 executeCommand={executeCommand}
                                 resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                                 setCanvasUndoStack={setCanvasUndoStack}
+                                userInfo={userInfo}
                             />
                             <CommentsLine
                                 x1={commentsLine.x1}

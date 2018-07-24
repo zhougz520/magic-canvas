@@ -5,6 +5,7 @@ import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseSta
 
 import { CommentsState } from '../../Comments';
 import { ComponentsMap } from '../../Stage';
+import { GlobalUtil } from '../../util';
 
 import { OrderedSet, List } from 'immutable';
 
@@ -204,7 +205,10 @@ export class CommentsUtil {
             const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                 data,
                 { x: position.left, y: position.top },
-                { cid: this._addCommentsRectParam.component ? this._addCommentsRectParam.component.getCid() : null }
+                {
+                    cid: this._addCommentsRectParam.component ? this._addCommentsRectParam.component.getCid() : null,
+                    ...this.buildCommentsRectCustomState()
+                }
             );
             this._canvas._componentsUtil._addNum -= 1;
             comData.id = comComments.getCid() + '.cr' + (commentsCustomState.getMaxRectId() + 1);
@@ -229,15 +233,40 @@ export class CommentsUtil {
                 })
             );
 
-            this.setComponentCommentsList(comData.id, { top: comData.t, left: comData.l });
+            this.setComponentCommentsList(comData.id);
         }
+    }
+
+    buildCommentsRectCustomState = () => {
+        const { pageMode, userInfo } = this._canvas.props;
+        let author: string = '作者';
+        let authorId: string = '';
+        let userType: 'Master' | 'Guest' = 'Master';
+
+        switch (pageMode) {
+            case 'Edit':
+            case 'Run':
+                if (userInfo) {
+                    author = userInfo.userName;
+                    authorId = userInfo.userId;
+                }
+                break;
+            case 'Guest':
+                const guestUserName = GlobalUtil.getCookie('pdu_GuestUserName');
+                author = guestUserName === '' ? '访客' : guestUserName;
+                authorId = '';
+                userType = 'Guest';
+                break;
+        }
+
+        return { author, authorId, userType };
     }
 
     /**
      * 对选择组件设置CommentsList
      * @param rectCid 选中框cid
      */
-    setComponentCommentsList = (rectCid: string, rectPosition: IPosition) => {
+    setComponentCommentsList = (rectCid: string) => {
         const component: IComponent | null = this._addCommentsRectParam.component;
         if (component !== null) {
             const newComments: ICommentsList = {
