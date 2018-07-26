@@ -13,10 +13,14 @@ export interface IComponentList {
 
 export type OperationType = 'create' | 'modify' | 'remove';
 
-export interface IStack {
-    timeStamp: number;
+export interface IOperation {
     operationType: OperationType;
     componentList: List<IComponentList>;
+}
+
+export interface IStack {
+    timeStamp: number;                          // 时间戳，同一时间记录一个栈
+    operationList: List<IOperation>;                                          // 操作：操作类型+组件列表
 }
 
 // 鼠标拖拽类型

@@ -1,5 +1,5 @@
 import { Canvas } from '../Canvas';
-import { IStack, OperationType, IComponentList } from '../model/types';
+import { IStack, OperationType, IComponentList, IOperation } from '../model/types';
 import { List, Stack } from 'immutable';
 
 export class StackUtil {
@@ -28,19 +28,22 @@ export class StackUtil {
 
         // 如果推过来的栈与第一个栈时间戳一致，则进行合并。否则作为新栈
         if (currentUndoStack.first() && currentUndoStack.first().timeStamp === timeStamp) {
-            componentList.map(
-                (component: IComponentList) => {
-                    currentUndoStack.first().componentList = currentUndoStack.first().componentList.update(
-                        // tslint:disable-next-line:arrow-return-shorthand
-                        (value: List<IComponentList>) => { return value.push(component); }
-                    );
+            currentUndoStack.first().operationList = currentUndoStack.first().operationList.update(
+                // tslint:disable-next-line:arrow-return-shorthand
+                (value: List<IOperation>) => {
+                    return value.push({
+                        operationType,
+                        componentList
+                    });
                 }
             );
         } else {
             currentUndoStack = currentUndoStack.push({
                 timeStamp,
-                operationType,
-                componentList
+                operationList: List().push({
+                    operationType,
+                    componentList
+                }) as List<IOperation>
             });
         }
 

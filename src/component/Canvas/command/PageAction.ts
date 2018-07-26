@@ -1,6 +1,6 @@
 import { Canvas } from '../Canvas';
 import { IComponent } from '../../BaseComponent';
-import { IRange, IStack, IComponentList } from '../model/types';
+import { IRange, IStack, IComponentList, IOperation } from '../model/types';
 import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
 import { Stack, Set, List, OrderedSet, Map } from 'immutable';
 
@@ -54,62 +54,72 @@ export class PageAction {
             this._canvas._drawUtil.clearSelected();
 
             let resetCurrentUndoStack: IStack;
-            let resetComponentList: List<IComponentList> = List();
-            const { timeStamp, operationType, componentList } = currentUndoStack;
+            let resetOperationList: List<IOperation> = List();
+            const { timeStamp, operationList } = currentUndoStack;
 
-            switch (operationType) {
-                case 'create':
-                    let cids: Set<string> = Set();
-                    componentList.map(
-                        (component: IComponentList) => {
-                            const com = this._canvas.getComponent(component.cid);
-                            if (com) {
-                                resetComponentList = resetComponentList.push(
-                                    {
-                                        cid: component.cid,
-                                        comPath: component.comPath,
-                                        baseState: com.getBaseState(),
-                                        childData: component.childData,
-                                        initType: 'Stack'
+            operationList.map(
+                (operation: IOperation) => {
+                    let resetComponentList: List<IComponentList> = List();
+
+                    switch (operation.operationType) {
+                        case 'create':
+                            let cids: Set<string> = Set();
+                            operation.componentList.map(
+                                (component: IComponentList) => {
+                                    const com = this._canvas.getComponent(component.cid);
+                                    if (com) {
+                                        resetComponentList = resetComponentList.push(
+                                            {
+                                                cid: component.cid,
+                                                comPath: component.comPath,
+                                                baseState: com.getBaseState(),
+                                                childData: component.childData,
+                                                initType: 'Stack'
+                                            }
+                                        );
                                     }
-                                );
-                            }
 
-                            cids = cids.add(component.cid);
-                        }
-                    );
-                    this._canvas._componentsUtil.deleteCanvasComponent(cids, false);
-                    break;
-                case 'modify':
-                    componentList.map(
-                        (component: IComponentList) => {
-                            const com = this._canvas.getComponent(component.cid);
-                            if (com) {
-                                resetComponentList = resetComponentList.push(component);
-                                com.undo();
-                            }
-                        }
-                    );
-                    break;
-                case 'remove':
-                    componentList.map(
-                        (component: IComponentList) => {
-                            resetComponentList = resetComponentList.push(component);
-                            currentComponentList = currentComponentList.add(component);
-                        }
-                    );
-                    this._canvas.setState({
-                        componentList: currentComponentList
+                                    cids = cids.add(component.cid);
+                                }
+                            );
+                            this._canvas._componentsUtil.deleteCanvasComponent(cids, false);
+                            break;
+                        case 'modify':
+                            operation.componentList.map(
+                                (component: IComponentList) => {
+                                    const com = this._canvas.getComponent(component.cid);
+                                    if (com) {
+                                        resetComponentList = resetComponentList.push(component);
+                                        com.undo();
+                                    }
+                                }
+                            );
+                            break;
+                        case 'remove':
+                            operation.componentList.map(
+                                (component: IComponentList) => {
+                                    resetComponentList = resetComponentList.push(component);
+                                    currentComponentList = currentComponentList.add(component);
+                                }
+                            );
+                            this._canvas.setState({
+                                componentList: currentComponentList
+                            });
+                            break;
+                        default:
+                            break;
+                    }
+
+                    resetOperationList = resetOperationList.push({
+                        operationType: operation.operationType,
+                        componentList: resetComponentList
                     });
-                    break;
-                default:
-                    break;
-            }
+                }
+            );
 
             resetCurrentUndoStack = {
                 timeStamp,
-                operationType,
-                componentList: resetComponentList
+                operationList: resetOperationList
             };
             this._canvas._undoStack = undoStack.shift();
             this._canvas._redoStack = redoStack.push(resetCurrentUndoStack);
@@ -135,62 +145,72 @@ export class PageAction {
             this._canvas._drawUtil.clearSelected();
 
             let resetCurrentRedoStack: IStack;
-            let resetComponentList: List<IComponentList> = List();
-            const { timeStamp, operationType, componentList } = currentRedoStack;
+            let resetOperationList: List<IOperation> = List();
+            const { timeStamp, operationList } = currentRedoStack;
 
-            switch (operationType) {
-                case 'create':
-                    componentList.map(
-                        (component: IComponentList) => {
-                            resetComponentList = resetComponentList.push(component);
-                            currentComponentList = currentComponentList.add(component);
-                        }
-                    );
-                    this._canvas.setState({
-                        componentList: currentComponentList
-                    });
-                    break;
-                case 'modify':
-                    componentList.map(
-                        (component: IComponentList) => {
-                            const com = this._canvas.getComponent(component.cid);
-                            if (com) {
-                                resetComponentList = resetComponentList.push(component);
-                                com.redo();
-                            }
-                        }
-                    );
-                    break;
-                case 'remove':
-                    let cids: Set<string> = Set();
-                    componentList.map(
-                        (component: IComponentList) => {
-                            const com = this._canvas.getComponent(component.cid);
-                            if (com) {
-                                resetComponentList = resetComponentList.push(
-                                    {
-                                        cid: component.cid,
-                                        comPath: component.comPath,
-                                        baseState: com.getBaseState(),
-                                        childData: component.childData,
-                                        initType: 'Stack'
+            operationList.map(
+                (operation: IOperation) => {
+                    let resetComponentList: List<IComponentList> = List();
+
+                    switch (operation.operationType) {
+                        case 'create':
+                            operation.componentList.map(
+                                (component: IComponentList) => {
+                                    resetComponentList = resetComponentList.push(component);
+                                    currentComponentList = currentComponentList.add(component);
+                                }
+                            );
+                            this._canvas.setState({
+                                componentList: currentComponentList
+                            });
+                            break;
+                        case 'modify':
+                            operation.componentList.map(
+                                (component: IComponentList) => {
+                                    const com = this._canvas.getComponent(component.cid);
+                                    if (com) {
+                                        resetComponentList = resetComponentList.push(component);
+                                        com.redo();
                                     }
-                                );
-                            }
+                                }
+                            );
+                            break;
+                        case 'remove':
+                            let cids: Set<string> = Set();
+                            operation.componentList.map(
+                                (component: IComponentList) => {
+                                    const com = this._canvas.getComponent(component.cid);
+                                    if (com) {
+                                        resetComponentList = resetComponentList.push(
+                                            {
+                                                cid: component.cid,
+                                                comPath: component.comPath,
+                                                baseState: com.getBaseState(),
+                                                childData: component.childData,
+                                                initType: 'Stack'
+                                            }
+                                        );
+                                    }
 
-                            cids = cids.add(component.cid);
-                        }
-                    );
-                    this._canvas._componentsUtil.deleteCanvasComponent(cids, false);
-                    break;
-                default:
-                    break;
-            }
+                                    cids = cids.add(component.cid);
+                                }
+                            );
+                            this._canvas._componentsUtil.deleteCanvasComponent(cids, false);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    resetOperationList = resetOperationList.push({
+                        operationType: operation.operationType,
+                        componentList: resetComponentList
+                    });
+                }
+            );
 
             resetCurrentRedoStack = {
                 timeStamp,
-                operationType,
-                componentList: resetComponentList
+                operationList: resetOperationList
             };
             this._canvas._undoStack = undoStack.push(resetCurrentRedoStack);
             this._canvas._redoStack = redoStack.shift();

@@ -179,7 +179,6 @@ export class CommentsUtil {
             List().push(data),
             { x: position.left, y: position.top },
             undefined,
-            'accurate',
             this.doAddCommentsRect
         );
     }

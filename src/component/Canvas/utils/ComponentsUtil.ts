@@ -6,7 +6,8 @@ import {
     ComponentType,
     IComData,
     IPosition,
-    ISize
+    ISize,
+    ICommentsList
 } from '../../BaseComponent';
 import { Canvas } from '../Canvas';
 import { IComponentList } from '../model/types';
@@ -38,11 +39,10 @@ export class ComponentsUtil {
         dataList: List<any>,
         position: IOffset = { x: 0, y: 0 },
         isDrop: boolean = false,
-        timeStampType: string = 'default',
         callback?: () => void
     ): void => {
         let addComponentList: List<IComponentList> = List();
-        const timeStamp: number = timeStampType === 'accurate' ? new Date().getTime() : Date.parse(new Date().toString());
+        const timeStamp: number = Date.parse(new Date().toString());
 
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         dataList.map(
@@ -92,6 +92,7 @@ export class ComponentsUtil {
     deleteCanvasComponent = (cids: Set<string>, isSetUndoStack: boolean = true) => {
         let delComponentList: List<IComponentList> = List();
         const timeStamp: number = Date.parse(new Date().toString());
+        let commentsNum: number = 0;
 
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         componentList.map(
@@ -107,6 +108,10 @@ export class ComponentsUtil {
                         childData: component.childData,
                         initType: 'Stack'
                     });
+
+                    if (component.baseState.getCurrentContent().getComType() === 'Comments') {
+                        commentsNum += 1;
+                    }
                 }
             }
         );
@@ -122,9 +127,33 @@ export class ComponentsUtil {
                     delComponentList
                 );
             }
+            if (commentsNum > 0) {
+                this.resetCommentsList();
+            }
         });
         this._canvas._drawUtil.clearSelected();
         this._canvas._drawUtil.clearDragBox();
+    }
+
+    /**
+     * 删除批注后，重新整理组件的锚点
+     */
+    resetCommentsList = () => {
+        const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        componentList.map(
+            (component: IComponentList) => {
+                const com: IComponent | null = this._canvas.getComponent(component.cid);
+                if (com && com.getCommentsList().size > 0) {
+                    const commentsList: ICommentsList[] = com.getCommentsList().toArray();
+                    for (let i = commentsList.length - 1; i >= 0; i--) {
+                        if (this._canvas.getComponent(commentsList[i].cid) === null) {
+                            commentsList.splice(i, 1);
+                        }
+                    }
+                    com.setCommentsList(List(commentsList));
+                }
+            }
+        );
     }
 
     /**
