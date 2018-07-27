@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent';
 import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './grid/index';
 import { MapProvider } from './MapProvider';
 import { gridDetail } from './StructureDemo';
@@ -7,7 +7,6 @@ import { gridDetail } from './StructureDemo';
 import '../sass/Map.scss';
 import '../sass/Field.scss';
 
-// tslint:disable-next-line:no-empty-interface
 export interface IDemoProps extends IBaseProps {
     showProj: boolean;              // 显示 项目控件
     showView: boolean;              // 显示 视图

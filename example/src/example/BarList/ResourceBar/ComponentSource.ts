@@ -73,7 +73,9 @@ const basePage: IBasePage[] = [
         category: '重构页面(试用)',
         categoryKey: 'newERP',
         expanded: false,
-        components: []
+        components: [
+            { t: 'MapComponent/newMap/grid/base/AppGridContainer', p: { name: '列表', w: 600, h: 400, type: 'base' } }
+        ]
     },
     {
         category: '新采招页面(试用)',
