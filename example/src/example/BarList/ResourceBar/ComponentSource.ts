@@ -9,7 +9,7 @@ const {
     Universal_TextField,
     Universal_Image,
     Universal_RichText
- } = ComponentsMap;
+} = ComponentsMap;
 
 export interface IBasePage {
     category: string;
@@ -74,7 +74,26 @@ const basePage: IBasePage[] = [
         categoryKey: 'newERP',
         expanded: false,
         components: [
-            { t: 'MapComponent/newMap/grid/base/AppGridContainer', p: { name: '列表', w: 600, h: 400, type: 'base' } }
+            {
+                t: 'MapComponent/newMap/grid/base/AppGridContainer',
+                p: {
+                    name: '列表',
+                    w: 600,
+                    h: 400,
+                    type: 'base',
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/newMap/grid/AppProjectTree',
+                                p: {
+                                    id: 'cs1.cs1',
+                                    map_pt_txt: '公司'
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
         ]
     },
     {
