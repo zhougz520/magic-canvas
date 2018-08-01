@@ -9,3 +9,8 @@ export enum ETheme {
     'red' = '活力红',
     'orange' = '欢快橙'
 }
+
+export interface IComData {
+    t: string;
+    p: any;
+}

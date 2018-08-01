@@ -374,7 +374,7 @@ export class CanvasGlobalParam {
         this.selectedComponents.map((com: any, cid) => {
             if (com && cid && this._canvas.getComponent(cid)) {
                 if (com.selectComChange) {
-                    com.selectComChange('');
+                    com.selectComChange(null, null);
                 }
             }
         });
