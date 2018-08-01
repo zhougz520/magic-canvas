@@ -335,7 +335,11 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         return (ref as IComponent) || null;
     }
 
-    // 更新控件
+    /**
+     * 更新子组件
+     * @param id 子组件id
+     * @param props 需要更新的属性集合
+     */
     private updateProps = (id: string, props: any) => {
         const appGridContainerState: AppGridContainerState = this.getCustomState();
         // 获取当前数据
@@ -346,19 +350,24 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         this.setCustomState(AppGridContainerState.set(appGridContainerState, { childData: newData }));
     }
 
-    // 更新控件属性
-    private updateComProps = (data: any, id: string, prop: any) => {
+    /**
+     * 更新子组件属性
+     * @param data childData数据
+     * @param id 子组件id
+     * @param props 需要更新的属性集合
+     */
+    private updateComProps = (data: any, id: string, props: any) => {
         let newData: any = data;
         data.components.forEach((com: any) => {
             if (com.p.id === id) {
-                com.p = Object.assign({}, com.p, prop);
+                com.p = Object.assign({}, com.p, props);
                 newData = data;
 
                 return newData;
             }
             // 如果存在子控件，则
             if (com.p.p !== undefined && com.p.p.components !== undefined) {
-                this.updateComProps(com.p.p, id, prop);
+                this.updateComProps(com.p.p, id, props);
             }
         });
 
