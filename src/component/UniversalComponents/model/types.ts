@@ -27,6 +27,7 @@ export interface IProperty {
 export interface IPropertyGroup {
     groupTitle: string;
     groupKey: string;
+    isActive: boolean;
     colNum: number;
     propertyList: List<IProperty>;
 }

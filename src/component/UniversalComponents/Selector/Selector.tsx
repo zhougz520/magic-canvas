@@ -93,44 +93,20 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
 
         // 外观
         propertyList = propertyList.push(
-            {
-                pTitle: '是否禁用',
-                pKey: 'disabled',
-                pValue: this.getCustomState().getDisabled(),
-                pType: PropertiesEnum.SWITCH
-            }
+            { pTitle: '是否禁用', pKey: 'disabled', pValue: this.getCustomState().getDisabled(), pType: PropertiesEnum.SWITCH }
         );
         propertyGroup = propertyGroup.add(
-            {
-                groupTitle: '外观',
-                groupKey: 'exterior',
-                colNum: 1,
-                propertyList
-            }
+            { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 
         // 字段设置
         propertyList = propertyList.push(
-            {
-                pTitle: '选项',
-                pKey: 'options',
-                pValue: this.getCustomState().getOptions(),
-                pType: PropertiesEnum.INPUT_LIST
-            }, {
-                pTitle: '选中项',
-                pKey: 'textValue',
-                pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_TEXT
-            }
+            { pTitle: '选项', pKey: 'options', pValue: this.getCustomState().getOptions(), pType: PropertiesEnum.INPUT_LIST },
+            { pTitle: '选中项', pKey: 'textValue', pValue: this.getCustomState().getTextValue(), pType: PropertiesEnum.INPUT_TEXT }
         );
         propertyGroup = propertyGroup.add(
-            {
-                groupTitle: '字段设置',
-                groupKey: 'field',
-                colNum: 1,
-                propertyList
-            }
+            { groupTitle: '字段设置', groupKey: 'field', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

@@ -163,20 +163,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
 
         // 外观
         propertyList = propertyList.push(
-            {
-                pTitle: '背景颜色',
-                pKey: 'backgroundColor',
-                pValue: this.getCustomState().getBackgroundColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }
+            { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER }
         );
         propertyGroup = propertyGroup.add(
-            {
-                groupTitle: '外观',
-                groupKey: 'exterior',
-                colNum: 1,
-                propertyList
-            }
+            { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

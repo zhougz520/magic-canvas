@@ -78,55 +78,22 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
 
         // 外观
         propertyList = propertyList.push(
-            {
-                pTitle: '背景颜色',
-                pKey: 'backgroundColor',
-                pValue: this.getCustomState().getBackgroundColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框颜色',
-                pKey: 'borderColor',
-                pValue: this.getCustomState().getBorderColor(),
-                pType: PropertiesEnum.COLOR_PICKER
-            }, {
-                pTitle: '边框宽度',
-                pKey: 'borderWidth',
-                pValue: this.getCustomState().getBorderWidth(),
-                pType: PropertiesEnum.SLIDER
-            }
+            { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER },
+            { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
+            { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
         );
         propertyGroup = propertyGroup.add(
-            {
-                groupTitle: '外观',
-                groupKey: 'exterior',
-                colNum: 1,
-                propertyList
-            }
+            { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 
         // 字段设置
         propertyList = propertyList.push(
-            {
-                pTitle: '文字内容',
-                pKey: 'textValue',
-                pValue: this.getCustomState().getTextValue(),
-                pType: PropertiesEnum.INPUT_TEXT
-            },
-            {
-                pTitle: '链接地址',
-                pKey: 'herf',
-                pValue: this.getCustomState().getHerf(),
-                pType: PropertiesEnum.INPUT_TEXT
-            }
+            { pTitle: '文字内容', pKey: 'textValue', pValue: this.getCustomState().getTextValue(), pType: PropertiesEnum.INPUT_TEXT },
+            { pTitle: '链接地址', pKey: 'herf', pValue: this.getCustomState().getHerf(), pType: PropertiesEnum.INPUT_TEXT }
         );
         propertyGroup = propertyGroup.add(
-            {
-                groupTitle: '字段设置',
-                groupKey: 'field',
-                colNum: 1,
-                propertyList
-            }
+            { groupTitle: '字段设置', groupKey: 'field', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

@@ -93,6 +93,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     private buildPropertyGroup = () => {
         const { propsGroup } = this.state;
         const group: JSX.Element[] = [];
+        const activeKeys: string[] = [];
 
         propsGroup.map(
             (propGroup: IPropertyGroup) => {
@@ -101,11 +102,12 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                         {this.buildPropertyList(propGroup.propertyList, propGroup.groupKey)}
                     </Collapse.Panel>
                 );
+                if (propGroup.isActive === true) activeKeys.push(propGroup.groupKey);
             }
         );
 
         return (
-            <Collapse bordered={false} defaultActiveKey={['exterior']}>
+            <Collapse bordered={false} activeKey={activeKeys}>
                 {group}
             </Collapse>
         );
