@@ -15,7 +15,7 @@ import { OrderedSet } from 'immutable';
  * 实现接口IComponent定义的所有方法，提供给外部调用
  */
 export class MapComponent<P extends IBaseProps, S extends IBaseState>
-    extends React.PureComponent<P, S> implements IComponent {
+    extends React.Component<P, S> implements IComponent {
 
     public editCom: HTMLElement | null = null;
     public defaultFont: IFont = {
@@ -26,6 +26,17 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         fontWeight: 'normal',
         textDecoration: 'none'
     };
+
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        if (
+            JSON.stringify(this.props) === JSON.stringify(nextProps) &&
+            JSON.stringify(this.state) === JSON.stringify(nextState)
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 
     /************************************* begin 富文本 ****************************************/
     /**

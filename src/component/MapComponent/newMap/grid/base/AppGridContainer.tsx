@@ -20,6 +20,8 @@ import { IComData } from '../../model/types';
 import { AppProjectTree } from '../AppProjectTree';
 
 import { Map, List, OrderedSet } from 'immutable';
+// tslint:disable-next-line:no-var-requires
+const clone = require('clone');
 
 import '../../sass/AppGrid.scss';
 
@@ -295,7 +297,6 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
                                 pageMode={pageMode}
-                                childData={component.p}
                                 id={id}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -345,7 +346,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         // 获取当前数据
         const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
         // 通过id查找到数据节点
-        const newData = this.updateComProps(childData, id, props);
+        const newData = this.updateComProps(clone(childData), id, props);
         // 更新数据到CustomState
         this.setCustomState(AppGridContainerState.set(appGridContainerState, { childData: newData }));
     }

@@ -10,8 +10,6 @@ export interface IBaseProps {
     theme: Theme;
     // 页面模式
     pageMode: PageMode;
-    // 子组件数据：component.p
-    childData: any;
     // 组件id
     id: string;
     // 当前选中组件id
