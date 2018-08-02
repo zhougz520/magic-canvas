@@ -101,7 +101,7 @@ export class AppProjectTree extends MapComponent<IAppProjectTreeProps, IAppProje
                 >
                     {map_pt_txt}
                 </label>
-                <div className="item-content" style={{ width: '260px' }}>
+                <div className="item-content" style={{ width: '160px' }}>
                     <Select style={{ width: '100%' }}>
                         {dropDownMenu}
                     </Select>

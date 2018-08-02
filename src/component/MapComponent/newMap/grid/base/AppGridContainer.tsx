@@ -18,6 +18,7 @@ import { AppGridContainerState, IAppGridContainerState as ICustomState } from '.
 import { IComData } from '../../model/types';
 
 import { AppProjectTree } from '../AppProjectTree';
+import { AppFindOrdinary } from '../AppFindOrdinary';
 
 import { Map, List, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
@@ -37,7 +38,7 @@ export interface IAppGridContainerState extends IBaseState {
 export default class AppGridContainer extends BaseComponent<IAppGridContainerProps, IAppGridContainerState> {
 
     private appProjectTree: JSX.Element | null = null;
-    // private appFindOrdinary: JSX.Element | null = null;
+    private appFindOrdinary: JSX.Element | null = null;
     // private appFindAdvanced: JSX.Element | null = null;
     // private appGridView: JSX.Element | null = null;
     // private appGridTitle: JSX.Element | null = null;
@@ -269,8 +270,14 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                 </div>
                 <div className="map-grid">
                     <div className="listheader-search">
+                        {/* 项目 */}
                         {
                             appGridContainerState.getShowAppProjectTree() ? this.appProjectTree : ''
+                        }
+
+                        {/* 普通查询 */}
+                        {
+                            appGridContainerState.getShowAppFindOrdinary() ? this.appFindOrdinary : ''
                         }
                     </div>
                 </div>
@@ -297,12 +304,26 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
                                 pageMode={pageMode}
-                                id={id}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 {...component.p}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppFindOrdinary':
+                        this.appFindOrdinary = (
+                            <AppFindOrdinary
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                {...component.p}
+                                map_fo_search={!appGridContainerState.getShowAppFindAdvanced()}
                             />
                         );
                         break;

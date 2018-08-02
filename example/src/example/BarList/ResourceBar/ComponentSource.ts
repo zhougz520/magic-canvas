@@ -89,6 +89,13 @@ const basePage: IBasePage[] = [
                                     id: 'cs1.cs1',
                                     map_pt_txt: '公司'
                                 }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppFindOrdinary',
+                                p: {
+                                    id: 'cs1.cs2',
+                                    map_fo_search: true
+                                }
                             }
                         ]
                     }
