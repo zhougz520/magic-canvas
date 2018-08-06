@@ -80,6 +80,7 @@ export function docKeyDown(canvas: Canvas, e: any): void {
                 e.preventDefault();
                 break;
             case 'delete':
+            case 'backspace':
                 canvas._componentsUtil.deleteCanvasComponent(canvas._canvasGlobalParam.getSelectedCids());
                 e.preventDefault();
                 break;
