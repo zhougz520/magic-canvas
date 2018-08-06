@@ -498,11 +498,6 @@ export class PageAction {
         currentSelectedComponent.map(
             (com: IComponent) => {
                 com.setPropertiesFromProperty(param.pKey, param.pValue);
-                // if (param.pKey === 'borderWidth') {
-                //     setTimeout(() => {
-                //         this._canvas._drawUtil.repaintSelected();
-                //     }, 0);
-                // }
             }
         );
     }

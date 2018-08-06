@@ -104,7 +104,6 @@ export class ComponentsUtil {
                         cid: component.cid,
                         comPath: component.comPath,
                         baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
-                        // TODO 删除的时候需要记录最新的childData？
                         childData: component.childData,
                         initType: 'Stack'
                     });

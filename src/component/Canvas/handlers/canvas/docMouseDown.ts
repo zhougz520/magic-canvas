@@ -26,7 +26,6 @@ export function docMouseDown(canvas: Canvas, e: any): void {
 
         canvas._canvasGlobalParam.anchorMouseDown(e, anchor);
         // 此处必须阻止事件冒泡，否则可能绘选中覆盖的组件
-        // TODO 折叠拖动bug
         e.stopPropagation();
         e.preventDefault();
     } else {
