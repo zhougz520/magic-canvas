@@ -71,7 +71,6 @@ export class AppFindOrdinary extends MapComponent<IAppFindOrdinaryProps, IAppFin
                             type="primary"
                             style={{
                                 height: '30px',
-                                width: '62px',
                                 borderRadius: '3px',
                                 backgroundColor: '#34A6F8',
                                 borderColor: '#34A6F8',

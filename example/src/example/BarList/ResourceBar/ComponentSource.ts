@@ -96,6 +96,12 @@ const basePage: IBasePage[] = [
                                     id: 'cs1.cs2',
                                     map_fo_search: true
                                 }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppFindAdvanced',
+                                p: {
+                                    id: 'cs1.cs3'
+                                }
                             }
                         ]
                     }

@@ -19,6 +19,7 @@ import { IComData } from '../../model/types';
 
 import { AppProjectTree } from '../AppProjectTree';
 import { AppFindOrdinary } from '../AppFindOrdinary';
+import { AppFindAdvanced } from '../AppFindAdvanced';
 
 import { Map, List, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
@@ -31,6 +32,7 @@ export interface IAppGridContainerProps extends IBaseProps {
 }
 
 export interface IAppGridContainerState extends IBaseState {
+    unfoldAdv: boolean;         // 展开筛选
     selectedId: string | null;  // 当前选中的子控件id
     hidden: boolean;
 }
@@ -39,7 +41,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
 
     private appProjectTree: JSX.Element | null = null;
     private appFindOrdinary: JSX.Element | null = null;
-    // private appFindAdvanced: JSX.Element | null = null;
+    private appFindAdvanced: JSX.Element | null = null;
     // private appGridView: JSX.Element | null = null;
     // private appGridTitle: JSX.Element | null = null;
     // private appGridMenu: JSX.Element | null = null;
@@ -57,6 +59,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         const { childData } = this.props;
         this.state = {
             baseState: this.initBaseStateWithCustomState(new AppGridContainerState({ childData })),
+            unfoldAdv: true,
             selectedId: null,
             hidden: false
         };
@@ -245,7 +248,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     /************************************* end 属性设置 ****************************************/
 
     render() {
-        const { hidden } = this.state;
+        const { hidden, unfoldAdv } = this.state;
         const appGridContainerState: AppGridContainerState = this.getCustomState();
 
         const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
@@ -256,7 +259,10 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         return (
             <div
                 className="page-appgrid"
-                style={BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected())}
+                style={{
+                    ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected()),
+                    border: '1px solid #d3d5d9'
+                }}
                 onMouseDown={this.fireSelectChange}
             >
                 {/* 列表组件标题 */}
@@ -279,7 +285,22 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                         {
                             appGridContainerState.getShowAppFindOrdinary() ? this.appFindOrdinary : ''
                         }
+
+                        {/* 高级搜索展开按钮 */}
+                        {
+                            appGridContainerState.getShowAppFindAdvanced() ?
+                                <a className="btn-adv-search" style={{ display: 'inline' }} onClick={this.changeUnfoldAdv}>{unfoldAdv ? '收起筛选' : '展开筛选'}</a> : ''
+                        }
                     </div>
+
+                    {/* 高级搜索 */}
+                    {
+                        appGridContainerState.getShowAppFindAdvanced() && unfoldAdv ?
+                            <div className="map-appfilter" style={{ borderWidth: '0px' }}>
+                                {this.appFindAdvanced}
+                            </div> : ''
+                    }
+
                 </div>
             </div>
         );
@@ -313,6 +334,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                         );
                         break;
                     case 'MapComponent/newMap/grid/AppFindOrdinary':
+                        const showSearch = appGridContainerState.getShowAppFindAdvanced() === false ? true : !this.state.unfoldAdv;
                         this.appFindOrdinary = (
                             <AppFindOrdinary
                                 ref={`c.${id}`}
@@ -323,7 +345,21 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 {...component.p}
-                                map_fo_search={!appGridContainerState.getShowAppFindAdvanced()}
+                                map_fo_search={showSearch}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppFindAdvanced':
+                        this.appFindAdvanced = (
+                            <AppFindAdvanced
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                {...component.p}
                             />
                         );
                         break;
@@ -447,6 +483,15 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
      */
     private onTitleMouseUp = (e: any) => {
         this.setIsCanMove(false);
+    }
+
+    /**
+     * 展开筛选\收起筛选
+     */
+    private changeUnfoldAdv = () => {
+        this.setState({
+            unfoldAdv: !this.state.unfoldAdv
+        });
     }
 }
 
