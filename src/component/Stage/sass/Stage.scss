@@ -1,10 +1,14 @@
 .stage {
     position: absolute;
-    margin: auto;
     overflow: auto;
-    background-color: #f3f3f3;
     display: block;
     transition-property: top, left, right;
     transition-duration: .3s;
     transition-timing-function: cubic-bezier(.65,.05,.36,1);
+    margin: 0;
+    font-family: "Monospaced Number", "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.65);
+    background-color: #fff;
 }

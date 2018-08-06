@@ -111,8 +111,14 @@ export class ImageMagnifierUtil {
             const natureHeight: number = imageCustomState.getHeight();
             const natureDataUrl: string = imageCustomState.getSrc();
             // 调整后的图片属性
-            const imagePosition = comImage.getPosition();
-            const imageSize: ISize = comImage.getSize();
+            const imagePosition = {
+                top: comImage.getPosition().top + 41,
+                left: comImage.getPosition().left + 11
+            };
+            const imageSize: ISize = {
+                height: comImage.getSize().height - 52,
+                width: comImage.getSize().width - 22
+            };
             // 放大镜相对位置
             const relativePosition: IPosition = {
                 top: rectPosition.top - imagePosition.top,

@@ -222,10 +222,11 @@ export class ComponentsUtil {
             t: 'UniversalComponents/ImageCom/Image',
             p: {
                 name: '图片',
-                w: size.width,
-                h: size.height,
+                w: size.width + 22,
+                h: size.height + 52,
                 l: currentMousePosition ? currentMousePosition.x : 100,
                 t: currentMousePosition ? currentMousePosition.y : 100,
+                txt_v: '图片',
                 customState: {
                     src: dataUrl,
                     width: size.width,

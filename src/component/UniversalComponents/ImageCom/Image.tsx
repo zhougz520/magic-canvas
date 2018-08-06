@@ -2,63 +2,100 @@ import * as React from 'react';
 import {
     BaseState,
     ContentState,
-    BaseComponent,
     BaseStyle,
-    IBaseProps,
-    IBaseState,
     IPosition,
     MaskLayer,
     IComData,
-    IComponent
+    IComponent,
+    ISize,
+    IRichEditOption,
+    IFont
 } from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
 import { IContextMenuItems } from '../../Stage';
 import { CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
 
 import { ImageMagnifier } from './ImageMagnifier';
 import { ImageState, IImageState } from './ImageState';
-import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
+import { IToolButtonGroup, emptyButtonGroup } from '../model/types';
 
-import { Map, OrderedSet, List } from 'immutable';
+import { OrderedSet } from 'immutable';
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
-export default class Image extends BaseComponent<IBaseProps, IBaseState> {
-    constructor(props: IBaseProps, context?: any) {
+export default class Image extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
+    private _padding: number = 8;
+
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new ImageState())
+            baseState: this.initBaseStateWithCustomState(new ImageState(), '图片'),
+            hidden: false
         };
     }
 
     /**
-     * 获取组件属性列表
+     * 获取富文本编辑器的大小和位置
      */
-    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
-        let propertyList: List<IProperty> = List();
-        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
 
-        // 外观
-        propertyList = propertyList.push(
-            { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
-            { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
-        );
-        propertyGroup = propertyGroup.add(
-            { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
-        );
-        propertyList = List();
+        const position: IPosition = {
+            top: comPosition.top + 7,
+            left: comPosition.left + this._padding
+        };
+        const size: ISize = {
+            width: comSize.width - this._padding,
+            height: 16
+        };
+        const font: IFont = {
+            textAlign: 'left',
+            fontColor: 'rgba(0, 0, 0, 0.65)',
+            fontStyle: 'normal',
+            fontSize: 14,
+            fontWeight: 'normal',
+            textDecoration: 'none'
+        };
 
-        return propertyGroup;
+        return { position, size, font };
     }
 
     /**
-     * 设置属性
+     * 获取组件富文本内容
+     * 返回：带格式的富文本内容
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newImageState: ImageState = ImageState.set(this.getCustomState(), properties);
+    public getRichChildNode = (): any => {
+        const baseState: BaseState = this.getBaseState();
 
-        this.setCustomState(newImageState, true, callback);
+        return baseState.getCurrentContent().getRichChildNode();
+    }
+
+    /**
+     * 设置组件文本内容
+     */
+    public setRichChildNode = (param: any): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            richChildNode: param.value
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setState({
+            baseState: newBaseState
+        }, () => this.callBackForRender('Rich'));
+    }
+
+    /**
+     * 获取组件的字体属性，传给工具栏
+     * 默认：空，组件自己重写
+     */
+    public getFontPropsToTool = (): IToolButtonGroup => {
+        return emptyButtonGroup;
     }
 
     /**
@@ -80,7 +117,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
         ];
     }
 
-    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
+    componentDidUpdate(prevProps: IBaseUniversalComponentProps, prevState: IBaseUniversalComponentState) {
         // 1.更新批注框
         this.updateCommentsList(prevState);
         // 2.更新图片放大镜
@@ -88,27 +125,40 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     render() {
+        const { hidden } = this.state;
         const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
         const magnifierList: JSX.Element[] = this.buildMagnifier(imageMagnifierList);
+        const comSize: ISize = this.getSize();
 
         return (
             <React.Fragment>
                 <div
                     style={{
                         ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
-                        backgroundColor: this.getCustomState().getBackgroundColor(),
-                        borderColor: this.getCustomState().getBorderColor(),
-                        borderWidth: this.getCustomState().getBorderWidth(),
-                        borderStyle: 'solid'
+                        border: '1px solid #d3d5d9'
                     }}
                     onMouseDown={this.fireSelectChange}
                 >
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '30px',
+                            backgroundColor: '#f0f0ff',
+                            borderBottom: '1px solid #d3d5d9',
+                            lineHeight: '30px',
+                            paddingLeft: '8px'
+                        }}
+                        onDoubleClick={this.doDbClickToEdit}
+                    >
+                        {hidden ? '' : this.getRichChildNode()}
+                    </div>
                     <MaskLayer id={this.getCid()} isCanSelected={this.isCanSelected()} />
                     <img
                         style={{
-                            width: '100%',
-                            height: '100%',
-                            display: 'inline-block'
+                            width: comSize.width - 22,
+                            height: comSize.height - 52,
+                            display: 'inline-block',
+                            margin: '10px'
                         }}
                         src={this.getCustomState().getSrc()}
                     />
@@ -179,7 +229,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
     /**
      * 更新放大镜列表
      */
-    private updateImageMagnifierList = (prevState: IBaseState) => {
+    private updateImageMagnifierList = (prevState: IBaseUniversalComponentState) => {
         const currentContent: ContentState = this.state.baseState.getCurrentContent();
         const prevContent: ContentState = prevState.baseState.getCurrentContent();
 
