@@ -1,8 +1,9 @@
 .Wingman {
     position: fixed !important;
     overflow: hidden;
-    opacity: 0;
+    opacity: 0 !important;
     outline: 0 none !important;
+    pointer-events: none !important;
 }
 
 .RichText-root {
