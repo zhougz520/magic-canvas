@@ -1,15 +1,20 @@
 import { Record } from 'immutable';
+import { ISize, IPosition } from '../../BaseComponent';
 
 export interface IImageMagnifierState {
-    cid: string;
-    src: string;
-    backgroundPositionX: number;
-    backgroundPositionY: number;
+    cid: string;                    // 图片父组件cid
+    src: string;                    // 图片地址
+    rectSize: ISize;                // 放大区域大小
+    rectPosition: IPosition;        // 放大区域位置（相对父组件位置）
+    backgroundPositionX: number;    // 放大偏移x
+    backgroundPositionY: number;    // 放大偏移y
 }
 
 const defaultRecord: IImageMagnifierState = {
     cid: '',
     src: '',
+    rectSize: { width: 0, height: 0 },
+    rectPosition: { top: 0, left: 0 },
     backgroundPositionX: 0,
     backgroundPositionY: 0
 };
@@ -37,6 +42,14 @@ export class ImageMagnifierState extends ImageMagnifierRecord {
 
     getSrc(): string {
         return this.get('src');
+    }
+
+    getRectSize(): ISize {
+        return this.get('rectSize');
+    }
+
+    getRectPosition(): IPosition {
+        return this.get('rectPosition');
     }
 
     getBackgroundPositionX(): number {

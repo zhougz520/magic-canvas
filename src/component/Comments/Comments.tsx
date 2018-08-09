@@ -312,7 +312,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         if (commentsRectList) {
             commentsRectList.map(
                 (commentsRect: IComponentList) => {
-                    const commentsLine: ICommentsLineProps = this.buildLine(this.getBaseState(), commentsRect.baseState, { x: -2, y: 20 });
+                    const commentsLine: ICommentsLineProps = this.buildLineProps(this.getBaseState(), commentsRect.baseState, { x: -2, y: 20 });
                     rectList.push(
                         <g key={commentsRect.cid}>
                             <CommentsRect
@@ -348,9 +348,9 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
     }
 
     /**
-     * 构建连接线
+     * 构建连接线参数
      */
-    private buildLine = (commentsBaseState: BaseState, rectBaseState: BaseState, offset: IOffset): ICommentsLineProps => {
+    private buildLineProps = (commentsBaseState: BaseState, rectBaseState: BaseState, offset: IOffset): ICommentsLineProps => {
         const commentsPositionState: PositionState = commentsBaseState.getCurrentContent().getPositionState();
         const rectPositionState: PositionState = rectBaseState.getCurrentContent().getPositionState();
         const rectSizeState: SizeState = rectBaseState.getCurrentContent().getSizeState();

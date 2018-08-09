@@ -143,10 +143,15 @@ export class ImageMagnifierUtil {
             const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                 data,
                 // TODO 修改添加位置
-                { x: rectPosition.left, y: rectPosition.top },
+                {
+                    x: Math.ceil(rectPosition.left + (rectSize.width - cutSize.width - 8) / 2),
+                    y: comImage.getPosition().top + comImage.getSize().height + 50
+                },
                 {
                     cid: this._imageComponentCid,
                     src: natureDataUrl,
+                    rectSize,
+                    rectPosition: relativePosition,
                     backgroundPositionX: - cutPosition.left,
                     backgroundPositionY: - cutPosition.top
                 }

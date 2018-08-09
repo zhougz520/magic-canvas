@@ -9,7 +9,9 @@ import {
     IComponent,
     ISize,
     IRichEditOption,
-    IFont
+    IFont,
+    PositionState,
+    SizeState
 } from '../../BaseComponent';
 import {
     BaseUniversalComponent,
@@ -20,7 +22,9 @@ import { IContextMenuItems } from '../../Stage';
 import { CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
 
 import { ImageMagnifier } from './ImageMagnifier';
+import { ImageMagnifierState } from './ImageMagnifierState';
 import { ImageState, IImageState } from './ImageState';
+import { ImageLine, IImageLineProps } from './ImageLine';
 import { IToolButtonGroup, emptyButtonGroup } from '../model/types';
 
 import { OrderedSet } from 'immutable';
@@ -128,6 +132,7 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         const { hidden } = this.state;
         const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
         const magnifierList: JSX.Element[] = this.buildMagnifier(imageMagnifierList);
+        const lineList: JSX.Element[] = this.buildLine(imageMagnifierList);
         const comSize: ISize = this.getSize();
 
         return (
@@ -163,6 +168,16 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                         src={this.getCustomState().getSrc()}
                     />
                 </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    version="1.1"
+                    width="100%"
+                    height="100%"
+                    pointerEvents="none"
+                    style={{ position: 'absolute', zIndex: this.getHierarchy() }}
+                >
+                    {lineList}
+                </svg>
                 <div
                     style={{
                         pointerEvents: 'none',
@@ -224,6 +239,51 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         }
 
         return magnifierList;
+    }
+
+    /**
+     * 构建连接线
+     */
+    private buildLine = (imageMagnifierList: OrderedSet<IComponentList>): JSX.Element[] => {
+        const lineList: JSX.Element[] = [];
+
+        if (imageMagnifierList) {
+            imageMagnifierList.map(
+                (imageMagnifier: IComponentList) => {
+                    const imageLine: IImageLineProps = this.buildLineProps(this.getBaseState(), imageMagnifier.baseState);
+                    lineList.push(
+                        <ImageLine
+                            key={imageMagnifier.cid}
+                            x1={imageLine.x1}
+                            y1={imageLine.y1}
+                            x2={imageLine.x2}
+                            y2={imageLine.y2}
+                        />
+                    );
+                }
+            );
+        }
+
+        return lineList;
+    }
+
+    /**
+     * 构建连接线参数
+     */
+    private buildLineProps = (imageBaseState: BaseState, imageMagnifierBaseState: BaseState): IImageLineProps => {
+        const imagePositionState: PositionState = imageBaseState.getCurrentContent().getPositionState();
+        const imageMagnifierPositionState: PositionState = imageMagnifierBaseState.getCurrentContent().getPositionState();
+        const imageMagnifierSizeState: SizeState = imageMagnifierBaseState.getCurrentContent().getSizeState();
+        const imageMagnifierCustomState: ImageMagnifierState = imageMagnifierBaseState.getCurrentContent().getCustomState();
+        const rectSize: ISize = imageMagnifierCustomState.getRectSize();
+        const rectPosition: IPosition = imageMagnifierCustomState.getRectPosition();
+
+        return {
+            x1: Math.ceil(imageMagnifierPositionState.getLeft() + imageMagnifierSizeState.getWidth() / 2),
+            y1: imageMagnifierPositionState.getTop(),
+            x2: Math.ceil(imagePositionState.getLeft() + 11 + rectPosition.left + rectSize.width / 2),
+            y2: imagePositionState.getTop() + 41 + rectPosition.top + rectSize.height
+        };
     }
 
     /**
