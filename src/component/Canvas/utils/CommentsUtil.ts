@@ -87,8 +87,6 @@ export class CommentsUtil {
      * 更新参数中的组件
      */
     updateParamComponent = (componentList: OrderedSet<IComponentList>) => {
-        const startPoint: IOffset = this._addCommentsRectParam.startPoint as IOffset;
-
         componentList.map(
             (component: IComponentList) => {
                 const com = this._canvas.getComponent(component.cid);
@@ -96,8 +94,19 @@ export class CommentsUtil {
                     const pos: IPosition = com.getPosition();
                     const size: ISize = com.getSize();
                     const zIndex: number = com.getHierarchy();
-                    if (pos.top <= startPoint.y && startPoint.y <= pos.top + size.height &&
-                        pos.left <= startPoint.x && startPoint.x <= pos.left + size.width) {
+                    const rectPositionAndSize = this.getAddCommentsRectPositionAndSize();
+                    if (rectPositionAndSize === null) return;
+
+                    const rectArea: number = rectPositionAndSize.size.width * rectPositionAndSize.size.height;
+                    const rectComArea: number = (Math.min(pos.left + size.width, rectPositionAndSize.position.left + rectPositionAndSize.size.width) - Math.max(pos.left, rectPositionAndSize.position.left)) *
+                        (Math.min(pos.top + size.height, rectPositionAndSize.position.top + rectPositionAndSize.size.height) - Math.max(pos.top, rectPositionAndSize.position.top));
+                    const comArea: number = size.width * size.height;
+                    /**
+                     * 框选逻辑
+                     * 1.框中面积占整个框面积的60%以上
+                     * 2.整个组件全部被框中
+                     */
+                    if (rectComArea / rectArea >= 0.6 || rectComArea === comArea) {
                         if (this._addCommentsRectParam.component === null) {
                             this._addCommentsRectParam.component = com;
                         } else {

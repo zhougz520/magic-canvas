@@ -448,23 +448,23 @@ export class CanvasGlobalParam {
             });
         } else {
             // 低性能模式，移动拖动框
-            if (stageBoundary) {
-                // 碰撞检测, 检查组件是否碰到边界
-                const leftCrash = this.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
-                const topCrash = this.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
-                const rightCrash = this.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
-                const bottomCrash = this.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
+            // if (stageBoundary) {
+            //     // 碰撞检测, 检查组件是否碰到边界
+            //     const leftCrash = this.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
+            //     const topCrash = this.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
+            //     const rightCrash = this.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
+            //     const bottomCrash = this.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
 
-                // 碰撞到边界后滚动stage的滚动条
-                if (leftCrash || topCrash || rightCrash || bottomCrash) {
-                    this.startScroll({
-                        x: leftCrash ? -15 : rightCrash ? 15 : 0,
-                        y: topCrash ? -15 : bottomCrash ? 15 : 0
-                    } as IOffset, setStageScroll);
-                } else {
-                    this.stopScroll();
-                }
-            }
+            //     // 碰撞到边界后滚动stage的滚动条
+            //     if (leftCrash || topCrash || rightCrash || bottomCrash) {
+            //         this.startScroll({
+            //             x: leftCrash ? -15 : rightCrash ? 15 : 0,
+            //             y: topCrash ? -15 : bottomCrash ? 15 : 0
+            //         } as IOffset, setStageScroll);
+            //     } else {
+            //         this.stopScroll();
+            //     }
+            // }
 
             this.dragDivList.map((item: IDragDiv | undefined) => {
                 if (item !== undefined) {
