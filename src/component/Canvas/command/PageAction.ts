@@ -39,10 +39,8 @@ export class PageAction {
     undoCanvas = () => {
         // 如果是编辑模式：结束编辑状态。
         if (this._canvas._isRichEditMode === true) {
-            this._canvas._richEditUtil.endEdit();
-        }
-
-        setTimeout(() => {
+            this._canvas._richEditUtil.undoRedo('undo');
+        } else {
             const undoStack: Stack<IStack> = this._canvas._undoStack;
             const redoStack: Stack<IStack> = this._canvas._redoStack;
             let currentComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
@@ -123,17 +121,15 @@ export class PageAction {
             };
             this._canvas._undoStack = undoStack.shift();
             this._canvas._redoStack = redoStack.push(resetCurrentUndoStack);
-        }, 0);
+        }
     }
 
     // 画布重做
     redoCanvas = () => {
         // 如果是编辑模式：结束编辑状态。
         if (this._canvas._isRichEditMode === true) {
-            this._canvas._richEditUtil.endEdit();
-        }
-
-        setTimeout(() => {
+            this._canvas._richEditUtil.undoRedo('redo');
+        } else {
             const undoStack: Stack<IStack> = this._canvas._undoStack;
             const redoStack: Stack<IStack> = this._canvas._redoStack;
             let currentComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
@@ -214,7 +210,7 @@ export class PageAction {
             };
             this._canvas._undoStack = undoStack.push(resetCurrentRedoStack);
             this._canvas._redoStack = redoStack.shift();
-        }, 0);
+        }
     }
 
     // 上移一层

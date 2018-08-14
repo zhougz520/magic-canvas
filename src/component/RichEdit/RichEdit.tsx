@@ -90,6 +90,21 @@ export class RichEdit extends React.PureComponent<IEditProps, IEditState> {
     }
 
     /**
+     * 撤销重做
+     */
+    undoRedo = (type: 'undo' | 'redo') => {
+        if (this.state.editorState) {
+            let newEditorState = null;
+            if (type === 'undo') {
+                newEditorState = EditorState.undo(this.state.editorState);
+            } else {
+                newEditorState = EditorState.redo(this.state.editorState);
+            }
+            this.onChange(newEditorState);
+        }
+    }
+
+    /**
      * 设置InLineStyle
      * @param inlineStyle 对应Draft-js的inlineStyleRenderMap
      */
