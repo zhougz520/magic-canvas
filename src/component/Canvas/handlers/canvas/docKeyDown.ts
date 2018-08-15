@@ -4,7 +4,7 @@ import { CommandMap } from '../../command/CommandEmitted';
 
 export function docKeyDown(canvas: Canvas, e: any): void {
     const args = canvas._mouseAndKeyUtil.keyArgs(e);
-    const { key, ctrl, alt, keyCode, target, targetName } = args as IKeyArgs;
+    const { key, ctrl, alt, keyCode, target, targetName, shift } = args as IKeyArgs;
 
     if (key === 'esc') {
         canvas.executeCommand({
@@ -40,11 +40,14 @@ export function docKeyDown(canvas: Canvas, e: any): void {
                 case 'v':   // 粘贴
                     cmd.t = CommandMap.COM_PASTE;
                     break;
-                case 'z':   // 撤销
-                    cmd.t = CommandMap.CANVAS_UNDO;
-                    break;
-                case 'y':   // 重做
-                    cmd.t = CommandMap.CANVAS_REDO;
+                case 'z':
+                    if (shift) {
+                        // 重做
+                        cmd.t = CommandMap.CANVAS_REDO;
+                    } else {
+                        // 撤销
+                        cmd.t = CommandMap.CANVAS_UNDO;
+                    }
                     break;
                 case 's':   // 保存
                     cmd.t = CommandMap.DATA_SAVE;
