@@ -1,5 +1,6 @@
 import { Canvas } from '../Canvas';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
+import { ComponentsMap } from '../../Stage';
 import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
 import { IBaseData } from '../../Draw/model/types';
 import { IAnchor } from '../../util';
@@ -328,14 +329,24 @@ export class CanvasGlobalParam {
         this.selectedComponents.map((com, cid) => {
             if (com && cid) {
                 const value = this.currentComponentSize.getValue(cid);
-                const left = x > value.size.width - 10 ?
+
+                // 图片使用等比缩放
+                if (com.getBaseProps().comPath === ComponentsMap.Universal_Image.t) {
+                    const afterOffset = this.scaleScaling(value, x, y, w, h, anchorKey);
+                    x = afterOffset.x;
+                    y = afterOffset.y;
+                    w = afterOffset.w;
+                    h = afterOffset.h;
+                }
+
+                const left: number = x > value.size.width - 10 ?
                     value.position.left + value.size.width - 10 : value.position.left + x;
-                const top = y > value.size.height - 10 ?
+                const top: number = y > value.size.height - 10 ?
                     value.position.top + value.size.height - 10 : value.position.top + y;
-                const width = value.size.width + w < 10 ? 10 : value.size.width + w;
-                const height = value.size.height + h < 10 ? 10 : value.size.height + h;
-                const position = { top, left };
-                const size = { width, height };
+                const width: number = value.size.width + w < 10 ? 10 : value.size.width + w;
+                const height: number = value.size.height + h < 10 ? 10 : value.size.height + h;
+                const position: IPosition = { top, left };
+                const size: ISize = { width, height };
                 if (end || this._canvas.props.highPerformance) {
                     // 高性能模式，组件立即变化
                     com.setPosition(position);
@@ -347,6 +358,54 @@ export class CanvasGlobalParam {
             }
         });
         if (comData.length > 0) callBack(comData);
+    }
+
+    // 等比缩放算法
+    scaleScaling(
+        currentComPositionAndSize: { position: IPosition; size: ISize; },
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        anchorKey: string
+    ): { x: number, y: number, w: number, h: number } {
+        let nextX: number = x;
+        let nextY: number = y;
+        let nextW: number = w;
+        let nextH: number = h;
+        switch (anchorKey) {
+            case 'ul':
+                // 左上锚点，修改position
+                // offset.x, offset.y, -offset.x, -offset.y
+                nextY = Math.ceil((-w / currentComPositionAndSize.size.width) * currentComPositionAndSize.size.height);
+                nextH = Math.ceil((w / currentComPositionAndSize.size.width) * currentComPositionAndSize.size.height);
+                break;
+            case 'bl':
+                // 左下锚点
+                // offset.x, 0, -offset.x, offset.y
+                nextY = 0;
+                nextH = Math.ceil((w / currentComPositionAndSize.size.width) * currentComPositionAndSize.size.height);
+                break;
+            case 'ur':
+                // 右上锚点
+                // 0, offset.y, offset.x, -offset.y
+                nextX = 0;
+                nextW = Math.ceil((h / currentComPositionAndSize.size.height) * currentComPositionAndSize.size.width);
+                break;
+            case 'br':
+                // 右下锚点
+                // 0, 0, offset.x, offset.y
+                nextX = 0;
+                nextW = Math.ceil((h / currentComPositionAndSize.size.height) * currentComPositionAndSize.size.width);
+                break;
+        }
+
+        return {
+            x: nextX,
+            y: nextY,
+            w: nextW,
+            h: nextH
+        };
     }
 
     // 新增选中组件
