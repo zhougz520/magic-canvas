@@ -61,19 +61,22 @@ export default class ComponentItem extends React.PureComponent<IComItemProps, IC
                 y: Math.ceil(comHeight * (evt.pageY - itemPos.topWithScroll) / 60)
             };
         }
-        localStorage.__dnd_type = 'dragging_cs';
+        localStorage.setItem('__dnd_type', 'dragging_cs');
         if (this.props.componentType.indexOf('MapComponent') !== -1 && componentProps.type === undefined) {
-            localStorage.__dnd_type = 'dragging_map';
+            localStorage.setItem('__dnd_type', 'dragging_map');
         }
-        localStorage.__dnd_value = JSON.stringify({
-            offset,
-            t: this.props.componentType,
-            p: this.props.componentProps
-        });
+        localStorage.setItem(
+            '__dnd_value',
+            JSON.stringify({
+                offset,
+                t: this.props.componentType,
+                p: this.props.componentProps
+            })
+        );
     }
 
     dragEnd = (evt: any) => {
-        delete localStorage.__dnd_type;
-        delete localStorage.__dnd_value;
+        localStorage.removeItem('__dnd_type');
+        localStorage.removeItem('__dnd_value');
     }
 }
