@@ -258,6 +258,8 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                             y1={imageLine.y1}
                             x2={imageLine.x2}
                             y2={imageLine.y2}
+                            rectSize={imageLine.rectSize}
+                            rectPosition={imageLine.rectPosition}
                         />
                     );
                 }
@@ -282,7 +284,9 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
             x1: Math.ceil(imageMagnifierPositionState.getLeft() + imageMagnifierSizeState.getWidth() / 2),
             y1: imageMagnifierPositionState.getTop(),
             x2: Math.ceil(imagePositionState.getLeft() + 11 + rectPosition.left + rectSize.width / 2),
-            y2: imagePositionState.getTop() + 41 + rectPosition.top + rectSize.height
+            y2: imagePositionState.getTop() + 41 + rectPosition.top + rectSize.height,
+            rectSize,
+            rectPosition: { top: imagePositionState.getTop() + 41 + rectPosition.top, left: imagePositionState.getLeft() + 11 + rectPosition.left }
         };
     }
 

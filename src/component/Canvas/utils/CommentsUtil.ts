@@ -98,8 +98,9 @@ export class CommentsUtil {
                     if (rectPositionAndSize === null) return;
 
                     const rectArea: number = rectPositionAndSize.size.width * rectPositionAndSize.size.height;
-                    const rectComArea: number = (Math.min(pos.left + size.width, rectPositionAndSize.position.left + rectPositionAndSize.size.width) - Math.max(pos.left, rectPositionAndSize.position.left)) *
-                        (Math.min(pos.top + size.height, rectPositionAndSize.position.top + rectPositionAndSize.size.height) - Math.max(pos.top, rectPositionAndSize.position.top));
+                    const rectComWidth: number = (Math.min(pos.left + size.width, rectPositionAndSize.position.left + rectPositionAndSize.size.width) - Math.max(pos.left, rectPositionAndSize.position.left));
+                    const rectComHeight: number = (Math.min(pos.top + size.height, rectPositionAndSize.position.top + rectPositionAndSize.size.height) - Math.max(pos.top, rectPositionAndSize.position.top));
+                    const rectComArea: number = rectComWidth < 0 || rectComHeight < 0 ? 0 : rectComWidth * rectComHeight;
                     const comArea: number = size.width * size.height;
                     /**
                      * 框选逻辑
