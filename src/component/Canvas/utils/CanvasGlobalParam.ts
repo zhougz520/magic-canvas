@@ -329,22 +329,25 @@ export class CanvasGlobalParam {
         this.selectedComponents.map((com, cid) => {
             if (com && cid) {
                 const value = this.currentComponentSize.getValue(cid);
-
+                let nextX: number = x;
+                let nextY: number = y;
+                let nextW: number = w;
+                let nextH: number = h;
                 // 图片使用等比缩放
                 if (com.getBaseProps().comPath === ComponentsMap.Universal_Image.t) {
                     const afterOffset = this.scaleScaling(value, x, y, w, h, anchorKey);
-                    x = afterOffset.x;
-                    y = afterOffset.y;
-                    w = afterOffset.w;
-                    h = afterOffset.h;
+                    nextX = afterOffset.x;
+                    nextY = afterOffset.y;
+                    nextW = afterOffset.w;
+                    nextH = afterOffset.h;
                 }
 
-                const left: number = x > value.size.width - 10 ?
-                    value.position.left + value.size.width - 10 : value.position.left + x;
-                const top: number = y > value.size.height - 10 ?
-                    value.position.top + value.size.height - 10 : value.position.top + y;
-                const width: number = value.size.width + w < 10 ? 10 : value.size.width + w;
-                const height: number = value.size.height + h < 10 ? 10 : value.size.height + h;
+                const left: number = nextX > value.size.width - 10 ?
+                    value.position.left + value.size.width - 10 : value.position.left + nextX;
+                const top: number = nextY > value.size.height - 10 ?
+                    value.position.top + value.size.height - 10 : value.position.top + nextY;
+                const width: number = value.size.width + nextW < 10 ? 10 : value.size.width + nextW;
+                const height: number = value.size.height + nextH < 10 ? 10 : value.size.height + nextH;
                 const position: IPosition = { top, left };
                 const size: ISize = { width, height };
                 if (end || this._canvas.props.highPerformance) {
