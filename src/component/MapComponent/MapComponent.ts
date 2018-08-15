@@ -369,10 +369,10 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      * 获取添加控件的信息
      */
     public getAddComponent() {
-        if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) return;
-        if (localStorage.__dnd_type !== 'dragging_map') return;
+        if (GlobalUtil.isEmptyString((localStorage as any).__dnd_type) || GlobalUtil.isEmptyString((localStorage as any).__dnd_value)) return;
+        if ((localStorage as any).__dnd_type !== 'dragging_map') return;
 
-        return JSON.parse(localStorage.__dnd_value);
+        return JSON.parse((localStorage as any).__dnd_value);
     }
 
     /**
