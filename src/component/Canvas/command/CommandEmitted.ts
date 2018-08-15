@@ -80,5 +80,7 @@ export enum CommandMap {
     MAGNIFIER_DELETE = 'e.deleteMagnifier',
 
     // 保存数据
-    DATA_SAVE = 'e.saveData'
+    DATA_SAVE = 'e.saveData',
+    // 退出所有模式
+    MODE_EXIT = 'e.exitAllMode'
 }

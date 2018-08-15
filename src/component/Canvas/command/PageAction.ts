@@ -621,4 +621,10 @@ export class PageAction {
     saveData = () => {
         this._canvas.props.saveData && this._canvas.props.saveData();
     }
+
+    // 退出所有模式
+    exitAllMode = () => {
+        this._canvas._canvasUtil.exitCanvasMode();
+        this._canvas._richEditUtil.endEdit();
+    }
 }
