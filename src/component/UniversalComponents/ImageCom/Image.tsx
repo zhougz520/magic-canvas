@@ -140,8 +140,9 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
             <React.Fragment>
                 <div
                     style={{
-                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
-                        border: '1px solid #d3d5d9'
+                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected()),
+                        borderColor: '#d3d5d9',
+                        backgroundColor: '#fff'
                     }}
                     onMouseDown={this.fireSelectChange}
                 >
