@@ -27,6 +27,7 @@ import { ImageState, IImageState } from './ImageState';
 import { ImageLine, IImageLineProps } from './ImageLine';
 import { IToolButtonGroup, emptyButtonGroup } from '../model/types';
 
+import { getPluginConfig, PluginMap } from '../../../plugin';
 import { OrderedSet } from 'immutable';
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
@@ -232,6 +233,7 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                             resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                             setCanvasUndoStack={setCanvasUndoStack}
                             userInfo={userInfo}
+                            src={this.getCustomState().getSrc()}
                         />
                     );
                 }
@@ -348,7 +350,8 @@ export function convertFromCustomStateToData(customState: any): any {
     );
 
     return {
-        src: encodeCustomState.getSrc(),
+        src: encodeCustomState.getUid() === '' ? encodeCustomState.getSrc() : '',
+        uid: encodeCustomState.getUid(),
         width: encodeCustomState.getWidth(),
         height: encodeCustomState.getHeight(),
         imageMagnifierList: components,
@@ -366,6 +369,7 @@ export function convertFromCustomStateToData(customState: any): any {
 export function convertFromDataToCustomState(
     customData: {
         src: string;
+        uid?: string;
         width: number;
         height: number;
         imageMagnifierList: Array<{
@@ -380,6 +384,7 @@ export function convertFromDataToCustomState(
 ): any {
     const data: IImageState = {
         src: '',
+        uid: '',
         width: 0,
         height: 0,
         imageMagnifierList: OrderedSet(),
@@ -403,7 +408,20 @@ export function convertFromDataToCustomState(
             }
         );
 
-        data.src = customData.src;
+        data.uid = customData.uid === undefined ? '' : customData.uid;
+        let src: string = '';
+        const loadFunc = getPluginConfig(PluginMap.IMAGE_ASYNC_LOAD_FUNC);
+        if (loadFunc) {
+            loadFunc(data.uid)
+            .then((ret: any) => {
+                src = ret.src;
+            })
+            .catch((err: any) => {
+                src = '';
+            });
+        }
+
+        data.src = data.uid === '' ? customData.src : src;
         data.width = customData.width;
         data.height = customData.height;
         data.maxMagnifierId = customData.maxMagnifierId;

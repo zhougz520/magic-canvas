@@ -213,7 +213,7 @@ export class ComponentsUtil {
      * @param size 图片大小
      */
     pasteImage = (
-        dataUrl: string,
+        uid: string,
         size: { width: number; height: number; }
     ): void => {
         const currentMousePosition = this._canvas._canvasGlobalParam.currentMousePosition;
@@ -227,7 +227,8 @@ export class ComponentsUtil {
                 t: currentMousePosition ? currentMousePosition.y : 100,
                 txt_v: '图片',
                 customState: {
-                    src: dataUrl,
+                    src: '',
+                    uid,
                     width: size.width,
                     height: size.height,
                     imageMagnifierList: OrderedSet(),

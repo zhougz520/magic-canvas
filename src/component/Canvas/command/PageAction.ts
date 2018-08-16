@@ -2,6 +2,8 @@ import { Canvas } from '../Canvas';
 import { IComponent } from '../../BaseComponent';
 import { IRange, IStack, IComponentList, IOperation } from '../model/types';
 import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
+
+import { getPluginConfig, PluginMap } from '../../../plugin';
 import { Stack, Set, List, OrderedSet, Map } from 'immutable';
 
 export class PageAction {
@@ -572,9 +574,13 @@ export class PageAction {
 
                 // image
                 if (clipboardTypes.includes('image') && data.image) {
-                    const imageData = data.image;
-                    const { dataUrl, size } = imageData;
-                    this._canvas._componentsUtil.pasteImage(dataUrl, size);
+                    const pasteImageFunc = getPluginConfig(PluginMap.PASTE_IMAGE_FUNC);
+                    if (!pasteImageFunc) {
+                        return;
+                    }
+                    const imageData = pasteImageFunc();
+                    const { size, uid } = imageData;
+                    this._canvas._componentsUtil.pasteImage(uid, size);
                 }
             }
         } catch (err) {

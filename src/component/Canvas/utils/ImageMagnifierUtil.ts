@@ -109,7 +109,6 @@ export class ImageMagnifierUtil {
             // 原图属性
             const natureWidth: number = imageCustomState.getWidth();
             const natureHeight: number = imageCustomState.getHeight();
-            const natureDataUrl: string = imageCustomState.getSrc();
             // 调整后的图片属性
             const imagePosition = {
                 top: comImage.getPosition().top + 41,
@@ -149,7 +148,6 @@ export class ImageMagnifierUtil {
                 },
                 {
                     cid: this._imageComponentCid,
-                    src: natureDataUrl,
                     rectSize,
                     rectPosition: relativePosition,
                     backgroundPositionX: - cutPosition.left,

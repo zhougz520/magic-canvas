@@ -7,6 +7,7 @@ const data = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQg
 
 export interface IImageState {
     src: string;
+    uid: string;
     width: number;
     height: number;
     imageMagnifierList: OrderedSet<IComponentList>;
@@ -19,6 +20,7 @@ export interface IImageState {
 
 const defaultRecord: IImageState = {
     src: data,
+    uid: '',
     width: 621,
     height: 509,
     imageMagnifierList: OrderedSet(),
@@ -48,6 +50,10 @@ export class ImageState extends ImageRecord {
 
     getSrc(): string {
         return this.get('src');
+    }
+
+    getUid(): string {
+        return this.get('uid');
     }
 
     getWidth(): number {
