@@ -46,7 +46,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         let author: string = '作者';
         let authorId: string = '';
         let userType: 'Master' | 'Guest' = 'Master';
-        let backgroundColor: string = '#fffbba';
+        let backgroundColor: string = '#F8E71C';
 
         switch (pageMode) {
             case 'Edit':
@@ -61,7 +61,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                 author = guestUserName === '' ? '访客' : guestUserName;
                 authorId = '';
                 userType = 'Guest';
-                backgroundColor = '#cafea5';
+                backgroundColor = '#7ED321';
                 break;
         }
         this.state = {
@@ -296,6 +296,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
      */
     private buildRect = (commentsRectList: OrderedSet<IComponentList>): JSX.Element[] => {
         const rectList: JSX.Element[] = [];
+        const commentsCustomState: CommentsState = this.getCustomState();
         const {
             pageMode,
             componentPosition,
@@ -331,12 +332,14 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                                 setCanvasUndoStack={setCanvasUndoStack}
                                 userInfo={userInfo}
+                                color={commentsCustomState.getBackgroundColor()}
                             />
                             <CommentsLine
                                 x1={commentsLine.x1}
                                 y1={commentsLine.y1}
                                 x2={commentsLine.x2}
                                 y2={commentsLine.y2}
+                                color={commentsLine.color}
                             />
                         </g>
                     );
@@ -354,12 +357,14 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         const commentsPositionState: PositionState = commentsBaseState.getCurrentContent().getPositionState();
         const rectPositionState: PositionState = rectBaseState.getCurrentContent().getPositionState();
         const rectSizeState: SizeState = rectBaseState.getCurrentContent().getSizeState();
+        const commentsCustomState: CommentsState = this.getCustomState();
 
         return {
             x1: commentsPositionState.getLeft() + offset.x,
             y1: commentsPositionState.getTop() + offset.y,
             x2: rectPositionState.getLeft() + rectSizeState.getWidth(),
-            y2: rectPositionState.getTop()
+            y2: rectPositionState.getTop(),
+            color: commentsCustomState.getBackgroundColor()
         };
     }
 
@@ -444,7 +449,7 @@ export function convertFromDataToCustomState(
         userType: 'Master',
         commentsRectList: OrderedSet(),
         maxRectId: 0,
-        backgroundColor: '#fffbba'
+        backgroundColor: '#F8E71C'
     };
     if (customData && customData.commentsRectList) {
         customData.commentsRectList.map(

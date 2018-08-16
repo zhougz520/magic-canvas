@@ -21,9 +21,13 @@ import { CommentsRectState, ICommentsRectState } from './CommentsRectState';
 import { OrderedSet, List } from 'immutable';
 import { Menu, Dropdown } from 'antd';
 
+export interface ICommentsRectProps extends IBaseProps {
+    color: string;
+}
+
 /* tslint:disable:jsx-wrap-multiline */
-export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
-    constructor(props: IBaseProps, context?: any) {
+export class CommentsRect extends BaseComponent<ICommentsRectProps, IBaseState> {
+    constructor(props: ICommentsRectProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -113,7 +117,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
         ];
     }
 
-    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
+    componentDidUpdate(prevProps: ICommentsRectProps, prevState: IBaseState) {
         const currentContent: ContentState = this.state.baseState.getCurrentContent();
         const prevContent: ContentState = prevState.baseState.getCurrentContent();
 
@@ -151,7 +155,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     render() {
-        const { pageMode } = this.props;
+        const { pageMode, color } = this.props;
         const size: ISize = this.getSize();
         const position: IPosition = this.getPosition();
         const guestContextMenu: JSX.Element = this.buildGuestContextMenu();
@@ -169,7 +173,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                         ry={5}
                         fill="#fff"
                         fillOpacity="0"
-                        stroke="#D0021B"
+                        stroke={color}
                         strokeWidth="1"
                         pointerEvents={this.isCanSelected() ? 'auto' : 'none'}
                         onMouseDown={this.fireSelectChange}
@@ -185,7 +189,7 @@ export class CommentsRect extends BaseComponent<IBaseProps, IBaseState> {
                     ry={5}
                     fill="#fff"
                     fillOpacity="0"
-                    stroke="#D0021B"
+                    stroke={color}
                     strokeWidth="1"
                     pointerEvents={this.isCanSelected() ? 'auto' : 'none'}
                     onMouseDown={this.fireSelectChange}

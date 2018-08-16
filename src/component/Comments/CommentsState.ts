@@ -17,7 +17,7 @@ const defaultRecord: ICommentsState = {
     userType: 'Master',
     commentsRectList: OrderedSet(),
     maxRectId: 0,
-    backgroundColor: '#fffbba'
+    backgroundColor: '#F8E71C'
 };
 
 export const CommentsRecord: Record.Class = Record(defaultRecord);
