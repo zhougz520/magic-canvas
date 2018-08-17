@@ -23,12 +23,12 @@ import { CommandMap, IComponentList, convertFromBaseStateToData, convertFromData
 
 import { ImageMagnifier } from './ImageMagnifier';
 import { ImageMagnifierState } from './ImageMagnifierState';
-import { ImageState, IImageState } from './ImageState';
+import { ImageState, IImageState, dataUrl } from './ImageState';
 import { ImageLine, IImageLineProps } from './ImageLine';
 import { IToolButtonGroup, emptyButtonGroup } from '../model/types';
 
 import { getPluginConfig, PluginMap } from '../../../plugin';
-import { OrderedSet } from 'immutable';
+import { OrderedSet, Map } from 'immutable';
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
 export default class Image extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
@@ -120,6 +120,24 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                 }
             }
         ];
+    }
+
+    componentDidMount() {
+        const uid = (this.getCustomState() as ImageState).getUid();
+        if (uid === undefined || uid === null || uid.length === 0) return;
+
+        const loadFunc = getPluginConfig(PluginMap.IMAGE_ASYNC_LOAD_FUNC);
+        if (loadFunc) {
+            loadFunc(uid)
+            .then((ret: any) => {
+                const src = ret.src;
+                const newImageState: ImageState = ImageState.set(this.getCustomState(), Map({ src }));
+                this.setCustomState(newImageState, false);
+            })
+            .catch((err: any) => {
+                // nothing
+            });
+        }
     }
 
     componentDidUpdate(prevProps: IBaseUniversalComponentProps, prevState: IBaseUniversalComponentState) {
@@ -410,18 +428,7 @@ export function convertFromDataToCustomState(
         );
 
         data.uid = customData.uid === undefined ? '' : customData.uid;
-        let src: string = '';
-        const loadFunc = getPluginConfig(PluginMap.IMAGE_ASYNC_LOAD_FUNC);
-        if (loadFunc) {
-            loadFunc(data.uid)
-            .then((ret: any) => {
-                src = ret.src;
-            })
-            .catch((err: any) => {
-                src = '';
-            });
-        }
-
+        const src: string = dataUrl;
         data.src = data.uid === '' ? customData.src : src;
         data.width = customData.width;
         data.height = customData.height;
