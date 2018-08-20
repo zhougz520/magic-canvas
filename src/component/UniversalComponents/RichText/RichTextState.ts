@@ -7,7 +7,7 @@ export interface IRichTextState {
 }
 
 const defaultRecord: IRichTextState = {
-    backgroundColor: '#FFF',
+    backgroundColor: 'transparent',
     borderColor: '#d9d9d9',
     borderWidth: 1
 };

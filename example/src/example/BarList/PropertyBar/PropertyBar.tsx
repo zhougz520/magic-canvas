@@ -255,7 +255,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         const colorPicker = (
             <SketchPicker
                 color={pValue}
-                onChangeComplete={(color) => this.handleColorPicker(color.hex, pId)}
+                onChangeComplete={(color) => this.handleColorPicker(`rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, pId)}
             />
         );
 

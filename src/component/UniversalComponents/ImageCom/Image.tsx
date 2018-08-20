@@ -104,6 +104,16 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
     }
 
     /**
+     * 工具栏设置字体样式
+     * @param fontStyleType 字体类型
+     * @param value 值
+     * @param key 循环的键
+     */
+    public setFontPropsFromTool = (fontStyleType: string, value: any, key: number) => {
+        return;
+    }
+
+    /**
      * 获取组件的右键菜单
      * 默认：空，组件自己重写
      */
