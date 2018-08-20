@@ -199,7 +199,11 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                         d: this.getCid()
                     });
                 }
-            }
+            },
+            {
+                type: 'separator'
+            },
+            ...this.defaultContextMenuItems
         ];
     }
 

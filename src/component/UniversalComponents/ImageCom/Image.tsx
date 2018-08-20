@@ -128,7 +128,11 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                         d: this.getCid()
                     });
                 }
-            }
+            },
+            {
+                type: 'separator'
+            },
+            ...this.defaultContextMenuItems
         ];
     }
 
@@ -139,14 +143,23 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         const loadFunc = getPluginConfig(PluginMap.IMAGE_ASYNC_LOAD_FUNC);
         if (loadFunc) {
             loadFunc(uid)
-            .then((ret: any) => {
-                const src = ret.src;
-                const newImageState: ImageState = ImageState.set(this.getCustomState(), Map({ src }));
-                this.setCustomState(newImageState, false);
-            })
-            .catch((err: any) => {
-                // nothing
-            });
+                .then((ret: any) => {
+                    const src = ret.src;
+                    const newImageState: ImageState = ImageState.set(this.getCustomState(), Map({ src }));
+
+                    const oldBaseState: BaseState = this.getBaseState();
+                    const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+                        customState: newImageState
+                    }) as ContentState;
+                    const newBaseState = BaseState.set(oldBaseState, {
+                        currentContent: newContent,
+                        tempContentState: newContent
+                    });
+                    this.setBaseState(newBaseState);
+                })
+                .catch((err: any) => {
+                    // nothing
+                });
         }
     }
 

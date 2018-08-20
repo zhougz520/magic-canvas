@@ -508,6 +508,13 @@ export class PageAction {
     }
 
     /**
+     * 删除组件
+     */
+    deleteCom = () => {
+        this._canvas._componentsUtil.deleteCanvasComponent(this._canvas._canvasGlobalParam.getSelectedCids());
+    }
+
+    /**
      * 复制组件
      */
     copyCom = () => {

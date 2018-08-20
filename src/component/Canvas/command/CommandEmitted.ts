@@ -65,6 +65,8 @@ export enum CommandMap {
     // 设置僚机焦点
     WINGMAN_FOCUS = 'e.setFocusWingman',
 
+    // 删除
+    COM_DELETE = 'e.deleteCom',
     // 复制
     COM_COPY = 'e.copyCom',
     // 剪切

@@ -25,6 +25,60 @@ import { Stack, List, OrderedSet } from 'immutable';
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
+    protected defaultContextMenuItems: IContextMenuItems[] = [
+        {
+            type: 'menu',
+            label: '删除',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.deleteCom'
+                });
+            }
+        },
+        {
+            type: 'separator'
+        },
+        {
+            type: 'menu',
+            label: '剪切',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.cutCom'
+                });
+            }
+        },
+        {
+            type: 'menu',
+            label: '复制',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.copyCom'
+                });
+            }
+        },
+        {
+            type: 'separator'
+        },
+        {
+            type: 'menu',
+            label: '置于顶层',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.frontCom'
+                });
+            }
+        },
+        {
+            type: 'menu',
+            label: '置于底层',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.backCom'
+                });
+            }
+        }
+    ];
+
     componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
         this.updateCommentsList(prevState);
     }
@@ -320,7 +374,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 默认：空，组件自己重写
      */
     public getContextMenuItems = (): IContextMenuItems[] => {
-        return [];
+        return this.defaultContextMenuItems;
     }
 
     /**
