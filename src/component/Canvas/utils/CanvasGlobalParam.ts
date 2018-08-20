@@ -1,11 +1,11 @@
 import { Canvas } from '../Canvas';
-import { IComponent, IPosition, ISize } from '../../BaseComponent';
+import { IComponent, IPosition, ISize, ICommentsList } from '../../BaseComponent';
 import { ComponentsMap } from '../../Stage';
-import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
+import { IDragDiv, DragType, IOffset, IBoundary, IComponentList } from '../model/types';
 import { IBaseData } from '../../Draw/model/types';
 import { IAnchor } from '../../util';
 
-import { Map, Set } from 'immutable';
+import { Map, Set, List, OrderedSet } from 'immutable';
 
 export class CanvasGlobalParam {
     public body: HTMLBodyElement;
@@ -260,9 +260,37 @@ export class CanvasGlobalParam {
 
     // 手动设置组件堆栈(当组件位置和大小改变完成后，在设置，其他情况请慎用)
     setUndoStack() {
-        this.selectedComponents.map((com, cid) => {
-            if (com) com.setUndoStack();
-        });
+        this.selectedComponents.map(
+            (com: IComponent, cid: string) => {
+                // 1.组件手动设栈
+                com.setUndoStack();
+
+                // 2.组件对应的选中框手动设栈
+                const commentsRectList: List<ICommentsList> = com.getCommentsList();
+                commentsRectList.map(
+                    (commentsRect: ICommentsList) => {
+                        const commentsRectCom: IComponent | null = this._canvas.getComponent(commentsRect.cid);
+                        if (commentsRectCom) {
+                            commentsRectCom.setUndoStack();
+                        }
+                    }
+                );
+
+                // 3.如果是图片组件，对放大镜设栈
+                const customState: any = com.getCustomState();
+                if (customState.getImageMagnifierList) {
+                    const imageMagnifierList: OrderedSet<IComponentList> = customState.getImageMagnifierList();
+                    imageMagnifierList.map(
+                        (imageMagnifier: IComponentList) => {
+                            const componentMagnifier: IComponent | null = this._canvas.getComponent(imageMagnifier.cid);
+                            if (componentMagnifier) {
+                                componentMagnifier.setUndoStack();
+                            }
+                        }
+                    );
+                }
+            }
+        );
     }
 
     // 获取当前鼠标所在锚点

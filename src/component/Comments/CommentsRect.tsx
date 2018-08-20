@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import {
     BaseComponent,
-    BaseState,
     IBaseProps,
     IBaseState,
     ISize,
@@ -118,16 +117,8 @@ export class CommentsRect extends BaseComponent<ICommentsRectProps, IBaseState> 
     }
 
     componentDidUpdate(prevProps: ICommentsRectProps, prevState: IBaseState) {
-        const currentContent: ContentState = this.state.baseState.getCurrentContent();
-        const prevContent: ContentState = prevState.baseState.getCurrentContent();
-
-        if (
-            currentContent.getPositionState().equals(prevContent.getPositionState()) === false ||
-            currentContent.getSizeState().equals(prevContent.getSizeState()) === false
-        ) {
-            // 选中框位置大小改变，同时修改对应的批注组件的CustomState
-            this.updateCommentsCustomState(this.getBaseState());
-        }
+        // 选中框位置大小改变，同时修改对应的批注组件的CustomState
+        this.updateCommentsCustomState(prevState);
     }
 
     componentWillUnmount() {
@@ -226,29 +217,38 @@ export class CommentsRect extends BaseComponent<ICommentsRectProps, IBaseState> 
      * 修改批注的CustomState
      * @param newBaseState 当前的BaseState
      */
-    private updateCommentsCustomState = (newBaseState: BaseState) => {
-        const commentsCid: string = this.getCid().split('.')[0];
-        const comments = this.props.getComponent(commentsCid);
-        if (comments) {
-            const commentsCustomState: CommentsState = comments.getCustomState();
-            const oldCommentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
-            let newCommentsRectList: OrderedSet<IComponentList> = OrderedSet();
-            oldCommentsRectList.map(
-                (commentsRect: IComponentList) => {
-                    if (commentsRect.cid === this.getCid()) {
-                        commentsRect.baseState = newBaseState;
-                    }
-                    newCommentsRectList = newCommentsRectList.add(commentsRect);
-                }
-            );
+    private updateCommentsCustomState = (prevState: IBaseState) => {
+        const currentContent: ContentState = this.state.baseState.getCurrentContent();
+        const prevContent: ContentState = prevState.baseState.getCurrentContent();
 
-            comments.setCustomState(
-                CommentsState.set(commentsCustomState, {
-                    commentsRectList: newCommentsRectList
-                }),
-                false
-            );
+        if (
+            currentContent.getPositionState().equals(prevContent.getPositionState()) === false ||
+            currentContent.getSizeState().equals(prevContent.getSizeState()) === false
+        ) {
+            const commentsCid: string = this.getCid().split('.')[0];
+            const comments = this.props.getComponent(commentsCid);
+            if (comments) {
+                const commentsCustomState: CommentsState = comments.getCustomState();
+                const oldCommentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
+                let newCommentsRectList: OrderedSet<IComponentList> = OrderedSet();
+                oldCommentsRectList.map(
+                    (commentsRect: IComponentList) => {
+                        if (commentsRect.cid === this.getCid()) {
+                            commentsRect.baseState = this.getBaseState();
+                        }
+                        newCommentsRectList = newCommentsRectList.add(commentsRect);
+                    }
+                );
+
+                comments.setCustomState(
+                    CommentsState.set(commentsCustomState, {
+                        commentsRectList: newCommentsRectList
+                    }),
+                    false
+                );
+            }
         }
+
     }
 }
 

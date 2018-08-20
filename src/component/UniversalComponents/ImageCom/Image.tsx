@@ -44,6 +44,18 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
     }
 
     /**
+     * 设置组件Position
+     * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
+     * @param position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
+     */
+    public setPosition = (position: IPosition, isSetUndo: boolean = false): void => {
+        const oldPositionState: PositionState = this.getPositionState();
+        const newPositionState: PositionState = PositionState.create(position);
+
+        this.setPositionState(newPositionState, isSetUndo, () => this.updateImageMagnifierList(oldPositionState));
+    }
+
+    /**
      * 获取富文本编辑器的大小和位置
      */
     public getRichEditOption = (): IRichEditOption => {
@@ -161,13 +173,6 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                     // nothing
                 });
         }
-    }
-
-    componentDidUpdate(prevProps: IBaseUniversalComponentProps, prevState: IBaseUniversalComponentState) {
-        // 1.更新批注框
-        this.updateCommentsList(prevState);
-        // 2.更新图片放大镜
-        this.updateImageMagnifierList(prevState);
     }
 
     render() {
@@ -337,35 +342,28 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
     /**
      * 更新放大镜列表
      */
-    private updateImageMagnifierList = (prevState: IBaseUniversalComponentState) => {
-        const currentContent: ContentState = this.state.baseState.getCurrentContent();
-        const prevContent: ContentState = prevState.baseState.getCurrentContent();
+    private updateImageMagnifierList = (prevPositionState: PositionState) => {
+        // 如果有放大镜，更新放大镜的位置
+        const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
+        const componentPosition: IPosition = this.getPosition();
+        imageMagnifierList.map(
+            (imageMagnifier: IComponentList) => {
+                const componentMagnifier: IComponent | null = this.props.getComponent(imageMagnifier.cid);
+                if (componentMagnifier !== null) {
+                    const imageMagnifierPosition: IPosition = componentMagnifier.getPosition();
+                    const relativePosition: IPosition = {
+                        top: imageMagnifierPosition.top - prevPositionState.getTop(),
+                        left: imageMagnifierPosition.left - prevPositionState.getLeft()
+                    };
 
-        if (
-            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
-        ) {
-            // 如果有批注，更新批注的位置
-            const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
-            const componentPosition: IPosition = this.getPosition();
-            imageMagnifierList.map(
-                (imageMagnifier: IComponentList) => {
-                    const componentMagnifier: IComponent | null = this.props.getComponent(imageMagnifier.cid);
-                    if (componentMagnifier !== null) {
-                        const imageMagnifierPosition: IPosition = componentMagnifier.getPosition();
-                        const relativePosition: IPosition = {
-                            top: imageMagnifierPosition.top - prevContent.getPositionState().getTop(),
-                            left: imageMagnifierPosition.left - prevContent.getPositionState().getLeft()
-                        };
-
-                        const newImageMagnifierPosition: IPosition = {
-                            top: componentPosition.top + relativePosition.top,
-                            left: componentPosition.left + relativePosition.left
-                        };
-                        componentMagnifier.setPosition(newImageMagnifierPosition);
-                    }
+                    const newImageMagnifierPosition: IPosition = {
+                        top: componentPosition.top + relativePosition.top,
+                        left: componentPosition.left + relativePosition.left
+                    };
+                    componentMagnifier.setPosition(newImageMagnifierPosition);
                 }
-            );
-        }
+            }
+        );
     }
 }
 
