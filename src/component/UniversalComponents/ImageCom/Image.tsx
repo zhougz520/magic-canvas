@@ -52,7 +52,10 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         const oldPositionState: PositionState = this.getPositionState();
         const newPositionState: PositionState = PositionState.create(position);
 
-        this.setPositionState(newPositionState, isSetUndo, () => this.updateImageMagnifierList(oldPositionState));
+        this.setPositionState(newPositionState, isSetUndo, () => {
+            this.updateCommentsList(oldPositionState);
+            this.updateImageMagnifierList(oldPositionState);
+        });
     }
 
     /**
