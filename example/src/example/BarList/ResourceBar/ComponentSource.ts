@@ -106,6 +106,26 @@ const basePage: IBasePage[] = [
                         ]
                     }
                 }
+            },
+            {
+                t: 'MapComponent/newMap/form/base/AppFormContainer',
+                p: {
+                    name: '表单',
+                    w: 600,
+                    h: 400,
+                    type: 'base',
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/newMap/form/AppProjectTree',
+                                p: {
+                                    id: 'cs1.cs1',
+                                    map_pt_txt: '公司'
+                                }
+                            }
+                        ]
+                    }
+                }
             }
         ]
     },

@@ -1,0 +1,143 @@
+$SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
+
+.page-appgrid {
+    .map-title {
+        width: 100%;
+        height: 30px;
+        background-color: #f0f0ff;
+        border-bottom: 1px solid #d3d5d9;
+        line-height: 30px;
+        padding-left: 8px;
+    }
+
+    .map-grid {
+        visibility: visible;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        margin-top: 8px;
+        padding: 2px;
+        height: auto;
+        display: block;
+    
+        .listheader-search {
+            color: #222;
+            margin-bottom: 12px;
+            height: 30px;
+            line-height: normal;
+
+            .map-select-open.search-item {
+                box-shadow: $SELECT_STYLE;
+            }
+            .search-item {
+                margin-right: 15px;
+                float: left;
+                &:hover {
+                    box-shadow: $SELECT_STYLE;
+                }
+
+                label {
+                    color: #222;
+                    display: inline-block;
+                    margin-right: 15px;
+                }
+    
+                .item-content {
+                    display: inline-block;
+    
+                    .ant-select-selection {
+                        border-radius: 0px;
+                    }
+                    .ant-select-selection--single {
+                        height: 30px;
+                    }
+                }
+            }
+            .search-item.searchbox-quickfind {
+                .ant-input {
+                    height: 30px;
+                    border-radius: 0px;
+                }
+            }
+
+            .btn-adv-search {
+                float: left;
+                margin-top: 5px;
+                color: #459AE9;
+            }
+        }
+
+        .map-appfilter {
+            .mc-filter {
+                padding-bottom: 14px;
+
+                .mc-filter-controls {
+                    display: table;
+                    width: 100%;
+                    border-collapse: collapse;
+                    border-spacing: 0;
+                    border: 1px solid #d3d5d9;
+                    table-layout: fixed;
+                    line-height: 1;
+
+                    .mc-filter-item {
+                        height: 39px;
+                        border-bottom: 1px dashed #e5e5e5;
+
+                        .mc-filter-item__label {
+                            padding: 0px;
+                            font-weight: 400;
+                            line-height: 38px;
+                            color: #777;
+                            text-align: left;
+                            padding-left: 12px;
+                            vertical-align: top;
+                            overflow: hidden;
+                            white-space: nowrap;
+                        }
+
+                        .mc-filter-item__target {
+                            padding: 3px 0;
+                            vertical-align: top;
+
+                            .mc-filter-item__inner {
+                                display: table;
+                                width: 100%;
+
+                                .mc-filter-item__part {
+                                    display: table-cell;
+                                    vertical-align: top;
+                                    white-space: nowrap;
+                                    padding-right: 18px;
+
+                                    .mc-filter-item__allcheck {
+                                        height: 24px;
+                                        line-height: 22px;
+                                        padding: 0 10px;
+                                        border-radius: 2px;
+                                        margin: 4px 0 0;
+                                        overflow: hidden;
+                                        cursor: pointer;
+                                        display: inline-block;
+                                        border: 1px solid #34A6F8;
+                                        position: relative;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .mc-filter-item:last-child {
+                        border-bottom: 0;
+                    }
+                }
+
+                .mc-filter-toolbar {
+                    display: block;
+                    padding: 4px 15px;
+                    margin-top: -1px;
+                    border: 1px solid #ddd;
+                }
+            }
+        }
+    }
+}
