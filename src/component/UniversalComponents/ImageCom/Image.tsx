@@ -19,7 +19,7 @@ import {
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
 import { IContextMenuItems } from '../../Stage';
-import { CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
+import { Canvas, CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
 
 import { ImageMagnifier } from './ImageMagnifier';
 import { ImageMagnifierState } from './ImageMagnifierState';
@@ -465,7 +465,7 @@ export function convertFromDataToCustomState(
     return ImageState.create(data);
 }
 
-export function getPasteCustomState(customData: any): any {
+export function getPasteCustomState(canvas: Canvas, customData: any): any {
     customData.imageMagnifierList = OrderedSet();
     customData.maxMagnifierId = 0;
 

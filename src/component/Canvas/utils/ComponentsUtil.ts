@@ -176,7 +176,7 @@ export class ComponentsUtil {
                 const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                     data,
                     { x: l + 10 * this._pasteNum, y: t + 10 * this._pasteNum },
-                    getPasteCustomStateFun ? getPasteCustomStateFun(data.p.customState) : data.p.customState
+                    getPasteCustomStateFun ? getPasteCustomStateFun(this._canvas, data.p.customState) : data.p.customState
                 );
                 const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
                 const component: IComponentList = {
