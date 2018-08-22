@@ -104,7 +104,6 @@ export class ComponentsUtil {
                         cid: component.cid,
                         comPath: component.comPath,
                         baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
-                        // TODO 删除的时候需要记录最新的childData？
                         childData: component.childData,
                         initType: 'Stack'
                     });
@@ -214,7 +213,7 @@ export class ComponentsUtil {
      * @param size 图片大小
      */
     pasteImage = (
-        dataUrl: string,
+        uid: string,
         size: { width: number; height: number; }
     ): void => {
         const currentMousePosition = this._canvas._canvasGlobalParam.currentMousePosition;
@@ -222,12 +221,14 @@ export class ComponentsUtil {
             t: 'UniversalComponents/ImageCom/Image',
             p: {
                 name: '图片',
-                w: size.width,
-                h: size.height,
+                w: size.width + 22,
+                h: size.height + 52,
                 l: currentMousePosition ? currentMousePosition.x : 100,
                 t: currentMousePosition ? currentMousePosition.y : 100,
+                txt_v: '图片',
                 customState: {
-                    src: dataUrl,
+                    src: '',
+                    uid,
                     width: size.width,
                     height: size.height,
                     imageMagnifierList: OrderedSet(),

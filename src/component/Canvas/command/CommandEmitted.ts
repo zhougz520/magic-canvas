@@ -65,6 +65,8 @@ export enum CommandMap {
     // 设置僚机焦点
     WINGMAN_FOCUS = 'e.setFocusWingman',
 
+    // 删除
+    COM_DELETE = 'e.deleteCom',
     // 复制
     COM_COPY = 'e.copyCom',
     // 剪切
@@ -80,5 +82,7 @@ export enum CommandMap {
     MAGNIFIER_DELETE = 'e.deleteMagnifier',
 
     // 保存数据
-    DATA_SAVE = 'e.saveData'
+    DATA_SAVE = 'e.saveData',
+    // 退出所有模式
+    MODE_EXIT = 'e.exitAllMode'
 }

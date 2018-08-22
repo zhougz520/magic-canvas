@@ -1,6 +1,6 @@
 {
   "name": "xprst-com",
-  "version": "0.0.14",
+  "version": "0.0.26",
   "description": "component base for xpresentation",
   "main": "./dist/index.js",
   "types": "./@types/index.d.ts",
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/xprst/xprst-com#readme",
   "scripts": {
+    "prepublish": "yarn run build",
     "start": "better-npm-run start",
     "build": "yarn run lint && better-npm-run compile-prod",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -57,7 +58,7 @@
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "react-beautiful-dnd": "^7.1.0",
-    "xprst-draft": "^0.0.4"
+    "xprst-draft": "^0.0.7"
   },
   "devDependencies": {
     "@types/debug": "^0.0.30",

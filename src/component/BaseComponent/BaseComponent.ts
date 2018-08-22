@@ -25,9 +25,59 @@ import { Stack, List, OrderedSet } from 'immutable';
 export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     extends React.PureComponent<P, S> implements IComponent {
 
-    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
-        this.updateCommentsList(prevState);
-    }
+    protected defaultContextMenuItems: IContextMenuItems[] = [
+        {
+            type: 'menu',
+            label: '删除',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.deleteCom'
+                });
+            }
+        },
+        {
+            type: 'separator'
+        },
+        {
+            type: 'menu',
+            label: '剪切',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.cutCom'
+                });
+            }
+        },
+        {
+            type: 'menu',
+            label: '复制',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.copyCom'
+                });
+            }
+        },
+        {
+            type: 'separator'
+        },
+        {
+            type: 'menu',
+            label: '置于顶层',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.frontCom'
+                });
+            }
+        },
+        {
+            type: 'menu',
+            label: '置于底层',
+            click: () => {
+                this.props.executeCommand({
+                    t: 'e.backCom'
+                });
+            }
+        }
+    ];
 
     /**
      * 获取组件的baseProps
@@ -95,12 +145,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 设置组件Position
      * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
-     * @param Position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
+     * @param position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public setPosition = (Position: IPosition, isSetUndo: boolean = false): void => {
-        const newPositionState: PositionState = PositionState.create(Position);
+    public setPosition = (position: IPosition, isSetUndo: boolean = false): void => {
+        const oldPositionState: PositionState = this.getPositionState();
+        const newPositionState: PositionState = PositionState.create(position);
 
-        this.setPositionState(newPositionState, isSetUndo);
+        this.setPositionState(newPositionState, isSetUndo, () => this.updateCommentsList(oldPositionState));
     }
 
     /**
@@ -320,7 +371,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 默认：空，组件自己重写
      */
     public getContextMenuItems = (): IContextMenuItems[] => {
-        return [];
+        return this.defaultContextMenuItems;
     }
 
     /**
@@ -589,7 +640,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 设置组件的PositionState
      * @param newPositionState 构建好的新的PositionState
      */
-    protected setPositionState = (newPositionState: PositionState, isSetUndo: boolean = false): void => {
+    protected setPositionState = (newPositionState: PositionState, isSetUndo: boolean = false, callback?: () => void): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             positionState: newPositionState
@@ -600,7 +651,10 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
 
         this.setState({
             baseState: newBaseState
-        }, () => this.callBackForRender('Position', isSetUndo));
+        }, () => {
+            this.callBackForRender('Position', isSetUndo);
+            callback && callback();
+        });
     }
 
     /**
@@ -703,34 +757,27 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 更新批注框位置
      */
-    protected updateCommentsList = (prevState: IBaseState): void => {
-        const currentContent: ContentState = this.state.baseState.getCurrentContent();
-        const prevContent: ContentState = prevState.baseState.getCurrentContent();
+    protected updateCommentsList = (prevPositionState: PositionState): void => {
+        // 如果有批注，更新批注的位置
+        const commentsList: List<ICommentsList> = this.getCommentsList();
+        const componentPosition: IPosition = this.getPosition();
+        commentsList.map(
+            (comments: ICommentsList) => {
+                const commentsRect: IComponent | null = this.props.getComponent(comments.cid);
+                if (commentsRect !== null) {
+                    const rectPosition: IPosition = commentsRect.getPosition();
+                    const relativePosition: IPosition = {
+                        top: rectPosition.top - prevPositionState.getTop(),
+                        left: rectPosition.left - prevPositionState.getLeft()
+                    };
 
-        if (
-            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
-        ) {
-            // 如果有批注，更新批注的位置
-            const commentsList: List<ICommentsList> = this.getCommentsList();
-            const componentPosition: IPosition = this.getPosition();
-            commentsList.map(
-                (comments: ICommentsList) => {
-                    const commentsRect: IComponent | null = this.props.getComponent(comments.cid);
-                    if (commentsRect !== null) {
-                        const rectPosition: IPosition = commentsRect.getPosition();
-                        const relativePosition: IPosition = {
-                            top: rectPosition.top - prevContent.getPositionState().getTop(),
-                            left: rectPosition.left - prevContent.getPositionState().getLeft()
-                        };
-
-                        const commentsRectPosition: IPosition = {
-                            top: componentPosition.top + relativePosition.top,
-                            left: componentPosition.left + relativePosition.left
-                        };
-                        commentsRect.setPosition(commentsRectPosition);
-                    }
+                    const commentsRectPosition: IPosition = {
+                        top: componentPosition.top + relativePosition.top,
+                        left: componentPosition.left + relativePosition.left
+                    };
+                    commentsRect.setPosition(commentsRectPosition);
                 }
-            );
-        }
+            }
+        );
     }
 }

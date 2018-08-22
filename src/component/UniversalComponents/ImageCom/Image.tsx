@@ -2,63 +2,130 @@ import * as React from 'react';
 import {
     BaseState,
     ContentState,
-    BaseComponent,
     BaseStyle,
-    IBaseProps,
-    IBaseState,
     IPosition,
     MaskLayer,
     IComData,
-    IComponent
+    IComponent,
+    ISize,
+    IRichEditOption,
+    IFont,
+    PositionState,
+    SizeState
 } from '../../BaseComponent';
+import {
+    BaseUniversalComponent,
+    IBaseUniversalComponentProps,
+    IBaseUniversalComponentState
+} from '../BaseUniversalComponent';
 import { IContextMenuItems } from '../../Stage';
 import { CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
 
 import { ImageMagnifier } from './ImageMagnifier';
-import { ImageState, IImageState } from './ImageState';
-import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
+import { ImageMagnifierState } from './ImageMagnifierState';
+import { ImageState, IImageState, dataUrl } from './ImageState';
+import { ImageLine, IImageLineProps } from './ImageLine';
+import { IToolButtonGroup, emptyButtonGroup } from '../model/types';
 
-import { Map, OrderedSet, List } from 'immutable';
+import { getPluginConfig, PluginMap } from '../../../plugin';
+import { OrderedSet, Map } from 'immutable';
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
-export default class Image extends BaseComponent<IBaseProps, IBaseState> {
-    constructor(props: IBaseProps, context?: any) {
+export default class Image extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
+    private _padding: number = 8;
+
+    constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new ImageState())
+            baseState: this.initBaseStateWithCustomState(new ImageState(), '图片'),
+            hidden: false
         };
     }
 
     /**
-     * 获取组件属性列表
+     * 设置组件Position
+     * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
+     * @param position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
-        let propertyList: List<IProperty> = List();
-        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+    public setPosition = (position: IPosition, isSetUndo: boolean = false): void => {
+        const oldPositionState: PositionState = this.getPositionState();
+        const newPositionState: PositionState = PositionState.create(position);
 
-        // 外观
-        propertyList = propertyList.push(
-            { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
-            { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
-        );
-        propertyGroup = propertyGroup.add(
-            { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
-        );
-        propertyList = List();
-
-        return propertyGroup;
+        this.setPositionState(newPositionState, isSetUndo, () => {
+            this.updateCommentsList(oldPositionState);
+            this.updateImageMagnifierList(oldPositionState);
+        });
     }
 
     /**
-     * 设置属性
+     * 获取富文本编辑器的大小和位置
      */
-    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
-        let properties = Map();
-        properties = properties.set(pKey, pValue);
-        const newImageState: ImageState = ImageState.set(this.getCustomState(), properties);
+    public getRichEditOption = (): IRichEditOption => {
+        const comPosition: IPosition = this.getPosition();
+        const comSize: ISize = this.getSize();
 
-        this.setCustomState(newImageState, true, callback);
+        const position: IPosition = {
+            top: comPosition.top + 7,
+            left: comPosition.left + this._padding
+        };
+        const size: ISize = {
+            width: comSize.width - this._padding,
+            height: 16
+        };
+        const font: IFont = {
+            textAlign: 'left',
+            fontColor: 'rgba(0, 0, 0, 0.65)',
+            fontStyle: 'normal',
+            fontSize: 14,
+            fontWeight: 'normal',
+            textDecoration: 'none'
+        };
+
+        return { position, size, font };
+    }
+
+    /**
+     * 获取组件富文本内容
+     * 返回：带格式的富文本内容
+     */
+    public getRichChildNode = (): any => {
+        const baseState: BaseState = this.getBaseState();
+
+        return baseState.getCurrentContent().getRichChildNode();
+    }
+
+    /**
+     * 设置组件文本内容
+     */
+    public setRichChildNode = (param: any): void => {
+        const oldBaseState: BaseState = this.getBaseState();
+        const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+            richChildNode: param.value
+        }) as ContentState;
+        const newBaseState = BaseState.push(oldBaseState, newContent);
+
+        this.setState({
+            baseState: newBaseState
+        }, () => this.callBackForRender('Rich'));
+    }
+
+    /**
+     * 获取组件的字体属性，传给工具栏
+     * 默认：空，组件自己重写
+     */
+    public getFontPropsToTool = (): IToolButtonGroup => {
+        return emptyButtonGroup;
+    }
+
+    /**
+     * 工具栏设置字体样式
+     * @param fontStyleType 字体类型
+     * @param value 值
+     * @param key 循环的键
+     */
+    public setFontPropsFromTool = (fontStyleType: string, value: any, key: number) => {
+        return;
     }
 
     /**
@@ -76,43 +143,92 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
                         d: this.getCid()
                     });
                 }
-            }
+            },
+            {
+                type: 'separator'
+            },
+            ...this.defaultContextMenuItems
         ];
     }
 
-    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
-        // 1.更新批注框
-        this.updateCommentsList(prevState);
-        // 2.更新图片放大镜
-        this.updateImageMagnifierList(prevState);
+    componentDidMount() {
+        const uid = (this.getCustomState() as ImageState).getUid();
+        if (uid === undefined || uid === null || uid.length === 0) return;
+
+        const loadFunc = getPluginConfig(PluginMap.IMAGE_ASYNC_LOAD_FUNC);
+        if (loadFunc) {
+            loadFunc(uid)
+                .then((ret: any) => {
+                    const src = ret.src;
+                    const newImageState: ImageState = ImageState.set(this.getCustomState(), Map({ src }));
+
+                    const oldBaseState: BaseState = this.getBaseState();
+                    const newContent: ContentState = oldBaseState.getCurrentContent().merge({
+                        customState: newImageState
+                    }) as ContentState;
+                    const newBaseState = BaseState.set(oldBaseState, {
+                        currentContent: newContent,
+                        tempContentState: newContent
+                    });
+                    this.setBaseState(newBaseState);
+                })
+                .catch((err: any) => {
+                    // nothing
+                });
+        }
     }
 
     render() {
+        const { hidden } = this.state;
         const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
         const magnifierList: JSX.Element[] = this.buildMagnifier(imageMagnifierList);
+        const lineList: JSX.Element[] = this.buildLine(imageMagnifierList);
+        const comSize: ISize = this.getSize();
 
         return (
             <React.Fragment>
                 <div
                     style={{
-                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
-                        backgroundColor: this.getCustomState().getBackgroundColor(),
-                        borderColor: this.getCustomState().getBorderColor(),
-                        borderWidth: this.getCustomState().getBorderWidth(),
-                        borderStyle: 'solid'
+                        ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected()),
+                        borderColor: '#d3d5d9',
+                        backgroundColor: '#fff'
                     }}
                     onMouseDown={this.fireSelectChange}
                 >
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '30px',
+                            backgroundColor: '#f0f0ff',
+                            borderBottom: '1px solid #d3d5d9',
+                            lineHeight: '30px',
+                            paddingLeft: '8px'
+                        }}
+                        onDoubleClick={this.doDbClickToEdit}
+                    >
+                        {hidden ? '' : this.getRichChildNode()}
+                    </div>
                     <MaskLayer id={this.getCid()} isCanSelected={this.isCanSelected()} />
                     <img
                         style={{
-                            width: '100%',
-                            height: '100%',
-                            display: 'inline-block'
+                            width: comSize.width - 22,
+                            height: comSize.height - 52,
+                            display: 'inline-block',
+                            margin: '10px'
                         }}
                         src={this.getCustomState().getSrc()}
                     />
                 </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    version="1.1"
+                    width="100%"
+                    height="100%"
+                    pointerEvents="none"
+                    style={{ position: 'absolute', zIndex: this.getHierarchy() }}
+                >
+                    {lineList}
+                </svg>
                 <div
                     style={{
                         pointerEvents: 'none',
@@ -167,6 +283,7 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
                             resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                             setCanvasUndoStack={setCanvasUndoStack}
                             userInfo={userInfo}
+                            src={this.getCustomState().getSrc()}
                         />
                     );
                 }
@@ -177,37 +294,79 @@ export default class Image extends BaseComponent<IBaseProps, IBaseState> {
     }
 
     /**
-     * 更新放大镜列表
+     * 构建连接线
      */
-    private updateImageMagnifierList = (prevState: IBaseState) => {
-        const currentContent: ContentState = this.state.baseState.getCurrentContent();
-        const prevContent: ContentState = prevState.baseState.getCurrentContent();
+    private buildLine = (imageMagnifierList: OrderedSet<IComponentList>): JSX.Element[] => {
+        const lineList: JSX.Element[] = [];
 
-        if (
-            currentContent.getPositionState().equals(prevContent.getPositionState()) === false
-        ) {
-            // 如果有批注，更新批注的位置
-            const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
-            const componentPosition: IPosition = this.getPosition();
+        if (imageMagnifierList) {
             imageMagnifierList.map(
                 (imageMagnifier: IComponentList) => {
-                    const componentMagnifier: IComponent | null = this.props.getComponent(imageMagnifier.cid);
-                    if (componentMagnifier !== null) {
-                        const imageMagnifierPosition: IPosition = componentMagnifier.getPosition();
-                        const relativePosition: IPosition = {
-                            top: imageMagnifierPosition.top - prevContent.getPositionState().getTop(),
-                            left: imageMagnifierPosition.left - prevContent.getPositionState().getLeft()
-                        };
-
-                        const newImageMagnifierPosition: IPosition = {
-                            top: componentPosition.top + relativePosition.top,
-                            left: componentPosition.left + relativePosition.left
-                        };
-                        componentMagnifier.setPosition(newImageMagnifierPosition);
-                    }
+                    const imageLine: IImageLineProps = this.buildLineProps(this.getBaseState(), imageMagnifier.baseState);
+                    lineList.push(
+                        <ImageLine
+                            key={imageMagnifier.cid}
+                            x1={imageLine.x1}
+                            y1={imageLine.y1}
+                            x2={imageLine.x2}
+                            y2={imageLine.y2}
+                            rectSize={imageLine.rectSize}
+                            rectPosition={imageLine.rectPosition}
+                        />
+                    );
                 }
             );
         }
+
+        return lineList;
+    }
+
+    /**
+     * 构建连接线参数
+     */
+    private buildLineProps = (imageBaseState: BaseState, imageMagnifierBaseState: BaseState): IImageLineProps => {
+        const imagePositionState: PositionState = imageBaseState.getCurrentContent().getPositionState();
+        const imageMagnifierPositionState: PositionState = imageMagnifierBaseState.getCurrentContent().getPositionState();
+        const imageMagnifierSizeState: SizeState = imageMagnifierBaseState.getCurrentContent().getSizeState();
+        const imageMagnifierCustomState: ImageMagnifierState = imageMagnifierBaseState.getCurrentContent().getCustomState();
+        const rectSize: ISize = imageMagnifierCustomState.getRectSize();
+        const rectPosition: IPosition = imageMagnifierCustomState.getRectPosition();
+
+        return {
+            x1: Math.ceil(imageMagnifierPositionState.getLeft() + imageMagnifierSizeState.getWidth() / 2),
+            y1: imageMagnifierPositionState.getTop(),
+            x2: Math.ceil(imagePositionState.getLeft() + 11 + rectPosition.left + rectSize.width / 2),
+            y2: imagePositionState.getTop() + 41 + rectPosition.top + rectSize.height,
+            rectSize,
+            rectPosition: { top: imagePositionState.getTop() + 41 + rectPosition.top, left: imagePositionState.getLeft() + 11 + rectPosition.left }
+        };
+    }
+
+    /**
+     * 更新放大镜列表
+     */
+    private updateImageMagnifierList = (prevPositionState: PositionState) => {
+        // 如果有放大镜，更新放大镜的位置
+        const imageMagnifierList: OrderedSet<IComponentList> = this.getCustomState().getImageMagnifierList();
+        const componentPosition: IPosition = this.getPosition();
+        imageMagnifierList.map(
+            (imageMagnifier: IComponentList) => {
+                const componentMagnifier: IComponent | null = this.props.getComponent(imageMagnifier.cid);
+                if (componentMagnifier !== null) {
+                    const imageMagnifierPosition: IPosition = componentMagnifier.getPosition();
+                    const relativePosition: IPosition = {
+                        top: imageMagnifierPosition.top - prevPositionState.getTop(),
+                        left: imageMagnifierPosition.left - prevPositionState.getLeft()
+                    };
+
+                    const newImageMagnifierPosition: IPosition = {
+                        top: componentPosition.top + relativePosition.top,
+                        left: componentPosition.left + relativePosition.left
+                    };
+                    componentMagnifier.setPosition(newImageMagnifierPosition);
+                }
+            }
+        );
     }
 }
 
@@ -234,7 +393,8 @@ export function convertFromCustomStateToData(customState: any): any {
     );
 
     return {
-        src: encodeCustomState.getSrc(),
+        src: encodeCustomState.getUid() === '' ? encodeCustomState.getSrc() : '',
+        uid: encodeCustomState.getUid(),
         width: encodeCustomState.getWidth(),
         height: encodeCustomState.getHeight(),
         imageMagnifierList: components,
@@ -252,6 +412,7 @@ export function convertFromCustomStateToData(customState: any): any {
 export function convertFromDataToCustomState(
     customData: {
         src: string;
+        uid?: string;
         width: number;
         height: number;
         imageMagnifierList: Array<{
@@ -266,6 +427,7 @@ export function convertFromDataToCustomState(
 ): any {
     const data: IImageState = {
         src: '',
+        uid: '',
         width: 0,
         height: 0,
         imageMagnifierList: OrderedSet(),
@@ -289,7 +451,9 @@ export function convertFromDataToCustomState(
             }
         );
 
-        data.src = customData.src;
+        data.uid = customData.uid === undefined ? '' : customData.uid;
+        const src: string = dataUrl;
+        data.src = data.uid === '' ? customData.src : src;
         data.width = customData.width;
         data.height = customData.height;
         data.maxMagnifierId = customData.maxMagnifierId;

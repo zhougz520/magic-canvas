@@ -133,7 +133,8 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
 
         const colorPicker = (
             <SketchPicker
-                onChangeComplete={(color) => this.changeColor(color.hex)}
+                color={fontColor.value}
+                onChangeComplete={(color) => this.changeColor(`rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`)}
             />
         );
 

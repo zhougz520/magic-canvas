@@ -2,6 +2,8 @@ import { Canvas } from '../Canvas';
 import { IComponent } from '../../BaseComponent';
 import { IRange, IStack, IComponentList, IOperation } from '../model/types';
 import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
+
+import { getPluginConfig, PluginMap } from '../../../plugin';
 import { Stack, Set, List, OrderedSet, Map } from 'immutable';
 
 export class PageAction {
@@ -39,10 +41,8 @@ export class PageAction {
     undoCanvas = () => {
         // 如果是编辑模式：结束编辑状态。
         if (this._canvas._isRichEditMode === true) {
-            this._canvas._richEditUtil.endEdit();
-        }
-
-        setTimeout(() => {
+            this._canvas._richEditUtil.undoRedo('undo');
+        } else {
             const undoStack: Stack<IStack> = this._canvas._undoStack;
             const redoStack: Stack<IStack> = this._canvas._redoStack;
             let currentComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
@@ -123,17 +123,15 @@ export class PageAction {
             };
             this._canvas._undoStack = undoStack.shift();
             this._canvas._redoStack = redoStack.push(resetCurrentUndoStack);
-        }, 0);
+        }
     }
 
     // 画布重做
     redoCanvas = () => {
         // 如果是编辑模式：结束编辑状态。
         if (this._canvas._isRichEditMode === true) {
-            this._canvas._richEditUtil.endEdit();
-        }
-
-        setTimeout(() => {
+            this._canvas._richEditUtil.undoRedo('redo');
+        } else {
             const undoStack: Stack<IStack> = this._canvas._undoStack;
             const redoStack: Stack<IStack> = this._canvas._redoStack;
             let currentComponentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
@@ -214,7 +212,7 @@ export class PageAction {
             };
             this._canvas._undoStack = undoStack.push(resetCurrentRedoStack);
             this._canvas._redoStack = redoStack.shift();
-        }, 0);
+        }
     }
 
     // 上移一层
@@ -498,11 +496,6 @@ export class PageAction {
         currentSelectedComponent.map(
             (com: IComponent) => {
                 com.setPropertiesFromProperty(param.pKey, param.pValue);
-                // if (param.pKey === 'borderWidth') {
-                //     setTimeout(() => {
-                //         this._canvas._drawUtil.repaintSelected();
-                //     }, 0);
-                // }
             }
         );
     }
@@ -512,6 +505,13 @@ export class PageAction {
      */
     setFocusWingman = () => {
         this._canvas.getWingman().setFocus();
+    }
+
+    /**
+     * 删除组件
+     */
+    deleteCom = () => {
+        this._canvas._componentsUtil.deleteCanvasComponent(this._canvas._canvasGlobalParam.getSelectedCids());
     }
 
     /**
@@ -581,9 +581,13 @@ export class PageAction {
 
                 // image
                 if (clipboardTypes.includes('image') && data.image) {
-                    const imageData = data.image;
-                    const { dataUrl, size } = imageData;
-                    this._canvas._componentsUtil.pasteImage(dataUrl, size);
+                    const pasteImageFunc = getPluginConfig(PluginMap.PASTE_IMAGE_FUNC);
+                    if (!pasteImageFunc) {
+                        return;
+                    }
+                    const imageData = pasteImageFunc();
+                    const { size, uid } = imageData;
+                    this._canvas._componentsUtil.pasteImage(uid, size);
                 }
             }
         } catch (err) {
@@ -629,5 +633,11 @@ export class PageAction {
     // 保存数据
     saveData = () => {
         this._canvas.props.saveData && this._canvas.props.saveData();
+    }
+
+    // 退出所有模式
+    exitAllMode = () => {
+        this._canvas._canvasUtil.exitCanvasMode();
+        this._canvas._richEditUtil.endEdit();
     }
 }

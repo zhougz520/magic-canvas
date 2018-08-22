@@ -109,10 +109,15 @@ export class ImageMagnifierUtil {
             // 原图属性
             const natureWidth: number = imageCustomState.getWidth();
             const natureHeight: number = imageCustomState.getHeight();
-            const natureDataUrl: string = imageCustomState.getSrc();
             // 调整后的图片属性
-            const imagePosition = comImage.getPosition();
-            const imageSize: ISize = comImage.getSize();
+            const imagePosition = {
+                top: comImage.getPosition().top + 41,
+                left: comImage.getPosition().left + 11
+            };
+            const imageSize: ISize = {
+                height: comImage.getSize().height - 52,
+                width: comImage.getSize().width - 22
+            };
             // 放大镜相对位置
             const relativePosition: IPosition = {
                 top: rectPosition.top - imagePosition.top,
@@ -137,10 +142,14 @@ export class ImageMagnifierUtil {
             const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                 data,
                 // TODO 修改添加位置
-                { x: rectPosition.left, y: rectPosition.top },
+                {
+                    x: Math.ceil(rectPosition.left + (rectSize.width - cutSize.width - 8) / 2),
+                    y: comImage.getPosition().top + comImage.getSize().height + 50
+                },
                 {
                     cid: this._imageComponentCid,
-                    src: natureDataUrl,
+                    rectSize,
+                    rectPosition: relativePosition,
                     backgroundPositionX: - cutPosition.left,
                     backgroundPositionY: - cutPosition.top
                 }

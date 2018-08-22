@@ -46,3 +46,9 @@ export {
 export {
     getListStyleTypeMap
 } from './component/RichEdit';
+
+export {
+    getPluginConfig,
+    addPluginConfig,
+    PluginMap
+} from './plugin';

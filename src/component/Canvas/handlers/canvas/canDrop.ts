@@ -1,13 +1,14 @@
 import { Canvas } from '../../Canvas';
-import { GlobalUtil } from '../../../util';
 import { List } from 'immutable';
 
 export function canDrop(canvas: Canvas, e: any): void {
-    if (GlobalUtil.isEmptyString(localStorage.__dnd_type) || GlobalUtil.isEmptyString(localStorage.__dnd_value)) {
+    const type = localStorage.getItem('__dnd_type');
+    const value = localStorage.getItem('__dnd_value');
+    if (type === null || value === null) {
         return;
     }
-    if (localStorage.__dnd_type !== 'dragging_cs') return;
-    const data = JSON.parse(localStorage.__dnd_value);
+    if (type !== 'dragging_cs') return;
+    const data = JSON.parse(value);
     const position = canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
 
     canvas._componentsUtil.addCanvasComponent(List().push(data), position, true);

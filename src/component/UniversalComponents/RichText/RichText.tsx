@@ -116,6 +116,16 @@ export default class RichText extends BaseUniversalComponent<IBaseUniversalCompo
         return emptyButtonGroup;
     }
 
+    /**
+     * 工具栏设置字体样式
+     * @param fontStyleType 字体类型
+     * @param value 值
+     * @param key 循环的键
+     */
+    public setFontPropsFromTool = (fontStyleType: string, value: any, key: number) => {
+        return;
+    }
+
     render() {
         const { hidden } = this.state;
 

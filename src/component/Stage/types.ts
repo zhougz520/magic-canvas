@@ -43,5 +43,6 @@ export type ContextMenuType = 'menu' | 'separator';
 export interface IContextMenuItems {
     type: ContextMenuType;
     label?: string;
+    enabled?: boolean;
     click?: () => void;
 }

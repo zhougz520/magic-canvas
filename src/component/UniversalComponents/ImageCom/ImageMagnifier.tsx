@@ -9,10 +9,14 @@ import { ImageMagnifierState, IImageMagnifierState } from './ImageMagnifierState
 
 import { OrderedSet } from 'immutable';
 
-// tslint:disable:jsx-no-multiline-js
-export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
+export interface IImageMagnifierProps extends IBaseProps {
+    src: string;
+}
 
-    constructor(props: IBaseProps, context?: any) {
+// tslint:disable:jsx-no-multiline-js
+export class ImageMagnifier extends BaseComponent<IImageMagnifierProps, IBaseState> {
+
+    constructor(props: IImageMagnifierProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -67,10 +71,8 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
         ];
     }
 
-    componentDidUpdate(prevProps: IBaseProps, prevState: IBaseState) {
-        // 1.更新批注框
-        this.updateCommentsList(prevState);
-        // 2.更新图片组件的CustomState
+    componentDidUpdate(prevProps: IImageMagnifierProps, prevState: IBaseState) {
+        // 更新图片组件的CustomState
         this.updateImageCustomState(prevState);
     }
 
@@ -104,7 +106,7 @@ export class ImageMagnifier extends BaseComponent<IBaseProps, IBaseState> {
                         width: width - 8,
                         height: height - 8,
                         margin: 4,
-                        backgroundImage: `url("${this.getCustomState().getSrc()}")`,
+                        backgroundImage: `url("${this.props.src}")`,
                         backgroundRepeat: 'no-repeat',
                         backgroundPosition: `${this.getCustomState().getBackgroundPositionX()}px ${this.getCustomState().getBackgroundPositionY()}px`
                     }}

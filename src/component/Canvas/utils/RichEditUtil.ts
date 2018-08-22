@@ -122,4 +122,9 @@ export class RichEditUtil {
             }
         }
     }
+
+    // 撤销重做
+    undoRedo = (type: 'undo' | 'redo') => {
+        this._canvas.getEditor().undoRedo(type);
+    }
 }

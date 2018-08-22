@@ -7973,9 +7973,9 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-xprst-draft@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/xprst-draft/-/xprst-draft-0.0.4.tgz#4a283f7fabed361a10e4ec86d60dbe49c6d9cdb0"
+xprst-draft@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/xprst-draft/-/xprst-draft-0.0.7.tgz#9d8952c412ea3c59de18060d1bfb10db379c20ab"
   dependencies:
     fbjs "^0.8.16"
     immutable "^3.8.2"

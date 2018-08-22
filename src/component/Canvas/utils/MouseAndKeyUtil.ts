@@ -32,7 +32,6 @@ export class MouseAndKeyUtil {
      * 判断鼠标事件作用的范围，component： 组件， canvas： 画布， outside： 外框
      */
     onMouseEventType = (e: any): string => {
-        // TODO 优化代码
         if (this._canvas._canvasUtil.isCanvasHaveMode() === true) return 'canvas';
 
         if (e.target) {
