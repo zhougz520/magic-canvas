@@ -403,7 +403,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
  * 批注把customState转成需要保存的data
  * @param customState 批注的customState
  */
-export function convertFromCustomStateToData(customState: any): any {
+export function convertFromCustomStateToData(
+    customState: any,
+    offset: IOffset = { x: 0, y: 0 }
+): any {
     const components: any[] = [];
     const encodeCustomState: CommentsState = customState;
     const commentsRectList: OrderedSet<IComponentList> = encodeCustomState.getCommentsRectList();
@@ -415,7 +418,8 @@ export function convertFromCustomStateToData(customState: any): any {
                     {
                         comPath: commentsRect.comPath,
                         childData: commentsRect.childData
-                    }
+                    },
+                    offset
                 )
             );
         }

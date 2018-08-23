@@ -19,7 +19,7 @@ import {
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
 import { IContextMenuItems } from '../../Stage';
-import { Canvas, CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
+import { Canvas, CommandMap, IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
 
 import { ImageMagnifier } from './ImageMagnifier';
 import { ImageMagnifierState } from './ImageMagnifierState';
@@ -374,7 +374,10 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
  * 批注把customState转成需要保存的data
  * @param customState 批注的customState
  */
-export function convertFromCustomStateToData(customState: any): any {
+export function convertFromCustomStateToData(
+    customState: any,
+    offset: IOffset = { x: 0, y: 0 }
+): any {
     const components: any[] = [];
     const encodeCustomState: ImageState = customState;
     const imageMagnifierList: OrderedSet<IComponentList> = encodeCustomState.getImageMagnifierList();
@@ -386,7 +389,8 @@ export function convertFromCustomStateToData(customState: any): any {
                     {
                         comPath: imageMagnifier.comPath,
                         childData: imageMagnifier.childData
-                    }
+                    },
+                    offset
                 )
             );
         }
