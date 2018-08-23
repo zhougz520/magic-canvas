@@ -33,6 +33,7 @@ import { OrderedSet, Map } from 'immutable';
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
 export default class Image extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
     private _padding: number = 8;
+    private _willUnmount: boolean = false;
 
     constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
@@ -170,12 +171,21 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                         currentContent: newContent,
                         tempContentState: newContent
                     });
-                    this.setBaseState(newBaseState);
+
+                    if (this._willUnmount === false) {
+                        this.setBaseState(newBaseState);
+                    } else {
+                        this._willUnmount = false;
+                    }
                 })
                 .catch((err: any) => {
                     // nothing
                 });
         }
+    }
+
+    componentWillUnmount() {
+        this._willUnmount = true;
     }
 
     render() {
