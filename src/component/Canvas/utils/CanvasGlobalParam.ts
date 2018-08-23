@@ -278,7 +278,7 @@ export class CanvasGlobalParam {
 
                 // 3.如果是图片组件，对放大镜设栈
                 const customState: any = com.getCustomState();
-                if (customState.getImageMagnifierList) {
+                if (customState && customState.getImageMagnifierList) {
                     const imageMagnifierList: OrderedSet<IComponentList> = customState.getImageMagnifierList();
                     imageMagnifierList.map(
                         (imageMagnifier: IComponentList) => {
