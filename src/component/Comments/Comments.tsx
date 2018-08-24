@@ -380,6 +380,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         return (
             <Menu onClick={this.handleGuestContextMenuClick}>
                 <Menu.Item key="addCommentsRect">添加锚点</Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="deleteComments">删除</Menu.Item>
             </Menu>
         );
     }
@@ -388,11 +390,17 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
      * 访客菜单点击
      */
     private handleGuestContextMenuClick = (e: any) => {
+        const { executeCommand } = this.props;
         switch (e.key) {
             case 'addCommentsRect':
-                this.props.executeCommand({
+                executeCommand({
                     t: CommandMap.COMMENTSRECT_ADD,
                     d: this.getCid()
+                });
+                break;
+            case 'deleteComments':
+                executeCommand({
+                    t: CommandMap.COM_DELETE
                 });
                 break;
         }
