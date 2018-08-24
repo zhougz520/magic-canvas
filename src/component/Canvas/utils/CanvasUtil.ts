@@ -1,6 +1,7 @@
 import { Canvas } from '../Canvas';
 import { IComponentList, IOffset } from '../model/types';
 import { IComponent, IPosition, ISize } from '../../BaseComponent';
+import { getPluginConfig, PluginMap } from '../../../plugin';
 
 import { OrderedSet } from 'immutable';
 
@@ -64,7 +65,12 @@ export class CanvasUtil {
      * 设置画布大小
      */
     setCanvasSize = (canvasSize: { width: number; height: number; }) => {
-        this._canvas.setState({ canvasSize });
+        this._canvas.setState({ canvasSize }, () => {
+            const afterCanvasSizeFunc = getPluginConfig(PluginMap.AFTER_CANVASSIZE_FUNC);
+            if (afterCanvasSizeFunc) {
+                afterCanvasSizeFunc();
+            }
+        });
     }
 
     /**

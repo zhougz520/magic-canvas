@@ -217,9 +217,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         }, () => {
             this.setState({
                 cursor: 'default',
-                componentList,
-                canvasSize
+                componentList
             });
+            this._canvasUtil.setCanvasSize(canvasSize);
             this._drawUtil.setDrawCanvasSize(canvasSize);
         });
     }
