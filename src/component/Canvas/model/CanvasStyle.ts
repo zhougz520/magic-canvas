@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PageMode } from '../../Stage';
 
-const a4Size: { width: number; height: number } = { width: 1675, height: 1167 };
+const a4Size: { width: number; height: number } = { width: 1675, height: 1187 };
 
 export const CanvasStyle = (
     pos: { top: number, left: number, right: number, bottom: number },
