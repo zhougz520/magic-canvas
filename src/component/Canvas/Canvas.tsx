@@ -480,7 +480,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     render() {
-        const { componentPosition } = this.props;
+        const { componentPosition, pageMode } = this.props;
         const { canvasSize, componentList } = this.state;
 
         const canvasOffset = componentPosition.canvasOffset;
@@ -496,7 +496,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 <div
                     // tslint:disable-next-line:jsx-no-lambda
                     ref={(handler) => this.canvas = handler}
-                    style={CanvasStyle(canvasOffset)}
+                    style={CanvasStyle(canvasOffset, pageMode)}
                     className="canvas"
                     onDrop={this._onCanDrop}
                     onDragOver={this._onCanDragOver}
