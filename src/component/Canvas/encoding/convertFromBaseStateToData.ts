@@ -6,6 +6,7 @@ import {
     IComData,
     ICommentsList
 } from '../../BaseComponent';
+import { IOffset } from '../model/types';
 import { convertFromCustomStateToData } from './convertFromCustomStateToData';
 import { convertFromRichToData } from './convertFromRichToData';
 import { List } from 'immutable';
@@ -15,10 +16,14 @@ import { List } from 'immutable';
  * @param baseState 组件baseState
  * @param baseProps 组件baseProps
  */
-export const convertFromBaseStateToData = (baseState: BaseState, baseProps: {
-    comPath: string;
-    childData: any;
-}): {
+export const convertFromBaseStateToData = (
+    baseState: BaseState,
+    baseProps: {
+        comPath: string;
+        childData: any;
+    },
+    offset: IOffset = { x: 0, y: 0 }
+): {
         t: string;
         p: IComData
     } => {
@@ -36,11 +41,11 @@ export const convertFromBaseStateToData = (baseState: BaseState, baseProps: {
             txt_v: convertFromRichToData(richChildNode, baseProps.comPath),
             w: sizeState.getWidth(),
             h: sizeState.getHeight(),
-            l: positionState.getLeft(),
-            t: positionState.getTop(),
+            l: positionState.getLeft() - offset.x,
+            t: positionState.getTop() - offset.y,
             p: baseProps.childData,
             zIndex: content.getZIndex(),
-            customState: convertFromCustomStateToData(customState, baseProps.comPath),
+            customState: convertFromCustomStateToData(customState, baseProps.comPath, offset),
             commentsList: commentsList.toArray(),
             comType: content.getComType()
         }

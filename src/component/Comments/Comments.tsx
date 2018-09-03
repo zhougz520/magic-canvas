@@ -15,7 +15,7 @@ import {
     IFont,
     MaskLayer
 } from '../BaseComponent';
-import { IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState, CommandMap } from '../Canvas';
+import { Canvas, IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState, CommandMap } from '../Canvas';
 import { IContextMenuItems } from '../Stage';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../UniversalComponents';
 import { CommentsRect } from './CommentsRect';
@@ -29,6 +29,7 @@ const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFro
 
 import { Menu, Dropdown } from 'antd';
 import { OrderedSet, List, Map } from 'immutable';
+import * as Color from 'color';
 import './sass/Comments.scss';
 
 export interface ICommentsBaseState extends IBaseState {
@@ -46,7 +47,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         let author: string = '作者';
         let authorId: string = '';
         let userType: 'Master' | 'Guest' = 'Master';
-        let backgroundColor: string = '#F8E71C';
+        let backgroundColor: string = '#FFFBBA';
 
         switch (pageMode) {
             case 'Edit':
@@ -61,7 +62,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                 author = guestUserName === '' ? '访客' : guestUserName;
                 authorId = '';
                 userType = 'Guest';
-                backgroundColor = '#7ED321';
+                backgroundColor = '#B8E986';
                 break;
         }
         this.state = {
@@ -300,7 +301,6 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
      */
     private buildRect = (commentsRectList: OrderedSet<IComponentList>): JSX.Element[] => {
         const rectList: JSX.Element[] = [];
-        const commentsCustomState: CommentsState = this.getCustomState();
         const {
             pageMode,
             componentPosition,
@@ -336,7 +336,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 resetMaxAndMinZIndex={resetMaxAndMinZIndex}
                                 setCanvasUndoStack={setCanvasUndoStack}
                                 userInfo={userInfo}
-                                color={commentsCustomState.getBackgroundColor()}
+                                color={commentsLine.color}
                             />
                             <CommentsLine
                                 x1={commentsLine.x1}
@@ -362,13 +362,14 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         const rectPositionState: PositionState = rectBaseState.getCurrentContent().getPositionState();
         const rectSizeState: SizeState = rectBaseState.getCurrentContent().getSizeState();
         const commentsCustomState: CommentsState = this.getCustomState();
+        const color = Color(commentsCustomState.getBackgroundColor()).darken(0.5).rgb().round();
 
         return {
             x1: commentsPositionState.getLeft() + offset.x,
             y1: commentsPositionState.getTop() + offset.y,
             x2: rectPositionState.getLeft() + rectSizeState.getWidth(),
             y2: rectPositionState.getTop(),
-            color: commentsCustomState.getBackgroundColor()
+            color: `rgba(${color.red()}, ${color.green()}, ${color.blue()}, ${color.alpha()})`
         };
     }
 
@@ -379,6 +380,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         return (
             <Menu onClick={this.handleGuestContextMenuClick}>
                 <Menu.Item key="addCommentsRect">添加锚点</Menu.Item>
+                <Menu.Divider />
+                <Menu.Item key="deleteComments">删除</Menu.Item>
             </Menu>
         );
     }
@@ -387,11 +390,17 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
      * 访客菜单点击
      */
     private handleGuestContextMenuClick = (e: any) => {
+        const { executeCommand } = this.props;
         switch (e.key) {
             case 'addCommentsRect':
-                this.props.executeCommand({
+                executeCommand({
                     t: CommandMap.COMMENTSRECT_ADD,
                     d: this.getCid()
+                });
+                break;
+            case 'deleteComments':
+                executeCommand({
+                    t: CommandMap.COM_DELETE
                 });
                 break;
         }
@@ -402,7 +411,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
  * 批注把customState转成需要保存的data
  * @param customState 批注的customState
  */
-export function convertFromCustomStateToData(customState: any): any {
+export function convertFromCustomStateToData(
+    customState: any,
+    offset: IOffset = { x: 0, y: 0 }
+): any {
     const components: any[] = [];
     const encodeCustomState: CommentsState = customState;
     const commentsRectList: OrderedSet<IComponentList> = encodeCustomState.getCommentsRectList();
@@ -414,7 +426,8 @@ export function convertFromCustomStateToData(customState: any): any {
                     {
                         comPath: commentsRect.comPath,
                         childData: commentsRect.childData
-                    }
+                    },
+                    offset
                 )
             );
         }
@@ -453,7 +466,7 @@ export function convertFromDataToCustomState(
         userType: 'Master',
         commentsRectList: OrderedSet(),
         maxRectId: 0,
-        backgroundColor: '#F8E71C'
+        backgroundColor: '#FFFBBA'
     };
     if (customData && customData.commentsRectList) {
         customData.commentsRectList.map(
@@ -512,6 +525,33 @@ export function convertFromDataToRich(
  * 获取粘贴的CustomData
  * @param customData 自定义数据
  */
-export function getPasteCustomState(customData: any): any {
-    return null;
+export function getPasteCustomState(canvas: Canvas, customData: any): any {
+    const { pageMode, userInfo } = canvas.props;
+    let author: string = '作者';
+    let authorId: string = '';
+    let userType: 'Master' | 'Guest' = 'Master';
+
+    switch (pageMode) {
+        case 'Edit':
+        case 'Run':
+            if (userInfo) {
+                author = userInfo.userName;
+                authorId = userInfo.userId;
+            }
+            break;
+        case 'Guest':
+            const guestUserName = GlobalUtil.getCookie('pdu_GuestUserName');
+            author = guestUserName === '' ? '访客' : guestUserName;
+            authorId = '';
+            userType = 'Guest';
+            break;
+    }
+
+    customData.author = author;
+    customData.authorId = authorId;
+    customData.userType = userType;
+    customData.commentsRectList = OrderedSet();
+    customData.maxRectId = 0;
+
+    return customData;
 }

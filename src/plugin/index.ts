@@ -4,8 +4,8 @@ import { Map } from 'immutable';
  * const
  */
 export enum PluginMap {
-    IMAGE_ASYNC_LOAD_FUNC = 'IMAGE_ASYNC_LOAD_FUNC',
-    PASTE_IMAGE_FUNC = 'PASTE_IMAGE_FUNC'
+    IMAGE_ASYNC_LOAD_FUNC = 'IMAGE_ASYNC_LOAD_FUNC',    // 通过uid加载图片dataUrl
+    PASTE_IMAGE_FUNC = 'PASTE_IMAGE_FUNC'               // 粘贴图片
 }
 
 let __config: Map<string, any> = Map();

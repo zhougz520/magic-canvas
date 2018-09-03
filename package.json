@@ -1,6 +1,6 @@
 {
   "name": "xprst-com",
-  "version": "0.0.26",
+  "version": "0.0.32",
   "description": "component base for xpresentation",
   "main": "./dist/index.js",
   "types": "./@types/index.d.ts",
@@ -55,12 +55,14 @@
   "dependencies": {
     "antd": "^3.7.0",
     "clone": "^2.1.2",
+    "color": "^3.0.0",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "react-beautiful-dnd": "^7.1.0",
     "xprst-draft": "^0.0.7"
   },
   "devDependencies": {
+    "@types/color": "^3.0.0",
     "@types/debug": "^0.0.30",
     "@types/immutable": "^3.8.7",
     "@types/node": "^9.6.0",

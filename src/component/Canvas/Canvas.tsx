@@ -3,12 +3,12 @@ import { ComponentsType } from '../Stage';
 import { RichEdit, Wingman } from '../RichEdit';
 import { IPropertyGroup, IToolButtonGroup, emptyButtonGroup } from '../UniversalComponents';
 
-import { BaseState, IComponent, IComData } from '../BaseComponent';
+import { BaseState, IComponent, IComData, IPosition, ISize } from '../BaseComponent';
 import { ICanvasState } from './ICanvasState';
 import { ICanvasProps } from './ICanvasProps';
 import { ICanvasComponent } from './ICanvasComponent';
 import { CanvasStyle, ContainerStyle } from './model/CanvasStyle';
-import { IComponentList, IStack } from './model/types';
+import { IComponentList, IStack, IOffset } from './model/types';
 
 import { CanvasGlobalParam } from './utils/CanvasGlobalParam';
 import { CanvasUtil } from './utils/CanvasUtil';
@@ -217,9 +217,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         }, () => {
             this.setState({
                 cursor: 'default',
-                componentList,
-                canvasSize
+                componentList
             });
+            this._canvasUtil.setCanvasSize(canvasSize);
             this._drawUtil.setDrawCanvasSize(canvasSize);
         });
     }
@@ -319,9 +319,18 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     /**
      * 收集保存数据
      */
-    getSaveData = (): { width: number; height: number, detail: any } => {
+    getSaveData = (isShrink: boolean = false): { width: number; height: number, detail: any } => {
         const componentList = this.state.componentList;
-        const { width, height } = this.state.canvasSize;
+        let { width, height } = this.state.canvasSize;
+        let offset: IOffset = { x: 0, y: 0 };
+
+        // 收缩画布数据
+        if (isShrink) {
+            const shrinkData = this.getShrinkData();
+            width = shrinkData.width;
+            height = shrinkData.height;
+            offset = shrinkData.offset;
+        }
 
         const components: any[] = [];
         componentList.map(
@@ -334,7 +343,8 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                             {
                                 comPath: com.getBaseProps().comPath,
                                 childData: com.getBaseProps().childData
-                            }
+                            },
+                            offset
                         )
                     );
                 }
@@ -351,6 +361,85 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             width,
             height,
             detail
+        };
+    }
+
+    getShrinkData = (): { width: number; height: number, offset: IOffset } => {
+        const componentList = this.state.componentList;
+        let { width, height } = this.state.canvasSize;
+        let offset: IOffset = { x: 0, y: 0 };
+
+        if (componentList.size > 0) {
+            const startXList: number[] = [];
+            const startYList: number[] = [];
+            const endXList: number[] = [];
+            const endYList: number[] = [];
+
+            componentList.map(
+                (component: IComponentList) => {
+                    const com = this.getComponent(component.cid);
+                    if (com) {
+                        // 1.处理组件
+                        const customState: any = com.getCustomState();
+                        const position: IPosition = com.getPosition();
+                        const size: ISize = com.getSize();
+                        startXList.push(position.left);
+                        startYList.push(position.top);
+                        endXList.push(position.left + size.width);
+                        endYList.push(position.top + size.height);
+
+                        // 2.处理组件对应的批注框
+                        if (customState && customState.getCommentsRectList) {
+                            const commentsRectList: OrderedSet<IComponentList> = customState.getCommentsRectList();
+                            commentsRectList.map(
+                                (commentsRect: IComponentList) => {
+                                    const commentsRectCom: IComponent | null = this.getComponent(commentsRect.cid);
+                                    if (commentsRectCom) {
+                                        const positionRect: IPosition = commentsRectCom.getPosition();
+                                        const sizeRect: ISize = commentsRectCom.getSize();
+                                        startXList.push(positionRect.left);
+                                        startYList.push(positionRect.top);
+                                        endXList.push(positionRect.left + sizeRect.width);
+                                        endYList.push(positionRect.top + sizeRect.height);
+                                    }
+                                }
+                            );
+                        }
+
+                        // 3.处理图片放大镜
+                        if (customState && customState.getImageMagnifierList) {
+                            const imageMagnifierList: OrderedSet<IComponentList> = customState.getImageMagnifierList();
+                            imageMagnifierList.map(
+                                (imageMagnifier: IComponentList) => {
+                                    const componentMagnifier: IComponent | null = this.getComponent(imageMagnifier.cid);
+                                    if (componentMagnifier) {
+                                        const positionMagnifier: IPosition = componentMagnifier.getPosition();
+                                        const sizeMagnifier: ISize = componentMagnifier.getSize();
+                                        startXList.push(positionMagnifier.left);
+                                        startYList.push(positionMagnifier.top);
+                                        endXList.push(positionMagnifier.left + sizeMagnifier.width);
+                                        endYList.push(positionMagnifier.top + sizeMagnifier.height);
+                                    }
+                                }
+                            );
+                        }
+                    }
+                }
+            );
+
+            const minX: number = Math.min(...startXList);
+            const minY: number = Math.min(...startYList);
+            const maxX: number = Math.max(...endXList);
+            const maxY: number = Math.max(...endYList);
+            width = maxX - minX + 20;
+            height = maxY - minY + 20;
+            offset = { x: minX - 10, y: minY - 10 };
+        }
+
+        return {
+            width,
+            height,
+            offset
         };
     }
 
@@ -391,7 +480,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     render() {
-        const { componentPosition } = this.props;
+        const { componentPosition, pageMode } = this.props;
         const { canvasSize, componentList } = this.state;
 
         const canvasOffset = componentPosition.canvasOffset;
@@ -407,7 +496,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                 <div
                     // tslint:disable-next-line:jsx-no-lambda
                     ref={(handler) => this.canvas = handler}
-                    style={CanvasStyle(canvasOffset)}
+                    style={CanvasStyle(canvasOffset, pageMode)}
                     className="canvas"
                     onDrop={this._onCanDrop}
                     onDragOver={this._onCanDragOver}

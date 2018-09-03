@@ -56,8 +56,8 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
     /**
      * 获取画布保存数据
      */
-    public getCanvasSaveData = () => {
-        const { width, height, detail } = this.getCanvas().getSaveData();
+    public getCanvasSaveData = (isShrink: boolean = false) => {
+        const { width, height, detail } = this.getCanvas().getSaveData(isShrink);
 
         return {
             detail,

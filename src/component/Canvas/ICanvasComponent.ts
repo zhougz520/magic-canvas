@@ -20,7 +20,7 @@ export interface ICanvasComponent {
     /**
      * 获取保存数据
      */
-    getSaveData: () => { width: number; height: number, detail: any };
+    getSaveData: (isShrink: boolean) => { width: number; height: number, detail: any };
 
     /**
      * 设置画布是否变脏

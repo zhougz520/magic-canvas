@@ -19,7 +19,7 @@ import {
     IBaseUniversalComponentState
 } from '../BaseUniversalComponent';
 import { IContextMenuItems } from '../../Stage';
-import { CommandMap, IComponentList, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
+import { Canvas, CommandMap, IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState } from '../../Canvas';
 
 import { ImageMagnifier } from './ImageMagnifier';
 import { ImageMagnifierState } from './ImageMagnifierState';
@@ -33,6 +33,7 @@ import { OrderedSet, Map } from 'immutable';
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
 export default class Image extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
     private _padding: number = 8;
+    private _willUnmount: boolean = false;
 
     constructor(props: IBaseUniversalComponentProps, context?: any) {
         super(props, context);
@@ -170,12 +171,21 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                         currentContent: newContent,
                         tempContentState: newContent
                     });
-                    this.setBaseState(newBaseState);
+
+                    if (this._willUnmount === false) {
+                        this.setBaseState(newBaseState);
+                    } else {
+                        this._willUnmount = false;
+                    }
                 })
                 .catch((err: any) => {
                     // nothing
                 });
         }
+    }
+
+    componentWillUnmount() {
+        this._willUnmount = true;
     }
 
     render() {
@@ -374,7 +384,10 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
  * 批注把customState转成需要保存的data
  * @param customState 批注的customState
  */
-export function convertFromCustomStateToData(customState: any): any {
+export function convertFromCustomStateToData(
+    customState: any,
+    offset: IOffset = { x: 0, y: 0 }
+): any {
     const components: any[] = [];
     const encodeCustomState: ImageState = customState;
     const imageMagnifierList: OrderedSet<IComponentList> = encodeCustomState.getImageMagnifierList();
@@ -386,7 +399,8 @@ export function convertFromCustomStateToData(customState: any): any {
                     {
                         comPath: imageMagnifier.comPath,
                         childData: imageMagnifier.childData
-                    }
+                    },
+                    offset
                 )
             );
         }
@@ -465,7 +479,7 @@ export function convertFromDataToCustomState(
     return ImageState.create(data);
 }
 
-export function getPasteCustomState(customData: any): any {
+export function getPasteCustomState(canvas: Canvas, customData: any): any {
     customData.imageMagnifierList = OrderedSet();
     customData.maxMagnifierId = 0;
 
