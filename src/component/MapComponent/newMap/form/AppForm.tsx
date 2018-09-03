@@ -56,13 +56,13 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                 className={`map-form`}
                 style={Object.assign({}, { width: '100%' }, hover)}
             >
-                <div className={`map-form-header`} style={{ display: map_form_header_show ? '' : 'none' }}>
+                <div className={`form-title`} style={{ display: map_form_header_show ? '' : 'none' }}>
                     {map_form_title}
                 </div>
-                <div className={`map-form-content`}>
+                <div className={`form-content`}>
                     {tabFormList.length > 0 ? tabFormList : ''}
                 </div>
-                <div className={`map-form-header`} style={{ display: map_form_foot_show ? '' : 'none' }}>
+                <div className={`form-foot`} style={{ display: map_form_foot_show ? '' : 'none' }}>
                     <ul>
                         {tabFormFootList.length > 0 ? tabFormFootList : ''}
                     </ul>

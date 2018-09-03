@@ -17,13 +17,12 @@ import { IComponent } from '../../IComponent';
 import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
 import { IComData } from '../../model/types';
 
-import { AppProjectTree } from '../AppProjectTree';
-
 import { Map, List, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
 const clone = require('clone');
 
-import '../../sass/AppGrid.scss';
+import '../../sass/AppForm.scss';
+import { AppForm } from '../AppForm';
 
 /* tslint:disable:no-empty-interface jsx-no-string-ref jsx-no-multiline-js jsx-no-lambda */
 export interface IAppFormContainerProps extends IBaseProps {
@@ -36,8 +35,8 @@ export interface IAppFormContainerState extends IBaseState {
 
 export default class AppFormContainer extends BaseComponent<IAppFormContainerProps, IAppFormContainerState> {
 
-    private appProjectTree: JSX.Element | null = null;
-    private appFindOrdinary: JSX.Element | null = null;
+    private appForm: JSX.Element | null = null;
+    private bottom: JSX.Element | null = null;
 
     private _padding: number = 8;
     private _isCanMove: boolean = false;
@@ -194,9 +193,9 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             // 列表属性
             propertyList = propertyList.push(
                 { pTitle: '标题', pKey: 'title', pValue: appFormContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT },
-                { pTitle: '主题', pKey: 'theme', pValue: appFormContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT },
-                { pTitle: '显示项目控件', pKey: 'showAppProjectTree', pValue: appFormContainerState.getShowHeader(), pType: PropertiesEnum.SWITCH },
-                { pTitle: '显示普通查询', pKey: 'showAppFindOrdinary', pValue: appFormContainerState.getShowBottom(), pType: PropertiesEnum.SWITCH }
+                { pTitle: '主题', pKey: 'theme', pValue: appFormContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT }
+                // { pTitle: '显示项目控件', pKey: 'showAppProjectTree', pValue: appFormContainerState.getShowHeader(), pType: PropertiesEnum.SWITCH },
+                // { pTitle: '显示普通查询', pKey: 'showAppFindOrdinary', pValue: appFormContainerState.getShowBottom(), pType: PropertiesEnum.SWITCH }
             );
             propertyGroup = propertyGroup.add(
                 { groupTitle: '列表属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
@@ -241,7 +240,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
 
         return (
             <div
-                className="page-appgrid"
+                className="page-newmap-appform"
                 style={{
                     ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected()),
                     border: '1px solid #d3d5d9'
@@ -257,19 +256,18 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 >
                     {hidden ? '' : appFormContainerState.getTitle()}
                 </div>
-                <div className="map-grid">
-                    <div className="listheader-search">
-                        {/* 项目 */}
-                        {
-                            appFormContainerState.getShowHeader() ? this.appProjectTree : ''
-                        }
+                <div
+                    className="map-form-content"
+                >
+                    {/* 项目 */}
+                    {this.appForm}
 
-                        {/* 普通查询 */}
+                    {/* 普通查询 */}
+                    <ul>
                         {
-                            appFormContainerState.getShowBottom() ? this.appFindOrdinary : ''
+                            appFormContainerState.getShowBottom() ? this.bottom : ''
                         }
-                    </div>
-
+                    </ul>
                 </div>
             </div>
         );
@@ -288,9 +286,9 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 const id: string = component.p.id;
 
                 switch (component.t) {
-                    case 'MapComponent/newMap/grid/AppProjectTree':
-                        this.appProjectTree = (
-                            <AppProjectTree
+                    case 'MapComponent/newMap/form/AppForm':
+                        this.appForm = (
+                            <AppForm
                                 ref={`c.${id}`}
                                 theme={appFormContainerState.getTheme()}
                                 pageMode={pageMode}
