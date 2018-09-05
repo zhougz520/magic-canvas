@@ -51,10 +51,6 @@ export class AppFormContainerState extends AppFormContainerStateRecord {
         return new AppFormContainerState(map);
     }
 
-    getShowHeader(): boolean {
-        return this.get('showHeader');
-    }
-
     getShowBottom(): boolean {
         return this.get('showBottom');
     }

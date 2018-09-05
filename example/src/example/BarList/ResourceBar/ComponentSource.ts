@@ -119,10 +119,62 @@ const basePage: IBasePage[] = [
                     p: {
                         components: [
                             {
-                                t: 'MapComponent/newMap/form/AppProjectTree',
+                                t: 'MapComponent/newMap/form/AppForm',
                                 p: {
                                     id: 'cs1.cs1',
-                                    map_pt_txt: '公司'
+                                    p: {
+                                        components: [{
+                                            t: 'MapComponent/newMap/form/TabForm',
+                                            p: {
+                                                id: 'cs1.cs1.cs1',
+                                                l: 197,
+                                                t: 132,
+                                                p: {
+                                                    components: [{
+                                                        t: 'MapComponent/newMap/form/TabItem',
+                                                        p: {
+                                                            id: 'cs1.cs1.cs1.cs1',
+                                                            l: 197,
+                                                            t: 132,
+                                                            p: {
+                                                                components: [{
+                                                                    t: 'MapComponent/newMap/form/SectionForm',
+                                                                    p: {
+                                                                        id: 'cs1.cs1.cs1.cs1.cs1',
+                                                                        l: 197,
+                                                                        t: 132,
+                                                                        p: {
+                                                                            components: [{
+                                                                                t: 'MapComponent/newMap/form/Section',
+                                                                                p: {
+                                                                                    id: 'cs1.cs1.cs1.cs1.cs1.cs1',
+                                                                                    l: 197,
+                                                                                    t: 132,
+                                                                                    p: {
+                                                                                        components: [{
+                                                                                            t: 'MapComponent/newMap/form/field/InputField',
+                                                                                            p: {
+                                                                                                id: 'cs1.cs1.cs1.cs1.cs1.cs1.cs1',
+                                                                                                l: 197,
+                                                                                                t: 132,
+                                                                                                map_form_f_cols: 1
+                                                                                            }
+                                                                                        }]
+                                                                                    }
+                                                                                }
+                                                                            }]
+                                                                        }
+                                                                    }
+                                                                }]
+                                                            }
+                                                        }
+                                                    }]
+                                                },
+                                                map_form_sti: 'cs1.cs1.cs1.cs1',
+                                                map_form_st: '2'
+                                            }
+                                        }]
+                                    }
                                 }
                             }
                         ]
