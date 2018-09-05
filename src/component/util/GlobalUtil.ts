@@ -53,5 +53,8 @@ export const GlobalUtil = {
         }
 
         return '';
+    },
+    fromImmutableToJs: (data: any): any => {
+        return data && data.toJS ? data.toJS() : data;
     }
 };

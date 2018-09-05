@@ -53,9 +53,11 @@
     }
   },
   "dependencies": {
+    "@xprst/handsontable-react": "^0.0.1",
     "antd": "^3.7.0",
     "clone": "^2.1.2",
     "color": "^3.0.0",
+    "handsontable": "^5.0.1",
     "immutable": "^3.8.2",
     "keycode": "^2.1.9",
     "react-beautiful-dnd": "^7.1.0",
