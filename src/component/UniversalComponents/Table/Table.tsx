@@ -62,7 +62,11 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
             baseState: this.initBaseStateWithCustomState(new TableState({
                 formulaData: Handsontable.helper.createEmptySpreadsheetData(10, 10),
                 cellData: [],
-                mergeData: []
+                mergeData: [],
+                rowHeights: [],
+                colWidths: [],
+                colHeaders: true,
+                rowHeaders: true
             }), '表格'),
             hidden: false
         };
@@ -74,6 +78,14 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
      */
     public isCanMove = () => {
         return this._isCanMove;
+    }
+
+    /**
+     * 是否可以挤开其他组件
+     * 默认：否，组件自己重写
+     */
+    public isCanPushOpenOtherComponent = (): boolean => {
+        return true;
     }
 
     /************************************* begin 富文本 ****************************************/
@@ -345,7 +357,6 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
     }
 
     render() {
-        console.log('render');
         const { hidden } = this.state;
         const customTableState: TableState = this.getCustomState();
 

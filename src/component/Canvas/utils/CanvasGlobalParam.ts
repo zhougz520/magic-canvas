@@ -587,6 +587,8 @@ export class CanvasGlobalParam {
                         top: parseInt(div.style.top, 10) - offset.pageY,
                         left: parseInt(div.style.left, 10) - offset.pageX
                     });
+                    // TODO com mouseup
+                    (value.component as any).onTitleMouseUp && (value.component as any).onTitleMouseUp(null);
                 }
                 this.body.removeChild(div);
             }
