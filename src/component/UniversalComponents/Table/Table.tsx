@@ -422,6 +422,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                     outsideClickDeselects={false}                                           // 在表格外点击是否丢失选中
                     stretchH="last"                                                         // 最后一行自适应
                     dragToScroll={false}
+                    fillHandle={false}                                                      // 自动填充（还有bug，暂时关闭）
                 />
             </div>
         );
