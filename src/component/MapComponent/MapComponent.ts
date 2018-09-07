@@ -382,6 +382,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         // GlobalUtil.debugLog(this.props, 'props');
         const { id, selectComChange } = this.props;
         selectComChange(e, id);
+        e.stopPropagation();
     }
 
     /**

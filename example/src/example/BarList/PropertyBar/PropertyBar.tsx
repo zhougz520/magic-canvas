@@ -3,7 +3,8 @@ import { PropertiesEnum, CommandMap, IPropertyGroup, IProperty } from '../../../
 import { List, OrderedSet } from 'immutable';
 
 import { SketchPicker } from 'react-color';
-import { Input, Switch, Slider, Collapse, Popover } from 'antd';
+import { Input, Switch, Slider, Collapse, Popover, Select } from 'antd';
+import { IpList } from '../../../../../src/component/UniversalComponents/model/types';
 const { TextArea } = Input;
 
 export interface IPropertyProps {
@@ -243,6 +244,24 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                     </div>
                 );
                 break;
+            case PropertiesEnum.SELECT:
+                element = (
+                    <div className="props-col-1 group-end" key={property.pKey}>
+                        {property.pTitle}
+                        <Select
+                            value={property.pValue}
+                            onChange={(value) => this.handleSelect(value, `${groupKey}.${property.pKey}`)}
+                        >
+                            {
+                                property.pList !== undefined ?
+                                    property.pList.map((pL: IpList, zIndex: number) => {
+                                        return <Select.Option key={zIndex} value={`${pL.key}`}>{`${pL.value}`}</Select.Option>;
+                                    }) : ''
+                            }
+                        </Select>
+                    </div>
+                );
+                break;
         }
 
         return element;
@@ -344,6 +363,16 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
      * ColorPicker值改变
      */
     private handleColorPicker = (pValue: any, pId: any) => {
+        const pKey = pId.split('.')[1];
+
+        this.changePropertyValue(null, pValue, pId);
+        this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
+    }
+
+    /**
+     * Select值改变
+     */
+    private handleSelect = (pValue: any, pId: any) => {
         const pKey = pId.split('.')[1];
 
         this.changePropertyValue(null, pValue, pId);

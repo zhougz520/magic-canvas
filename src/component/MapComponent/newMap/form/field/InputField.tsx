@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../../../index';
+import { MapComponent } from '../../index';
+import { IFieldProps } from './IFieldProps';
 import { Input } from 'antd';
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-
+import { getStateClass, getFieldCommonPropertyList } from './common/util';
+import { OrderedSet, List } from 'immutable';
+import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
-export interface IMapProps extends IBaseProps {
+export interface IMapProps extends IFieldProps {
 	map_form_f_title: string;
 	map_form_f_default: string;
 	map_form_f_state: string;
@@ -19,7 +22,7 @@ export interface IMapProps extends IBaseProps {
 	index: number;
 }
 
-export class InputFieldClass extends MapComponent<IMapProps, any> {
+export class InputField extends MapComponent<IMapProps, any> {
 	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
@@ -30,7 +33,7 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 		titleWidth: 110,
 		unit: 1,
 		currUnit: 2,
-		map_form_f_type: 'MapComponent/map/form/field/InputField'
+		map_form_f_type: 'MapComponent/newMap/form/field/InputField'
 	};
 
 	public resizing = false;
@@ -46,7 +49,8 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 		this.state = {
 			currX: 0,
 			resizing: false,
-			hover: {}
+			hover: {},
+			value: undefined
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -57,52 +61,68 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 		...draggableStyle
 	})
 
+	/**
+	 * 获取组件属性列表
+	 */
+	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+		let propertyList: List<IProperty> = List();
+		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+		propertyList = getFieldCommonPropertyList(this.props);
+		// 组件属性整理
+		propertyGroup = propertyGroup.add(
+			{ groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+		);
+		propertyList = List();
+
+		return propertyGroup;
+	}
 	public render() {
-		const {
-			map_form_f_title,
-			map_form_f_default,
-			id,
-			titleWidth,
-			map_form_f_disabled,
-			unit,
-			currUnit,
-			selectedId
-		} = this.props;
-		const { hover } = this.state;
+		const { value } = this.state;
+		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
+		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
 			borderClass = ' read-only';
 		}
 
+		const currUnit = '100%';
+
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
-				className={`field-bar `}
-				onMouseDown={this.selectedCom}
-				draggable
-				onDragOver={this.handleFieldOver}
-				// onDragOver={this.onDrageOver}
-				onDragLeave={this.handleLeave}
-				onDragEnd={this.handleLeave}
+				style={Object.assign({}, { width: currUnit })}
+				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
+				// tslint:disable-next-line:jsx-no-lambda
+				onMouseDown={(e: any) => { this.selectedCom(e); }}
 			>
 				<MaskLayer id={id} />
-				<table className={`field-tb ${selectedId === id ? 'map-selected' : ''}`}>
+				<table className="field-tb">
 					<tbody>
 						<tr>
-							<td className={`field-title`} style={{ width: titleWidth }}>
+							<td className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 								{map_form_f_title}
 							</td>
 							<td className="field-content">
-								<Input
-									type="text"
-									className={map_form_f_disabled ? borderClass : ''}
-									placeholder=""
-									// onChange={this.onChangeText}
-									disabled={map_form_f_disabled}
-									defaultValue={map_form_f_default}
-									value={map_form_f_default}
-								/>
+								<table style={{ width: '100%' }}>
+									<tbody>
+										<tr>
+											<td className="new-require">
+												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+											</td>
+											<td>
+												<Input
+													type="text"
+													className={map_form_f_disabled ? borderClass : ''}
+													placeholder=""
+													onChange={this.onChangeText}
+													disabled={map_form_f_disabled}
+													defaultValue={map_form_f_default}
+													value={value === undefined ? map_form_f_default : value}
+												/>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</td>
 						</tr>
 					</tbody>
@@ -110,5 +130,10 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 			</div>
 		);
 	}
+
+	private onChangeText = (e: any) => {
+		this.setState({
+			value: e.target.value
+		});
+	}
 }
-export const InputField = InputFieldClass;

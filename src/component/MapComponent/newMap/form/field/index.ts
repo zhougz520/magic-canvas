@@ -8,5 +8,5 @@ export { DataTimeField } from './DataTimeField';
 export { CheckBoxField } from './CheckBoxField';
 export { InputIconField } from './InputIconField';
 export { LookUpField } from './LookUpField';
-export { UploadFiles } from './UploadFiles';
+export { TextField } from './TextField';
 export { NullField } from './NullField';

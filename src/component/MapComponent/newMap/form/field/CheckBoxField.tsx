@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { MapComponent } from '../../../index';
+import { MapComponent } from '../../index';
 import { IFieldProps } from './IFieldProps';
-import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { Checkbox } from 'antd';
+// import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
+import { getStateClass, getFieldCommonPropertyList } from './common/util';
+import { OrderedSet, List } from 'immutable';
+import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+// import { Checkbox } from 'antd';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
@@ -19,7 +23,7 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		map_form_f_type: 'pc/map/form/field/InputField'
+		map_form_f_type: 'MapComponent/newMap/form/field/InputField'
 	};
 
 	public resizing = false;
@@ -44,46 +48,78 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 		// styles we need to apply on draggables
 		...draggableStyle
 	})
+	/**
+	 * 获取组件属性列表
+	 */
+	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+		let propertyList: List<IProperty> = List();
+		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+		propertyList = getFieldCommonPropertyList(this.props);
+		// 组件属性整理
+		propertyGroup = propertyGroup.add(
+			{ groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+		);
+		propertyList = List();
 
+		return propertyGroup;
+	}
 	public render() {
-		const { map_form_f_title, map_form_f_default, id, index, titleWidth } = this.props;
-		// 获取选项
+		// const { value } = this.state;
+		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
+		const stateClass = getStateClass(map_form_f_state);
+
 		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
-		const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+
+		const currUnit = '100%';
+
+		return (
 			<div
-				onMouseDown={this.selectedCom}
-				ref={provided.innerRef}
-				{...provided.dragHandleProps}
-				style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+				ref={(ref) => this.com = ref}
+				style={Object.assign({}, { width: currUnit })}
+				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
+				// tslint:disable-next-line:jsx-no-lambda
+				onMouseDown={(e: any) => { this.selectedCom(e); }}
 			>
+				<MaskLayer id={id} />
 				<table className="field-tb">
 					<tbody>
 						<tr>
-							<td className={`field-title`} style={{ width: titleWidth }}>
+							<td className={`field-title  ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 								{map_form_f_title}
 							</td>
 							<td className="field-content">
-								{
-									arrRadio.map((chkBox: string, num: number) => {
-										if (chkBox === '') return '';
+								<table style={{ width: '100%' }}>
+									<tbody>
+										<tr>
+											<td className="new-require">
+												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+											</td>
+											<td>
+												{
+													arrRadio.map((chkBox, index) => {
+														if (chkBox === '') return '';
 
-										return <Checkbox key={num} >{chkBox}</Checkbox>;
-									})
-								}
+														return (
+															<div key={index} style={{ float: 'left', marginRight: 8 }}>
+																<input className="checkbox ux-checkbox" type="checkbox" onClick={this.onChange} />
+																{chkBox}
+															</div>
+														);
+													})
+												}
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				{provided.placeholder}
 			</div>
 		);
+	}
 
-		return (
-			<div ref={(ref) => this.com = ref} style={Object.assign({}, { width: '100%' })} className="field-bar">
-				<Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
-					{initDrag}
-				</Draggable>
-			</div>
-		);
+	private onChange = (e: any) => {
+		e.target.checked;
 	}
 }

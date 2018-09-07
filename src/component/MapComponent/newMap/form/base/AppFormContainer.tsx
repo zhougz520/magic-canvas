@@ -11,7 +11,11 @@ import {
     ISize,
     IFont
 } from '../../../../BaseComponent';
-import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+import {
+    //  PropertiesEnum,
+    IPropertyGroup,
+    IProperty
+} from '../../../../UniversalComponents';
 
 import { IComponent } from '../../IComponent';
 import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
@@ -186,14 +190,14 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             // 选中子组件，显示子组件的属性栏
             return this._childPropertyGroup;
         } else {
-            const appFormContainerState: AppFormContainerState = this.getCustomState();
+            // const appFormContainerState: AppFormContainerState = this.getCustomState();
             let propertyList: List<IProperty> = List();
             let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
             // 列表属性
             propertyList = propertyList.push(
-                { pTitle: '标题', pKey: 'title', pValue: appFormContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT },
-                { pTitle: '主题', pKey: 'theme', pValue: appFormContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT }
+                // { pTitle: '标题', pKey: 'title', pValue: appFormContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT },
+                // { pTitle: '主题', pKey: 'theme', pValue: appFormContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT }
                 // { pTitle: '显示项目控件', pKey: 'showAppProjectTree', pValue: appFormContainerState.getShowHeader(), pType: PropertiesEnum.SWITCH },
                 // { pTitle: '显示普通查询', pKey: 'showAppFindOrdinary', pValue: appFormContainerState.getShowBottom(), pType: PropertiesEnum.SWITCH }
             );
@@ -235,7 +239,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
 
         const childData = appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
         if (childData && childData.components && childData.components.length > 0) {
-            this.initCom(childData.components);
+            this.initCom(childData.components, childData);
         }
 
         return (
@@ -276,7 +280,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
     /**
      * 加载子组件
      */
-    private initCom = (components: IComData[]) => {
+    private initCom = (components: IComData[], childData: any) => {
         const { selectedId } = this.state;
         const { pageMode } = this.props;
         const appFormContainerState: AppFormContainerState = this.getCustomState();
@@ -296,7 +300,10 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                                 selectComChange={this.selectComChange}
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
                                 {...component.p}
+                                stateData={childData}
+                                refs={this.refs}
                             />
                         );
                         break;
@@ -324,7 +331,11 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             if (ref === undefined) {
                 return null;
             }
-            currRefs = currRefs[`${currCid}`].refs as any;
+            if (currRefs[`${currCid}`] !== undefined && Object.keys(currRefs[`${currCid}`].refs).length > 0) {
+                // 正常情况下一级只有一个，
+                // 如果存在多个，则直接进入下一次循环
+                currRefs = currRefs[`${currCid}`].refs as any;
+            }
         }
 
         return (ref as IComponent) || null;
@@ -340,7 +351,14 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         // 获取当前数据
         const childData = appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
         // 通过id查找到数据节点
-        const newData = this.updateComProps(clone(childData), id, props);
+        let newData: any;
+        if (id === '') {
+            // 当没有id的时候，直接更新整体data(新增组件的时候，直接更新整个CustomState)
+            newData = props.p;
+        } else {
+            // 通过id查找到数据节点
+            newData = this.updateComProps(clone(childData), id, props);
+        }
         // 更新数据到CustomState
         this.setCustomState(AppFormContainerState.set(appFormContainerState, { childData: newData }));
     }
@@ -355,6 +373,10 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         let newData: any = data;
         data.components.forEach((com: any) => {
             if (com.p.id === id) {
+                // 当 map_form_f_type 存在时
+                if (props.map_form_f_type !== undefined && props.map_form_f_type !== '') {
+                    com.t = props.map_form_f_type;
+                }
                 com.p = Object.assign({}, com.p, props);
                 newData = data;
 
@@ -391,6 +413,8 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         this.setState({
             selectedId: id
         });
+        // 调用container的属性加载
+        this.fireSelectChange(e);
     }
 
     /**

@@ -1,22 +1,30 @@
 import * as React from 'react';
 import { MapComponent } from '../../index';
 import { IFieldProps } from './IFieldProps';
-// import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { DatePicker } from 'antd';
+// import { Input } from 'antd';
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
 import { getStateClass, getFieldCommonPropertyList } from './common/util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
-// import { Checkbox } from 'antd';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
-export interface ICurrProps extends IFieldProps {
+export interface IMapProps extends IFieldProps {
+	map_form_f_title: string;
 	map_form_f_default: string;
+	map_form_f_state: string;
+	map_form_f_cols: number;
+	map_form_f_disabled: boolean;
+	map_form_f_hidden_t: boolean;
+	map_form_f_type: string;
+	titleWidth: number;
+	unit: number;
+	currUnit: number;
+	index: number;
 }
 
-export class DataTimeField extends MapComponent<ICurrProps, any> {
-	static defaultOptionProps = {
+export class TextField extends MapComponent<IMapProps, any> {
+	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
 		map_form_f_state: '0',
@@ -24,7 +32,9 @@ export class DataTimeField extends MapComponent<ICurrProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		map_form_f_type: 'MapComponent/newMap/form/field/DataTimeField'
+		unit: 1,
+		currUnit: 2,
+		map_form_f_type: 'MapComponent/newMap/form/field/TextField'
 	};
 
 	public resizing = false;
@@ -39,7 +49,8 @@ export class DataTimeField extends MapComponent<ICurrProps, any> {
 
 		this.state = {
 			currX: 0,
-			resizing: false
+			resizing: false,
+			hover: {}
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -49,6 +60,7 @@ export class DataTimeField extends MapComponent<ICurrProps, any> {
 		// styles we need to apply on draggables
 		...draggableStyle
 	})
+
 	/**
 	 * 获取组件属性列表
 	 */
@@ -65,8 +77,7 @@ export class DataTimeField extends MapComponent<ICurrProps, any> {
 		return propertyGroup;
 	}
 	public render() {
-		// const { value } = this.state;
-		const { map_form_f_title, map_form_f_state, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
+		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		const currUnit = '100%';
@@ -83,7 +94,7 @@ export class DataTimeField extends MapComponent<ICurrProps, any> {
 				<table className="field-tb">
 					<tbody>
 						<tr>
-							<td className={`field-title  ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
+							<td className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 								{map_form_f_title}
 							</td>
 							<td className="field-content">
@@ -94,11 +105,7 @@ export class DataTimeField extends MapComponent<ICurrProps, any> {
 												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
 											</td>
 											<td>
-												<DatePicker
-													style={{ width: '100%' }}
-													format="YYYY-MM-DD"
-													placeholder=""
-												/>
+												{map_form_f_default}
 											</td>
 										</tr>
 									</tbody>

@@ -499,6 +499,17 @@ export class PageAction {
             }
         );
     }
+    // /**
+    //  * 属性工具栏设置组件属性
+    //  */
+    // setTypeCom = (param: { pKey: string; pValue: any; }) => {
+    //     const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
+    //     currentSelectedComponent.map(
+    //         (com: IComponent) => {
+    //             com.setPropertiesFromProperty(param.pKey, param.pValue);
+    //         }
+    //     );
+    // }
 
     /**
      * 设置僚机焦点

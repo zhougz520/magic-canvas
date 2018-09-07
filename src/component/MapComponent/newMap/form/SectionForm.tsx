@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../../index';
+import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Section } from './index';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { GlobalUtil } from '../../../util';
+// import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -11,6 +12,8 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
+// tslint:disable:jsx-no-multiline-js
+// tslint:disable:no-shadowed-variable
 export class SectionFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
@@ -28,74 +31,55 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
         };
     }
     render() {
-        const { hover } = this.state;
-        // console.log('refs', this.props.refs);
-        const {
-            updateProps,
-            p,
-            selectedId,
-            selectComChange
-        } = this.props;
-        const components = p === undefined ? undefined : p.components;
-        const sections: any[] = [];
-        // 循环初始化菜单按钮
-        if (components !== undefined) {
-            components.forEach((com: any, index: number) => {
-                const { t } = com;
-                if (t === 'MapComponent/map/form/Section') {
-                    sections.push(
-                        <Section
-                            key={`c.${com.p.id}`}
-                            selectedId={selectedId}
-                            ref={`c.${com.p.id}`}
-                            selectComChange={selectComChange}
-                            {...com.p}
-                            updateProps={updateProps}
-                            index={index}
-                        />
-                    );
-                }
-            });
-        }
-
-        const initSection = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
-            (
-                <div
-                    ref={provided.innerRef}
-                >
-                    {sections}
-                </div>
-            );
+        const { p, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps } = this.props;
+        const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
 
         return (
             <div
                 ref={(ref) => this.com = ref}
-                className={`form-sectionForm`}
-                style={Object.assign({}, hover)}
-                onDragOver={this.handleOver}
-                onDragLeave={this.handleLeave}
+                className="tab-content"
             >
-                <DragDropContext onDragEnd={this.onDragEnd} >
-                    <Droppable droppableId="droppable">
-                        {initSection}
-                    </Droppable>
-                </DragDropContext>
+                {
+                    GlobalUtil.isUndefined(components) ? '' :
+                        (
+                            components.map((com: any, index: number) => {
+                                const { t, p } = com;
+                                if (t === 'MapComponent/newMap/form/Section') {
+                                    return <Section
+                                        key={p.id}
+                                        {...p}
+                                        ref={`c.${p.id}`}
+                                        pageMode={pageMode}
+                                        selectedId={selectedId}
+                                        selectComChange={selectComChange}
+                                        setChildPropertyGroup={setChildPropertyGroup}
+                                        doChildDbClickToEdit={doChildDbClickToEdit}
+                                        stateData={stateData}
+                                        updateProps={updateProps}
+                                        refs={refs}
+                                    />;
+                                } else {
+                                    return '';
+                                }
+                            })
+                        )
+                }
             </div>
         );
     }
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/form/Section');
+        return (t === 'MapComponent/newMap/form/Section');
     }
     /**
      * override
      */
     public addChildComponent = (id: string, data: any, addData: any): any => {
-        if (addData.t === 'MapComponent/map/form/Section') {
+        if (addData.t === 'MapComponent/newMap/form/Section') {
             const section = this.getChildComponent(id, data, addData);
             let childId = section.p.id;
             childId = section.p.id;
-            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
+            this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/field/InputField' });
         }
 
         this.props.updateProps('', data);

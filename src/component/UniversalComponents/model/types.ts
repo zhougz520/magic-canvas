@@ -8,9 +8,13 @@ export enum PropertiesEnum {
     INPUT_LIST = 'input_list',                  // 输入框单元素列表
     SWITCH = 'switch',                          // 开关选择器
     COLOR_PICKER = 'color_picker',              // 选色器
-    SLIDER = 'slider'                           // 滑动输入条
+    SLIDER = 'slider',                          // 滑动输入条
+    SELECT = 'select'                           // 下拉选项
 }
-
+export interface IpList {
+    key: string;
+    value: string;
+}
 /**
  * 属性类型
  */
@@ -19,6 +23,7 @@ export interface IProperty {
     pKey: string;
     pValue: any;
     pType: PropertiesEnum;
+    pList?: IpList[];
 }
 
 /**
