@@ -35,7 +35,8 @@ export const ComponentsMap = {
     Universal_Input: { t: 'UniversalComponents/Input/Input', p: { name: '单行输入', w: 200, h: 32 } },
     Universal_TextField: { t: 'UniversalComponents/TextField/TextField', p: { name: '多行输入', w: 280, h: 73 } },
     Universal_Image: { t: 'UniversalComponents/ImageCom/Image', p: { name: '图片', w: 300, h: 200 } },
-    Universal_RichText: { t: 'UniversalComponents/RichText/RichText', p: { name: '文本', w: 204, h: 170 } }
+    Universal_RichText: { t: 'UniversalComponents/RichText/RichText', p: { name: '文本', w: 204, h: 170 } },
+    Universal_Table: { t: 'UniversalComponents/Table/Table', p: { name: '表格', w: 600, h: 300 } }
 };
 
 export type ContextMenuType = 'menu' | 'separator';

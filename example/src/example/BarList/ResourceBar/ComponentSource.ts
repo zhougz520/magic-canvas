@@ -8,7 +8,8 @@ const {
     Universal_Selector,
     Universal_TextField,
     Universal_Image,
-    Universal_RichText
+    Universal_RichText,
+    Universal_Table
 } = ComponentsMap;
 
 export interface IBasePage {
@@ -43,7 +44,8 @@ const basePage: IBasePage[] = [
             Universal_Selector,
             Universal_TextField,
             Universal_Image,
-            Universal_RichText
+            Universal_RichText,
+            Universal_Table
         ]
     },
     {
