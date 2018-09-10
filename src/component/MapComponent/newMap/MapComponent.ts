@@ -32,7 +32,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (this.com !== null) {
             // if(this.hasHandle){
             this.com.addEventListener('drop', this.handleDropAddComponent);
-            this.com.addEventListener('keydown', this.deleteComponentsById);
+            // this.com.addEventListener('keydown', this.deleteComponentsById);
             // this.com.addEventListener('mouseover', () => { alert(this.com); });
             // }
             // this.com.addEventListener('mousedown', this.selectedCom);
@@ -384,13 +384,60 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /************************************* end 操作子控件 ****************************************/
     /************************************* bgn 操作基础控件 ****************************************/
     /**
-     * 删除控件
+     * 选中父组件
      */
-    public deleteComponentsById = (): any => {
+    public selectedComParent = (): boolean => {
         const cid: string = this.props.selectedId as string;
         const state = this.props.stateData;
-        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) return;
-        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return;
+        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) {
+            return false;
+        }
+        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return false;
+        const parentId = cid.substring(0, cid.lastIndexOf('.'));
+        const { selectComChange } = this.props;
+        selectComChange(undefined, parentId);
+
+        return true;
+    }
+    /**
+     * 复制控件
+     */
+    public copySelectedCom = (): boolean => {
+        const cid: string = this.props.selectedId as string;
+        const state = this.props.stateData;
+        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) {
+            return false;
+        }
+        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return false;
+        const parentId = cid.substring(0, cid.lastIndexOf('.'));
+        const parent = this.findComponentParent(state, cid as string);
+        const newId = this.newComponentsId(parent, `${parentId}.cs`);
+        if (!GlobalUtil.isUndefined(parent)) {
+            const selectedCom = parent.find((com: any) => com.p.id === cid);
+            if (selectedCom) {
+                // 复制选中控件的结构
+                const newCom = JSON.parse(JSON.stringify(selectedCom));
+                // 获取新ID
+                newCom.p.id = newId;
+                parent.push(newCom);
+            }
+        }
+        this.props.updateProps(parentId, { p: { components: parent } });
+        const { selectComChange } = this.props;
+        selectComChange(undefined, newId);
+
+        return true;
+    }
+    /**
+     * 删除控件
+     */
+    public deleteComponentsById = (): boolean => {
+        const cid: string = this.props.selectedId as string;
+        const state = this.props.stateData;
+        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) {
+            return false;
+        }
+        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return false;
 
         const parent = this.findComponentParent(state, cid as string);
         if (!GlobalUtil.isUndefined(parent)) {
@@ -402,7 +449,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         const parentId = cid.substring(0, cid.lastIndexOf('.'));
         this.props.updateProps(parentId, { p: { components: parent } });
 
-        return cid;
+        return true;
     }
     /**
      *  drop 添加控件

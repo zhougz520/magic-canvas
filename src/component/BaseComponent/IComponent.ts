@@ -165,7 +165,7 @@ export interface IComponent {
     /**
      * 获取组件的属性，传给属性栏
      */
-    getPropertiesToProperty: () =>  OrderedSet<IPropertyGroup>;
+    getPropertiesToProperty: () => OrderedSet<IPropertyGroup>;
     setPropertiesFromProperty: (pKey: string, pValue: any, callback?: () => void) => void;
 
     /**
@@ -173,4 +173,9 @@ export interface IComponent {
      */
     getFontPropsToTool: () => IToolButtonGroup;
     setFontPropsFromTool: (fontStyleType: string, value: any, key: number) => void;
+
+    /**
+     * 操作子组件
+     */
+    handleChildCom: (handle: string) => boolean;
 }

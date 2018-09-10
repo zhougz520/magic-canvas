@@ -553,6 +553,13 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     public setFontPropsFromTool = (fontStyleType: string, value: any, key: number) => {
         return;
     }
+    /**
+     * 操作子控件
+     * 默认：false, 没有选中子组件
+     */
+    public handleChildCom = (handle: string): boolean => {
+        return false;
+    }
 
     /**
      * 初始化BaseSate

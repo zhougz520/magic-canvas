@@ -27,6 +27,7 @@ const clone = require('clone');
 
 import '../../sass/AppForm.scss';
 import { AppForm } from '../AppForm';
+import { HandleChildCom } from '../../../types';
 
 /* tslint:disable:no-empty-interface jsx-no-string-ref jsx-no-multiline-js jsx-no-lambda */
 export interface IAppFormContainerProps extends IBaseProps {
@@ -179,6 +180,57 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             this.setCustomState(newAppFormContainerState);
         }
     }
+    /**
+     * 操作子控件
+     */
+    public handleChildCom = (handle: string): boolean => {
+        const { selectedId } = this.state;
+        if (!selectedId) return false;
+        const childCom: any = this.getChildComponent(selectedId);
+        if (!childCom) return false;
+
+        let result: boolean = false;
+        switch (handle) {
+            case HandleChildCom.DELETE:         // 删除
+                result = childCom.deleteComponentsById();
+                break;
+            case HandleChildCom.SELECT_PARENT:  // 选中父组件
+                result = childCom.selectedComParent();
+                break;
+            case HandleChildCom.COPY_COM:       // 复制控件
+                result = childCom.copySelectedCom();
+                break;
+        }
+
+        return result;
+    }
+
+    // /**
+    //  * 删除控件
+    //  */
+    // public deleteComponentsById = (): any => {
+    //     const { selectedId } = this.state;
+    //     if (selectedId === null || GlobalUtil.isEmptyString(selectedId) || GlobalUtil.isUndefined(selectedId)) {
+    //         // 没有选中子控件，则直接返回
+    //         return false;
+    //     } else {
+    //         // 选中子控件，则删除，并返回true
+    //         const parentId = selectedId.substring(0, selectedId.lastIndexOf('.'));
+    //         const parent: any = this.getChildComponent(parentId);
+    //         if (parent && selectedId) {
+    //             const components = parent.props.p.components;
+    //             if (components) {
+    //                 const idx = components.findIndex((com: any) => com.p.id === selectedId);
+    //                 if (idx >= 0) {
+    //                     components.splice(idx, 1);
+    //                 }
+    //                 this.updateProps(parentId, { p: { components } });
+    //             }
+    //         }
+    //     }
+
+    //     return true;
+    // }
     /************************************* end 富文本 ****************************************/
 
     /************************************* begin 属性设置 ****************************************/
