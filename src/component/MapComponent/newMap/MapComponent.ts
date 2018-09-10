@@ -415,10 +415,11 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (!GlobalUtil.isUndefined(parent)) {
             const selectedCom = parent.find((com: any) => com.p.id === cid);
             if (selectedCom) {
-                // 复制选中控件的结构
-                const newCom = JSON.parse(JSON.stringify(selectedCom));
-                // 获取新ID
-                newCom.p.id = newId;
+                // console.log('selectedCom', selectedCom);
+                // 复制选中控件的结构,并重置结构中所有id
+                // tslint:disable-next-line:no-eval
+                const newCom = JSON.parse(JSON.stringify(selectedCom).replace(eval(`/\"${selectedCom.p.id}/g`), `"${newId}`));
+                // console.log('newCom', newCom);
                 parent.push(newCom);
             }
         }
