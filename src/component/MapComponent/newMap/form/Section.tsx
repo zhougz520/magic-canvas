@@ -429,7 +429,8 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/newMap/form/field/RadioField') ||
             (t === 'MapComponent/newMap/form/field/SelectField') ||
             (t === 'MapComponent/newMap/form/field/TextAreaField') ||
-            (t === 'MapComponent/newMap/form/field/TextField');
+            (t === 'MapComponent/newMap/form/field/TextField') ||
+            (t === 'MapComponent/newMap/grid/AppGrid');
     }
 }
 export const Section = SectionClass;

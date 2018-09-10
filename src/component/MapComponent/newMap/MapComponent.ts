@@ -456,9 +456,6 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      */
     public handleDropAddComponent = (e: any) => {
         const data: any = this.getAddComponent();
-        this.setState({
-            hover: {}
-        });
         if (data === undefined) {
             const { selectedId, stateData, dragChangeField } = this.props;
             // 判断是否是字段换位置
@@ -524,6 +521,9 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             currRef = this.getCurrRef(currId);
             if (currRef !== undefined && currRef.componentCanBeAdded(data.t)) {
                 currRef.addChildComponent(currRef.props.id, { p: this.props.stateData }, data);
+                currRef.setState({
+                    hover: {}
+                });
                 // e.stopPropagation();
                 // 跳出循环
                 break;

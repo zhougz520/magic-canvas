@@ -32,12 +32,16 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
     }
     render() {
         const { p, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps } = this.props;
+        const { hover } = this.state;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
 
         return (
             <div
                 ref={(ref) => this.com = ref}
                 className="tab-content"
+                style={Object.assign({}, { width: '100%' }, hover)}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
             >
                 {
                     GlobalUtil.isUndefined(components) ? '' :

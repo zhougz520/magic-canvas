@@ -65,7 +65,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
     // tslint:disable:no-shadowed-variable
     public render() {
         const { p, map_form_sti, map_form_st, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps, id } = this.props;
-        const { selectId } = this.state;
+        const { selectId, hover } = this.state;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
 
         const sectionFormList: any[] = [];
@@ -112,12 +112,18 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                 ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
             >
-                <table className={`form`}>
+                <table
+                    className={`form`}
+                >
                     <tbody>
                         <tr className={` ${map_form_st !== '2' ? 'tab-bar' : ''} ${hideTitle ? ' bar-hide' : ''}`}>
                             <td className={`${map_form_st === '2' ? 'tab-bar-content' : ''}`}>
                                 <div className={`margin20-lr ${map_form_st === '2' ? 'tab-bar-title-line' : ''}`}>
-                                    <table>
+                                    <table
+                                        style={Object.assign({}, { width: '100%' }, hover)}
+                                        onDragOver={this.handleOver}
+                                        onDragLeave={this.handleLeave}
+                                    >
                                         <tbody>
                                             <tr>
                                                 <td>
