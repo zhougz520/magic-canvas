@@ -18,6 +18,8 @@ export interface ICanvasProps {
     highPerformance: boolean;
     // 画布偏移量
     componentPosition: ICompos;
+    // 画布缩放比例（0-1）
+    scale?: number;
 
     // 设置页签变脏
     setPageDirty?: () => void;

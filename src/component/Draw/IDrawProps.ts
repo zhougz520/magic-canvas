@@ -8,6 +8,8 @@ export interface IDrawProps {
     canvasSize: { width: number, height: number };
     // 画布偏移量
     componentPosition: any;
+    // 画布缩放比例（0-1）
+    scale?: number;
 
     getCanvas: () => ICanvasComponent | null;
     getStageScroll: () => { scrollLeft: number, scrollTop: number };

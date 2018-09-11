@@ -183,7 +183,7 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 <InputNumber
                     min={1}
                     max={100}
-                    style={{width: 50}}
+                    style={{ width: 50 }}
                     size="small"
                     defaultValue={fontSize.value}
                     onChange={(value: any) => this.fireCommand(CommandMap.EDITOR_FONTSIZE, value)}
@@ -244,7 +244,15 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     onClick={() => this.doSaveData()}
                 >
                     保存
-                </Button>
+                </Button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <InputNumber
+                    size="small"
+                    style={{ width: 60 }}
+                    min={0}
+                    max={1}
+                    step={0.1}
+                    defaultValue={1}
+                />
             </div>
         );
     }
