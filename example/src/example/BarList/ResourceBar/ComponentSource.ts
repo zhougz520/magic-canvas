@@ -76,6 +76,20 @@ const basePage: IBasePage[] = [
         categoryKey: 'newERP',
         expanded: false,
         components: [
+            { t: 'MapComponent/newMap/form/field/TextField', p: { name: '纯文本' } },
+            { t: 'MapComponent/newMap/form/field/InputField', p: { name: '文本录入' } },
+            { t: 'MapComponent/newMap/form/field/InputNumberField', p: { name: '数字录入' } },
+            { t: 'MapComponent/newMap/form/field/LinkField', p: { name: '超链接' } },
+            { t: 'MapComponent/newMap/form/field/SelectField', p: { name: '下拉选择' } },
+            { t: 'MapComponent/newMap/form/field/DataTimeField', p: { name: '日期录入' } },
+            { t: 'MapComponent/newMap/form/field/LookUpField', p: { name: '弹出选择' } },
+            { t: 'MapComponent/newMap/form/field/RadioField', p: { name: '单选框' } },
+            { t: 'MapComponent/newMap/form/field/CheckBoxField', p: { name: '复选框' } },
+            { t: 'MapComponent/newMap/form/field/InputIconField', p: { name: '文本&图片' } },
+            { t: 'MapComponent/newMap/form/field/TextAreaField', p: { name: '多行文本' } },
+            { t: 'MapComponent/newMap/form/field/NullField', p: { name: '空白区' } },
+            { t: 'MapComponent/newMap/form/Section', p: { name: '分组' } },
+            { t: 'MapComponent/newMap/form/TabItem', p: { name: '标签页' } },
             {
                 t: 'MapComponent/newMap/grid/base/AppGridContainer',
                 p: {

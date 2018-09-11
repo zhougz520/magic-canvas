@@ -13,6 +13,7 @@ import { Canvas } from '../Canvas';
 import { IComponentList } from '../model/types';
 import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 import { Map, OrderedSet, Set, List } from 'immutable';
+import { HandleChildCom } from '../../MapComponent/types';
 
 export class ComponentsUtil {
     // 粘贴次数
@@ -95,21 +96,29 @@ export class ComponentsUtil {
         let commentsNum: number = 0;
 
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        let deletedChildCom = false;
         componentList.map(
             (component: IComponentList) => {
                 if (cids.contains(component.cid)) {
-                    componentList = componentList.delete(component);
+                    // 判断是否存在子组件选中
+                    if ((this._canvas.getComponent(component.cid) as IComponent).handleChildCom) {
+                        deletedChildCom = (this._canvas.getComponent(component.cid) as IComponent).handleChildCom(HandleChildCom.DELETE);
+                    }
+                    // 未删除子组件，则删除大map控件
+                    if (!deletedChildCom) {
+                        componentList = componentList.delete(component);
 
-                    delComponentList = delComponentList.push({
-                        cid: component.cid,
-                        comPath: component.comPath,
-                        baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
-                        childData: component.childData,
-                        initType: 'Stack'
-                    });
+                        delComponentList = delComponentList.push({
+                            cid: component.cid,
+                            comPath: component.comPath,
+                            baseState: (this._canvas.getComponent(component.cid) as IComponent).getBaseState(),
+                            childData: component.childData,
+                            initType: 'Stack'
+                        });
 
-                    if (component.baseState.getCurrentContent().getComType() === 'Comments') {
-                        commentsNum += 1;
+                        if (component.baseState.getCurrentContent().getComType() === 'Comments') {
+                            commentsNum += 1;
+                        }
                     }
                 }
             }

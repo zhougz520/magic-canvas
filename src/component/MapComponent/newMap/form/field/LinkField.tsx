@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../../../index';
-import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { Checkbox } from 'antd';
+import { MapComponent } from '../../index';
+import { IFieldProps } from './IFieldProps';
+import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
+import { getStateClass, getFieldCommonPropertyList } from './common/util';
+import { OrderedSet, List } from 'immutable';
+import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
-export interface IMapProps extends IBaseProps {
-	updateProps: (cid: string, updateProp: any) => void;
+export interface IMapProps extends IFieldProps {
 	map_form_f_title: string;
 	map_form_f_default: string;
 	map_form_f_state: string;
@@ -15,11 +17,13 @@ export interface IMapProps extends IBaseProps {
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
+	unit: number;
+	currUnit: number;
 	index: number;
 }
 
 export class LinkField extends MapComponent<IMapProps, any> {
-	static defaultOptionProps = {
+	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
 		map_form_f_state: '0',
@@ -27,7 +31,9 @@ export class LinkField extends MapComponent<IMapProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		map_form_f_type: 'pc/map/form/field/InputField'
+		unit: 1,
+		currUnit: 2,
+		map_form_f_type: 'MapComponent/newMap/form/field/LinkField'
 	};
 
 	public resizing = false;
@@ -42,7 +48,8 @@ export class LinkField extends MapComponent<IMapProps, any> {
 
 		this.state = {
 			currX: 0,
-			resizing: false
+			resizing: false,
+			hover: {}
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -53,44 +60,59 @@ export class LinkField extends MapComponent<IMapProps, any> {
 		...draggableStyle
 	})
 
+	/**
+	 * 获取组件属性列表
+	 */
+	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+		let propertyList: List<IProperty> = List();
+		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+		propertyList = getFieldCommonPropertyList(this.props);
+		// 组件属性整理
+		propertyGroup = propertyGroup.add(
+			{ groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+		);
+		propertyList = List();
+
+		return propertyGroup;
+	}
 	public render() {
-		const { map_form_f_title, map_form_f_default, id, index, titleWidth } = this.props;
-		// 获取选项
-		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
-		const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
+		const stateClass = getStateClass(map_form_f_state);
+
+		const currUnit = '100%';
+
+		return (
 			<div
-				onMouseDown={this.selectedCom}
-				ref={provided.innerRef}
-				{...provided.dragHandleProps}
-				style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+				ref={(ref) => this.com = ref}
+				style={Object.assign({}, { width: currUnit })}
+				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
+				// tslint:disable-next-line:jsx-no-lambda
+				onMouseDown={(e: any) => { this.selectedCom(e); }}
 			>
+				<MaskLayer id={id} />
 				<table className="field-tb">
 					<tbody>
 						<tr>
-							<td className={`field-title`} style={{ width: titleWidth }}>
+							<td className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 								{map_form_f_title}
 							</td>
 							<td className="field-content">
-								{
-									arrRadio.map((chkBox: string, num: number) => {
-										if (chkBox === '') return '';
-
-										return <Checkbox key={num} >{chkBox}</Checkbox>;
-									})
-								}
+								<table style={{ width: '100%' }}>
+									<tbody>
+										<tr>
+											<td className="new-require">
+												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+											</td>
+											<td>
+												<a href="#">{map_form_f_default}</a>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				{provided.placeholder}
-			</div>
-		);
-
-		return (
-			<div ref={(ref) => this.com = ref} style={Object.assign({}, { width: '100%' })} className="field-bar">
-				<Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
-					{initDrag}
-				</Draggable>
 			</div>
 		);
 	}

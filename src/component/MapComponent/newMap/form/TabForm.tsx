@@ -1,8 +1,16 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../../index';
+import { MapComponent, IBaseProps } from '../index';
 import { TabItem, SectionForm } from './index';
 import { GlobalUtil } from '../../../util';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { OrderedSet, List } from 'immutable';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+// import { GlobalUtil } from '../../../util';
+// import {
+//     // DragDropContext,
+//     // Droppable,
+//     DroppableProvided,
+//     DroppableStateSnapshot
+// } from 'react-beautiful-dnd';
 
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-no-multiline-js
@@ -10,6 +18,7 @@ export interface IMapProps extends IBaseProps {
     showNavBar: boolean;
     showTabItems: boolean;
     map_form_sti?: string;
+    map_form_st?: string;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -20,9 +29,6 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
         showNavBar: true,
         showTabItems: true
     };
-
-    private tabItem: any;
-    private sectionForm: any;
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
@@ -30,97 +36,150 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
         };
     }
 
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        const { map_form_st } = this.props;
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 列表属性
+        // propertyList = propertyList.push(
+        //     { pTitle: '标题', pKey: 'map_form_st_name', pValue: map_form_st_name, pType: PropertiesEnum.INPUT_TEXT }
+        // );
+        propertyList = propertyList.push(
+            {
+                pTitle: '分区样式', pKey: 'map_form_st', pValue: map_form_st, pType: PropertiesEnum.SELECT,
+                pList: [{ key: '0', value: '无边框' }, { key: '1', value: '有边框' }, { key: '2', value: '标签页显示' }]
+            }
+        );
+        // 组件属性整理
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+    // tslint:disable:no-shadowed-variable
     public render() {
-        const { hover } = this.state;
-        const { p } = this.props;
-        const components: any[] = GlobalUtil.isUndefined(p) ? [] : p.components;
-        this.initSectionForm(components);
-        this.initTabItem(components);
+        const { p, map_form_sti, map_form_st, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps, id } = this.props;
+        const { selectId, hover } = this.state;
+        const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
+
+        const sectionFormList: any[] = [];
+        if (!GlobalUtil.isUndefined(components)) {
+            components.forEach((com: any, index: number) => {
+                const { t, p } = com;
+                if (t === 'MapComponent/newMap/form/TabItem') {
+                    const { map_form_st_state } = p;
+
+                    const sectionForm = GlobalUtil.isUndefined(p.p) ? undefined : p.p.components;
+                    if (sectionForm && (selectId === undefined ? (map_form_sti === undefined ? index === 0 : map_form_sti.substring(4) === p.id.substring(4)) : selectId === p.id)) {
+                        sectionForm.forEach((secCom: any, secIndex: number) => {
+                            const { t, p } = secCom;
+                            if (t === 'MapComponent/newMap/form/SectionForm') {
+                                sectionFormList.push(
+                                    <SectionForm
+                                        tabItemState={map_form_st_state}
+                                        key={p.id}
+                                        {...p}
+                                        ref={`c.${p.id}`}
+                                        pageMode={pageMode}
+                                        selectedId={selectedId}
+                                        selectComChange={selectComChange}
+                                        setChildPropertyGroup={setChildPropertyGroup}
+                                        doChildDbClickToEdit={doChildDbClickToEdit}
+                                        stateData={stateData}
+                                        updateProps={updateProps}
+                                        refs={refs}
+                                    />
+                                );
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        // 是否显示title
+        const hideTitle = map_form_st === '0' ? true : false;
+        // console.log('map_form_st', map_form_st);
 
         return (
             <div
+                className={`${map_form_st === '1' ? 'margin20-lr-t' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
                 ref={(ref) => this.com = ref}
-                onDragOver={this.handleOver}
-                onDragLeave={this.handleLeave}
-                className={`form-tab`}
-                style={Object.assign({}, { width: '100%' }, hover)}
+                onMouseDown={this.selectedCom}
             >
-                <DragDropContext onDragEnd={this.onDragEnd} >
-                    <Droppable droppableId="droppable" direction="horizontal">
-                        {this.tabItem}
-                    </Droppable>
-                </DragDropContext>
-                {this.sectionForm}
+                <table
+                    className={`form`}
+                >
+                    <tbody>
+                        <tr className={` ${map_form_st !== '2' ? 'tab-bar' : ''} ${hideTitle ? ' bar-hide' : ''}`}>
+                            <td className={`${map_form_st === '2' ? 'tab-bar-content' : ''}`}>
+                                <div className={`margin20-lr ${map_form_st === '2' ? 'tab-bar-title-line' : ''}`}>
+                                    <table
+                                        style={Object.assign({}, { width: '100%' }, hover)}
+                                        onDragOver={this.handleOver}
+                                        onDragLeave={this.handleLeave}
+                                    >
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    {
+                                                        GlobalUtil.isUndefined(components) ? '' :
+                                                            (
+                                                                components.map((com: any, index: number) => {
+                                                                    const { t, p } = com;
+                                                                    if (t === 'MapComponent/newMap/form/TabItem') {
+                                                                        return <TabItem
+                                                                            formState={map_form_st}
+                                                                            onChangeItem={this.onChangeItem}
+                                                                            id={p.id}
+                                                                            tabSelected={selectId === undefined ? (map_form_sti === undefined ? index === 0 : map_form_sti.substring(4) === p.id.substring(4)) : selectId === p.id}
+                                                                            key={p.id}
+                                                                            {...p}
+                                                                            ref={`c.${p.id}`}
+                                                                            pageMode={pageMode}
+                                                                            selectedId={selectedId}
+                                                                            selectComChange={selectComChange}
+                                                                            setChildPropertyGroup={setChildPropertyGroup}
+                                                                            doChildDbClickToEdit={doChildDbClickToEdit}
+                                                                            stateData={stateData}
+                                                                            updateProps={updateProps}
+                                                                            refs={refs}
+                                                                        />;
+                                                                    } else {
+                                                                        return [];
+                                                                    }
+                                                                })
+                                                            )
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr className={`tab-form-content`}>
+                            <td className="tab-bg" style={map_form_st === '0' || map_form_st === '2' ? { padding: '10px 0 0 0', border: 0 } : {}}>
+                                <div className={`${map_form_st !== '1' ? 'margin10-lr' : ''}`}>
+                                    {sectionFormList}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }
 
-    // 初始化加载控件
-    public initSectionForm = (components: any[]) => {
-        const { selectedId, map_form_sti, showTabItems, updateProps, selectComChange } = this.props;
-        components.forEach((com, index) => {
-            const { p, t } = com;
-            if (t === 'MapComponent/map/form/TabItem') {
-                const sectionForm = GlobalUtil.isUndefined(p.p) ? undefined : p.p.components;
-                if (!GlobalUtil.isUndefined(sectionForm)
-                    && (map_form_sti === undefined ?
-                        index === 0 :
-                        map_form_sti === p.id
-                    )) {
-                    // 整理tabForm
-                    sectionForm.forEach(
-                        (sec: any) => {
-                            if (sec.t === 'MapComponent/map/form/SectionForm') {
-                                this.sectionForm = (
-                                    <SectionForm
-                                        ref={`c.${sec.p.id}`}
-                                        selectedId={selectedId}
-                                        updateProps={updateProps}
-                                        selectComChange={selectComChange}
-                                        {...sec.p}
-                                        showTabItems={showTabItems}
-                                    />
-                                );
-                            }
-                        }
-                    );
-                }
-            }
-        });
-    }
-    // 初始化加载控件
-    public initTabItem = (components: any[]) => {
-        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sti } = this.props;
-        const tabList: any[] = [];
-        components.forEach((com: any, index: number) => {
-            const { t, p } = com;
-            if (t === 'MapComponent/map/form/TabItem') {
-                tabList.push(
-                    <TabItem
-                        ref={`c.${p.id}`}
-                        key={`c.${p.id}`}
-                        selectedId={selectedId}
-                        updateProps={updateProps}
-                        selectComChange={selectComChange}
-                        selectOn={map_form_sti === undefined && index === 0 ? p.id : map_form_sti}
-                        {...p}
-                        index={index}
-                        showTabItems={showTabItems}
-                        onChangeItem={this.onChangeItem}
-                    />);
-            }
-        });
-        this.tabItem = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
-            (
-                <div className="form-tabItems" ref={provided.innerRef} style={{ display: !showNavBar ? 'none' : '' }} >
-                    {tabList}
-                </div>
-            );
-    }
-
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/form/TabItem');
+        return (t === 'MapComponent/newMap/form/TabItem');
     }
 
     public onChangeItem = (tabId: string) => {
@@ -132,14 +191,14 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
      * override
      */
     public addChildComponent = (id: string, data: any, addData: any): any => {
-        if (addData.t === 'MapComponent/map/form/TabItem') {
+        if (addData.t === 'MapComponent/newMap/form/TabItem') {
             const tabItem = this.getChildComponent(id, data, addData);
             let childId = tabItem.p.id;
-            const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/SectionForm' });
+            const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/SectionForm' });
             childId = sectionForm.p.id;
-            const section = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/Section' });
+            const section = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/Section' });
             childId = section.p.id;
-            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
+            this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/field/InputField' });
         }
 
         this.props.updateProps('', data);

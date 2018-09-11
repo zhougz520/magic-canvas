@@ -4,6 +4,7 @@ import { IBaseProps } from '../../../index';
  * 传递给State进行修改
  */
 export interface IFieldProps extends IBaseProps {
+    p: any;
     map_form_f_title: string;
     map_form_f_default: string;
     map_form_f_state: string;
