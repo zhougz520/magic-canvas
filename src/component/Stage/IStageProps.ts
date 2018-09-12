@@ -14,6 +14,8 @@ export interface IStageProps {
     pageMode: PageMode;
     // 用户信息
     userInfo?: { userId: string; userName: string; };
+    // 画布缩放比例（0-1）
+    scale?: number;
 
     // 设置页签变脏
     setPageDirty?: () => void;

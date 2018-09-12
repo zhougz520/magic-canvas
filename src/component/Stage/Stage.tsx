@@ -94,7 +94,8 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
             copyToClipboard,
             readFromClipboard,
             checkClipboard,
-            userInfo
+            userInfo,
+            scale
         } = this.props;
 
         return (
@@ -105,6 +106,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     pageMode={pageMode}
                     canvasSize={canvasSize}
                     componentPosition={componentPosition}
+                    scale={scale}
                     getStageScroll={this.getStageScroll}
                 />
                 <Canvas
@@ -113,6 +115,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     canvasSize={canvasSize}
                     components={components}
                     componentPosition={componentPosition}
+                    scale={scale}
                     highPerformance={highPerformance}
                     getDraw={this.getDraw}
                     getStageScroll={this.getStageScroll}
