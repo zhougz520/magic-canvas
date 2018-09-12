@@ -40,7 +40,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
         const { hover } = this.state;
         const { p, map_form_title, theme, map_form_header_show, map_form_foot_show,
             pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit,
-            stateData, refs, updateProps, id } = this.props;
+            stateData, getRefs, updateProps, id } = this.props;
         const components: any[] = GlobalUtil.isUndefined(p) ? undefined : p.components;
         const tabFormList: any[] = [];
         const tabFormFootList: any[] = [];
@@ -63,7 +63,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                         />
                     );
                 } else if (t === 'MapComponent/newMap/form/AppGridMenuItem') {
@@ -80,7 +80,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                         />
                     );
                 }

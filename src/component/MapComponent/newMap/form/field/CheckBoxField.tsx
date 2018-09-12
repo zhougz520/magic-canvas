@@ -19,7 +19,6 @@ export interface ICurrProps extends IFieldProps {
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
-	unit: number;
 	currUnit: number;
 	index: number;
 }
@@ -33,7 +32,6 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		unit: 1,
 		currUnit: 2,
 		map_form_f_type: 'MapComponent/newMap/form/field/CheckBoxField'
 	};
@@ -78,7 +76,7 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 	public render() {
 		// const { value } = this.state;
 		const { hover } = this.state;
-		const { map_form_f_title, map_form_f_default, unit, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
+		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
@@ -86,7 +84,7 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
+				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
 				onMouseDown={this.selectedCom}
 				draggable

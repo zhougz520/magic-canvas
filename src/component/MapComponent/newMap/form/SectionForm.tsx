@@ -65,7 +65,7 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
 
     // 初始化加载控件
     public initSectonList = (components: any[]) => {
-        const { pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps } = this.props;
+        const { pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, getRefs, stateData, updateProps } = this.props;
         let tabList: any[] = [];
         if (GlobalUtil.isUndefined(components)) return;
         tabList = components.map((com: any, index: number) => {
@@ -84,7 +84,7 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
                     doChildDbClickToEdit={doChildDbClickToEdit}
                     stateData={stateData}
                     updateProps={updateProps}
-                    refs={refs}
+                    getRefs={getRefs}
                 />;
             } else {
                 return '';

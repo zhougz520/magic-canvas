@@ -17,7 +17,6 @@ export interface IMapProps extends IFieldProps {
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
-	unit: number;
 	currUnit: number;
 	index: number;
 }
@@ -31,7 +30,6 @@ export class NullField extends MapComponent<IMapProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		unit: 1,
 		currUnit: 2,
 		map_form_f_type: 'MapComponent/newMap/form/field/NullField'
 	};
@@ -77,12 +75,12 @@ export class NullField extends MapComponent<IMapProps, any> {
 	}
 	public render() {
 		const { hover } = this.state;
-		const { map_form_f_default, unit, currUnit, id, selectedId } = this.props;
+		const { map_form_f_default, map_form_f_cols, currUnit, id, selectedId } = this.props;
 
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
+				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
 				onMouseDown={this.selectedCom}
 				draggable

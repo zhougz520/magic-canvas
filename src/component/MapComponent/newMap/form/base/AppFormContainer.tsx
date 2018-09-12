@@ -355,13 +355,18 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                                 updateProps={this.updateProps}
                                 {...component.p}
                                 stateData={childData}
-                                refs={this.refs}
+                                getRefs={this.getRefs}
                             />
                         );
                         break;
                 }
             }
         );
+    }
+
+    // 获取refs
+    private getRefs = () => {
+        return this.refs;
     }
 
     /**

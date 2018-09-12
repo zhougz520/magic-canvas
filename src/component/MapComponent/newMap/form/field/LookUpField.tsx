@@ -18,7 +18,6 @@ export interface IMapProps extends IFieldProps {
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
-	unit: number;
 	currUnit: number;
 	index: number;
 }
@@ -32,7 +31,6 @@ export class LookUpField extends MapComponent<IMapProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		unit: 1,
 		currUnit: 2,
 		map_form_f_type: 'MapComponent/newMap/form/field/LookUpField'
 	};
@@ -78,7 +76,7 @@ export class LookUpField extends MapComponent<IMapProps, any> {
 	}
 	public render() {
 		const { hover } = this.state;
-		const { map_form_f_title, map_form_f_default, unit, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
+		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
@@ -88,7 +86,7 @@ export class LookUpField extends MapComponent<IMapProps, any> {
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
+				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
 				onMouseDown={this.selectedCom}
 				draggable
@@ -112,23 +110,17 @@ export class LookUpField extends MapComponent<IMapProps, any> {
 										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
 									</td>
 									<td>
-										<table className="field-tb">
-											<tbody>
-												<tr>
-													<td >
-														<Input
-															type="text"
-															placeholder=""
-															className={`${map_form_f_disabled ? borderClass : ''}`}
-															onChange={this.onChangeText}
-															disabled={map_form_f_disabled}
-															value={map_form_f_default}
-														/>
-														<div className="miniux-lookpopup-button miniux-icon icon-add miniux-lookpopup-button-hide newlookup" />
-													</td>
-												</tr>
-											</tbody>
-										</table>
+										<div className="field-tb" style={{ position: 'relative' }}>
+											<Input
+												type="text"
+												className={map_form_f_disabled ? borderClass : ''}
+												placeholder=""
+												onChange={this.onChangeText}
+												disabled={map_form_f_disabled}
+												defaultValue={map_form_f_default}
+											/>
+											<div className="miniux-lookpopup-button miniux-icon icon-add miniux-lookpopup-button-hide newlookup" >＋</div>
+										</div>
 									</td>
 								</tr>
 							</tbody>

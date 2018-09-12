@@ -158,7 +158,7 @@ table {
                         display: flex;
                         flex-wrap: wrap;
                         width: 100%;
-                        min-height: 100px;
+                        min-height: 50px;
                         padding: 10px;
                     }
                     .fieldList-tb {
@@ -196,7 +196,7 @@ table {
                 // position: relative;
                 width: 100%;
                 height: 100%;
-                min-height: 27px; // display: inline-block; // float: left;
+                min-height: 34px; // display: inline-block; // float: left;
                 padding: 0 10px;
                 line-height: 20px;
                 .field-tb {
@@ -223,8 +223,42 @@ table {
                         display: block;
                         cursor: auto;
                     }
+                    .miniux-icon {
+                        position: absolute;
+                        right: 1px;
+                        top: 5px;
+                        width: 20px;
+                        height: 20px;
+                        z-index: 100;
+                        cursor: pointer;
+                        color: #6f7988;
+                    }
+                    .miniux-lookpopup-button {
+                        position: absolute;
+                        top: 0;
+                        bottom: 0;
+                        background-color: #fff;
+                        width: 28px;
+                        height: 100%;
+                        line-height: 20px;
+                        text-align: center;
+                        cursor: pointer;
+                        border-left: 1px solid #d3d5d9;
+                        color: #bbb;
+                    }
+                    .miniux-lookpopup-button:before {
+                        position: absolute;
+                        top: 50%;
+                        left: 0;
+                        margin-top: -10px;
+                        width: 28px;
+                        text-align: center;
+                        height: 20px;
+                    }
                     .newlookup {
                         position: absolute;
+                        font-size: 28px;
+                        font-weight: 100;
                         height: auto;
                         bottom: 2px;
                         top: 2px;
@@ -301,11 +335,11 @@ table {
                     }
                     .field-content {
                         flex: 1;
+                        padding-top: 1px;
                         .new-require {
                             height: 30px;
                             width: 15px;
                         }
-                        padding-top: 2px;
                         .input-number {
                             text-align: right;
                         }

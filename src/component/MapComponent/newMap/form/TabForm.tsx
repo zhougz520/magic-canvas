@@ -77,7 +77,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
     // tslint:disable:no-shadowed-variable
     public render() {
         const { p, map_form_sti, map_form_st, pageMode, selectedId, selectComChange, index,
-            setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps, id } = this.props;
+            setChildPropertyGroup, doChildDbClickToEdit, getRefs, stateData, updateProps, id } = this.props;
         const { selectId } = this.state;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
         this.initTabItem(components);
@@ -110,7 +110,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                                         doChildDbClickToEdit={doChildDbClickToEdit}
                                         stateData={stateData}
                                         updateProps={updateProps}
-                                        refs={refs}
+                                        getRefs={getRefs}
                                     />
                                 );
                             }
@@ -169,7 +169,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
 
     // 初始化加载控件
     public initTabItem = (components: any[]) => {
-        const { map_form_sti, map_form_st, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps } = this.props;
+        const { map_form_sti, map_form_st, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, getRefs, stateData, updateProps } = this.props;
         const { selectId, hover } = this.state;
         let tabList: any[] = [];
         if (GlobalUtil.isUndefined(components)) return;
@@ -192,7 +192,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                     doChildDbClickToEdit={doChildDbClickToEdit}
                     stateData={stateData}
                     updateProps={updateProps}
-                    refs={refs}
+                    getRefs={getRefs}
                 />;
             } else {
                 return [];

@@ -23,6 +23,6 @@ export interface IBaseProps {
     p: any;
     updateProps: (id: string, data: any) => void;
     stateData?: any;
-    refs?: any;
+    getRefs?: () => any;
     index?: number;
 }

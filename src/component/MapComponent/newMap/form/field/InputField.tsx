@@ -12,12 +12,11 @@ export interface IMapProps extends IFieldProps {
 	map_form_f_title: string;
 	map_form_f_default: string;
 	map_form_f_state: string;
-	map_form_f_cols: number;
 	map_form_f_disabled: boolean;
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
-	unit: number;
+	map_form_f_cols: number;
 	currUnit: number;
 	index: number;
 }
@@ -31,7 +30,6 @@ export class InputField extends MapComponent<IMapProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		unit: 1,
 		currUnit: 2,
 		map_form_f_type: 'MapComponent/newMap/form/field/InputField'
 	};
@@ -78,7 +76,7 @@ export class InputField extends MapComponent<IMapProps, any> {
 	}
 	public render() {
 		const { value, hover } = this.state;
-		const { map_form_f_title, map_form_f_default, unit, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
+		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
@@ -88,7 +86,7 @@ export class InputField extends MapComponent<IMapProps, any> {
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
+				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
 				onMouseDown={this.selectedCom}
 				draggable

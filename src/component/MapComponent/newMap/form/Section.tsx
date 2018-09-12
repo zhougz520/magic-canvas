@@ -73,7 +73,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
             >
                 <div
-                    className={`section-title`}
+                    className={`section-title ${map_form_ss ? 'bar-show' : 'bar-hide'}`}
                     {...provided.dragHandleProps}
                     key={'title'}
                 >
@@ -92,7 +92,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             <div
                 ref={(ref) => this.com = ref}
                 className={`section-tb ${selectedId === id ? 'map-select-open' : ''}`}
-                style={Object.assign({}, map_form_ss ? {} : { border: 0 }, hover)}
+                style={Object.assign({}, hover)}
                 onDragOver={this.handleOver}
                 onMouseDown={this.selectedCom}
                 onDragLeave={this.handleLeave}
@@ -153,7 +153,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     }
     private initFieldList = (currFieldList: any) => {
         const { map_form_ss_unit, map_form_ss_tt_w, updateProps,
-            pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData } = this.props;
+            pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, getRefs, stateData } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
         const components = currFieldList === undefined ? undefined : currFieldList;
         const fieldList: any[] = [];
@@ -176,9 +176,11 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                         // console.log('InputField', t);
                         field = <InputField
                             titleWidth={map_form_ss_tt_w}
-                            key={p.id} {...p}
+                            key={p.id}
+                            {...p}
                             id={p.id}
-                            unit={p.unit}
+                            currUnit={currUnit}
+                            map_form_f_cols={p.map_form_f_cols}
                             index={index}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
@@ -189,7 +191,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -199,8 +201,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                                 titleWidth={map_form_ss_tt_w}
                                 key={p.id}
                                 {...p}
+                                id={p.id}
+                                currUnit={currUnit}
                                 index={index}
-                                unit={p.unit}
+                                map_form_f_cols={p.map_form_f_cols}
                                 map_form_f_type={t}
                                 ref={`c.${p.id}`}
                                 pageMode={pageMode}
@@ -210,7 +214,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 stateData={stateData}
                                 updateProps={updateProps}
-                                refs={refs}
+                                getRefs={getRefs}
                                 dragChangeField={this.dragChangeField}
                             />;
                         break;
@@ -219,8 +223,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -230,7 +236,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -239,8 +245,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -250,7 +258,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -259,8 +267,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -270,7 +280,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -279,8 +289,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -290,7 +302,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -299,8 +311,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -310,7 +324,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -319,9 +333,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            index={index}
-                            unit={p.unit}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -331,7 +346,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -340,8 +355,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -351,7 +368,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -360,8 +377,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -371,7 +390,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -380,8 +399,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -391,7 +412,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;
@@ -400,8 +421,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
+                            id={p.id}
+                            currUnit={currUnit}
                             index={index}
-                            unit={p.unit}
+                            map_form_f_cols={p.map_form_f_cols}
                             map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
@@ -411,7 +434,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
                             updateProps={updateProps}
-                            refs={refs}
+                            getRefs={getRefs}
                             dragChangeField={this.dragChangeField}
                         />;
                         break;

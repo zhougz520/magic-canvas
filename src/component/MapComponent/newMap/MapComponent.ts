@@ -16,7 +16,7 @@ import { GlobalUtil } from '../../util';
  * 实现接口IComponent定义的所有方法，提供给外部调用
  */
 export class MapComponent<P extends IBaseProps, S extends IBaseState>
-    extends React.PureComponent<P, S> implements IComponent {
+    extends React.Component<P, S> implements IComponent {
 
     com: HTMLElement | null = null;
     rowList: any[] = [];
@@ -55,17 +55,14 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             }
         }
     }
-    // shouldComponentUpdate(nextProps: any, nextState: any) {
-    //     console.log('nextProps', nextProps);
-    //     nextProps.refs = null;
-    //     console.log('nextProps', JSON.stringify(nextProps));
-    //     if (JSON.stringify(this.props) === JSON.stringify(nextProps) &&
-    //         JSON.stringify(this.state) === JSON.stringify(nextState)) {
-    //         return false;
-    //     }
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        if (JSON.stringify(this.props) === JSON.stringify(nextProps) &&
+            JSON.stringify(this.state) === JSON.stringify(nextState)) {
+            return false;
+        }
 
-    //     return true;
-    // }
+        return true;
+    }
 
     /************************************* begin 富文本 ****************************************/
     /**
@@ -327,7 +324,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         return parent;
     }
     public getCurrRef = (currId: string) => {
-        const refs: any = this.props.refs;
+        const refs: any = this.props.getRefs ? this.props.getRefs() : undefined;
         const currRsf = this.loopRefs(currId, refs);
 
         return currRsf;
