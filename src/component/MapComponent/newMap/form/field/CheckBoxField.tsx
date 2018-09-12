@@ -11,11 +11,21 @@ import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
 export interface ICurrProps extends IFieldProps {
+	map_form_f_title: string;
 	map_form_f_default: string;
+	map_form_f_state: string;
+	map_form_f_cols: number;
+	map_form_f_disabled: boolean;
+	map_form_f_hidden_t: boolean;
+	map_form_f_type: string;
+	titleWidth: number;
+	unit: number;
+	currUnit: number;
+	index: number;
 }
 
 export class CheckBoxField extends MapComponent<ICurrProps, any> {
-	static defaultOptionProps = {
+	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
 		map_form_f_state: '0',
@@ -23,7 +33,9 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		map_form_f_type: 'MapComponent/newMap/form/field/InputField'
+		unit: 1,
+		currUnit: 2,
+		map_form_f_type: 'MapComponent/newMap/form/field/CheckBoxField'
 	};
 
 	public resizing = false;
@@ -65,56 +77,57 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 	}
 	public render() {
 		// const { value } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
+		const { hover } = this.state;
+		const { map_form_f_title, map_form_f_default, unit, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
 
-		const currUnit = '100%';
-
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: currUnit })}
+				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
-				// tslint:disable-next-line:jsx-no-lambda
-				onMouseDown={(e: any) => { this.selectedCom(e); }}
+				onMouseDown={this.selectedCom}
+				draggable
+				onDragOver={this.handleFieldOver}
+				// onDragOver={this.onDrageOver}
+				onDragLeave={this.handleLeave}
+				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} />
-				<table className="field-tb">
-					<tbody>
-						<tr>
-							<td className={`field-title  ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
-								{map_form_f_title}
-							</td>
-							<td className="field-content">
-								<table style={{ width: '100%' }}>
-									<tbody>
-										<tr>
-											<td className="new-require">
-												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
-											</td>
-											<td>
-												{
-													arrRadio.map((chkBox, index) => {
-														if (chkBox === '') return '';
+				<div
+					className="field-tb"
+				>
+					<MaskLayer id={id} />
+					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
+						{map_form_f_title}
+					</div>
+					<div className="field-content">
+						<table style={{ width: '100%' }}>
+							<tbody>
+								<tr>
+									<td className="new-require">
+										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+									</td>
+									<td>
+										{
+											arrRadio.map((chkBox, index) => {
+												if (chkBox === '') return '';
 
-														return (
-															<div key={index} style={{ float: 'left', marginRight: 8 }}>
-																<input className="checkbox ux-checkbox" type="checkbox" onClick={this.onChange} />
-																{chkBox}
-															</div>
-														);
-													})
-												}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+												return (
+													<div key={index} style={{ float: 'left', marginRight: 8 }}>
+														<input className="checkbox ux-checkbox" type="checkbox" onClick={this.onChange} />
+														{chkBox}
+													</div>
+												);
+											})
+										}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		);
 	}

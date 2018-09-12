@@ -465,7 +465,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         this.setState({
             selectedId: id
         });
-        // 调用container的属性加载
+        // 调用container的选中
         this.fireSelectChange(e);
     }
 

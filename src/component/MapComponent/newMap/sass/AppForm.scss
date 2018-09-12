@@ -105,6 +105,7 @@ table {
                     }
                     .tab-bar-title-line {
                         border-bottom: 1px solid #A0A3AB;
+                        height: 40px;
                     }
                 }
                 .margin10-lr {
@@ -151,24 +152,23 @@ table {
                         width: 3px;
                         height: 16px;
                         background: #44b549;
+                    } // border: 1px solid #d9dadc;
+                    border-top: none;
+                    .section-td {
+                        display: flex;
+                        flex-wrap: wrap;
+                        width: 100%;
+                        min-height: 100px;
+                        padding: 10px;
                     }
-                    .section-tr {
-                        // border: 1px solid #d9dadc;
-                        border-top: none;
-                        .section-td {
+                    .fieldList-tb {
+                        table-layout: fixed;
+                        width: 100%;
+                        .fieldList-tr {
                             width: 100%;
-                            min-height: 100px;
-                            padding: 10px;
-                        }
-                        .fieldList-tb {
-                            table-layout: fixed;
-                            width: 100%;
-                            .fieldList-tr {
-                                width: 100%;
-                                .fieldList-td {
-                                    vertical-align: middle;
-                                    padding: 3px 0;
-                                }
+                            .fieldList-td {
+                                vertical-align: middle;
+                                padding: 3px 0;
                             }
                         }
                     }
@@ -193,14 +193,15 @@ table {
                 border: 0;
             }
             .field-bar {
-                position: relative;
+                // position: relative;
                 width: 100%;
                 height: 100%;
-                min-height: 27px;
-                float: left;
+                min-height: 27px; // display: inline-block; // float: left;
                 padding: 0 10px;
                 line-height: 20px;
                 .field-tb {
+                    display: flex;
+                    flex-direction: row;
                     table-layout: fixed;
                     td {
                         WORD-WRAP: break-word;
@@ -237,9 +238,9 @@ table {
                         height: $form-field-cal-ico-height;
                         width: $form-field-cal-ico-width; // background: url($form-field-cal-btn-disabled-img-url) left no-repeat;
                     }
-                    width: 100%;
                     .field-title {
                         width: 110px;
+                        line-height: 34px;
                     }
                     .required {
                         color: #e60012;
@@ -299,6 +300,7 @@ table {
                         }
                     }
                     .field-content {
+                        flex: 1;
                         .new-require {
                             height: 30px;
                             width: 15px;

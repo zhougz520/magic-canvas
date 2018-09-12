@@ -77,58 +77,58 @@ export class RadioField extends MapComponent<IMapProps, any> {
 		return propertyGroup;
 	}
 	public render() {
-		const { value } = this.state;
 		const RadioGroup = Radio.Group;
-		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
+		const { value, hover } = this.state;
+		const { map_form_f_title, map_form_f_default, unit, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
-
-		const currUnit = '100%';
 
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: currUnit })}
+				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
-				// tslint:disable-next-line:jsx-no-lambda
-				onMouseDown={(e: any) => { this.selectedCom(e); }}
+				onMouseDown={this.selectedCom}
+				draggable
+				onDragOver={this.handleFieldOver}
+				// onDragOver={this.onDrageOver}
+				onDragLeave={this.handleLeave}
+				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} />
-				<table className="field-tb">
-					<tbody>
-						<tr>
-							<td className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
-								{map_form_f_title}
-							</td>
-							<td className="field-content">
-								<table style={{ width: '100%' }}>
-									<tbody>
-										<tr>
-											<td className="new-require">
-												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
-											</td>
-											<td>
-												<RadioGroup
-													onChange={this.onChange}
-													disabled={map_form_f_disabled}
-													value={value}
-												>
-													{
-														arrRadio.map((radio, index) => {
-															if (radio === '') return '';
+				<div
+					className="field-tb"
+				>
+					<MaskLayer id={id} />
+					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
+						{map_form_f_title}
+					</div>
+					<div className="field-content">
+						<table style={{ width: '100%' }}>
+							<tbody>
+								<tr>
+									<td className="new-require">
+										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+									</td>
+									<td>
+										<RadioGroup
+											onChange={this.onChange}
+											disabled={map_form_f_disabled}
+											value={value}
+										>
+											{
+												arrRadio.map((radio, index) => {
+													if (radio === '') return '';
 
-															return <Radio key={index} checked={value === radio} value={radio}>{radio}</Radio>;
-														})
-													}
-												</RadioGroup>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+													return <Radio key={index} checked={value === radio} value={radio}>{radio}</Radio>;
+												})
+											}
+										</RadioGroup>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		);
 	}

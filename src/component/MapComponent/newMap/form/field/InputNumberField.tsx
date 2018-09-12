@@ -77,56 +77,58 @@ export class InputNumberField extends MapComponent<IMapProps, any> {
 		return propertyGroup;
 	}
 	public render() {
-		const { value } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
+		const { value, hover } = this.state;
+		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_disabled,
+			map_form_f_hidden_t, titleWidth, selectedId, id,
+			unit,
+			currUnit
+		} = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
 			borderClass = ' read-only';
 		}
 
-		const currUnit = '100%';
-
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: currUnit })}
+				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
-				// tslint:disable-next-line:jsx-no-lambda
-				onMouseDown={(e: any) => { this.selectedCom(e); }}
+				onMouseDown={this.selectedCom}
+				draggable
+				onDragOver={this.handleFieldOver}
+				// onDragOver={this.onDrageOver}
+				onDragLeave={this.handleLeave}
+				onDragEnd={this.handleLeave}
 			>
 				<MaskLayer id={id} />
-				<table className="field-tb">
-					<tbody>
-						<tr>
-							<td className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
-								{map_form_f_title}
-							</td>
-							<td className="field-content">
-								<table style={{ width: '100%' }}>
-									<tbody>
-										<tr>
-											<td className="new-require">
-												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
-											</td>
-											<td>
-												<Input
-													type="text"
-													placeholder=""
-													className={`input-number${map_form_f_disabled ? borderClass : ''}`}
-													onChange={this.onChangeText}
-													disabled={map_form_f_disabled}
-													defaultValue={map_form_f_default}
-													value={value}
-												/>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div className="field-tb">
+					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
+						{map_form_f_title}
+					</div>
+					<div className="field-content">
+						<table style={{ width: '100%' }}>
+							<tbody>
+								<tr>
+									<td className="new-require">
+										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+									</td>
+									<td>
+										<Input
+											type="text"
+											placeholder=""
+											className={`input-number${map_form_f_disabled ? borderClass : ''}`}
+											onChange={this.onChangeText}
+											disabled={map_form_f_disabled}
+											defaultValue={map_form_f_default}
+											value={value}
+										/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		);
 	}

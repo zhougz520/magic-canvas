@@ -6,6 +6,7 @@ import { GlobalUtil } from '../../../util';
 import { Theme } from '../model/types';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
     showTabItems: boolean;
@@ -53,6 +54,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                             key={com.p.id}
                             {...com.p}
                             ref={`c.${com.p.id}`}
+                            index={index}
                             // p={theme}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -70,6 +72,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                             key={com.p.id}
                             {...com.p}
                             ref={`c.${com.p.id}`}
+                            index={index}
                             pageMode={pageMode}
                             selectedId={selectedId}
                             selectComChange={selectComChange}
@@ -83,6 +86,18 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                 }
             });
         }
+        const tabForms = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+            (
+                <div
+                    className={`form-content`}
+                    style={Object.assign({}, hover)}
+                    onDragOver={this.handleOver}
+                    onDragLeave={this.handleLeave}
+                    ref={provided.innerRef}
+                >
+                    {tabFormList}
+                </div>
+            );
 
         return (
             <div
@@ -96,15 +111,17 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                 <div className={`form-title`} style={{ display: map_form_header_show ? '' : 'none' }}>
                     {map_form_title}
                 </div>
-                <div className={`form-content`}>
-                    {tabFormList.length > 0 ? tabFormList : ''}
-                </div>
+                <DragDropContext onDragEnd={this.onDragEnd} >
+                    <Droppable droppableId="droppable-tabForm" >
+                        {tabForms}
+                    </Droppable>
+                </DragDropContext>
                 <div className={`form-foot`} style={{ display: map_form_foot_show ? '' : 'none' }}>
                     <ul>
                         {tabFormFootList.length > 0 ? tabFormFootList : ''}
                     </ul>
                 </div>
-            </div>
+            </div >
         );
     }
 

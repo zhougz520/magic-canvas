@@ -14,4 +14,6 @@ export interface IFieldProps extends IBaseProps {
     map_form_f_type: string;
     titleWidth: number;
     index: number;
+    unit: number;
+    currUnit: number;
 }

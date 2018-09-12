@@ -4,6 +4,8 @@ import { TabItem, SectionForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 // import { GlobalUtil } from '../../../util';
 // import {
 //     // DragDropContext,
@@ -23,12 +25,14 @@ export interface IMapProps extends IBaseProps {
 
 // tslint:disable-next-line:no-empty-interface
 // tslint:disable:jsx-no-string-ref
+// tslint:disable:jsx-wrap-multiline
 export class TabFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         selectedId: undefined,
         showNavBar: true,
         showTabItems: true
     };
+    private tabItems: any;
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
@@ -36,6 +40,14 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
         };
     }
 
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
     /**
      * 获取组件属性列表
      */
@@ -64,11 +76,14 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
     }
     // tslint:disable:no-shadowed-variable
     public render() {
-        const { p, map_form_sti, map_form_st, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps, id } = this.props;
-        const { selectId, hover } = this.state;
+        const { p, map_form_sti, map_form_st, pageMode, selectedId, selectComChange, index,
+            setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps, id } = this.props;
+        const { selectId } = this.state;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
+        this.initTabItem(components);
 
         const sectionFormList: any[] = [];
+        let secList: any;
         if (!GlobalUtil.isUndefined(components)) {
             components.forEach((com: any, index: number) => {
                 const { t, p } = com;
@@ -86,6 +101,8 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                                         key={p.id}
                                         {...p}
                                         ref={`c.${p.id}`}
+                                        id={p.id}
+                                        index={secIndex}
                                         pageMode={pageMode}
                                         selectedId={selectedId}
                                         selectComChange={selectComChange}
@@ -101,10 +118,41 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                     }
                 }
             });
+            secList =
+                <div
+                    className={`${map_form_st !== '1' ? 'margin10-lr' : ''}`}
+                >
+                    {sectionFormList}
+                </div>;
         }
         // 是否显示title
         const hideTitle = map_form_st === '0' ? true : false;
         // console.log('map_form_st', map_form_st);
+        const tabFrom = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+            <table
+                className={`form`}
+                ref={provided.innerRef}
+                // {...provided.dragHandleProps}
+                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+            >
+                <tbody>
+                    <tr className={` ${map_form_st !== '2' ? 'tab-bar' : ''} ${hideTitle ? ' bar-hide' : ''}`}>
+                        <td className={`${map_form_st === '2' ? 'tab-bar-content' : ''}`}>
+                            {/* <DragDropContext onDragEnd={this.onDragEnd} > */}
+                            <Droppable droppableId="droppable-tabItem" direction="horizontal">
+                                {this.tabItems}
+                            </Droppable>
+                            {/* </DragDropContext> */}
+                        </td>
+                    </tr>
+                    <tr className={`tab-form-content`}>
+                        <td className="tab-bg" style={map_form_st === '0' || map_form_st === '2' ? { padding: '10px 0 0 0', border: 0 } : {}}>
+                            {secList}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        );
 
         return (
             <div
@@ -112,69 +160,56 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                 ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
             >
-                <table
-                    className={`form`}
-                >
-                    <tbody>
-                        <tr className={` ${map_form_st !== '2' ? 'tab-bar' : ''} ${hideTitle ? ' bar-hide' : ''}`}>
-                            <td className={`${map_form_st === '2' ? 'tab-bar-content' : ''}`}>
-                                <div className={`margin20-lr ${map_form_st === '2' ? 'tab-bar-title-line' : ''}`}>
-                                    <table
-                                        style={Object.assign({}, { width: '100%' }, hover)}
-                                        onDragOver={this.handleOver}
-                                        onDragLeave={this.handleLeave}
-                                    >
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    {
-                                                        GlobalUtil.isUndefined(components) ? '' :
-                                                            (
-                                                                components.map((com: any, index: number) => {
-                                                                    const { t, p } = com;
-                                                                    if (t === 'MapComponent/newMap/form/TabItem') {
-                                                                        return <TabItem
-                                                                            formState={map_form_st}
-                                                                            onChangeItem={this.onChangeItem}
-                                                                            id={p.id}
-                                                                            tabSelected={selectId === undefined ? (map_form_sti === undefined ? index === 0 : map_form_sti.substring(4) === p.id.substring(4)) : selectId === p.id}
-                                                                            key={p.id}
-                                                                            {...p}
-                                                                            ref={`c.${p.id}`}
-                                                                            pageMode={pageMode}
-                                                                            selectedId={selectedId}
-                                                                            selectComChange={selectComChange}
-                                                                            setChildPropertyGroup={setChildPropertyGroup}
-                                                                            doChildDbClickToEdit={doChildDbClickToEdit}
-                                                                            stateData={stateData}
-                                                                            updateProps={updateProps}
-                                                                            refs={refs}
-                                                                        />;
-                                                                    } else {
-                                                                        return [];
-                                                                    }
-                                                                })
-                                                            )
-                                                    }
-
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr className={`tab-form-content`}>
-                            <td className="tab-bg" style={map_form_st === '0' || map_form_st === '2' ? { padding: '10px 0 0 0', border: 0 } : {}}>
-                                <div className={`${map_form_st !== '1' ? 'margin10-lr' : ''}`}>
-                                    {sectionFormList}
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {tabFrom}
+                </Draggable>
+            </div >
         );
+    }
+
+    // 初始化加载控件
+    public initTabItem = (components: any[]) => {
+        const { map_form_sti, map_form_st, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps } = this.props;
+        const { selectId, hover } = this.state;
+        let tabList: any[] = [];
+        if (GlobalUtil.isUndefined(components)) return;
+        tabList = components.map((com: any, index: number) => {
+            const { t, p } = com;
+            if (t === 'MapComponent/newMap/form/TabItem') {
+                return <TabItem
+                    formState={map_form_st}
+                    onChangeItem={this.onChangeItem}
+                    id={p.id}
+                    tabSelected={selectId === undefined ? (map_form_sti === undefined ? index === 0 : map_form_sti.substring(4) === p.id.substring(4)) : selectId === p.id}
+                    key={p.id}
+                    index={index}
+                    {...p}
+                    ref={`c.${p.id}`}
+                    pageMode={pageMode}
+                    selectedId={selectedId}
+                    selectComChange={selectComChange}
+                    setChildPropertyGroup={setChildPropertyGroup}
+                    doChildDbClickToEdit={doChildDbClickToEdit}
+                    stateData={stateData}
+                    updateProps={updateProps}
+                    refs={refs}
+                />;
+            } else {
+                return [];
+            }
+        });
+        this.tabItems = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+            (
+                <div
+                    className={`margin20-lr ${map_form_st === '2' ? 'tab-bar-title-line' : ''}`}
+                    style={Object.assign({}, { width: '100%' }, hover)}
+                    onDragOver={this.handleOver}
+                    onDragLeave={this.handleLeave}
+                    ref={provided.innerRef}
+                >
+                    {tabList}
+                </div>
+            );
     }
 
     /*重载添加组件*/

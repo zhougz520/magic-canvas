@@ -77,8 +77,8 @@ export class SelectField extends MapComponent<IMapProps, any> {
 		return propertyGroup;
 	}
 	public render() {
-		const { map_form_f_title, map_form_f_default, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, selectedId, id } = this.props;
-		const { selectType, value } = this.state;
+		const { selectType, value, hover } = this.state;
+		const { map_form_f_title, map_form_f_default, unit, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		// 获取下拉选项
 		const arrOption = map_form_f_default === undefined ? [''] : map_form_f_default.split(/\r?\n/);
@@ -90,52 +90,52 @@ export class SelectField extends MapComponent<IMapProps, any> {
 			borderClass = ' read-only';
 		}
 
-		const currUnit = '100%';
-
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: currUnit })}
+				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
-				// tslint:disable-next-line:jsx-no-lambda
-				onMouseDown={(e: any) => { this.selectedCom(e); }}
+				onMouseDown={this.selectedCom}
+				draggable
+				onDragOver={this.handleFieldOver}
+				// onDragOver={this.onDrageOver}
+				onDragLeave={this.handleLeave}
+				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} />
-				<table className="field-tb">
-					<tbody>
-						<tr>
-							<td className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
-								{map_form_f_title}
-							</td>
-							<td className="field-content">
-								<table style={{ width: '100%' }}>
-									<tbody>
-										<tr>
-											<td className="new-require">
-												<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
-											</td>
-											<td>
-												<Popover placement="bottomRight" title={null} content={content} trigger="click" overlayStyle={{ width: 200 }} overlayClassName="select-field-card" visible={selectType}>
-													<div className="select-field">
-														<Input
-															readOnly
-															className={`select-field-text ${map_form_f_disabled ? borderClass : ''}`}
-															// onBlur={this.onBlur}
-															value={value}
-														/>
-														<span onClick={this.onSelectClick} className="select-field-btn">
-															<Icon style={{ color: '#BFBFBF' }} type={selectType ? 'caret-up' : 'caret-down'} />
-														</span>
-													</div>
-												</Popover>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div
+					className="field-tb"
+				>
+					<MaskLayer id={id} />
+					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
+						{map_form_f_title}
+					</div>
+					<div className="field-content">
+						<table style={{ width: '100%' }}>
+							<tbody>
+								<tr>
+									<td className="new-require">
+										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+									</td>
+									<td>
+										<Popover placement="bottomRight" title={null} content={content} trigger="click" overlayStyle={{ width: 200 }} overlayClassName="select-field-card" visible={selectType}>
+											<div className="select-field">
+												<Input
+													readOnly
+													className={`select-field-text ${map_form_f_disabled ? borderClass : ''}`}
+													// onBlur={this.onBlur}
+													value={value}
+												/>
+												<span onClick={this.onSelectClick} className="select-field-btn">
+													<Icon style={{ color: '#BFBFBF' }} type={selectType ? 'caret-up' : 'caret-down'} />
+												</span>
+											</div>
+										</Popover>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		);
 	}

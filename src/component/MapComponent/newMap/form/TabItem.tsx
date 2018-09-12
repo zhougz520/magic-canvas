@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
-// import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -17,6 +17,7 @@ export interface IMapProps extends IBaseProps {
 
 // tslint:disable:jsx-wrap-multiline
 // tslint:disable:jsx-alignment
+// tslint:disable:jsx-no-multiline-js
 export class TabItemClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_st_name: '标签页',
@@ -69,26 +70,39 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
         return propertyGroup;
     }
     public render() {
-        const { map_form_st_name, tabSelected, formState, selectedId, id } = this.props;
+        const { map_form_st_name, tabSelected, formState, selectedId, id, index } = this.props;
         // 如果分区状态为2，则以标签页的形式显示
         // 如果分区状态为1，则以标题的形式显示
-        const showItem = formState === '2' ?
-            <span className="tab-text" onClick={this.onChangeItem}>
-                {map_form_st_name}
-            </span>
-            :
-            <div className={`newTab-title`} style={{ display: `${formState !== '2' && tabSelected ? 'block' : 'none'}` }}>
-                {map_form_st_name}
-            </div>;
+        const showItem = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+            <div
+                ref={provided.innerRef}
+                {...provided.dragHandleProps}
+                className={`${formState === '2' ? ` newTab ${tabSelected ? ' newTabOn' : ''}` : ''} ${selectedId === id ? 'map-select-open' : ''}`}
+                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+            >
+                {
+                    formState === '2' ?
+                        <span className="tab-text" onClick={this.onChangeItem}>
+                            {map_form_st_name}
+                        </span>
+                        :
+                        <div className={`newTab-title`} style={{ display: `${formState !== '2' && tabSelected ? 'block' : 'none'}` }}>
+                            {map_form_st_name}
+                        </div>
+                }
+            </div>
+
+        );
 
         return (
             <div
                 style={{ float: 'left' }}
                 ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
-                className={`${formState === '2' ? ` newTab ${tabSelected ? ' newTabOn' : ''}` : ''} ${selectedId === id ? 'map-select-open' : ''}`}
             >
-                {showItem}
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {showItem}
+                </Draggable>
             </div>
         );
     }
