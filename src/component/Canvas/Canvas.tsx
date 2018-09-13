@@ -434,6 +434,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             width = maxX - minX + 20;
             height = maxY - minY + 20;
             offset = { x: minX - 10, y: minY - 10 };
+
+            // TODO 由收缩画布改为了提供画布最小高
+            width = this.state.canvasSize.width;
+            height = maxY + 20;
+            offset = { x: 0, y: 0 };
         }
 
         return {
