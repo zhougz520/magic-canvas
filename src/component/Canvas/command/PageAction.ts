@@ -37,6 +37,17 @@ export class PageAction {
         this._canvas._drawUtil.clearDragBox();
     }
 
+    // 加载批注模版
+    initTemplateComments = (param: { cid: string; template: string | null; }) => {
+        const { cid, template } = param;
+        if (template !== null) {
+            const com: IComponent | null = this._canvas.getComponent(cid);
+            if (com && com.getComType() === 'Comments') {
+                (com as any).initTemplate(template);
+            }
+        }
+    }
+
     // 画布撤销
     undoCanvas = () => {
         // 如果是编辑模式：结束编辑状态。

@@ -231,6 +231,12 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     onClick={() => this.fireCommand(CommandMap.COMMENTS_ADD)}
                 >
                     批注
+                </Button>
+                <Button
+                    size="small"
+                    onClick={() => this.fireCommand(CommandMap.COMMENTS_INITTEMPLATE, { cid: 'cm1', template: 'ct1.ct1' })}
+                >
+                    加载批注模版
                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button
                     size="small"
