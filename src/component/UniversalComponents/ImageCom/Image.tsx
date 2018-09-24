@@ -4,7 +4,7 @@ import {
     ContentState,
     BaseStyle,
     IPosition,
-    MaskLayer,
+    // MaskLayer,
     IComData,
     IComponent,
     ISize,
@@ -218,7 +218,7 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                     >
                         {hidden ? '' : this.getRichChildNode()}
                     </div>
-                    <MaskLayer id={this.getCid()} isCanSelected={this.isCanSelected()} />
+                    {/* <MaskLayer id={this.getCid()} isCanSelected={this.isCanSelected()} /> */}
                     <img
                         style={{
                             width: comSize.width - 22,
