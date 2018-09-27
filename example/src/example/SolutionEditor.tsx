@@ -14,6 +14,10 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
 
     constructor(props: any) {
         super(props);
+
+        this.state = {
+            scale: 1
+        };
     }
 
     getStage = (): Stage => {
@@ -53,6 +57,12 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
         console.log(JSON.stringify(saveData));
     }
 
+    setScale = (scale: number) => {
+        this.setState({
+            scale
+        });
+    }
+
     render() {
         return (
             <div className="main-editor">
@@ -62,6 +72,7 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
                     onCommandEmitted={this.onCommandEmitted}
                     highPerformance={this.highPerformance}
                     getSaveData={this.getSaveData}
+                    setScale={this.setScale}
                 />
                 <Stage
                     config={config}
@@ -72,6 +83,7 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
                     onPropertyProperties={this.onPropertyProperties}
                     pageMode={'Edit'}
                     userInfo={{ userId: 'zhougz@mingyuanyun.com', userName: '周冠舟' }}
+                    scale={this.state.scale}
                 />
             </div>
         );
