@@ -32,6 +32,8 @@ import { Menu, Dropdown, Icon } from 'antd';
 import { OrderedSet, List, Map } from 'immutable';
 import * as Color from 'color';
 import './sass/Comments.scss';
+// tslint:disable-next-line:no-var-requires
+const clone = require('clone');
 
 export interface ICommentsBaseState extends IBaseState {
     hidden: boolean;
@@ -82,8 +84,20 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
      * @param template 模版
      */
     public initTemplate = (template: string) => {
-        const richChildData: any = (Template as any)[template];
+        const richChildData: any = clone((Template as any)[template]);
         if (richChildData) {
+            if (richChildData.blocks && richChildData.blocks instanceof Array) {
+                const title: string = '需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：';
+                const titleObj = {
+                    data: {},
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    key: '',
+                    text: title,
+                    type: 'unstyled'
+                };
+                richChildData.blocks.unshift(titleObj);
+            }
             const contentState: any = convertFromRawToDraftState(richChildData);
             const editorState: any = EditorState.createWithContent(contentState);
             this.setRichChildNode(editorState);
@@ -429,6 +443,9 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         }
     }
 
+    /**
+     * 调用模版窗口
+     */
     private initCommentsTemplate = () => {
         const templateFunc = getPluginConfig(PluginMap.INIT_COMMENTSTEMPLATE_FUNC);
         if (templateFunc) {
