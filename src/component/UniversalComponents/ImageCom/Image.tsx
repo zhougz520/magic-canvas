@@ -269,7 +269,8 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
             resetMaxAndMinZIndex,
             setCanvasUndoStack,
             executeCommand,
-            userInfo
+            userInfo,
+            scale
         } = this.props;
 
         if (imageMagnifierList) {
@@ -285,6 +286,7 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                             comPath={imageMagnifier.comPath}
                             initType={imageMagnifier.initType}
                             componentPosition={componentPosition}
+                            scale={scale}
                             repaintSelected={repaintSelected}
                             repaintCanvas={repaintCanvas}
                             selectionChanging={selectionChanging}

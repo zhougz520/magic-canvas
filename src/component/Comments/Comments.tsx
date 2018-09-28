@@ -348,7 +348,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
             resetMaxAndMinZIndex,
             setCanvasUndoStack,
             executeCommand,
-            userInfo
+            userInfo,
+            scale
         } = this.props;
 
         if (commentsRectList) {
@@ -365,6 +366,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 comPath={commentsRect.comPath}
                                 initType={commentsRect.initType}
                                 componentPosition={componentPosition}
+                                scale={scale}
                                 repaintSelected={repaintSelected}
                                 repaintCanvas={repaintCanvas}
                                 selectionChanging={selectionChanging}
