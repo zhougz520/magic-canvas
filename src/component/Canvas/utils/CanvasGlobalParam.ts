@@ -487,6 +487,7 @@ export class CanvasGlobalParam {
     // 在body中创建组件的移动框
     drawDragBox(offset: any) {
         // 每次创建的时候都跟新一次偏移量
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const offsetX: number = offset.pageX;
         const offsetY: number = offset.pageY;
         this.componentOffset.setValue({ offsetX, offsetY });
@@ -496,8 +497,8 @@ export class CanvasGlobalParam {
             if (!cid || !component) return;
             if (!this.dragDivList.has(cid)) {
                 // 将canvas坐标系转换为document坐标系
-                const top = component.getPosition().top + offsetY;
-                const left = component.getPosition().left + offsetX;
+                const top = Math.ceil(component.getPosition().top * scale) + offsetY;
+                const left = Math.ceil(component.getPosition().left * scale) + offsetX;
                 const width = component.getSize().width;
                 const height = component.getSize().height;
 
@@ -513,6 +514,8 @@ export class CanvasGlobalParam {
                 documentDiv.style.display = 'none';
                 documentDiv.style.pointerEvents = 'none';
                 documentDiv.style.borderStyle = 'dashed';
+                documentDiv.style.transform = `scale(${scale})`;
+                documentDiv.style.transformOrigin = 'top left';
                 this.body.appendChild(documentDiv);
 
                 this.dragDivList = this.dragDivList.set(cid, { component, documentDiv, hasChange: false });
@@ -555,7 +558,7 @@ export class CanvasGlobalParam {
             //         this.stopScroll();
             //     }
             // }
-
+            const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
             this.dragDivList.map((item: IDragDiv | undefined) => {
                 if (item !== undefined) {
                     if (item.component.isCanMove() === false) return;
@@ -564,11 +567,11 @@ export class CanvasGlobalParam {
                     div.style.display = 'block';
                     item.hasChange = true;
                     if (div.style.left) {
-                        const left = pos.left + offset.x + this.componentOffset.x;
+                        const left = Math.ceil(pos.left * scale) + offset.x + this.componentOffset.x;
                         div.style.left = `${left}px`;
                     }
                     if (div.style.top) {
-                        const right = pos.top + offset.y + this.componentOffset.y;
+                        const right = Math.ceil(pos.top * scale) + offset.y + this.componentOffset.y;
                         div.style.top = `${right}px`;
                     }
                 }
@@ -579,13 +582,14 @@ export class CanvasGlobalParam {
 
     // 在body中删除组件的移动框
     clearDragBox(offset: any) {
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         this.dragDivList.map((value, key) => {
             if (value !== undefined) {
                 const div = value.documentDiv;
                 if (div.style.left && div.style.top && value.hasChange) {
                     value.component.setPosition({
-                        top: parseInt(div.style.top, 10) - offset.pageY,
-                        left: parseInt(div.style.left, 10) - offset.pageX
+                        top: Math.ceil((parseInt(div.style.top, 10) - offset.pageY) / scale),
+                        left: Math.ceil((parseInt(div.style.left, 10) - offset.pageX) / scale)
                     });
                     // TODO com mouseup
                     (value.component as any).onTitleMouseUp && (value.component as any).onTitleMouseUp(null);

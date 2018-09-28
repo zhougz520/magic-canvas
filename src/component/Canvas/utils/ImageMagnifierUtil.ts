@@ -58,16 +58,24 @@ export class ImageMagnifierUtil {
      * mouseDown的时候记录落点的组件和鼠标位置
      */
     setMouseDownParam = (e: any) => {
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const startPoint: IOffset = this._canvas._canvasGlobalParam.getPointerStart('canvas');
-        this._addImageMagnifierParam.startPoint = startPoint;
+        this._addImageMagnifierParam.startPoint = {
+            x: Math.ceil(startPoint.x / scale),
+            y: Math.ceil(startPoint.y / scale)
+        };
     }
 
     /**
      * mouseUp的时候记录鼠标位置
      */
     setMouseUpParam = (e: any) => {
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const endPoint: IOffset = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
-        this._addImageMagnifierParam.endPoint = endPoint;
+        this._addImageMagnifierParam.endPoint = {
+            x: Math.ceil(endPoint.x / scale),
+            y: Math.ceil(endPoint.y / scale)
+        };
     }
 
     /**
