@@ -528,14 +528,15 @@ export class CanvasGlobalParam {
     moveDragBox(offset: IOffset, stageBoundary: IBoundary | undefined, setStageScroll: any) {
         if (!stageBoundary) return;
         this.dargging = true;
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         if (this._canvas.props.highPerformance) {
             // 高性能模式，直接拖动组件
             this.selectedComponents.map((component, cid) => {
                 if (component && cid) {
                     if (component.isCanMove() === false) return;
                     const value = this.currentComponentSize.getValue(cid);
-                    const top = value.position.top + offset.y;
-                    const left = value.position.left + offset.x;
+                    const top = value.position.top + Math.ceil(offset.y / scale);
+                    const left = value.position.left + Math.ceil(offset.x / scale);
                     component.setPosition({ top, left });
                 }
             });
@@ -558,7 +559,6 @@ export class CanvasGlobalParam {
             //         this.stopScroll();
             //     }
             // }
-            const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
             this.dragDivList.map((item: IDragDiv | undefined) => {
                 if (item !== undefined) {
                     if (item.component.isCanMove() === false) return;

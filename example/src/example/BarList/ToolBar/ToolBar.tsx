@@ -254,8 +254,8 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 <InputNumber
                     size="small"
                     style={{ width: 60 }}
-                    min={0.1}
-                    max={1}
+                    min={0.5}
+                    max={2}
                     step={0.1}
                     defaultValue={1}
                     onChange={(value: any) => this.props.setScale(value)}
