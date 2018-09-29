@@ -348,8 +348,8 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         const imageMagnifierPositionState: PositionState = imageMagnifierBaseState.getCurrentContent().getPositionState();
         const imageMagnifierSizeState: SizeState = imageMagnifierBaseState.getCurrentContent().getSizeState();
         const imageMagnifierCustomState: ImageMagnifierState = imageMagnifierBaseState.getCurrentContent().getCustomState();
-        const rectSize: ISize = imageMagnifierCustomState.getRectSize();
         const rectPosition: IPosition = imageMagnifierCustomState.getRectPosition();
+        const rectSize: ISize = imageMagnifierCustomState.getRectSize();
 
         return {
             x1: Math.ceil(imageMagnifierPositionState.getLeft() + imageMagnifierSizeState.getWidth() / 2),
