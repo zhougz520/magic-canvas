@@ -660,6 +660,8 @@ export class PageAction {
     // 退出所有模式
     exitAllMode = () => {
         this._canvas._canvasUtil.exitCanvasMode();
-        this._canvas._richEditUtil.endEdit();
+        if (this._canvas._isRichEditMode === true) {
+            this._canvas._richEditUtil.endEdit();
+        }
     }
 }
