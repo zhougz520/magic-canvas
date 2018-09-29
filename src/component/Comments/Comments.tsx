@@ -449,7 +449,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
      * 调用模版窗口
      */
     private initCommentsTemplate = () => {
-        const templateFunc = getPluginConfig(PluginMap.INIT_COMMENTSTEMPLATE_FUNC);
+        const templateFunc = getPluginConfig(PluginMap.OPEN_COMMENTSTEMPLATE_FUNC);
         if (templateFunc) {
             templateFunc(this.getCid());
         }
