@@ -16,7 +16,7 @@ import { GlobalUtil } from '../../util';
  * 实现接口IComponent定义的所有方法，提供给外部调用
  */
 export class MapComponent<P extends IBaseProps, S extends IBaseState>
-    extends React.PureComponent<P, S> implements IComponent {
+    extends React.Component<P, S> implements IComponent {
 
     com: HTMLElement | null = null;
     public editCom: HTMLElement | null = null;
@@ -28,6 +28,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         fontWeight: 'normal',
         textDecoration: 'none'
     };
+
     componentDidMount() {
         if (this.com !== null) {
             // if(this.hasHandle){
@@ -44,6 +45,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             }
         }
     }
+
     componentWillUpdate(nextProps: any, nextState: any) {
         if (this.com !== null) {
             const currMaskLayer = document.getElementById(this.props.id);
@@ -54,17 +56,17 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             }
         }
     }
-    // shouldComponentUpdate(nextProps: any, nextState: any) {
-    //     console.log('nextProps', nextProps);
-    //     nextProps.refs = null;
-    //     console.log('nextProps', JSON.stringify(nextProps));
-    //     if (JSON.stringify(this.props) === JSON.stringify(nextProps) &&
-    //         JSON.stringify(this.state) === JSON.stringify(nextState)) {
-    //         return false;
-    //     }
 
-    //     return true;
-    // }
+    shouldComponentUpdate(nextProps: any, nextState: any) {
+        if (
+            JSON.stringify(this.props) === JSON.stringify(nextProps) &&
+            JSON.stringify(this.state) === JSON.stringify(nextState)
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 
     /************************************* begin 富文本 ****************************************/
     /**
@@ -540,6 +542,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     protected selectedCom = (e: any) => {
         const { id, selectComChange } = this.props;
         selectComChange(e, id);
-        e.stopPropagation();
+        // TODO
+        // e.stopPropagation();
     }
 }

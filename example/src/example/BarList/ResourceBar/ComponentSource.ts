@@ -116,7 +116,54 @@ const basePage: IBasePage[] = [
                             {
                                 t: 'MapComponent/newMap/grid/AppFindAdvanced',
                                 p: {
-                                    id: 'cs1.cs3'
+                                    id: 'cs1.cs3',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppFindAdvancedItem',
+                                                p: {
+                                                    id: 'cs1.cs3.cs1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppFindAdvancedItem',
+                                                p: {
+                                                    id: 'cs1.cs3.cs2',
+                                                    map_fa_type: 'date'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridTitle',
+                                p: {
+                                    id: 'cs1.cs4',
+                                    map_gt_txt: '列表'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridView',
+                                p: {
+                                    id: 'cs1.cs5',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridViewItem',
+                                                p: {
+                                                    id: 'cs1.cs5.cs1',
+                                                    map_gvi_selected: true
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridViewItem',
+                                                p: {
+                                                    id: 'cs1.cs5.cs2'
+                                                }
+                                            }
+                                        ]
+                                    }
                                 }
                             }
                         ]

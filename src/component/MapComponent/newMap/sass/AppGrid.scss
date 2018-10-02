@@ -82,6 +82,9 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                     .mc-filter-item {
                         height: 39px;
                         border-bottom: 1px dashed #e5e5e5;
+                        &:hover {
+                            box-shadow: $SELECT_STYLE;
+                        }
 
                         .mc-filter-item__label {
                             padding: 0px;
@@ -122,6 +125,16 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                                         position: relative;
                                     }
                                 }
+                                .mc-filter-item__control {
+                                    display: table-cell;
+                                    vertical-align: top;
+                                    width: 100%;
+
+                                    .ant-input {
+                                        height: 30px;
+                                        border-radius: 0px;
+                                    }
+                                }
                             }
                         }
                     }
@@ -136,6 +149,88 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                     padding: 4px 15px;
                     margin-top: -1px;
                     border: 1px solid #ddd;
+                }
+            }
+        }
+
+        .listheader {
+            margin-bottom: -1px;
+            border: 0;
+            // position: relative;
+
+            .mc-listheader {
+                padding-top: 0;
+                padding-bottom: 0;
+                height: auto;
+                background: #f8f8fa;
+                // position: relative;
+
+                .map-select-open.mc-listheader__views {
+                    box-shadow: $SELECT_STYLE;
+                }
+                .mc-listheader__views {
+                    display: block;
+                    border-bottom: 1px solid #e7e7eb;
+                    margin-bottom: -1px;
+                    // position: relative;
+                    padding: 3px 18px 3px 18px;
+                    border: 1px solid #e7e7eb;
+                    &.title {
+                        &:hover {
+                            box-shadow: $SELECT_STYLE;
+                        }
+                    }
+
+                    .mc-listheader__title {
+                        font-size: 15px;
+                        font-weight: 400;
+                        margin: 0;
+                        line-height: 32px;
+                        display: inline-block;
+                    }
+
+                    .mc-listheader-viewlist {
+                        display: inline-block;
+                        vertical-align: top;
+                        width: 100%;
+
+                        .mc-listheader-viewlist-buttongroup {
+                            list-style: none;
+                            margin: 0;
+                            padding: 0;
+                            height: 30px;
+
+                            .mc-listheader-viewlist-buttongroup__item.map-select-open {
+                                box-shadow: $SELECT_STYLE;
+                            }
+                            .mc-listheader-viewlist-buttongroup__item.is-selected {
+                                background-color: #576477;
+                                border-color: #576477;
+                                z-index: 3;
+                                color: #fff;
+                            }
+                            .mc-listheader-viewlist-buttongroup__item {
+                                float: left;
+                                border: 1px solid #c9cace;
+                                padding: 7px 20px;
+                                line-height: 1;
+                                margin-right: -1px;
+                                // position: relative;
+                                cursor: pointer;
+                                &:hover {
+                                    box-shadow: $SELECT_STYLE;
+                                }
+                            }
+                            .mc-listheader-viewlist-buttongroup__item:first-child {
+                                border-top-left-radius: 3px;
+                                border-bottom-left-radius: 3px;
+                            }
+                            .mc-listheader-viewlist-buttongroup__item:last-child {
+                                border-top-right-radius: 3px;
+                                border-bottom-right-radius: 3px;
+                            }
+                        }
+                    }
                 }
             }
         }
