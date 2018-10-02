@@ -37,8 +37,7 @@ const handlerMap: any = {
     canvas: HandlerMap
 };
 
-/* tslint:disable:no-console */
-/* tslint:disable:jsx-no-string-ref */
+/* tslint:disable:jsx-no-string-ref jsx-no-multiline-js */
 export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> implements ICanvasComponent {
     container: HTMLDivElement | null = null;
     canvas: HTMLDivElement | null = null;
@@ -434,6 +433,11 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
             width = maxX - minX + 20;
             height = maxY - minY + 20;
             offset = { x: minX - 10, y: minY - 10 };
+
+            // TODO 由收缩画布改为了提供画布最小高
+            width = this.state.canvasSize.width;
+            height = maxY + 20;
+            offset = { x: 0, y: 0 };
         }
 
         return {
@@ -480,7 +484,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
     }
 
     render() {
-        const { componentPosition, pageMode } = this.props;
+        const { componentPosition, pageMode, scale } = this.props;
         const { canvasSize, componentList } = this.state;
 
         const canvasOffset = componentPosition.canvasOffset;
@@ -488,31 +492,38 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         const cursor = this.state.cursor;
 
         return (
-            <div
-                ref={(handler) => this.container = handler}
-                className="container"
-                style={{ ...ContainerStyle(canvasSize), cursor }}
-            >
+            <React.Fragment>
                 <div
-                    // tslint:disable-next-line:jsx-no-lambda
-                    ref={(handler) => this.canvas = handler}
-                    style={CanvasStyle(canvasOffset, pageMode)}
-                    className="canvas"
-                    onDrop={this._onCanDrop}
-                    onDragOver={this._onCanDragOver}
+                    ref={(handler) => this.container = handler}
+                    className="container"
+                    style={{
+                        ...ContainerStyle(canvasSize),
+                        cursor,
+                        transform: `scale(${scale ? scale : 1})`,
+                        transformOrigin: 'top left'
+                    }}
                 >
-                    {children}
+                    <div
+                        // tslint:disable-next-line:jsx-no-lambda
+                        ref={(handler) => this.canvas = handler}
+                        style={CanvasStyle(canvasOffset, pageMode)}
+                        className="canvas"
+                        onDrop={this._onCanDrop}
+                        onDragOver={this._onCanDragOver}
+                    >
+                        {children}
+                    </div>
+                    <RichEdit
+                        ref={(handler) => this.editor = handler}
+                        onPressEnter={this._richEditUtil.endEdit}
+                        onCommandProperties={this.props.onCommandProperties}
+                    />
                 </div>
-                <RichEdit
-                    ref={(handler) => this.editor = handler}
-                    onPressEnter={this._richEditUtil.endEdit}
-                    onCommandProperties={this.props.onCommandProperties}
-                />
                 <Wingman
                     ref={(handler) => this.wingman = handler}
                     setIsWingmanFocus={this._canvasGlobalParam.setIsWingmanFocus}
                 />
-            </div>
+            </React.Fragment>
         );
     }
 

@@ -19,6 +19,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.Component<P, S> implements IComponent {
 
     com: HTMLElement | null = null;
+    rowList: any[] = [];
     public editCom: HTMLElement | null = null;
     public defaultFont: IFont = {
         textAlign: 'left',
@@ -308,8 +309,27 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
 
         return parent;
     }
+    // 和上面的方法相比，多了参数initId。当p为中间某一层时，从头开始去找，会找不到，提前返回null，所以添加initId，保证从p这一级开始查找
+    public findComponentParentByInitId = (p: any, initId: string, id: string) => {
+        const ids = id.split('.');
+        const initIds = initId.split('.');
+        if (ids.length === 1) {
+            return p.components;
+        }
+        let tmpId = `${initId}.${ids[initIds.length]}`;
+        let parent = p.components;
+        if (GlobalUtil.isUndefined(parent)) return;
+        for (let idx = initIds.length + 1; idx < ids.length; idx++) {
+            parent = parent.find((currP: any) => currP.p.id === tmpId);
+            if (parent === undefined || parent.p === undefined || parent.p.p === undefined || parent.p.p.components === undefined) return;
+            parent = parent.p.p.components;
+            tmpId = `${tmpId}.${ids[idx]}`;
+        }
+
+        return parent;
+    }
     public getCurrRef = (currId: string) => {
-        const refs: any = this.props.refs;
+        const refs: any = this.props.getRefs ? this.props.getRefs() : undefined;
         const currRsf = this.loopRefs(currId, refs);
 
         return currRsf;
@@ -469,27 +489,32 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             let currDomRef;
             let bds;
             const mousePosX = e.pageX;
+            const mousePosY = e.pageY;
             for (let idx = 0; idx < items.length; idx++) {
                 currDomRef = this.getCurrRef(`c.${items[idx].p.id}`);
+                // 重置当前控件的hover
+                currDomRef.setState({
+                    hover: {}
+                });
                 bds = this.getDomBounds(currDomRef.com);
                 if (bds !== undefined) {
                     // 判断是否移动到最前面
-                    if (idx === 0 && mousePosX < bds.left) {
+                    if (idx === 0 && mousePosX < bds.left && mousePosY < bds.top) {
                         targetIndex = 0;
                         appendTo = false;
                         break;
                     }
                     // 判断是否移动到最后面
-                    if (idx === items.length - 1 && mousePosX > (bds.left + (bds.width / 2))) {
+                    if (idx === items.length - 1 && mousePosX > (bds.left + (bds.width / 2)) && mousePosY > (bds.top + (bds.height / 2))) {
                         targetIndex = items.length - 1;
                         appendTo = true;
                         break;
                     }
-                    if (mousePosX >= bds.left && mousePosX <= bds.left + bds.width / 2) {
+                    if ((mousePosX >= bds.left && mousePosX <= bds.left + bds.width / 2) && (mousePosY > bds.top && mousePosY < bds.top + bds.height)) {
                         targetIndex = idx;
                         appendTo = false;
                         break;
-                    } else if (mousePosX < bds.left + bds.width && mousePosX > bds.left + bds.width / 2) {
+                    } else if ((mousePosX < bds.left + bds.width && mousePosX > bds.left + bds.width / 2) && (mousePosY > bds.top && mousePosY < bds.top + bds.height)) {
                         targetIndex = idx;
                         appendTo = true;
                         break;
@@ -536,6 +561,111 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         e.stopPropagation();
     }
     /************************************* end 操作基础控件 ****************************************/
+    /*********************************************拖拽 bgn*********************************************/
+
+    /**
+     * 拖动处理
+     */
+    public onDragEnd = (result: any) => {
+        if (result.type === 'field-row') {
+            this.onDragEndBoard(result);
+        }
+        const { p, id } = this.props;
+        // dropped outside the list
+        if (!result.destination || result.destination.index < 0) {
+            return;
+        }
+        const currComs: any = this.findComponentParentByInitId(p, id, result.draggableId) === undefined ? p.components : this.findComponentParentByInitId(p, id, result.draggableId);
+        const components = this.reorder(
+            currComs,
+            result.source.index,
+            result.destination.index
+        );
+
+        const parentId = result.draggableId.substring(0, result.draggableId.lastIndexOf('.'));
+        p.components = components;
+        this.props.updateProps(parentId, { p });
+    }
+
+    /**
+     * 字段拖拽处理
+     */
+    public onDragEndBoard = (result: any) => {
+        if (this.rowList !== null) {
+            const { source, destination } = result;
+            const { p, id } = this.props;
+
+            // dropped outside the list
+            if (!destination) {
+                return;
+            }
+
+            if (source.droppableId === destination.droppableId) {
+                const components = this.reorder(
+                    this.rowList[source.droppableId],
+                    source.index,
+                    result.destination.index
+                );
+                this.rowList[source.droppableId] = components;
+            } else {
+                const result_move: any = this.move(
+                    this.rowList[source.droppableId],
+                    this.rowList[destination.droppableId],
+                    source,
+                    destination
+                );
+                this.rowList[source.droppableId] = result_move[source.droppableId];
+                this.rowList[destination.droppableId] = result_move[destination.droppableId];
+            }
+            p.components = this.getAllCom(this.rowList);
+            this.props.updateProps(id, { p });
+
+        }
+    }
+    public getAllCom = (dataList: any[]) => {
+        let coms: any[] = [];
+        dataList.forEach((data: any) => {
+            coms = coms.concat(data);
+        });
+
+        return coms;
+    }
+    public reorder = (list: any, startIndex: any, endIndex: any) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+
+        return result;
+    }
+    public move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
+        const sourceClone = Array.from(source);
+        const destClone = Array.from(destination);
+        const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+        destClone.splice(droppableDestination.index, 0, removed);
+
+        const result: any = {};
+        result[droppableSource.droppableId] = sourceClone;
+        result[droppableDestination.droppableId] = destClone;
+
+        return result;
+    }
+
+    /**
+     * 控件在容器上方，容器背景颜色变化
+     */
+    public handleFieldOver = (e: any) => {
+        const data: any = this.getAddComponent();
+        if (data !== undefined) return;
+        this.setState({
+            hover: { backgroundColor: '#007ACC' }
+        });
+        e.preventDefault();
+    }
+    /**
+     * 拖动处理
+     */
+    /*********************************************拖拽 end*************************************************/
     /**
      * 选中子控件
      */

@@ -231,6 +231,12 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                     onClick={() => this.fireCommand(CommandMap.COMMENTS_ADD)}
                 >
                     批注
+                </Button>
+                <Button
+                    size="small"
+                    onClick={() => this.fireCommand(CommandMap.COMMENTS_INITTEMPLATE, { cid: 'cm1', template: 'ct1.ct1' })}
+                >
+                    加载批注模版
                 </Button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <Button
                     size="small"
@@ -248,10 +254,11 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
                 <InputNumber
                     size="small"
                     style={{ width: 60 }}
-                    min={0}
-                    max={1}
+                    min={0.5}
+                    max={2}
                     step={0.1}
                     defaultValue={1}
+                    onChange={(value: any) => this.props.setScale(value)}
                 />
             </div>
         );

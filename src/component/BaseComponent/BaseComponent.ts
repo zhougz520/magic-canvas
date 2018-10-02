@@ -505,13 +505,14 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         // 计算当前点击事件的触发位置
         const positionState = this.getPositionState();
         const sizeState = this.getSizeState();
+        const scale: number = (this.props.scale ? this.props.scale : 1) as number;
         const anchorList = countAnchorPoint(
             this.getCid(),
             this.getType(),
-            positionState.getLeft(),
-            positionState.getTop(),
-            sizeState.getWidth(),
-            sizeState.getHeight()
+            Math.ceil(positionState.getLeft() * scale),
+            Math.ceil(positionState.getTop() * scale),
+            Math.ceil(sizeState.getWidth() * scale),
+            Math.ceil(sizeState.getHeight() * scale)
         );
 
         return findAnchorPoint(currentX, currentY, anchorList);

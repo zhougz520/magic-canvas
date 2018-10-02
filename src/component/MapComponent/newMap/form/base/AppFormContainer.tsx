@@ -355,13 +355,18 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                                 updateProps={this.updateProps}
                                 {...component.p}
                                 stateData={childData}
-                                refs={this.refs}
+                                getRefs={this.getRefs}
                             />
                         );
                         break;
                 }
             }
         );
+    }
+
+    // 获取refs
+    private getRefs = () => {
+        return this.refs;
     }
 
     /**
@@ -465,7 +470,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         this.setState({
             selectedId: id
         });
-        // 调用container的属性加载
+        // 调用container的选中
         this.fireSelectChange(e);
     }
 

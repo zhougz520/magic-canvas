@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Draw, IDrawComponent } from '../Draw';
 import { Canvas, ICanvasComponent, IBoundary, IOffset } from '../Canvas';
+import { PluginMap, addPluginConfig } from '../../plugin';
 
 import { IStageProps } from './IStageProps';
 import { IStageState } from './IStageState';
@@ -19,6 +20,8 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
             highPerformance: props.config.highPerformance,
             componentPosition: props.config.componentPosition
         };
+
+        this.props.openCommentsTemplateModal && addPluginConfig(PluginMap.OPEN_COMMENTSTEMPLATE_FUNC, this.props.openCommentsTemplateModal);
     }
 
     /**

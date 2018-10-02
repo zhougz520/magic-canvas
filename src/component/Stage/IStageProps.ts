@@ -43,4 +43,7 @@ export interface IStageProps {
     onCommandProperties?: (buttonGroup: IToolButtonGroup) => void;
     // 获取选中的组件属性，传给PropertyTool
     onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
+
+    // 打开批注模版窗口
+    openCommentsTemplateModal?: (cid: string) => void;
 }

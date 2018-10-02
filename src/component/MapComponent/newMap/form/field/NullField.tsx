@@ -17,7 +17,6 @@ export interface IMapProps extends IFieldProps {
 	map_form_f_hidden_t: boolean;
 	map_form_f_type: string;
 	titleWidth: number;
-	unit: number;
 	currUnit: number;
 	index: number;
 }
@@ -31,7 +30,6 @@ export class NullField extends MapComponent<IMapProps, any> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		unit: 1,
 		currUnit: 2,
 		map_form_f_type: 'MapComponent/newMap/form/field/NullField'
 	};
@@ -76,36 +74,37 @@ export class NullField extends MapComponent<IMapProps, any> {
 		return propertyGroup;
 	}
 	public render() {
-		const { map_form_f_default, selectedId, id } = this.props;
-
-		const currUnit = '100%';
+		const { hover } = this.state;
+		const { map_form_f_default, map_form_f_cols, currUnit, id, selectedId } = this.props;
 
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: currUnit })}
+				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
-				// tslint:disable-next-line:jsx-no-lambda
-				onMouseDown={(e: any) => { this.selectedCom(e); }}
+				onMouseDown={this.selectedCom}
+				draggable
+				onDragOver={this.handleFieldOver}
+				// onDragOver={this.onDrageOver}
+				onDragLeave={this.handleLeave}
+				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} />
-				<table className="field-tb">
-					<tbody>
-						<tr>
-							<td className="field-content">
-								<table style={{ width: '100%' }}>
-									<tbody>
-										<tr>
-											<td>
-												{map_form_f_default}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div
+					className="field-tb"
+				>
+					<MaskLayer id={id} />
+					<div className="field-content">
+						<table style={{ width: '100%' }}>
+							<tbody>
+								<tr>
+									<td>
+										{map_form_f_default}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		);
 	}

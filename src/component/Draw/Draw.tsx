@@ -11,7 +11,7 @@ import { Stretch } from './box/StretchBoxComponent';
 import { Set } from 'immutable';
 import { IComponent } from '../BaseComponent';
 
-/* tslint:disable:no-console */
+/* tslint:disable:jsx-no-multiline-js jsx-no-string-ref */
 export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements IDrawComponent {
     private draw: HTMLDivElement | null = null;
 
@@ -87,10 +87,18 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
 
     render() {
         const { rectList, choiceBox, canvasSize } = this.state;
+        const { scale } = this.props;
 
         return (
-            // tslint:disable-next-line:jsx-no-string-ref
-            <div className="draw" style={DrawStyle(canvasSize)} ref={(draw) => this.draw = draw}>
+            <div
+                className="draw"
+                style={{
+                    ...DrawStyle(canvasSize),
+                    transform: `scale(${scale ? scale : 1})`,
+                    transformOrigin: 'top left'
+                }}
+                ref={(draw) => this.draw = draw}
+            >
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
                     {rectList}
                     {choiceBox === null ? '' : <ChoiceBox key="canvas" data={choiceBox} />}

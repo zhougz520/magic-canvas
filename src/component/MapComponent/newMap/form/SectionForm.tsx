@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Section } from './index';
 import { GlobalUtil } from '../../../util';
-// import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -14,6 +14,7 @@ export interface IMapState extends IBaseState {
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-no-multiline-js
 // tslint:disable:no-shadowed-variable
+// tslint:disable:jsx-wrap-multiline
 export class SectionFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
@@ -21,6 +22,7 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
     };
 
     public menus: HTMLElement | null = null;
+    private sectionList: any;
 
     constructor(props: IMapProps, context?: any) {
         super(props, context);
@@ -30,47 +32,74 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
             ...props
         };
     }
+
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
     render() {
-        const { p, pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, refs, stateData, updateProps } = this.props;
+        const { p, id, selectedId } = this.props;
         const { hover } = this.state;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
+        this.initSectonList(components);
 
         return (
             <div
                 ref={(ref) => this.com = ref}
-                className="tab-content"
+                className={`tab-content ${selectedId === id ? 'map-select-open' : ''}`}
                 style={Object.assign({}, { width: '100%' }, hover)}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
+            // onMouseDown={this.selectedCom}
             >
-                {
-                    GlobalUtil.isUndefined(components) ? '' :
-                        (
-                            components.map((com: any, index: number) => {
-                                const { t, p } = com;
-                                if (t === 'MapComponent/newMap/form/Section') {
-                                    return <Section
-                                        key={p.id}
-                                        {...p}
-                                        ref={`c.${p.id}`}
-                                        pageMode={pageMode}
-                                        selectedId={selectedId}
-                                        selectComChange={selectComChange}
-                                        setChildPropertyGroup={setChildPropertyGroup}
-                                        doChildDbClickToEdit={doChildDbClickToEdit}
-                                        stateData={stateData}
-                                        updateProps={updateProps}
-                                        refs={refs}
-                                    />;
-                                } else {
-                                    return '';
-                                }
-                            })
-                        )
-                }
+                <Droppable droppableId="droppable-sectionList" >
+                    {this.sectionList}
+                </Droppable>
             </div>
         );
     }
+
+    // 初始化加载控件
+    public initSectonList = (components: any[]) => {
+        const { pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, getRefs, stateData, updateProps } = this.props;
+        let tabList: any[] = [];
+        if (GlobalUtil.isUndefined(components)) return;
+        tabList = components.map((com: any, index: number) => {
+            const { t, p } = com;
+            if (t === 'MapComponent/newMap/form/Section') {
+                return <Section
+                    key={p.id}
+                    {...p}
+                    ref={`c.${p.id}`}
+                    index={index}
+                    id={p.id}
+                    pageMode={pageMode}
+                    selectedId={selectedId}
+                    selectComChange={selectComChange}
+                    setChildPropertyGroup={setChildPropertyGroup}
+                    doChildDbClickToEdit={doChildDbClickToEdit}
+                    stateData={stateData}
+                    updateProps={updateProps}
+                    getRefs={getRefs}
+                />;
+            } else {
+                return '';
+            }
+        });
+        this.sectionList = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+            (
+                <div
+                    ref={provided.innerRef}
+                >
+                    {tabList}
+                </div>
+            );
+    }
+
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/newMap/form/Section');

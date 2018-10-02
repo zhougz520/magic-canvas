@@ -24,5 +24,6 @@ export interface IBaseProps {
     dragChangeField?: (fieldList: any) => void;
 
     stateData?: any;
-    refs?: any;
+    getRefs?: () => any;
+    index?: number;
 }

@@ -12,8 +12,7 @@ import {
     PositionState,
     SizeState,
     IComData,
-    IFont,
-    MaskLayer
+    IFont
 } from '../BaseComponent';
 import { Canvas, IComponentList, IOffset, convertFromBaseStateToData, convertFromDataToBaseState, CommandMap } from '../Canvas';
 import { IContextMenuItems } from '../Stage';
@@ -21,19 +20,24 @@ import { PropertiesEnum, IPropertyGroup, IProperty } from '../UniversalComponent
 import { CommentsRect } from './CommentsRect';
 import { CommentsLine, ICommentsLineProps } from './CommentsLine';
 import { CommentsState, ICommentsState } from './CommentsState';
+import { Template } from './Template';
+import { getPluginConfig, PluginMap } from '../../plugin';
 
 import { GlobalUtil } from '../util';
 import { blockStyleFn } from '../RichEdit';
 import { DraftPublic } from 'xprst-draft';
 const { Editor, EditorState, InlineUtils, convertFromDraftStateToRaw, convertFromRawToDraftState } = DraftPublic;
 
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Icon } from 'antd';
 import { OrderedSet, List, Map } from 'immutable';
 import * as Color from 'color';
 import './sass/Comments.scss';
+// tslint:disable-next-line:no-var-requires
+const clone = require('clone');
 
 export interface ICommentsBaseState extends IBaseState {
     hidden: boolean;
+    hover: boolean;
 }
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
@@ -70,8 +74,34 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                 new CommentsState({ author, authorId, userType, backgroundColor }),
                 EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n')
             ),
-            hidden: false
+            hidden: false,
+            hover: false
         };
+    }
+
+    /**
+     * 加载模版
+     * @param template 模版
+     */
+    public initTemplate = (template: string) => {
+        const richChildData: any = clone((Template as any)[template]);
+        if (richChildData) {
+            if (richChildData.blocks && richChildData.blocks instanceof Array) {
+                const title: string = '需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：';
+                const titleObj = {
+                    data: {},
+                    depth: 0,
+                    inlineStyleRanges: [],
+                    key: '',
+                    text: title,
+                    type: 'unstyled'
+                };
+                richChildData.blocks.unshift(titleObj);
+            }
+            const contentState: any = convertFromRawToDraftState(richChildData);
+            const editorState: any = EditorState.createWithContent(contentState);
+            this.setRichChildNode(editorState);
+        }
     }
 
     /**
@@ -210,7 +240,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
 
     render() {
         const { pageMode } = this.props;
-        const { hidden } = this.state;
+        const { hidden, hover } = this.state;
         const commentsCustomState: CommentsState = this.getCustomState();
         const commentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
         const rectList: JSX.Element[] = this.buildRect(commentsRectList);
@@ -243,8 +273,10 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                     backgroundColor: commentsCustomState.getBackgroundColor()
                                 }}
                             >
-                                <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
-                                <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
+                                {/* <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} /> */}
+                                <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
+                                    {commentsCustomState.getAuthor()}：
+                                </div>
                                 <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                                     <Editor
                                         editorState={editorState}
@@ -271,9 +303,14 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                                 backgroundColor: commentsCustomState.getBackgroundColor()
                             }}
+                            onMouseEnter={() => { this.setState({ hover: true }); }}
+                            onMouseLeave={() => { this.setState({ hover: false }); }}
                         >
-                            <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
-                            <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>{commentsCustomState.getAuthor()}：</div>
+                            {/* <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} /> */}
+                            <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
+                                {commentsCustomState.getAuthor()}：
+                                {hover === true ? <Icon type="setting" className="setting" onClick={this.initCommentsTemplate} /> : ''}
+                            </div>
                             <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                                 <Editor
                                     editorState={editorState}
@@ -311,7 +348,8 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
             resetMaxAndMinZIndex,
             setCanvasUndoStack,
             executeCommand,
-            userInfo
+            userInfo,
+            scale
         } = this.props;
 
         if (commentsRectList) {
@@ -328,6 +366,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 comPath={commentsRect.comPath}
                                 initType={commentsRect.initType}
                                 componentPosition={componentPosition}
+                                scale={scale}
                                 repaintSelected={repaintSelected}
                                 repaintCanvas={repaintCanvas}
                                 selectionChanging={selectionChanging}
@@ -403,6 +442,16 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                     t: CommandMap.COM_DELETE
                 });
                 break;
+        }
+    }
+
+    /**
+     * 调用模版窗口
+     */
+    private initCommentsTemplate = () => {
+        const templateFunc = getPluginConfig(PluginMap.OPEN_COMMENTSTEMPLATE_FUNC);
+        if (templateFunc) {
+            templateFunc(this.getCid());
         }
     }
 }
