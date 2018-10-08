@@ -232,6 +232,86 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                         }
                     }
                 }
+
+                .mc-listheader__addon {
+                    border: 1px solid #e7e7eb;
+                    border-bottom: 0;
+                    margin-top: 0;
+                    right: 1px;
+                    width: auto;
+                    padding: 0 18px;
+                    top: 50%;
+                    background-color: #f8f8fa;
+
+                    .mc-listheader__addon-wrap {
+                        display: table;
+                        width: 100%;
+                        .mc-listheader__toolbar {
+                            display: table-cell;
+                            width: 100%;
+                            vertical-align: top;
+                            .listheader-toolbar {
+                                margin-left: -6px;
+                                margin-right: -6px;
+                                height: 41px;
+
+                                .listheader-toolbar.map-left {
+                                    min-width: 50%;
+                                    float: left;
+                                }
+                                .map-left {
+                                    text-align: left;
+                                    display: inline-block;
+                                    height: 41px;
+                                    list-style: none;
+                                    margin: 0px;
+                                    padding: 0px;
+                                }
+                                .listheader-toolbar.map-right {
+                                    min-width: 50%;
+                                    float: right;
+                                }
+                                .map-right {
+                                    text-align: right;
+                                    display: inline-block;
+                                    height: 41px;
+                                    list-style: none;
+                                    margin: 0px;
+                                    padding: 0px;
+                                }
+
+                                .ant-btn.map-select-open {
+                                    box-shadow: $SELECT_STYLE;
+                                }
+                                .ant-btn {
+                                    margin: 4px 6px 5px;
+                                    padding: 4px 22px;
+                                    border-radius: 3px;
+                                    min-width: 60px;
+                                    position: static;
+                                    &:hover {
+                                        box-shadow: $SELECT_STYLE;
+                                    }
+                                }
+                                .ant-btn-primary {
+                                    background-color: #34A6F8;
+                                    border-color: #34A6F8;
+                                }
+                                .ant-switch-checked {
+                                    background-color: #34A6F8;
+                                }
+                                .map-switch.map-select-open {
+                                    box-shadow: $SELECT_STYLE;
+                                }
+                                .map-switch {
+                                    &:hover {
+                                        box-shadow: $SELECT_STYLE;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

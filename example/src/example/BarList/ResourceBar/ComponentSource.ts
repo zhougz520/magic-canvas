@@ -259,6 +259,50 @@ const basePage: IBasePage[] = [
                                         ]
                                     }
                                 }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridMenu',
+                                p: {
+                                    id: 'cs1.cs6',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridMenuLeft',
+                                                p: {
+                                                    id: 'cs1.cs6.cs1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridMenuRight',
+                                                p: {
+                                                    id: 'cs1.cs6.cs2',
+                                                    p: {
+                                                        components: [
+                                                            {
+                                                                t: 'MapComponent/newMap/grid/AppGridMenuItemButton',
+                                                                p: {
+                                                                    id: 'cs1.cs6.cs2.cs1'
+                                                                }
+                                                            },
+                                                            {
+                                                                t: 'MapComponent/newMap/grid/AppGridMenuItemDropdown',
+                                                                p: {
+                                                                    id: 'cs1.cs6.cs2.cs2'
+                                                                }
+                                                            },
+                                                            {
+                                                                t: 'MapComponent/newMap/grid/AppGridMenuItemSwitch',
+                                                                p: {
+                                                                    id: 'cs1.cs6.cs2.cs3'
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
                             }
                         ]
                     }
