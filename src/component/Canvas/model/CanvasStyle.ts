@@ -14,7 +14,7 @@ export const CanvasStyle = (
     ctx.translate(0.5, 0.5);
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 7]);
-    ctx.strokeStyle = '#d9d9d9';
+    ctx.strokeStyle = 'darkgray';
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(a4Size.width, 0);
