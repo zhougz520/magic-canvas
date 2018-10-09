@@ -13,7 +13,6 @@ import { IComponent } from '../BaseComponent';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-string-ref */
 export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements IDrawComponent {
-    private draw: HTMLDivElement | null = null;
 
     constructor(props: IDrawProps, context?: any) {
         super(props, context);
@@ -97,7 +96,6 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
                     transform: `scale(${scale ? scale : 1})`,
                     transformOrigin: 'top left'
                 }}
-                ref={(draw) => this.draw = draw}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
                     {rectList}
