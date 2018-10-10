@@ -313,5 +313,164 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                 }
             }
         }
+
+        .map-grid-viewcontainer * {
+            box-sizing: content-box;
+        }
+        .map-select-open.map-grid-viewcontainer {
+            box-shadow: $SELECT_STYLE;
+        }
+        .map-grid-viewcontainer {
+            box-sizing: content-box;
+            border: 1px solid #e5e5e5;
+            &:hover {
+                box-shadow: $SELECT_STYLE;
+            }
+
+            .map-grid-viewport {
+                overflow: hidden;
+                height: 100%;
+
+                .map-grid-columns {
+                    background-color: #F8F8FA;
+                    width: 100%;
+                    overflow: hidden;
+                    height: 35px;
+                    position: relative;
+
+                    .map-grid-columns-view {
+                        height: 35px;
+                        margin-left: 0px;
+                        margin-right: 125px;
+                    }
+                    .map-grid-columns-lock {
+                        padding-bottom: 0;
+                        position: absolute;
+                        top: 0;
+                        overflow: hidden;
+                    }
+                    .map-grid-columns-lock-right {
+                        height: 35px;
+                        background-color: #F8F8FA;
+                        border-right: none;
+                        border-left: solid 1px #e5e5e5;
+                        right: 0;
+                        left: auto;
+                    }
+                    
+                    .map-grid-table {
+                        width: 100%;
+                        position: relative;
+                        text-align: left;
+                        table-layout: fixed;
+                        display: table;
+                        height: 1px;
+
+                        .map-select-open.map-grid-headerCell {
+                            box-shadow: $SELECT_STYLE;
+                        }
+                        .map-grid-headerCell {
+                            border-right-color: #e5e5e5;
+                            border-bottom-color: #e5e5e5;
+                            border-right-width: 1px;
+                            border-right-style: solid;
+                            border-bottom-width: 1px;
+                            border-bottom-style: solid;
+                            &:hover {
+                                box-shadow: $SELECT_STYLE;
+                            }
+
+                            .map-grid-headerCell-outer {
+                                height: 34px;
+                                padding-left: 10px;
+                                padding-right: 10px;
+                                .map-grid-headerCell-inner {
+                                    height: 34px;
+                                    padding: 0;
+                                    line-height: 34px;
+                                }
+                            }
+
+                            .map-grid-headerCell-nowrap {
+                                white-space: nowrap;
+                                word-break: keep-all;
+                            }
+                        }
+
+                        .map-grid-refresh {
+                            margin: 6px 0 0;
+                            width: 17px;
+                            height: 24px;
+                            background: url(../images/classic-icon.png) -305px 0;
+                            vertical-align: top;
+                            cursor: pointer;
+                            float: right;
+                            margin-right: 4px;
+                        }
+
+                        .map-grid-checkbox {
+                            margin-top: 7px;
+                            display: inline-block;
+                            overflow: hidden;
+                            width: 16px;
+                            height: 16px;
+                            vertical-align: top;
+                            margin-left: 2px;
+                            margin-right: 5px;
+                            background: url(../images/checkbox.png) no-repeat;
+                            background-position: 0 0;
+                            cursor: pointer;
+                        }
+                        .map-grid-checkbox__check-all {
+                            margin-top: 9px;
+                        }
+
+                        .map-grid-sortIcon {
+                            display: inline-block;
+                            margin-top: -3px;
+                            width: 12px;
+                            height: 25px;
+                            background: url(../images/classic-icon.png) 0 -25px;
+                            vertical-align: middle;
+                            background-position: -361px 1px;
+                            overflow: hidden;
+                            margin-left: 2px;
+                            margin-right: 2px;
+                        }
+                    }
+                }
+
+                .map-grid-body {
+                    overflow: visible;
+                    width: 100%;
+                    padding: 0;
+                    position: relative;
+                    text-align: left;
+                    clear: both;
+
+                    .map-grid-rows-view {
+                        overflow-x: auto;
+                        overflow-y: hidden;
+                        position: static;
+                        height: 100%;
+
+                        .map-grid-table {
+                            padding-bottom: 1px;
+                            position: relative;
+                            text-align: left;
+                            table-layout: fixed;
+                            display: table;
+                            height: 1px;
+
+                            .map-grid-emptyText {
+                                padding: 15px;
+                                text-align: left;
+                                padding-left: 35px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -189,7 +189,7 @@ const basePage: IBasePage[] = [
                 p: {
                     name: '列表',
                     w: 600,
-                    h: 400,
+                    h: 500,
                     type: 'base',
                     p: {
                         components: [
@@ -217,13 +217,6 @@ const basePage: IBasePage[] = [
                                                 t: 'MapComponent/newMap/grid/AppFindAdvancedItem',
                                                 p: {
                                                     id: 'cs1.cs3.cs1'
-                                                }
-                                            },
-                                            {
-                                                t: 'MapComponent/newMap/grid/AppFindAdvancedItem',
-                                                p: {
-                                                    id: 'cs1.cs3.cs2',
-                                                    map_fa_type: 'date'
                                                 }
                                             }
                                         ]
@@ -298,6 +291,34 @@ const basePage: IBasePage[] = [
                                                             }
                                                         ]
                                                     }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGrid',
+                                p: {
+                                    id: 'cs1.cs7',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridHeader',
+                                                p: {
+                                                    id: 'cs1.cs7.cs1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridHeader',
+                                                p: {
+                                                    id: 'cs1.cs7.cs2'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridHeader',
+                                                p: {
+                                                    id: 'cs1.cs7.cs3'
                                                 }
                                             }
                                         ]

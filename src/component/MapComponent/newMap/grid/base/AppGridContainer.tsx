@@ -23,6 +23,7 @@ import { AppFindAdvanced } from '../AppFindAdvanced';
 import { AppGridView } from '../AppGridView';
 import { AppGridTitle } from '../AppGridTitle';
 import { AppGridMenu } from '../AppGridMenu';
+import { AppGrid } from '../AppGrid';
 
 import { Map, List, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
@@ -48,7 +49,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     private appGridView: JSX.Element | null = null;
     private appGridTitle: JSX.Element | null = null;
     private appGridMenu: JSX.Element | null = null;
-    // private appGrid: JSX.Element | null = null;
+    private appGrid: JSX.Element | null = null;
     // private appGridPage: JSX.Element | null = null;
     // private modalMenu: JSX.Element | null = null;
 
@@ -326,6 +327,11 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             </div> : ''
                     }
 
+                    {/* AppGrid */}
+                    {
+                        this.appGrid
+                    }
+
                 </div>
             </div>
         );
@@ -435,6 +441,22 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 {...component.p}
                             />
                         );
+                        break;
+                    case 'MapComponent/newMap/grid/AppGrid':
+                        this.appGrid = (
+                            <AppGrid
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                {...component.p}
+                            />
+                        );
+                        break;
                 }
             }
         );
