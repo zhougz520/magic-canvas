@@ -277,6 +277,15 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
                                     {commentsCustomState.getAuthor()}：
                                 </div>
+                                <div
+                                    style={{
+                                        pointerEvents: 'auto',
+                                        position: 'absolute',
+                                        zIndex: 1000,
+                                        width: this.getSize().width,
+                                        height: this.getSize().height - 24
+                                    }}
+                                />
                                 <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                                     <Editor
                                         editorState={editorState}
@@ -311,6 +320,15 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 {commentsCustomState.getAuthor()}：
                                 {hover === true ? <Icon type="setting" className="setting" onClick={this.initCommentsTemplate} /> : ''}
                             </div>
+                            <div
+                                style={{
+                                    pointerEvents: 'auto',
+                                    position: 'absolute',
+                                    zIndex: 1000,
+                                    width: this.getSize().width,
+                                    height: this.getSize().height - 24
+                                }}
+                            />
                             <div style={{ width: '100%', height: this.getSize().height - 24 }}>
                                 <Editor
                                     editorState={editorState}
