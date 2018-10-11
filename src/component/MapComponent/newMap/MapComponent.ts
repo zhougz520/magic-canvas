@@ -680,6 +680,6 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         const { id, selectComChange } = this.props;
         selectComChange(e, id);
         // TODO
-        // e.stopPropagation();
+        e.stopPropagation();
     }
 }
