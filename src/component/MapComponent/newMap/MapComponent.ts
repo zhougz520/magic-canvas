@@ -506,22 +506,22 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
                 bds = this.getDomBounds(currDomRef.com);
                 if (bds !== undefined) {
                     // 判断是否移动到最前面
-                    if (idx === 0 && mousePosX < bds.left && mousePosY < bds.top) {
+                    if (idx === 0 && mousePosX < bds.leftWithScroll && mousePosY < bds.topWithScroll) {
                         targetIndex = 0;
                         appendTo = false;
                         break;
                     }
                     // 判断是否移动到最后面
-                    if (idx === items.length - 1 && mousePosX > (bds.left + (bds.width / 2)) && mousePosY > (bds.top + (bds.height / 2))) {
+                    if (idx === items.length - 1 && mousePosX > (bds.leftWithScroll + (bds.width / 2)) && mousePosY > (bds.topWithScroll + (bds.height / 2))) {
                         targetIndex = items.length - 1;
                         appendTo = true;
                         break;
                     }
-                    if ((mousePosX >= bds.left && mousePosX <= bds.left + bds.width / 2) && (mousePosY > bds.top && mousePosY < bds.top + bds.height)) {
+                    if ((mousePosX >= bds.leftWithScroll && mousePosX <= bds.leftWithScroll + bds.width / 2) && (mousePosY > bds.topWithScroll && mousePosY < bds.topWithScroll + bds.height)) {
                         targetIndex = idx;
                         appendTo = false;
                         break;
-                    } else if ((mousePosX < bds.left + bds.width && mousePosX > bds.left + bds.width / 2) && (mousePosY > bds.top && mousePosY < bds.top + bds.height)) {
+                    } else if ((mousePosX < bds.leftWithScroll + bds.width && mousePosX > bds.leftWithScroll + bds.width / 2) && (mousePosY > bds.topWithScroll && mousePosY < bds.topWithScroll + bds.height)) {
                         targetIndex = idx;
                         appendTo = true;
                         break;
@@ -565,6 +565,8 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
             }
             currId = currId.substring(0, currId.length - `.${ids[i]}`.length);
         }
+        // 清空 localStorage
+        localStorage.setItem('__dnd_type', '');
         e.stopPropagation();
     }
     /************************************* end 操作基础控件 ****************************************/
