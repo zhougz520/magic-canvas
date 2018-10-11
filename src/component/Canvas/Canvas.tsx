@@ -499,8 +499,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
                     style={{
                         ...ContainerStyle(canvasSize),
                         cursor,
-                        transform: `scale(${scale ? scale : 1})`,
-                        transformOrigin: 'top left'
+                        // transform: `scale(${scale ? scale : 1})`,
+                        // transformOrigin: 'top left'
+                        zoom: `${scale ? scale : 1}`
                     }}
                 >
                     <div

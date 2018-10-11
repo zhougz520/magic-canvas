@@ -93,8 +93,9 @@ export class Draw extends React.PureComponent<IDrawProps, IDrawState> implements
                 className="draw"
                 style={{
                     ...DrawStyle(canvasSize),
-                    transform: `scale(${scale ? scale : 1})`,
-                    transformOrigin: 'top left'
+                    // transform: `scale(${scale ? scale : 1})`,
+                    // transformOrigin: 'top left'
+                    zoom: `${scale ? scale : 1}`
                 }}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%">
