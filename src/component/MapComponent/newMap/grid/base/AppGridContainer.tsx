@@ -20,6 +20,10 @@ import { IComData } from '../../model/types';
 import { AppProjectTree } from '../AppProjectTree';
 import { AppFindOrdinary } from '../AppFindOrdinary';
 import { AppFindAdvanced } from '../AppFindAdvanced';
+import { AppGridView } from '../AppGridView';
+import { AppGridTitle } from '../AppGridTitle';
+import { AppGridMenu } from '../AppGridMenu';
+import { AppGrid } from '../AppGrid';
 
 import { Map, List, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
@@ -42,10 +46,10 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     private appProjectTree: JSX.Element | null = null;
     private appFindOrdinary: JSX.Element | null = null;
     private appFindAdvanced: JSX.Element | null = null;
-    // private appGridView: JSX.Element | null = null;
-    // private appGridTitle: JSX.Element | null = null;
-    // private appGridMenu: JSX.Element | null = null;
-    // private appGrid: JSX.Element | null = null;
+    private appGridView: JSX.Element | null = null;
+    private appGridTitle: JSX.Element | null = null;
+    private appGridMenu: JSX.Element | null = null;
+    private appGrid: JSX.Element | null = null;
     // private appGridPage: JSX.Element | null = null;
     // private modalMenu: JSX.Element | null = null;
 
@@ -253,7 +257,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
 
         const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
         if (childData && childData.components && childData.components.length > 0) {
-            this.initCom(childData.components);
+            this.initCom(childData.components, clone(childData));
         }
 
         return (
@@ -261,7 +265,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                 className="page-appgrid"
                 style={{
                     ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected()),
-                    border: '1px solid #d3d5d9'
+                    border: '1px solid #d3d5d9',
+                    backgroundColor: '#FFF'
                 }}
                 onMouseDown={this.fireSelectChange}
             >
@@ -301,6 +306,32 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             </div> : ''
                     }
 
+                    {/* 视图 + Title + Menu */}
+                    {
+                        appGridContainerState.getShowAppGridView() || appGridContainerState.getShowAppGridTitle() || appGridContainerState.getShowAppGridMenu() ?
+                            <div className="listheader">
+                                <div className="mc-listheader">
+                                    {/* 视图 */}
+                                    {
+                                        appGridContainerState.getShowAppGridView() ? this.appGridView : ''
+                                    }
+                                    {/* Title */}
+                                    {
+                                        appGridContainerState.getShowAppGridTitle() ? this.appGridTitle : ''
+                                    }
+                                    {/* Menu */}
+                                    {
+                                        appGridContainerState.getShowAppGridMenu() ? this.appGridMenu : ''
+                                    }
+                                </div>
+                            </div> : ''
+                    }
+
+                    {/* AppGrid */}
+                    {
+                        this.appGrid
+                    }
+
                 </div>
             </div>
         );
@@ -309,7 +340,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     /**
      * 加载子组件
      */
-    private initCom = (components: IComData[]) => {
+    private initCom = (components: IComData[], childData: any) => {
         const { selectedId } = this.state;
         const { pageMode } = this.props;
         const appGridContainerState: AppGridContainerState = this.getCustomState();
@@ -329,6 +360,9 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 selectComChange={this.selectComChange}
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -344,6 +378,9 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 selectComChange={this.selectComChange}
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                                 map_fo_search={showSearch}
                             />
@@ -359,6 +396,77 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 selectComChange={this.selectComChange}
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
+                                {...component.p}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppGridView':
+                        this.appGridView = (
+                            <AppGridView
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
+                                {...component.p}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppGridTitle':
+                        this.appGridTitle = (
+                            <AppGridTitle
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
+                                {...component.p}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppGridMenu':
+                        this.appGridMenu = (
+                            <AppGridMenu
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
+                                {...component.p}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppGrid':
+                        this.appGrid = (
+                            <AppGrid
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -492,6 +600,13 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         this.setState({
             unfoldAdv: !this.state.unfoldAdv
         });
+    }
+
+    /**
+     * 获取refs
+     */
+    private getRefs = () => {
+        return this.refs;
     }
 }
 

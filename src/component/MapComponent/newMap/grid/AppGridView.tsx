@@ -3,23 +3,21 @@ import * as React from 'react';
 import { IBaseProps } from '../IBaseProps';
 import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
-import { AppFindAdvancedItem } from './AppFindAdvancedItem';
+import { AppGridViewItem } from './AppGridViewItem';
 
 import { GlobalUtil } from '../../../util';
 
-import { Button } from 'antd';
-
 // tslint:disable-next-line:no-empty-interface
-export interface IAppFindAdvancedProps extends IBaseProps {
+export interface IAppGridViewProps extends IBaseProps {
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface IAppFindAdvancedState extends IBaseState {
+export interface IAppGridViewState extends IBaseState {
 }
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
-export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFindAdvancedState> {
-    constructor(props: IAppFindAdvancedProps, context?: any) {
+export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewState> {
+    constructor(props: IAppGridViewProps, context?: any) {
         super(props, context);
 
         this.state = {
@@ -33,7 +31,7 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
      * @param t 组件路径
      */
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/newMap/grid/AppFindAdvancedItem');
+        return (t === 'MapComponent/newMap/grid/AppGridViewItem');
     }
 
     render() {
@@ -51,14 +49,14 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
         } = this.props;
 
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
-        const appFindAdvancedItem: any[] = [];
+        const appGridViewItem: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
                 (com: any) => {
                     const { t, p } = com;
-                    if (t === 'MapComponent/newMap/grid/AppFindAdvancedItem') {
-                        appFindAdvancedItem.push(
-                            <AppFindAdvancedItem
+                    if (t === 'MapComponent/newMap/grid/AppGridViewItem') {
+                        appGridViewItem.push(
+                            <AppGridViewItem
                                 ref={`c.${p.id}`}
                                 key={p.id}
                                 {...p}
@@ -79,46 +77,22 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
         }
 
         return (
-            <div className="mc-filter">
-                <table
-                    className="mc-filter-controls"
-                    style={Object.assign({}, this.state.hover)}
-                    ref={(ref) => this.com = ref}
-                    onDragOver={this.handleOver}
-                    onDragLeave={this.handleLeave}
-                >
-                    <tbody>
+            <div
+                className="mc-listheader__views"
+                style={Object.assign({}, this.state.hover)}
+                ref={(ref) => this.com = ref}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+            >
+                <div className="mc-listheader-viewlist">
+                    <ul className="mc-listheader-viewlist-buttongroup">
                         {
-                            appFindAdvancedItem.length > 0 ? appFindAdvancedItem :
+                            appGridViewItem.length > 0 ? appGridViewItem :
                                 (
-                                    <tr className="mc-filter-item">
-                                        <th style={{ width: '200px', color: 'rgb(191, 191, 191)' }}>请添加高级搜索组件...</th>
-                                        <td />
-                                    </tr>
+                                    <div style={{ color: '#bfbfbf', paddingTop: '4px', fontWeight: 'bold' }}>请添加视图标签...</div>
                                 )
                         }
-                    </tbody>
-                </table>
-                <div className="mc-filter-toolbar">
-                    <Button
-                        type="primary"
-                        style={{
-                            height: '32px',
-                            borderRadius: '3px',
-                            backgroundColor: '#34A6F8',
-                            borderColor: '#34A6F8'
-                        }}
-                    >
-                        搜索
-                    </Button>
-                    <a
-                        style={{
-                            marginLeft: '10px',
-                            color: '#666'
-                        }}
-                    >
-                        清空
-                    </a>
+                    </ul>
                 </div>
             </div>
         );

@@ -72,13 +72,22 @@ export class DrawUtil {
      */
     drawChoiceBox = (e: any) => {
         // 通知绘画层出现选择框
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
         const style = { fill: '#108ee9', fillOpacity: 0.05, stroke: '#108ee9', strokeWidth: 1 };
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
-            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
+            draw.drawChoiceBox({
+                pointX: Math.ceil(pointStart.x / scale),
+                pointY: Math.ceil(pointStart.y / scale),
+                offset: {
+                    x: Math.ceil(offset.x / scale),
+                    y: Math.ceil(offset.y / scale)
+                },
+                style
+            });
         }
     }
 
@@ -87,13 +96,22 @@ export class DrawUtil {
      */
     drawChoiceBoxAddCommentsMode = (e: any) => {
         // 通知绘画层出现选择框
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
         const style = { fill: '#fff', fillOpacity: 0, stroke: '#D0021B', strokeWidth: 1, rx: 5, ry: 5 };
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
-            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
+            draw.drawChoiceBox({
+                pointX: Math.ceil(pointStart.x / scale),
+                pointY: Math.ceil(pointStart.y / scale),
+                offset: {
+                    x: Math.ceil(offset.x / scale),
+                    y: Math.ceil(offset.y / scale)
+                },
+                style
+            });
         }
     }
 
@@ -102,13 +120,22 @@ export class DrawUtil {
      */
     drawChoiceBoxAddImageMagnifierMode = (e: any) => {
         // 通知绘画层出现选择框
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const pointStart = this._canvas._canvasGlobalParam.getPointerStart('stage');
         const stagePos = this._canvas._positionUtil.getPositionRelativeStage(e.pageX, e.pageY);
         const offset = { x: stagePos.pointX - pointStart.x, y: stagePos.pointY - pointStart.y };
         const style = { fill: '#bbbbbb', fillOpacity: 0.10, stroke: '#bbbbbb', strokeWidth: 1, rx: 3, ry: 3 };
         const draw = this._canvas.props.getDraw();
         if (draw !== null) {
-            draw.drawChoiceBox({ pointX: pointStart.x, pointY: pointStart.y, offset, style });
+            draw.drawChoiceBox({
+                pointX: Math.ceil(pointStart.x / scale),
+                pointY: Math.ceil(pointStart.y / scale),
+                offset: {
+                    x: Math.ceil(offset.x / scale),
+                    y: Math.ceil(offset.y / scale)
+                },
+                style
+            });
         }
     }
 
@@ -117,16 +144,17 @@ export class DrawUtil {
      */
     clearChoiceBox = (e: any) => {
         if (this._canvas._canvasGlobalParam.getDragType() === DragType.Choice) {
+            const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
             const pointStart = this._canvas._canvasGlobalParam.getPointerStart('canvas');
             const pointA = { x: pointStart.x, y: pointStart.y };
             const pointB = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
             const start = {
-                x: Math.min(pointA.x, pointB.x),
-                y: Math.min(pointA.y, pointB.y)
+                x: Math.ceil(Math.min(pointA.x, pointB.x) / scale),
+                y: Math.ceil(Math.min(pointA.y, pointB.y) / scale)
             };
             const end = {
-                x: Math.max(pointA.x, pointB.x),
-                y: Math.max(pointA.y, pointB.y)
+                x: Math.ceil(Math.max(pointA.x, pointB.x) / scale),
+                y: Math.ceil(Math.max(pointA.y, pointB.y) / scale)
             };
 
             const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
@@ -167,9 +195,14 @@ export class DrawUtil {
      */
     drawStretchBox = (e: any, endStretch: boolean = false) => {
         if (this._canvas._canvasGlobalParam.getDragType() === DragType.Stretch) {
+            const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
             const pointStart = this._canvas._canvasGlobalParam.getPointerStart('canvas');
             const canvasPos = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
-            const offset: IOffset = { x: canvasPos.x - pointStart.x, y: canvasPos.y - pointStart.y };
+            const offset: IOffset = {
+                x: Math.ceil((canvasPos.x - pointStart.x) / scale),
+                y: Math.ceil((canvasPos.y - pointStart.y) / scale)
+            };
+
             const draw = this._canvas.props.getDraw();
             if (draw !== null) {
                 this._canvas._canvasGlobalParam.anchorMove(offset, endStretch, (data: any) => {

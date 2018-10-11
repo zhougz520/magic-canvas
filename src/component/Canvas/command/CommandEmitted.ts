@@ -6,6 +6,8 @@ export enum CommandMap {
     COMMENTSRECT_ADD = 'e.addCommentsRect',
     // 删除批注锚点
     COMMENTSRECT_DELETE = 'e.deleteCommentsRect',
+    // 加载批注模版
+    COMMENTS_INITTEMPLATE = 'e.initTemplateComments',
 
     // 画布撤销
     CANVAS_UNDO = 'e.undoCanvas',

@@ -68,16 +68,24 @@ export class CommentsUtil {
      * mouseDown的时候记录落点的组件和鼠标位置
      */
     setMouseDownParam = (e: any) => {
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const startPoint: IOffset = this._canvas._canvasGlobalParam.getPointerStart('canvas');
-        this._addCommentsRectParam.startPoint = startPoint;
+        this._addCommentsRectParam.startPoint = {
+            x: Math.ceil(startPoint.x / scale),
+            y: Math.ceil(startPoint.y / scale)
+        };
     }
 
     /**
      * mouseUp的时候记录鼠标位置
      */
     setMouseUpParam = (e: any) => {
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
         const endPoint: IOffset = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
-        this._addCommentsRectParam.endPoint = endPoint;
+        this._addCommentsRectParam.endPoint = {
+            x: Math.ceil(endPoint.x / scale),
+            y: Math.ceil(endPoint.y / scale)
+        };
 
         const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         this.updateParamComponent(componentList);

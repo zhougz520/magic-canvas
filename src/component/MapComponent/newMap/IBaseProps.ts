@@ -14,15 +14,17 @@ export interface IBaseProps {
     id: string;
     // 当前选中组件id
     selectedId: string | null;
-    dragChangeField?: (fieldList: any) => void;
+    // 子组件
+    p: any;
+    // childData集合
+    stateData?: any;
 
     selectComChange: (e: any, id: string) => void;
     setChildPropertyGroup: (childPropertyGroup: OrderedSet<IPropertyGroup>) => void;
     doChildDbClickToEdit: (e: any) => void;
-    // 页面模式
-    p: any;
     updateProps: (id: string, data: any) => void;
-    stateData?: any;
+    dragChangeField?: (fieldList: any) => void;
     getRefs?: () => any;
+
     index?: number;
 }

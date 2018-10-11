@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import { AppMenuItem } from '../base/index';
+import { AppMenuItem } from './AppMenuItem';
 import { TabForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { Theme } from '../model/types';

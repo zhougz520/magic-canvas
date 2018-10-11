@@ -185,39 +185,6 @@ const basePage: IBasePage[] = [
             { t: 'MapComponent/newMap/form/Section', p: { name: '分组' } },
             { t: 'MapComponent/newMap/form/TabItem', p: { name: '标签页' } },
             {
-                t: 'MapComponent/newMap/grid/base/AppGridContainer',
-                p: {
-                    name: '列表',
-                    w: 600,
-                    h: 400,
-                    type: 'base',
-                    p: {
-                        components: [
-                            {
-                                t: 'MapComponent/newMap/grid/AppProjectTree',
-                                p: {
-                                    id: 'cs1.cs1',
-                                    map_pt_txt: '公司'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/newMap/grid/AppFindOrdinary',
-                                p: {
-                                    id: 'cs1.cs2',
-                                    map_fo_search: true
-                                }
-                            },
-                            {
-                                t: 'MapComponent/newMap/grid/AppFindAdvanced',
-                                p: {
-                                    id: 'cs1.cs3'
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            {
                 t: 'MapComponent/newMap/form/base/AppFormContainer',
                 p: {
                     name: '表单',
@@ -288,7 +255,87 @@ const basePage: IBasePage[] = [
                         ]
                     }
                 }
-            }
+            },
+            {
+                t: 'MapComponent/newMap/grid/base/AppGridContainer',
+                p: {
+                    name: '列表',
+                    w: 600,
+                    h: 500,
+                    type: 'base',
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/newMap/grid/AppProjectTree',
+                                p: {
+                                    id: 'cs1.cs1',
+                                    map_pt_txt: '公司'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppFindOrdinary',
+                                p: {
+                                    id: 'cs1.cs2',
+                                    map_fo_search: true
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppFindAdvanced',
+                                p: {
+                                    id: 'cs1.cs3'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridTitle',
+                                p: {
+                                    id: 'cs1.cs4',
+                                    map_gt_txt: '列表'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridView',
+                                p: {
+                                    id: 'cs1.cs5'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridMenu',
+                                p: {
+                                    id: 'cs1.cs6',
+                                    p: {
+                                        components: [
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridMenuLeft',
+                                                p: {
+                                                    id: 'cs1.cs6.cs1'
+                                                }
+                                            },
+                                            {
+                                                t: 'MapComponent/newMap/grid/AppGridMenuRight',
+                                                p: {
+                                                    id: 'cs1.cs6.cs2'
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGrid',
+                                p: {
+                                    id: 'cs1.cs7'
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            { t: 'MapComponent/newMap/grid/AppFindAdvancedItem', p: { name: '高级搜索组件' } },
+            { t: 'MapComponent/newMap/grid/AppGridViewItem', p: { name: '视图标签' } },
+            { t: 'MapComponent/newMap/grid/AppGridMenuItemButton', p: { name: '按钮' } },
+            { t: 'MapComponent/newMap/grid/AppGridMenuItemDropdown', p: { name: '菜单按钮' } },
+            { t: 'MapComponent/newMap/grid/AppGridMenuItemSwitch', p: { name: '开关按钮' } },
+            { t: 'MapComponent/newMap/grid/AppGridHeader', p: { name: '列表-列' } }
         ]
     },
     {

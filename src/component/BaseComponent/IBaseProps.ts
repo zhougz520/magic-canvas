@@ -25,6 +25,8 @@ export interface IBaseProps {
     initType: InitType;
     // 画布偏移量
     componentPosition: ICompos;
+    // 画布缩放比例（0-1）
+    scale?: number;
 
     // 改动组件大小的时候，调用画布的重绘选中框
     repaintSelected: () => void;

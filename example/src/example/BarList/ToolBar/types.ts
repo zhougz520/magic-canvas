@@ -8,6 +8,7 @@ export interface IToolbarProps {
     // 发送命令
     onCommandEmitted: (cmd: any) => void;
     getSaveData: () => void;
+    setScale: (scale: number) => void;
 }
 
 // tslint:disable-next-line:no-empty-interface

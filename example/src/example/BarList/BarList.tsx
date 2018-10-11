@@ -14,6 +14,7 @@ export interface IBarProps {
     highPerformance: (value: boolean) => void;
     onCommandEmitted: (cmd: any) => void;
     getSaveData: () => void;
+    setScale: (scale: number) => void;
 }
 
 export interface IBarState {
@@ -60,6 +61,7 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
                     highPerformance={this.props.highPerformance}
                     getSaveData={this.props.getSaveData}
+                    setScale={this.props.setScale}
                 />
                 <Resource
                     collapsed={resourceBarCollapsed}
