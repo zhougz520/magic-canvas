@@ -192,7 +192,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         let result: boolean = false;
         switch (handle) {
             case HandleChildCom.DELETE:         // 删除
-                result = childCom.copySelectedCom();
+                result = childCom.deleteComponentsById();
                 break;
             case HandleChildCom.SELECT_PARENT:  // 选中父组件
                 result = childCom.selectedComParent();
