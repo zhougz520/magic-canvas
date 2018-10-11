@@ -23,8 +23,17 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
         super(props, context);
 
         this.state = {
-            hidden: false
+            hidden: false,
+            hover: {}
         };
+    }
+
+    /**
+     * 重载添加组件
+     * @param t 组件路径
+     */
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/newMap/grid/AppFindAdvancedItem');
     }
 
     render() {
@@ -36,6 +45,8 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
             setChildPropertyGroup,
             doChildDbClickToEdit,
             updateProps,
+            getRefs,
+            stateData,
             p
         } = this.props;
 
@@ -58,6 +69,8 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
@@ -67,7 +80,13 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
 
         return (
             <div className="mc-filter">
-                <table className="mc-filter-controls">
+                <table
+                    className="mc-filter-controls"
+                    style={Object.assign({}, this.state.hover)}
+                    ref={(ref) => this.com = ref}
+                    onDragOver={this.handleOver}
+                    onDragLeave={this.handleLeave}
+                >
                     <tbody>
                         {
                             appFindAdvancedItem.length > 0 ? appFindAdvancedItem :

@@ -84,13 +84,21 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      */
     public getRichEditOption = (comPosition: IPosition): IRichEditOption => {
         const childCom: HTMLElement = (this.editCom as HTMLElement);
+        let offsetTop: number = childCom.offsetTop;
+        let offsetLeft: number = childCom.offsetLeft;
+        let offsetParent: Element | null = childCom.offsetParent;
+        while (offsetParent && offsetParent.className !== 'page-appgrid') {
+            offsetTop += (offsetParent as any).offsetTop;
+            offsetLeft += (offsetParent as any).offsetLeft;
+            offsetParent = (offsetParent as any).offsetParent;
+        }
 
         const position: IPosition = {
-            top: comPosition.top + childCom.offsetTop,
-            left: comPosition.left + childCom.offsetLeft
+            top: comPosition.top + offsetTop,
+            left: comPosition.left + offsetLeft
         };
         const size: any = {
-            width: undefined,
+            width: childCom.offsetWidth + 20,
             height: childCom.offsetHeight
         };
         const font: IFont = this.defaultFont;
@@ -262,7 +270,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (data === undefined) return;
         if (!this.componentCanBeAdded(data.t)) return;
         this.setState({
-            hover: { backgroundColor: '#007ACC' }
+            hover: { backgroundColor: 'rgba(24, 144, 255, 0.2)' }
         });
         e.preventDefault();
     }
@@ -340,14 +348,13 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     public loopRefs = (id: string, refs: any) => {
         let currRef = refs[`${id}`];
         if (currRef === undefined) {
-            const refArr: any[] = [];
             // tslint:disable-next-line:forin
             for (const refId in refs) {
-                refArr.push(refs[`${refId}`]);
+                currRef = this.loopRefs(id, refs[`${refId}`].refs);
+                if (currRef !== undefined) {
+                    break;
+                }
             }
-            refArr.forEach((ref: any) => {
-                currRef = this.loopRefs(id, ref.refs);
-            });
         }
 
         return currRef;
@@ -658,7 +665,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         const data: any = this.getAddComponent();
         if (data !== undefined) return;
         this.setState({
-            hover: { backgroundColor: '#007ACC' }
+            hover: { backgroundColor: 'rgba(24, 144, 255, 0.2)' }
         });
         e.preventDefault();
     }

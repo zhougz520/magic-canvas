@@ -257,7 +257,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
 
         const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
         if (childData && childData.components && childData.components.length > 0) {
-            this.initCom(childData.components);
+            this.initCom(childData.components, clone(childData));
         }
 
         return (
@@ -340,7 +340,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     /**
      * 加载子组件
      */
-    private initCom = (components: IComData[]) => {
+    private initCom = (components: IComData[], childData: any) => {
         const { selectedId } = this.state;
         const { pageMode } = this.props;
         const appGridContainerState: AppGridContainerState = this.getCustomState();
@@ -361,6 +361,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -377,6 +379,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                                 map_fo_search={showSearch}
                             />
@@ -393,6 +397,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -408,6 +414,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -423,6 +431,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -438,6 +448,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -453,6 +465,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 setChildPropertyGroup={this.setChildPropertyGroup}
                                 doChildDbClickToEdit={this.doChildDbClickToEdit}
                                 updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
                                 {...component.p}
                             />
                         );
@@ -586,6 +600,13 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         this.setState({
             unfoldAdv: !this.state.unfoldAdv
         });
+    }
+
+    /**
+     * 获取refs
+     */
+    private getRefs = () => {
+        return this.refs;
     }
 }
 

@@ -21,8 +21,17 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
         super(props, context);
 
         this.state = {
-            hidden: false
+            hidden: false,
+            hover: {}
         };
+    }
+
+    /**
+     * 重载添加组件
+     * @param t 组件路径
+     */
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/newMap/grid/AppGridViewItem');
     }
 
     render() {
@@ -34,6 +43,8 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
             setChildPropertyGroup,
             doChildDbClickToEdit,
             updateProps,
+            getRefs,
+            stateData,
             p
         } = this.props;
 
@@ -56,6 +67,8 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
@@ -64,7 +77,13 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
         }
 
         return (
-            <div className="mc-listheader__views">
+            <div
+                className="mc-listheader__views"
+                style={Object.assign({}, this.state.hover)}
+                ref={(ref) => this.com = ref}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+            >
                 <div className="mc-listheader-viewlist">
                     <ul className="mc-listheader-viewlist-buttongroup">
                         {

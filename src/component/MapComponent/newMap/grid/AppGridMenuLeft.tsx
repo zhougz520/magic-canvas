@@ -23,8 +23,19 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         super(props, context);
 
         this.state = {
-            hidden: false
+            hidden: false,
+            hover: {}
         };
+    }
+
+    /**
+     * 重载添加组件
+     * @param t 组件路径
+     */
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/newMap/grid/AppGridMenuItemButton') ||
+            (t === 'MapComponent/newMap/grid/AppGridMenuItemDropdown') ||
+            (t === 'MapComponent/newMap/grid/AppGridMenuItemSwitch');
     }
 
     render() {
@@ -36,6 +47,8 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
             setChildPropertyGroup,
             doChildDbClickToEdit,
             updateProps,
+            getRefs,
+            stateData,
             p
         } = this.props;
 
@@ -58,6 +71,8 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
@@ -75,6 +90,8 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
@@ -92,6 +109,8 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
@@ -100,7 +119,13 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         }
 
         return (
-            <ul className="listheader-toolbar map-left">
+            <ul
+                className="listheader-toolbar map-left"
+                style={Object.assign({}, this.state.hover)}
+                ref={(ref) => this.com = ref}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
+            >
                 {
                     appGridMenuItem.length > 0 ? appGridMenuItem :
                         (

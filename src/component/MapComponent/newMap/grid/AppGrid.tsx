@@ -31,8 +31,17 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         super(props, context);
 
         this.state = {
-            hidden: false
+            hidden: false,
+            hover: {}
         };
+    }
+
+    /**
+     * 重载添加组件
+     * @param t 组件路径
+     */
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/newMap/grid/AppGridHeader');
     }
 
     /**
@@ -65,6 +74,8 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
             setChildPropertyGroup,
             doChildDbClickToEdit,
             updateProps,
+            getRefs,
+            stateData,
             p,
             map_g_check,
             map_g_num,
@@ -91,6 +102,8 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
 
@@ -105,7 +118,10 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         return (
             <div
                 className={`map-grid-viewcontainer ${selectedId === id ? 'map-select-open' : ''}`}
-                style={{ height: '200px' }}
+                style={Object.assign({}, { height: '200px' }, this.state.hover)}
+                ref={(ref) => this.com = ref}
+                onDragOver={this.handleOver}
+                onDragLeave={this.handleLeave}
             // onMouseDown={this.selectedCom}
             >
                 <div className="map-grid-viewport">

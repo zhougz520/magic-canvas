@@ -35,6 +35,8 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
             setChildPropertyGroup,
             doChildDbClickToEdit,
             updateProps,
+            getRefs,
+            stateData,
             p
         } = this.props;
 
@@ -57,6 +59,8 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
@@ -73,6 +77,8 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
                                 setChildPropertyGroup={setChildPropertyGroup}
                                 doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
                             />
                         );
                     }
