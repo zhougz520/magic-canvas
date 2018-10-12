@@ -6,6 +6,7 @@ import { MapComponent } from '../MapComponent';
 import { AppGridViewItem } from './AppGridViewItem';
 
 import { GlobalUtil } from '../../../util';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridViewProps extends IBaseProps {
@@ -52,13 +53,14 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
         const appGridViewItem: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
-                (com: any) => {
+                (com: any, index: number) => {
                     const { t, p } = com;
                     if (t === 'MapComponent/newMap/grid/AppGridViewItem') {
                         appGridViewItem.push(
                             <AppGridViewItem
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -85,14 +87,28 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
                 onDragLeave={this.handleLeave}
             >
                 <div className="mc-listheader-viewlist">
-                    <ul className="mc-listheader-viewlist-buttongroup">
-                        {
-                            appGridViewItem.length > 0 ? appGridViewItem :
-                                (
-                                    <div style={{ color: '#bfbfbf', paddingTop: '4px', fontWeight: 'bold' }}>请添加视图标签...</div>
-                                )
-                        }
-                    </ul>
+                    <div className="mc-listheader-viewlist-buttongroup">
+                        <DragDropContext onDragEnd={this.onDragEnd} >
+                            <Droppable droppableId="droppable-appGridView" direction="horizontal" >
+                                {
+                                    (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+                                        (
+                                            <div
+                                                ref={provided.innerRef}
+                                                className={`drag-container`}
+                                            >
+                                                {
+                                                    appGridViewItem.length > 0 ? appGridViewItem :
+                                                        (
+                                                            <div style={{ color: '#bfbfbf', paddingTop: '4px', fontWeight: 'bold' }}>请添加视图标签...</div>
+                                                        )
+                                                }
+                                            </div>
+                                        )
+                                }
+                            </Droppable>
+                        </DragDropContext>
+                    </div>
                 </div>
             </div>
         );

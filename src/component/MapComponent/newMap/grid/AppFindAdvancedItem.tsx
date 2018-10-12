@@ -10,6 +10,8 @@ import { OrderedSet, List } from 'immutable';
 import { Input, DatePicker } from 'antd';
 import zhCN from 'antd/lib/date-picker/locale/zh_CN';
 import 'moment/locale/zh-cn';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export enum AppFindAdvancedItemType {
     TEXT = 'text',
@@ -45,6 +47,16 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
             hidden: false
         };
     }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+        width: '100%',
+        height: '100%',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
 
     /**
      * 获取组件属性列表
@@ -54,11 +66,11 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
         const typeList: any[] = [
-            {key: AppFindAdvancedItemType.TEXT, value: '文本输入'},
-            {key: AppFindAdvancedItemType.SELECT, value: '选项列表'},
-            {key: AppFindAdvancedItemType.NUMBER_RANGE, value: '数值区间'},
-            {key: AppFindAdvancedItemType.NUMBER, value: '数值输入'},
-            {key: AppFindAdvancedItemType.DATE, value: '日期区间'}
+            { key: AppFindAdvancedItemType.TEXT, value: '文本输入' },
+            { key: AppFindAdvancedItemType.SELECT, value: '选项列表' },
+            { key: AppFindAdvancedItemType.NUMBER_RANGE, value: '数值区间' },
+            { key: AppFindAdvancedItemType.NUMBER, value: '数值输入' },
+            { key: AppFindAdvancedItemType.DATE, value: '日期区间' }
         ];
 
         // 列表属性
@@ -93,39 +105,58 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
     }
 
     render() {
-        const { map_fa_txt, selectedId, id, doChildDbClickToEdit } = this.props;
+        const { map_fa_txt, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
 
         return (
-            <tr
-                className={`mc-filter-item ${selectedId === id ? 'map-select-open' : ''}`}
+            <div
+                ref={(ref) => this.com = ref}
+                onDoubleClick={doChildDbClickToEdit}
                 onMouseDown={this.selectedCom}
             >
-                <th className="mc-filter-item__label" style={{ width: '85px' }}>
-                    <label
-                        ref={(ref) => this.editCom = ref}
-                        style={{
-                            visibility: hidden ? 'hidden' : 'visible',
-                            position: 'relative'
-                        }}
-                        onDoubleClick={doChildDbClickToEdit}
-                    >
-                        {map_fa_txt}：
-                    </label>
-                </th>
-                <td className="mc-filter-item__target">
-                    <div className="mc-filter-item__inner">
-                        <div className="mc-filter-item__part">
-                            <span className="mc-filter-item__allcheck">
-                                全部
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {
+                        (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            >
+                                <MaskLayer id={id} />
+                                <div
+                                    className={`mc-filter-item ${selectedId === id ? 'map-select-open' : ''}`}
+                                >
+                                    <div className="mc-filter-item__label" style={{ width: '85px' }}>
+                                        <label
+                                            ref={(ref) => this.editCom = ref}
+                                            style={{
+                                                visibility: hidden ? 'hidden' : 'visible',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            {map_fa_txt}：
+                                        </label>
+                                    </div>
+                                    <div className="mc-filter-item__target">
+                                        <div className="mc-filter-item__inner">
+                                            <div className="mc-filter-item__part">
+                                                <span className="mc-filter-item__allcheck">
+                                                    全部
                             </span>
-                        </div>
-                        {
-                            this.buildContent()
-                        }
-                    </div>
-                </td>
-            </tr>
+                                            </div>
+                                            {
+                                                this.buildContent()
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* </Droppable> */}
+                                {provided.placeholder}
+                            </div >
+                        )
+                    }
+                </Draggable >
+            </div>
         );
     }
 

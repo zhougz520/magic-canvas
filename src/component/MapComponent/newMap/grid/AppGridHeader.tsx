@@ -7,6 +7,7 @@ import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
 
 import { OrderedSet, List } from 'immutable';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridHeaderProps extends IBaseProps {
@@ -40,6 +41,14 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
             hidden: false
         };
     }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
 
     /**
      * 获取组件属性列表
@@ -85,33 +94,48 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
     }
 
     render() {
-        const { map_gh_txt, map_gh_width, map_gh_seq, map_gh_req, map_gh_align, selectedId, id, doChildDbClickToEdit } = this.props;
+        const { map_gh_txt, map_gh_width, map_gh_seq, map_gh_req, map_gh_align, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
 
         return (
-            <td
-                className={`map-grid-headerCell ${selectedId === id ? 'map-select-open' : ''}`}
-                style={{ width: `${map_gh_width}px`, textAlign: map_gh_align }}
-                onMouseDown={this.selectedCom}
-            >
-                <div className="map-grid-headerCell-outer">
-                    <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
-                        <label
-                            ref={(ref) => this.editCom = ref}
-                            style={{
-                                visibility: hidden ? 'hidden' : 'visible',
-                                color: map_gh_req ? 'red' : undefined
-                            }}
-                            onDoubleClick={doChildDbClickToEdit}
+            <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                {
+                    (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                        <td
+                            ref={(ref) => this.com = ref}
+                            className={`map-grid-headerCell ${selectedId === id ? 'map-select-open' : ''}`}
+                            style={{ width: `${map_gh_width}px`, textAlign: map_gh_align }}
+                            onMouseDown={this.selectedCom}
                         >
-                            {map_gh_txt}
-                            {
-                                map_gh_seq ? (<span className="map-grid-sortIcon" />) : null
-                            }
-                        </label>
-                    </div>
-                </div>
-            </td>
+                            <div
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            >
+                                <div className="map-grid-headerCell-outer">
+                                    <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
+                                        <label
+                                            ref={(ref) => this.editCom = ref}
+                                            style={{
+                                                visibility: hidden ? 'hidden' : 'visible',
+                                                color: map_gh_req ? 'red' : undefined
+                                            }}
+                                            onDoubleClick={doChildDbClickToEdit}
+                                        >
+                                            {map_gh_txt}
+                                            {
+                                                map_gh_seq ? (<span className="map-grid-sortIcon" />) : null
+                                            }
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* </Droppable> */}
+                                {provided.placeholder}
+                            </div >
+                        </td>
+                    )
+                }
+            </Draggable >
         );
     }
 }

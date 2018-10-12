@@ -8,6 +8,8 @@ import { MapComponent } from '../MapComponent';
 
 import { Button, Dropdown, Menu, Icon } from 'antd';
 import { OrderedSet, List } from 'immutable';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemDropdownProps extends IBaseProps {
@@ -33,6 +35,14 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
             hidden: false
         };
     }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
 
     /**
      * 获取组件属性列表
@@ -73,7 +83,7 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
     }
 
     render() {
-        const { map_gmid_txt, map_gmid_o, selectedId, id, doChildDbClickToEdit } = this.props;
+        const { map_gmid_txt, map_gmid_o, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
         const menu = (
             <Menu>
@@ -88,26 +98,42 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
         );
 
         return (
-            <li
-                style={{ display: 'inline-block' }}
+            <div
+                className={`menuItem`}
+                ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
             >
-                <Dropdown overlay={menu}>
-                    <Button
-                        className={`${selectedId === id ? 'map-select-open' : ''}`}
-                        onDoubleClick={doChildDbClickToEdit}
-                    >
-                        <label
-                            ref={(ref) => this.editCom = ref}
-                            style={{
-                                visibility: hidden ? 'hidden' : 'visible'
-                            }}
-                        >
-                            {map_gmid_txt}<Icon type="down" />
-                        </label>
-                    </Button>
-                </Dropdown>
-            </li>
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {
+                        (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            >
+                                <MaskLayer id={id} />
+                                <Dropdown overlay={menu}>
+                                    <Button
+                                        className={`${selectedId === id ? 'map-select-open' : ''}`}
+                                        onDoubleClick={doChildDbClickToEdit}
+                                    >
+                                        <label
+                                            ref={(ref) => this.editCom = ref}
+                                            style={{
+                                                visibility: hidden ? 'hidden' : 'visible'
+                                            }}
+                                        >
+                                            {map_gmid_txt}<Icon type="down" />
+                                        </label>
+                                    </Button>
+                                </Dropdown>
+                                {/* </Droppable> */}
+                                {provided.placeholder}
+                            </div >
+                        )
+                    }
+                </Draggable >
+            </div>
         );
     }
 }

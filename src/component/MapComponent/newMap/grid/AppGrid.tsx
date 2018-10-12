@@ -9,6 +9,7 @@ import { AppGridHeader } from './AppGridHeader';
 
 import { GlobalUtil } from '../../../util';
 import { OrderedSet, List } from 'immutable';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridProps extends IBaseProps {
@@ -87,13 +88,14 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         const appGridBody: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
-                (com: any) => {
+                (com: any, index: number) => {
                     const { t, p } = com;
                     if (t === 'MapComponent/newMap/grid/AppGridHeader') {
                         appGridHeader.push(
                             <AppGridHeader
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -157,7 +159,22 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                                             ) : null
                                         }
                                         {
-                                            appGridHeader.length > 0 ? appGridHeader :
+                                            appGridHeader.length > 0 ?
+                                                <DragDropContext onDragEnd={this.onDragEnd} >
+                                                    <Droppable droppableId="droppable-appGrid" direction="horizontal" >
+                                                        {
+                                                            (provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                                                                <div
+                                                                    ref={provided.innerRef}
+                                                                    className={`drag-container`}
+                                                                >
+                                                                    {appGridHeader}
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </Droppable>
+                                                </DragDropContext>
+                                                :
                                                 (
                                                     <td className="map-grid-headerCell" style={{ width: '120px' }} />
                                                 )

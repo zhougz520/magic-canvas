@@ -8,6 +8,8 @@ import { MapComponent } from '../MapComponent';
 
 import { Switch } from 'antd';
 import { OrderedSet, List } from 'immutable';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemSwitchProps extends IBaseProps {
@@ -33,6 +35,14 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
             hidden: false
         };
     }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
 
     /**
      * 获取组件属性列表
@@ -73,35 +83,50 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
     }
 
     render() {
-        const { map_gmis_txt, map_gmis_hl, selectedId, id, doChildDbClickToEdit } = this.props;
+        const { map_gmis_txt, map_gmis_hl, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
 
         return (
-            <li
-                style={{ display: 'inline-block' }}
+            <div
+                ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
-                className={`map-switch ${selectedId === id ? 'map-select-open' : ''}`}
+                onDoubleClick={doChildDbClickToEdit}
+                className={`menuItem map-switch ${selectedId === id ? 'map-select-open' : ''}`}
             >
-                {
-                    map_gmis_hl ?
-                        (
-                            <Switch key="1" size="small" defaultChecked />
-                        ) :
-                        (
-                            <Switch key="2" size="small" defaultChecked={false} />
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {
+                        (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            >
+                                <MaskLayer id={id} />
+                                {
+                                    map_gmis_hl ?
+                                        (
+                                            <Switch key="1" size="small" defaultChecked />
+                                        ) :
+                                        (
+                                            <Switch key="2" size="small" defaultChecked={false} />
+                                        )
+                                }
+                                &nbsp;
+                                <label
+                                    ref={(ref) => this.editCom = ref}
+                                    style={{
+                                        visibility: hidden ? 'hidden' : 'visible'
+                                    }}
+                                >
+                                    {map_gmis_txt}
+                                </label>
+                                {/* </Droppable> */}
+                                {provided.placeholder}
+                            </div >
                         )
-                }
-                &nbsp;
-                <label
-                    ref={(ref) => this.editCom = ref}
-                    style={{
-                        visibility: hidden ? 'hidden' : 'visible'
-                    }}
-                    onDoubleClick={doChildDbClickToEdit}
-                >
-                    {map_gmis_txt}
-                </label>
-            </li>
+                    }
+                </Draggable >
+            </div>
         );
     }
 }

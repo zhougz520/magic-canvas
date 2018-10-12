@@ -6,6 +6,7 @@ import { MapComponent } from '../MapComponent';
 import { AppGridMenuItemButton } from './AppGridMenuItemButton';
 import { AppGridMenuItemDropdown } from './AppGridMenuItemDropdown';
 import { AppGridMenuItemSwitch } from './AppGridMenuItemSwitch';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 import { GlobalUtil } from '../../../util';
 
@@ -56,13 +57,14 @@ export class AppGridMenuRight extends MapComponent<IAppGridMenuRightProps, IAppG
         const appGridMenuItem: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
-                (com: any) => {
+                (com: any, index: number) => {
                     const { t, p } = com;
                     if (t === 'MapComponent/newMap/grid/AppGridMenuItemButton') {
                         appGridMenuItem.push(
                             <AppGridMenuItemButton
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -82,6 +84,7 @@ export class AppGridMenuRight extends MapComponent<IAppGridMenuRightProps, IAppG
                             <AppGridMenuItemDropdown
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -101,6 +104,7 @@ export class AppGridMenuRight extends MapComponent<IAppGridMenuRightProps, IAppG
                             <AppGridMenuItemSwitch
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -119,20 +123,34 @@ export class AppGridMenuRight extends MapComponent<IAppGridMenuRightProps, IAppG
         }
 
         return (
-            <ul
+            <div
                 className="listheader-toolbar map-right"
                 style={Object.assign({}, this.state.hover)}
                 ref={(ref) => this.com = ref}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-                {
-                    appGridMenuItem.length > 0 ? appGridMenuItem :
-                        (
-                            <div style={{ color: '#bfbfbf', paddingTop: '10px', fontWeight: 'bold' }}>请添加菜单右侧按钮...</div>
-                        )
-                }
-            </ul>
+                <DragDropContext onDragEnd={this.onDragEnd} >
+                    <Droppable droppableId="droppable-appGridMenuRight" direction="horizontal" >
+                        {
+                            (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+                                (
+                                    <div
+                                        ref={provided.innerRef}
+                                        className={`drag-container`}
+                                    >
+                                        {
+                                            appGridMenuItem.length > 0 ? appGridMenuItem :
+                                                (
+                                                    <div style={{ color: '#bfbfbf', paddingTop: '10px', fontWeight: 'bold' }}>请添加菜单右侧按钮...</div>
+                                                )
+                                        }
+                                    </div>
+                                )
+                        }
+                    </Droppable>
+                </DragDropContext>
+            </div>
         );
     }
 }

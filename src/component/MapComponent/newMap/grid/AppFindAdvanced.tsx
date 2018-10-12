@@ -8,6 +8,7 @@ import { AppFindAdvancedItem } from './AppFindAdvancedItem';
 import { GlobalUtil } from '../../../util';
 
 import { Button } from 'antd';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppFindAdvancedProps extends IBaseProps {
@@ -54,13 +55,14 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
         const appFindAdvancedItem: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
-                (com: any) => {
+                (com: any, index: number) => {
                     const { t, p } = com;
                     if (t === 'MapComponent/newMap/grid/AppFindAdvancedItem') {
                         appFindAdvancedItem.push(
                             <AppFindAdvancedItem
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -80,25 +82,36 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
 
         return (
             <div className="mc-filter">
-                <table
+                <div
                     className="mc-filter-controls"
                     style={Object.assign({}, this.state.hover)}
                     ref={(ref) => this.com = ref}
                     onDragOver={this.handleOver}
                     onDragLeave={this.handleLeave}
                 >
-                    <tbody>
-                        {
-                            appFindAdvancedItem.length > 0 ? appFindAdvancedItem :
-                                (
-                                    <tr className="mc-filter-item">
-                                        <th style={{ width: '200px', color: 'rgb(191, 191, 191)' }}>请添加高级搜索组件...</th>
-                                        <td />
-                                    </tr>
-                                )
-                        }
-                    </tbody>
-                </table>
+                    <DragDropContext onDragEnd={this.onDragEnd} >
+                        <Droppable droppableId="droppable-appFindAdvanced" >
+                            {
+                                (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+                                    (
+                                        <div
+                                            ref={provided.innerRef}
+                                            className={`drag-container`}
+                                        >
+                                            {
+                                                appFindAdvancedItem.length > 0 ? appFindAdvancedItem :
+                                                    (
+                                                        <div className="mc-filter-item">
+                                                            <div style={{ width: '200px', color: 'rgb(191, 191, 191)' }}>请添加高级搜索组件...</div>
+                                                        </div>
+                                                    )
+                                            }
+                                        </div>
+                                    )
+                            }
+                        </Droppable>
+                    </DragDropContext>
+                </div>
                 <div className="mc-filter-toolbar">
                     <Button
                         type="primary"

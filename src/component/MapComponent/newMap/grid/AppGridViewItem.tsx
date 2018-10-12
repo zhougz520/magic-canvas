@@ -7,6 +7,7 @@ import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
 
 import { OrderedSet, List } from 'immutable';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridViewItemProps extends IBaseProps {
@@ -32,6 +33,16 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
             hidden: false
         };
     }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+        width: '100%',
+        height: '100%',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
 
     /**
      * 获取组件属性列表
@@ -72,24 +83,40 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
     }
 
     render() {
-        const { map_gvi_txt, map_gvi_selected, selectedId, id, doChildDbClickToEdit } = this.props;
+        const { map_gvi_txt, map_gvi_selected, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
 
         return (
-            <li
+            <div
+                ref={(ref) => this.com = ref}
                 className={`mc-listheader-viewlist-buttongroup__item ${map_gvi_selected ? 'is-selected' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
                 onMouseDown={this.selectedCom}
+                onDoubleClick={doChildDbClickToEdit}
             >
-                <label
-                    ref={(ref) => this.editCom = ref}
-                    style={{
-                        visibility: hidden ? 'hidden' : 'visible'
-                    }}
-                    onDoubleClick={doChildDbClickToEdit}
-                >
-                    {map_gvi_txt}
-                </label>
-            </li>
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {
+                        (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            >
+                                <label
+                                    ref={(ref) => this.editCom = ref}
+                                    style={{
+                                        visibility: hidden ? 'hidden' : 'visible',
+                                        margin: '7px 20px'
+                                    }}
+                                >
+                                    {map_gvi_txt}
+                                </label>
+                                {/* </Droppable> */}
+                                {provided.placeholder}
+                            </div >
+                        )
+                    }
+                </Draggable >
+            </div>
         );
     }
 }

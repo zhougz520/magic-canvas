@@ -6,6 +6,7 @@ import { MapComponent } from '../MapComponent';
 import { AppGridMenuItemButton } from './AppGridMenuItemButton';
 import { AppGridMenuItemDropdown } from './AppGridMenuItemDropdown';
 import { AppGridMenuItemSwitch } from './AppGridMenuItemSwitch';
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 import { GlobalUtil } from '../../../util';
 
@@ -17,6 +18,7 @@ export interface IAppGridMenuLeftProps extends IBaseProps {
 export interface IAppGridMenuLeftState extends IBaseState {
 }
 
+// tslint:disable:jsx-wrap-multiline
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
 export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGridMenuLeftState> {
     constructor(props: IAppGridMenuLeftProps, context?: any) {
@@ -56,13 +58,14 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         const appGridMenuItem: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
-                (com: any) => {
+                (com: any, index: number) => {
                     const { t, p } = com;
                     if (t === 'MapComponent/newMap/grid/AppGridMenuItemButton') {
                         appGridMenuItem.push(
                             <AppGridMenuItemButton
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -82,6 +85,7 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                             <AppGridMenuItemDropdown
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -101,6 +105,7 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                             <AppGridMenuItemSwitch
                                 ref={`c.${p.id}`}
                                 key={p.id}
+                                index={index}
                                 {...p}
                                 theme={theme}
                                 pageMode={pageMode}
@@ -119,20 +124,34 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         }
 
         return (
-            <ul
+            <div
                 className="listheader-toolbar map-left"
                 style={Object.assign({}, this.state.hover)}
                 ref={(ref) => this.com = ref}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-                {
-                    appGridMenuItem.length > 0 ? appGridMenuItem :
-                        (
-                            <div style={{ color: '#bfbfbf', paddingTop: '10px', fontWeight: 'bold' }}>请添加菜单左侧按钮...</div>
-                        )
-                }
-            </ul>
+                <DragDropContext onDragEnd={this.onDragEnd} >
+                    <Droppable droppableId="droppable-appGridMenuLeft" direction="horizontal" >
+                        {
+                            (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+                                (
+                                    <div
+                                        ref={provided.innerRef}
+                                        className={`drag-container`}
+                                    >
+                                        {
+                                            appGridMenuItem.length > 0 ? appGridMenuItem :
+                                                (
+                                                    <div style={{ color: '#bfbfbf', paddingTop: '10px', fontWeight: 'bold' }}>请添加菜单左侧按钮...</div>
+                                                )
+                                        }
+                                    </div>
+                                )
+                        }
+                    </Droppable>
+                </DragDropContext>
+            </div>
         );
     }
 }

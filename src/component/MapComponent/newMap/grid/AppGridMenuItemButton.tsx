@@ -8,6 +8,8 @@ import { MapComponent } from '../MapComponent';
 
 import { Button } from 'antd';
 import { OrderedSet, List } from 'immutable';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemButtonProps extends IBaseProps {
@@ -33,6 +35,14 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
             hidden: false
         };
     }
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
+
+        // change background colour if dragging
+        background: isDragging ? 'blue' : '',
+
+        // styles we need to apply on draggables
+        ...draggableStyle
+    })
 
     /**
      * 获取组件属性列表
@@ -73,29 +83,49 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
     }
 
     render() {
-        const { map_gmib_txt, map_gmib_hl, selectedId, id, doChildDbClickToEdit } = this.props;
+        const { map_gmib_txt, map_gmib_hl, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
 
         return (
-            <li
-                style={{ display: 'inline-block' }}
+            <div
+                className={`menuItem`}
+                ref={(ref) => {
+                    this.com = ref;
+                }}
                 onMouseDown={this.selectedCom}
+                onDoubleClick={doChildDbClickToEdit}
             >
-                <Button
-                    type={map_gmib_hl ? 'primary' : 'default'}
-                    className={`${selectedId === id ? 'map-select-open' : ''}`}
-                    onDoubleClick={doChildDbClickToEdit}
-                >
-                    <label
-                        ref={(ref) => this.editCom = ref}
-                        style={{
-                            visibility: hidden ? 'hidden' : 'visible'
-                        }}
-                    >
-                        {map_gmib_txt}
-                    </label>
-                </Button>
-            </li>
+                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                    {
+                        (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                {...provided.dragHandleProps}
+                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            >
+                                <MaskLayer id={id} />
+                                <Button
+                                    type={map_gmib_hl ? 'primary' : 'default'}
+                                    className={`${selectedId === id ? 'map-select-open' : ''}`}
+                                >
+                                    <label
+                                        ref={(ref) => {
+                                            this.editCom = ref;
+                                        }}
+                                        style={{
+                                            visibility: hidden ? 'hidden' : 'visible'
+                                        }}
+                                    >
+                                        {map_gmib_txt}
+                                    </label>
+                                </Button>
+                                {/* </Droppable> */}
+                                {provided.placeholder}
+                            </div >
+                        )
+                    }
+                </Draggable >
+            </div>
         );
     }
 }
