@@ -31,8 +31,7 @@ export interface IMapProps extends IBaseProps {
     index?: number;
 }
 
-// tslint:disable:no-shadowed-variable
-// tslint:disable:jsx-alignment
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref */
 export class SectionClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_ss: true,
@@ -43,6 +42,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
+            hidden: false,
             hover: {},
             fieldList: this.props.p !== undefined ? this.props.p.components : []
         };
@@ -63,8 +63,8 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     })
 
     public render() {
-        const { fieldList, hover } = this.state;
-        const { map_form_ss_name, map_form_ss, id, index, selectedId } = this.props;
+        const { fieldList, hover, hidden } = this.state;
+        const { map_form_ss_name, map_form_ss, id, index, selectedId, doChildDbClickToEdit } = this.props;
         const currFieldList = this.initFieldList(fieldList);
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
@@ -78,7 +78,15 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                     key={'title'}
                 >
                     <div className={`section-hr`}>
-                        {map_form_ss_name}
+                        <label
+                            ref={(ref) => this.editCom = ref}
+                            style={{
+                                visibility: hidden ? 'hidden' : 'visible'
+                            }}
+                            onDoubleClick={doChildDbClickToEdit}
+                        >
+                            {map_form_ss_name}
+                        </label>
                     </div>
                 </div>
                 {/* <Droppable droppableId="droppable-fieldList" direction="horizontal" > */}
@@ -135,6 +143,24 @@ export class SectionClass extends MapComponent<IMapProps, any> {
 
         return propertyGroup;
     }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        return this.props.map_form_ss_name;
+    }
+
+    /**
+     * 构建要设置的文本属性对象
+     */
+    public buildRichChildNode = (value: any): any => {
+        const obj: any = {};
+        obj['map_form_ss_name'] = value;
+
+        return obj;
+    }
+
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/newMap/form/field/CheckBoxField') ||

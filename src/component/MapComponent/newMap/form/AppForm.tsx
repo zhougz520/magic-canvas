@@ -17,7 +17,7 @@ export interface IMapProps extends IBaseProps {
     theme?: Theme;
 }
 
-// tslint:disable:jsx-no-string-ref
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref */
 export class AppFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         selectedId: undefined,
@@ -32,12 +32,13 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
+            hidden: false,
             hover: {}
         };
     }
 
     public render() {
-        const { hover } = this.state;
+        const { hover, hidden } = this.state;
         const { p, map_form_title, theme, map_form_header_show, map_form_foot_show,
             pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit,
             stateData, getRefs, updateProps, id } = this.props;
@@ -109,7 +110,15 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                 style={Object.assign({}, hover)}
             >
                 <div className={`form-title`} style={{ display: map_form_header_show ? '' : 'none' }}>
-                    {map_form_title}
+                    <label
+                        ref={(ref) => this.editCom = ref}
+                        style={{
+                            visibility: hidden ? 'hidden' : 'visible'
+                        }}
+                        onDoubleClick={doChildDbClickToEdit}
+                    >
+                        {map_form_title}
+                    </label>
                 </div>
                 <DragDropContext onDragEnd={this.onDragEnd} >
                     <Droppable droppableId="droppable-tabForm" >
@@ -152,6 +161,24 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
 
         return propertyGroup;
     }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        return this.props.map_form_title;
+    }
+
+    /**
+     * 构建要设置的文本属性对象
+     */
+    public buildRichChildNode = (value: any): any => {
+        const obj: any = {};
+        obj['map_form_title'] = value;
+
+        return obj;
+    }
+
     /*重载添加组件*/
     // public componentCanBeAdded(t: string) {
     //     return (t === 'MapComponent/newMap/form/NavBarItem');

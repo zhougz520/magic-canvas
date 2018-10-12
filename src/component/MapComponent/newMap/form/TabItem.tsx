@@ -15,9 +15,7 @@ export interface IMapProps extends IBaseProps {
     onChangeItem: (id: string) => void;
 }
 
-// tslint:disable:jsx-wrap-multiline
-// tslint:disable:jsx-alignment
-// tslint:disable:jsx-no-multiline-js
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref */
 export class TabItemClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_st_name: '标签页',
@@ -30,6 +28,7 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
+            hidden: false,
             defaultValue: props.map_form_st_name || ''
         };
     }
@@ -69,8 +68,27 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
 
         return propertyGroup;
     }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        return this.props.map_form_st_name;
+    }
+
+    /**
+     * 构建要设置的文本属性对象
+     */
+    public buildRichChildNode = (value: any): any => {
+        const obj: any = {};
+        obj['map_form_st_name'] = value;
+
+        return obj;
+    }
+
     public render() {
-        const { map_form_st_name, tabSelected, formState, selectedId, id, index } = this.props;
+        const { hidden } = this.state;
+        const { map_form_st_name, tabSelected, formState, selectedId, id, index, doChildDbClickToEdit } = this.props;
         // 如果分区状态为2，则以标签页的形式显示
         // 如果分区状态为1，则以标题的形式显示
         const showItem = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
@@ -83,11 +101,27 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
                 {
                     formState === '2' ?
                         <span className="tab-text" onClick={this.onChangeItem}>
-                            {map_form_st_name}
+                            <label
+                                ref={(ref) => this.editCom = ref}
+                                style={{
+                                    visibility: hidden ? 'hidden' : 'visible'
+                                }}
+                                onDoubleClick={doChildDbClickToEdit}
+                            >
+                                {map_form_st_name}
+                            </label>
                         </span>
                         :
                         <div className={`newTab-title`} style={{ display: `${formState !== '2' && tabSelected ? 'block' : 'none'}` }}>
-                            {map_form_st_name}
+                            <label
+                                ref={(ref) => this.editCom = ref}
+                                style={{
+                                    visibility: hidden ? 'hidden' : 'visible'
+                                }}
+                                onDoubleClick={doChildDbClickToEdit}
+                            >
+                                {map_form_st_name}
+                            </label>
                         </div>
                 }
             </div>
