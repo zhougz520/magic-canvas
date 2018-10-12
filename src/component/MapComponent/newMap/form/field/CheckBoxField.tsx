@@ -8,8 +8,7 @@ import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 // import { Checkbox } from 'antd';
 
-// tslint:disable:indent
-// tslint:disable:jsx-no-multiline-js
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent */
 export interface ICurrProps extends IFieldProps {
 	map_form_f_title: string;
 	map_form_f_default: string;
@@ -47,6 +46,7 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 		super(props, context);
 
 		this.state = {
+			hidden: false,
 			currX: 0,
 			resizing: false
 		};
@@ -73,10 +73,28 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 
 		return propertyGroup;
 	}
+
+    /**
+     * 获取组件文本
+     */
+	public getRichChildNode = (): any => {
+		return this.props.map_form_f_title;
+	}
+
+    /**
+     * 构建要设置的文本属性对象
+     */
+	public buildRichChildNode = (value: any): any => {
+		const obj: any = {};
+		obj['map_form_f_title'] = value;
+
+		return obj;
+	}
+
 	public render() {
 		// const { value } = this.state;
-		const { hover } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId } = this.props;
+		const { hover, hidden } = this.state;
+		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
@@ -96,9 +114,16 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 				<div
 					className="field-tb"
 				>
-					<MaskLayer id={id} />
+					<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
-						{map_form_f_title}
+						<label
+							ref={(ref) => this.editCom = ref}
+							style={{
+								visibility: hidden ? 'hidden' : 'visible'
+							}}
+						>
+							{map_form_f_title}
+						</label>
 					</div>
 					<div className="field-content">
 						<table style={{ width: '100%' }}>

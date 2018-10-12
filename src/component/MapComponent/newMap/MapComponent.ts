@@ -87,7 +87,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         let offsetTop: number = childCom.offsetTop;
         let offsetLeft: number = childCom.offsetLeft;
         let offsetParent: Element | null = childCom.offsetParent;
-        while (offsetParent && offsetParent.className !== 'page-appgrid') {
+        while (offsetParent && offsetParent.className !== 'page-appgrid' && offsetParent.className !== 'page-newmap-appform') {
             offsetTop += (offsetParent as any).offsetTop;
             offsetLeft += (offsetParent as any).offsetLeft;
             offsetParent = (offsetParent as any).offsetParent;
