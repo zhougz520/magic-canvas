@@ -11,7 +11,6 @@ import { Input, DatePicker } from 'antd';
 import zhCN from 'antd/lib/date-picker/locale/zh_CN';
 import 'moment/locale/zh-cn';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 export enum AppFindAdvancedItemType {
     TEXT = 'text',
@@ -47,13 +46,10 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
             hidden: false
         };
     }
+
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
-        width: '100%',
-        height: '100%',
-
+        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -109,54 +105,49 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
         const { hidden } = this.state;
 
         return (
-            <div
-                ref={(ref) => this.com = ref}
-                onDoubleClick={doChildDbClickToEdit}
-                onMouseDown={this.selectedCom}
-            >
-                <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
-                    {
-                        (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
-                            <div
-                                ref={provided.innerRef}
-                                {...provided.dragHandleProps}
-                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
-                            >
-                                <MaskLayer id={id} />
-                                <div
-                                    className={`mc-filter-item ${selectedId === id ? 'map-select-open' : ''}`}
+            <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
+                {
+                    (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
+                        <tr
+                            className={`mc-filter-item ${selectedId === id ? 'map-select-open' : ''}`}
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                            style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
+                            onMouseDown={(e) => {
+                                if (provided.dragHandleProps) {
+                                    provided.dragHandleProps.onMouseDown(e);
+                                }
+                                this.selectedCom(e);
+                            }}
+                        >
+                            <th className="mc-filter-item__label" style={{ width: '85px' }}>
+                                <label
+                                    ref={(ref) => this.editCom = ref}
+                                    style={{
+                                        visibility: hidden ? 'hidden' : 'visible',
+                                        position: 'relative'
+                                    }}
+                                    onDoubleClick={doChildDbClickToEdit}
                                 >
-                                    <div className="mc-filter-item__label" style={{ width: '85px' }}>
-                                        <label
-                                            ref={(ref) => this.editCom = ref}
-                                            style={{
-                                                visibility: hidden ? 'hidden' : 'visible',
-                                                position: 'relative'
-                                            }}
-                                        >
-                                            {map_fa_txt}：
-                                        </label>
+                                    {map_fa_txt}：
+                                </label>
+                            </th>
+                            <td className="mc-filter-item__target">
+                                <div className="mc-filter-item__inner">
+                                    <div className="mc-filter-item__part">
+                                        <span className="mc-filter-item__allcheck">
+                                            全部
+                                        </span>
                                     </div>
-                                    <div className="mc-filter-item__target">
-                                        <div className="mc-filter-item__inner">
-                                            <div className="mc-filter-item__part">
-                                                <span className="mc-filter-item__allcheck">
-                                                    全部
-                            </span>
-                                            </div>
-                                            {
-                                                this.buildContent()
-                                            }
-                                        </div>
-                                    </div>
+                                    {
+                                        this.buildContent()
+                                    }
                                 </div>
-                                {/* </Droppable> */}
-                                {provided.placeholder}
-                            </div >
-                        )
-                    }
-                </Draggable >
-            </div>
+                            </td>
+                        </tr>
+                    )
+                }
+            </Draggable >
         );
     }
 
