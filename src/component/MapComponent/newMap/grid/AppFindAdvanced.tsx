@@ -82,7 +82,7 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
 
         return (
             <div className="mc-filter">
-                <DragDropContext onDragEnd={this.onDragEnd} >
+                <DragDropContext onDragEnd={this.onDragEnd}>
                     <table
                         className="mc-filter-controls"
                         style={Object.assign({}, this.state.hover)}
@@ -90,7 +90,7 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
                         onDragOver={this.handleOver}
                         onDragLeave={this.handleLeave}
                     >
-                        <Droppable droppableId="droppable-appFindAdvanced" >
+                        <Droppable droppableId="droppable-appFindAdvanced">
                             {
                                 (provided: DroppableProvided) =>
                                     (
