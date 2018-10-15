@@ -120,14 +120,17 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
                                 this.selectedCom(e);
                             }}
                         >
-                            <th className="mc-filter-item__label" style={{ width: '85px' }}>
+                            <th
+                                className="mc-filter-item__label"
+                                style={{ width: '85px' }}
+                                onDoubleClick={doChildDbClickToEdit}
+                            >
                                 <label
                                     ref={(ref) => this.editCom = ref}
                                     style={{
                                         visibility: hidden ? 'hidden' : 'visible',
                                         position: 'relative'
                                     }}
-                                    onDoubleClick={doChildDbClickToEdit}
                                 >
                                     {map_fa_txt}：
                                 </label>
