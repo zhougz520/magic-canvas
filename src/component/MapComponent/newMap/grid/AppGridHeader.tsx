@@ -41,11 +41,12 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
             hidden: false
         };
     }
-    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
+    public getItemStyle = (draggableStyle: any, isDragging: any, width: any, align: any) => ({
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
-
+        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
+        width: `${width}px`,
+        textAlign: align,
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -102,40 +103,38 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
                 {
                     (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                         <td
-                            ref={(ref) => this.com = ref}
                             className={`map-grid-headerCell ${selectedId === id ? 'map-select-open' : ''}`}
-                            style={{ width: `${map_gh_width}px`, textAlign: map_gh_align }}
-                            onMouseDown={this.selectedCom}
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                            style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging, map_gh_width, map_gh_align)}
+                            onMouseDown={(e) => {
+                                if (provided.dragHandleProps) {
+                                    provided.dragHandleProps.onMouseDown(e);
+                                }
+                                this.selectedCom(e);
+                            }}
+                            onDoubleClick={doChildDbClickToEdit}
                         >
-                            <div
-                                {...provided.dragHandleProps}
-                                ref={provided.innerRef}
-                                style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
-                            >
-                                <div className="map-grid-headerCell-outer">
-                                    <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
-                                        <label
-                                            ref={(ref) => this.editCom = ref}
-                                            style={{
-                                                visibility: hidden ? 'hidden' : 'visible',
-                                                color: map_gh_req ? 'red' : undefined
-                                            }}
-                                            onDoubleClick={doChildDbClickToEdit}
-                                        >
-                                            {map_gh_txt}
-                                            {
-                                                map_gh_seq ? (<span className="map-grid-sortIcon" />) : null
-                                            }
-                                        </label>
-                                    </div>
+                            <div className="map-grid-headerCell-outer">
+                                <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
+                                    <label
+                                        ref={(ref) => this.editCom = ref}
+                                        style={{
+                                            visibility: hidden ? 'hidden' : 'visible',
+                                            color: map_gh_req ? 'red' : undefined
+                                        }}
+                                    >
+                                        {map_gh_txt}
+                                        {
+                                            map_gh_seq ? (<span className="map-grid-sortIcon" />) : null
+                                        }
+                                    </label>
                                 </div>
-                                {/* </Droppable> */}
-                                {provided.placeholder}
-                            </div >
+                            </div>
                         </td>
                     )
                 }
-            </Draggable >
+            </Draggable>
         );
     }
 }

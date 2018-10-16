@@ -150,7 +150,7 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
                         </tr>
                     )
                 }
-            </Draggable >
+            </Draggable>
         );
     }
 
