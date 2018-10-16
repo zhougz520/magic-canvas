@@ -18,9 +18,9 @@ import { GlobalUtil } from '../../util';
 export class MapComponent<P extends IBaseProps, S extends IBaseState>
     extends React.Component<P, S> implements IComponent {
 
-    com: HTMLElement | null = null;
-    rowList: any[] = [];
+    public com: HTMLElement | null = null;
     public editCom: HTMLElement | null = null;
+    public rowList: any[] = [];
     public defaultFont: IFont = {
         textAlign: 'left',
         fontColor: '#222',
@@ -31,16 +31,11 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     };
 
     componentDidMount() {
-        if (this.com !== null) {
-            // if(this.hasHandle){
+        if (this.com) {
             this.com.addEventListener('drop', this.handleDropAddComponent);
-            // this.com.addEventListener('keydown', this.deleteComponentsById);
-            // this.com.addEventListener('mouseover', () => { alert(this.com); });
-            // }
-            // this.com.addEventListener('mousedown', this.selectedCom);
+
             const currMaskLayer = document.getElementById(this.props.id);
-            // console.log('id', this.props.id);
-            if (currMaskLayer !== null) {
+            if (currMaskLayer) {
                 currMaskLayer.style.width = `${this.com.offsetWidth}px`;
                 currMaskLayer.style.height = `${this.com.offsetHeight}px`;
             }
@@ -48,13 +43,18 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     componentWillUpdate(nextProps: any, nextState: any) {
-        if (this.com !== null) {
+        if (this.com) {
             const currMaskLayer = document.getElementById(this.props.id);
-            // console.log('id', this.props.id);
-            if (currMaskLayer !== null) {
+            if (currMaskLayer) {
                 currMaskLayer.style.width = `${this.com.offsetWidth}px`;
                 currMaskLayer.style.height = `${this.com.offsetHeight}px`;
             }
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.com) {
+            this.com.removeEventListener('drop', this.handleDropAddComponent);
         }
     }
 
@@ -681,7 +681,6 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     protected selectedCom = (e: any) => {
         const { id, selectComChange } = this.props;
         selectComChange(e, id);
-        // TODO
         e.stopPropagation();
     }
 }

@@ -1,4 +1,5 @@
-$SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
+$SELECT_BORDERCOLOR: rgba(24, 144, 255, 1);
+$SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
 
 .page-appgrid {
     .map-title {
@@ -26,14 +27,12 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
             line-height: normal;
 
             .map-select-open.search-item {
-                box-shadow: $SELECT_STYLE;
+                border: 1px dashed $SELECT_BORDERCOLOR;
+                background-color: $SELECT_BACKCOLOR;
             }
             .search-item {
                 margin-right: 15px;
                 float: left;
-                &:hover {
-                    box-shadow: $SELECT_STYLE;
-                }
 
                 label {
                     display: inline-block;
@@ -79,14 +78,12 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                     line-height: 1;
 
                     .map-select-open.mc-filter-item {
-                        box-shadow: $SELECT_STYLE;
+                        border: 1px dashed $SELECT_BORDERCOLOR;
+                        background-color: $SELECT_BACKCOLOR;
                     }
                     .mc-filter-item {
                         height: 39px;
                         border-bottom: 1px dashed #e5e5e5;
-                        &:hover {
-                            box-shadow: $SELECT_STYLE;
-                        }
 
                         .mc-filter-item__label {
                             padding: 0px;
@@ -167,7 +164,8 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                 // position: relative;
 
                 .map-select-open.mc-listheader__views {
-                    box-shadow: $SELECT_STYLE;
+                    border: 1px dashed $SELECT_BORDERCOLOR;
+                    background-color: $SELECT_BACKCOLOR;
                 }
                 .mc-listheader__views {
                     display: block;
@@ -176,11 +174,6 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                     // position: relative;
                     padding: 3px 18px 3px 18px;
                     border: 1px solid #e7e7eb;
-                    &.title {
-                        &:hover {
-                            box-shadow: $SELECT_STYLE;
-                        }
-                    }
 
                     .mc-listheader__title {
                         font-size: 15px;
@@ -202,7 +195,8 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                             height: 30px;
 
                             .mc-listheader-viewlist-buttongroup__item.map-select-open {
-                                box-shadow: $SELECT_STYLE;
+                                border: 1px dashed $SELECT_BORDERCOLOR;
+                                background-color: $SELECT_BACKCOLOR;
                             }
                             .mc-listheader-viewlist-buttongroup__item.is-selected {
                                 background-color: #576477;
@@ -218,9 +212,6 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                                 margin-right: -1px;
                                 // position: relative;
                                 cursor: pointer;
-                                &:hover {
-                                    box-shadow: $SELECT_STYLE;
-                                }
                             }
                             .mc-listheader-viewlist-buttongroup__item:first-child {
                                 border-top-left-radius: 3px;
@@ -292,7 +283,8 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                                 }
 
                                 .ant-btn.map-select-open {
-                                    box-shadow: $SELECT_STYLE;
+                                    border: 1px dashed $SELECT_BORDERCOLOR;
+                                    background-color: $SELECT_BACKCOLOR;
                                 }
                                 .ant-btn {
                                     margin: 4px 6px 5px;
@@ -301,9 +293,6 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                                     min-width: 60px;
                                     position: static;
                                     color: #333;
-                                    &:hover {
-                                        box-shadow: $SELECT_STYLE;
-                                    }
                                 }
                                 .ant-btn-primary {
                                     background-color: #34A6F8;
@@ -313,13 +302,11 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                                     background-color: #34A6F8;
                                 }
                                 .map-switch.map-select-open {
-                                    box-shadow: $SELECT_STYLE;
+                                    border: 1px dashed $SELECT_BORDERCOLOR;
+                                    background-color: $SELECT_BACKCOLOR;
                                 }
                                 .map-switch {
                                     margin: 0 6px 0;
-                                    &:hover {
-                                        box-shadow: $SELECT_STYLE;
-                                    }
                                     .ant-switch-small{
                                         top: -2px;
                                     }
@@ -335,14 +322,12 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
             box-sizing: content-box;
         }
         .map-select-open.map-grid-viewcontainer {
-            box-shadow: $SELECT_STYLE;
+            border: 1px dashed $SELECT_BORDERCOLOR;
+            background-color: $SELECT_BACKCOLOR;
         }
         .map-grid-viewcontainer {
             box-sizing: content-box;
             border: 1px solid #e5e5e5;
-            &:hover {
-                box-shadow: $SELECT_STYLE;
-            }
 
             .map-grid-viewport {
                 overflow: hidden;
@@ -385,7 +370,8 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                         height: 1px;
 
                         .map-select-open.map-grid-headerCell {
-                            box-shadow: $SELECT_STYLE;
+                            border: 1px dashed $SELECT_BORDERCOLOR;
+                            background-color: $SELECT_BACKCOLOR;
                         }
                         .map-grid-headerCell {
                             border-right-color: #e5e5e5;
@@ -394,9 +380,6 @@ $SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
                             border-right-style: solid;
                             border-bottom-width: 1px;
                             border-bottom-style: solid;
-                            &:hover {
-                                box-shadow: $SELECT_STYLE;
-                            }
 
                             .map-grid-headerCell-outer {
                                 height: 34px;
