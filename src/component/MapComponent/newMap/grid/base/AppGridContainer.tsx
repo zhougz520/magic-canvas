@@ -235,7 +235,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
             // 列表属性
             propertyList = propertyList.push(
                 { pTitle: '标题', pKey: 'title', pValue: appGridContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT },
-                { pTitle: '主题', pKey: 'theme', pValue: appGridContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT },
+                // { pTitle: '主题', pKey: 'theme', pValue: appGridContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT },
                 { pTitle: '显示项目控件', pKey: 'showAppProjectTree', pValue: appGridContainerState.getShowAppProjectTree(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示普通查询', pKey: 'showAppFindOrdinary', pValue: appGridContainerState.getShowAppFindOrdinary(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示高级搜索', pKey: 'showAppFindAdvanced', pValue: appGridContainerState.getShowAppFindAdvanced(), pType: PropertiesEnum.SWITCH },
