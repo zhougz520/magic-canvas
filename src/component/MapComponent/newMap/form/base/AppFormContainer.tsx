@@ -41,7 +41,7 @@ export interface IAppFormContainerState extends IBaseState {
 export default class AppFormContainer extends BaseComponent<IAppFormContainerProps, IAppFormContainerState> {
 
     private appForm: JSX.Element | null = null;
-    private bottom: JSX.Element | null = null;
+    // private bottom: JSX.Element | null = null;
 
     private _padding: number = 8;
     private _isCanMove: boolean = false;
@@ -291,7 +291,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
 
         const childData = appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
         if (childData && childData.components && childData.components.length > 0) {
-            this.initCom(childData.components, childData);
+            this.initCom(childData.components, clone(childData));
         }
 
         return (
@@ -317,13 +317,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 >
                     {/* 项目 */}
                     {this.appForm}
-
-                    {/* 普通查询 */}
-                    <ul>
-                        {
-                            appFormContainerState.getShowBottom() ? this.bottom : ''
-                        }
-                    </ul>
                 </div>
             </div>
         );

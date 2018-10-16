@@ -32,12 +32,13 @@ table {
     }
     .map-form-content {
         flex: 1;
+        display: flex;
         visibility: visible;
         box-sizing: border-box;
         overflow-x: hidden;
         .map-form {
             min-width: 400px;
-            height: 95%;
+            flex: 1;
             margin: 8px;
             display: flex;
             flex-direction: column;

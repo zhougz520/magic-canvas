@@ -10,6 +10,7 @@ import {
     // NullField
 } from '../form/field';
 import { MapConsumer } from '../MapConsumer';
+import * as DragStyle from '../DragStyle';
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-wrap-multiline
 // tslint:disable:jsx-no-multiline-js
@@ -45,7 +46,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle
