@@ -87,7 +87,12 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         let offsetTop: number = childCom.offsetTop;
         let offsetLeft: number = childCom.offsetLeft;
         let offsetParent: Element | null = childCom.offsetParent;
+        let scrollLeft: number = 0;
         while (offsetParent && offsetParent.className !== 'page-appgrid' && offsetParent.className !== 'page-newmap-appform') {
+            // AppGrid滚动条
+            if (offsetParent.className === 'map-grid-columns-view') {
+                scrollLeft = offsetParent.scrollLeft;
+            }
             offsetTop += (offsetParent as any).offsetTop;
             offsetLeft += (offsetParent as any).offsetLeft;
             offsetParent = (offsetParent as any).offsetParent;
@@ -95,7 +100,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
 
         const position: IPosition = {
             top: comPosition.top + offsetTop,
-            left: comPosition.left + offsetLeft
+            left: comPosition.left + offsetLeft - scrollLeft
         };
         const size: any = {
             width: childCom.offsetWidth + 20,
