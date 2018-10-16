@@ -9,7 +9,6 @@ import { MapComponent } from '../MapComponent';
 import { Switch } from 'antd';
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemSwitchProps extends IBaseProps {
@@ -35,11 +34,12 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
             hidden: false
         };
     }
+
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
-
+        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
+        width: '100%',
+        height: '100%',
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -87,11 +87,11 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
         const { hidden } = this.state;
 
         return (
-            <div
-                ref={(ref) => this.com = ref}
+            <li
+                className={`map-switch ${selectedId === id ? 'map-select-open' : ''}`}
+                style={{ display: 'inline-block' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
-                className={`menuItem map-switch ${selectedId === id ? 'map-select-open' : ''}`}
             >
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {
@@ -101,7 +101,6 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
                                 {...provided.dragHandleProps}
                                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
                             >
-                                <MaskLayer id={id} />
                                 {
                                     map_gmis_hl ?
                                         (
@@ -120,13 +119,11 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
                                 >
                                     {map_gmis_txt}
                                 </label>
-                                {/* </Droppable> */}
-                                {provided.placeholder}
-                            </div >
+                            </div>
                         )
                     }
-                </Draggable >
-            </div>
+                </Draggable>
+            </li>
         );
     }
 }

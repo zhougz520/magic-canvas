@@ -6,9 +6,9 @@ import { MapComponent } from '../MapComponent';
 import { AppGridMenuItemButton } from './AppGridMenuItemButton';
 import { AppGridMenuItemDropdown } from './AppGridMenuItemDropdown';
 import { AppGridMenuItemSwitch } from './AppGridMenuItemSwitch';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 import { GlobalUtil } from '../../../util';
+import { DragDropContext, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuLeftProps extends IBaseProps {
@@ -18,7 +18,6 @@ export interface IAppGridMenuLeftProps extends IBaseProps {
 export interface IAppGridMenuLeftState extends IBaseState {
 }
 
-// tslint:disable:jsx-wrap-multiline
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
 export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGridMenuLeftState> {
     constructor(props: IAppGridMenuLeftProps, context?: any) {
@@ -124,26 +123,26 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         }
 
         return (
-            <div
+            <ul
                 className="listheader-toolbar map-left"
                 style={Object.assign({}, this.state.hover)}
                 ref={(ref) => this.com = ref}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
             >
-                <DragDropContext onDragEnd={this.onDragEnd} >
-                    <Droppable droppableId="droppable-appGridMenuLeft" direction="horizontal" >
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <Droppable droppableId="droppable-appGridView" direction="horizontal">
                         {
-                            (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+                            (provided: DroppableProvided) =>
                                 (
                                     <div
                                         ref={provided.innerRef}
-                                        className={`drag-container`}
+                                        style={{ height: '100%', width: '100%', lineHeight: '40px', textAlign: 'left', display: 'inline-block' }}
                                     >
                                         {
                                             appGridMenuItem.length > 0 ? appGridMenuItem :
                                                 (
-                                                    <div style={{ color: '#bfbfbf', paddingTop: '10px', fontWeight: 'bold' }}>请添加菜单左侧按钮...</div>
+                                                    <div style={{ color: '#bfbfbf', fontWeight: 'bold' }}>请添加菜单左侧按钮...</div>
                                                 )
                                         }
                                     </div>
@@ -151,7 +150,7 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                         }
                     </Droppable>
                 </DragDropContext>
-            </div>
+            </ul>
         );
     }
 }

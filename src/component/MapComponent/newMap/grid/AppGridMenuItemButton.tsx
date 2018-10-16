@@ -9,7 +9,6 @@ import { MapComponent } from '../MapComponent';
 import { Button } from 'antd';
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemButtonProps extends IBaseProps {
@@ -35,11 +34,12 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
             hidden: false
         };
     }
+
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
-
+        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
+        width: '100%',
+        height: '100%',
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -87,9 +87,8 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
         const { hidden } = this.state;
 
         return (
-            <div
-                className={`menuItem`}
-                ref={(ref) => this.com = ref}
+            <li
+                style={{ display: 'inline-block' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >
@@ -101,15 +100,13 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
                                 {...provided.dragHandleProps}
                                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
                             >
-                                <MaskLayer id={id} />
                                 <Button
                                     type={map_gmib_hl ? 'primary' : 'default'}
                                     className={`${selectedId === id ? 'map-select-open' : ''}`}
+                                    style={{pointerEvents: 'none'}}
                                 >
                                     <label
-                                        ref={(ref) => {
-                                            this.editCom = ref;
-                                        }}
+                                        ref={(ref) => this.editCom = ref}
                                         style={{
                                             visibility: hidden ? 'hidden' : 'visible'
                                         }}
@@ -117,13 +114,11 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
                                         {map_gmib_txt}
                                     </label>
                                 </Button>
-                                {/* </Droppable> */}
-                                {provided.placeholder}
                             </div >
                         )
                     }
-                </Draggable >
-            </div>
+                </Draggable>
+            </li >
         );
     }
 }

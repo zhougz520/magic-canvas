@@ -9,7 +9,6 @@ import { MapComponent } from '../MapComponent';
 import { Button, Dropdown, Menu, Icon } from 'antd';
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemDropdownProps extends IBaseProps {
@@ -35,11 +34,12 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
             hidden: false
         };
     }
+
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
-
+        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
+        width: '100%',
+        height: '100%',
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -98,9 +98,8 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
         );
 
         return (
-            <div
-                className={`menuItem`}
-                ref={(ref) => this.com = ref}
+            <li
+                style={{ display: 'inline-block' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >
@@ -112,10 +111,10 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
                                 {...provided.dragHandleProps}
                                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
                             >
-                                <MaskLayer id={id} />
                                 <Dropdown overlay={menu}>
                                     <Button
                                         className={`${selectedId === id ? 'map-select-open' : ''}`}
+                                        style={{pointerEvents: 'none'}}
                                     >
                                         <label
                                             ref={(ref) => this.editCom = ref}
@@ -127,13 +126,11 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
                                         </label>
                                     </Button>
                                 </Dropdown>
-                                {/* </Droppable> */}
-                                {provided.placeholder}
-                            </div >
+                            </div>
                         )
                     }
-                </Draggable >
-            </div>
+                </Draggable>
+            </li>
         );
     }
 }

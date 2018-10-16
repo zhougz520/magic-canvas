@@ -245,25 +245,18 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                                 margin-left: -6px;
                                 margin-right: -6px;
                                 height: 41px;
-                                .drag-container{
-                                    line-height: 41px;
-                                    list-style: none;
-                                }
+
                                 .listheader-toolbar.map-left {
                                     min-width: 50%;
                                     float: left;
                                 }
                                 .map-left {
                                     text-align: left;
-                                    display: flex;
-                                    flex-direction: column;
+                                    display: inline-block;
                                     height: 41px;
                                     list-style: none;
                                     margin: 0px;
                                     padding: 0px;
-                                    .menuItem{
-                                        float: left;
-                                    }
                                 }
                                 .listheader-toolbar.map-right {
                                     min-width: 50%;
@@ -271,15 +264,11 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                                 }
                                 .map-right {
                                     text-align: right;
-                                    display: flex;
-                                    flex-direction: column-reverse;
+                                    display: inline-block;
                                     height: 41px;
                                     list-style: none;
                                     margin: 0px;
                                     padding: 0px;
-                                    .menuItem{
-                                        float: right;
-                                    }
                                 }
 
                                 .ant-btn.map-select-open {
@@ -306,9 +295,8 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                                     background-color: $SELECT_BACKCOLOR;
                                 }
                                 .map-switch {
-                                    margin: 0 6px 0;
                                     .ant-switch-small{
-                                        top: -2px;
+                                        top: -1px;
                                     }
                                 }
                             }
