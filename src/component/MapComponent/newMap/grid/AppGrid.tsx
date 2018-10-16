@@ -127,7 +127,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                 ref={(ref) => this.com = ref}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
-            // onMouseDown={this.selectedCom}
+                onMouseDown={this.selectedCom}
             >
                 <div className="map-grid-viewport">
                     {/* 标题头 */}
