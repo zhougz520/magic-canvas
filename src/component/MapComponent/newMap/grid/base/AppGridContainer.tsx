@@ -243,8 +243,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                 { pTitle: '显示视图', pKey: 'showAppGridView', pValue: appGridContainerState.getShowAppGridView(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示标题', pKey: 'showAppGridTitle', pValue: appGridContainerState.getShowAppGridTitle(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示表头', pKey: 'showAppGridMenu', pValue: appGridContainerState.getShowAppGridMenu(), pType: PropertiesEnum.SWITCH },
-                { pTitle: '显示分页', pKey: 'showAppGridPage', pValue: appGridContainerState.getShowAppGridPage(), pType: PropertiesEnum.SWITCH },
-                { pTitle: '显示对话框按钮', pKey: 'showModalMenu', pValue: appGridContainerState.getShowModalMenu(), pType: PropertiesEnum.SWITCH }
+                { pTitle: '显示分页', pKey: 'showAppGridPage', pValue: appGridContainerState.getShowAppGridPage(), pType: PropertiesEnum.SWITCH }
+                // { pTitle: '显示对话框按钮', pKey: 'showModalMenu', pValue: appGridContainerState.getShowModalMenu(), pType: PropertiesEnum.SWITCH }
             );
             propertyGroup = propertyGroup.add(
                 { groupTitle: '列表属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
