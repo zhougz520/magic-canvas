@@ -18,6 +18,7 @@ import {
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import * as DragStyle from '../DragStyle';
 // import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-wrap-multiline
@@ -56,7 +57,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle

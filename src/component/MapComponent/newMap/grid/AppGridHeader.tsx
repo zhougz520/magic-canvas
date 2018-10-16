@@ -8,6 +8,7 @@ import { MapComponent } from '../MapComponent';
 
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import * as DragStyle from '../DragStyle';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridHeaderProps extends IBaseProps {
@@ -44,7 +45,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
 
     public getItemStyle = (draggableStyle: any, isDragging: any, width: any, align: any) => ({
         // change background colour if dragging
-        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
         width: `${width}px`,
         textAlign: align,
         // styles we need to apply on draggables

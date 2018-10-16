@@ -3,6 +3,7 @@ import { MapComponent } from '../../../index';
 import { IFieldProps } from './IFieldProps';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { Checkbox } from 'antd';
+import * as DragStyle from '../DragStyle';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
@@ -39,7 +40,7 @@ export class CheckBoxField extends MapComponent<ICurrProps, any> {
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 		// change background colour if dragging
-		background: isDragging ? 'blue' : '',
+		background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
 		// styles we need to apply on draggables
 		...draggableStyle

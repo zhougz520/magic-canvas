@@ -3,6 +3,7 @@ import { MapComponent, IBaseProps, IBaseState } from '../index';
 import { Section } from './index';
 import { GlobalUtil } from '../../../util';
 import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import * as DragStyle from '../DragStyle';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -36,7 +37,7 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle

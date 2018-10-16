@@ -4,6 +4,7 @@ import { MapComponent, IBaseProps } from '../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 // import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 import { MapConsumer } from '../MapConsumer';
+import * as DragStyle from '../DragStyle';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -38,7 +39,7 @@ export class AppGridTitleClass extends MapComponent<IMapProps, any> {
     }
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle

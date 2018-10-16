@@ -3,6 +3,7 @@ import { MapComponent, IBaseProps } from '../index';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import * as DragStyle from '../DragStyle';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -36,7 +37,7 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle

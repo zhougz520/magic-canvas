@@ -5,7 +5,7 @@ import { GlobalUtil } from '../../../util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import * as DragStyle from '../DragStyle';
 // import { GlobalUtil } from '../../../util';
 // import {
 //     // DragDropContext,
@@ -43,7 +43,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle

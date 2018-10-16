@@ -10,6 +10,7 @@ import { Button } from 'antd';
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
+import * as DragStyle from '../DragStyle';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuItemButtonProps extends IBaseProps {
@@ -38,7 +39,7 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? DragStyle.BaseDragStyle.background : '',
 
         // styles we need to apply on draggables
         ...draggableStyle
