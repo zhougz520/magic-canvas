@@ -9,7 +9,7 @@ import { AppGridHeader } from './AppGridHeader';
 
 import { GlobalUtil } from '../../../util';
 import { OrderedSet, List } from 'immutable';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridProps extends IBaseProps {
@@ -23,10 +23,13 @@ export interface IAppGridState extends IBaseState {
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
 export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
+
     static defaultProps = {
         map_g_check: false,
         map_g_num: true
     };
+
+    public headerCom: HTMLElement | null = null;
 
     constructor(props: IAppGridProps, context?: any) {
         super(props, context);
@@ -110,7 +113,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                         );
 
                         appGridBody.push(
-                            <td key={p.id} style={{ padding: '0px', border: '0px', margin: '0px', height: '0px', width: `${p.map_gh_width ? p.map_gh_width : 60}px` }} />
+                            <td key={p.id} style={{ padding: '0px', borderRight: '1px', borderRightStyle: 'solid', borderRightColor: 'transparent', margin: '0px', height: '0px', width: `${p.map_gh_width ? p.map_gh_width : 60}px` }} />
                         );
                     }
                 }
@@ -130,58 +133,72 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                     {/* 标题头 */}
                     <div className="map-grid-columns">
                         {/* 数据列 */}
-                        <div className="map-grid-columns-view">
-                            <table className="map-grid-table" cellSpacing="0" cellPadding="0" style={{ border: '0', height: 'auto' }}>
-                                <tbody>
-                                    <tr style={{ height: '34px' }}>
-                                        {/* 多选 */}
+                        <div className="map-grid-columns-view" ref={(ref) => this.headerCom = ref}>
+                            <DragDropContext onDragEnd={this.onDragEnd}>
+                                <table className="map-grid-table" cellSpacing="0" cellPadding="0" style={{ border: '0', height: 'auto' }}>
+                                    <Droppable droppableId="droppable-appGrid" direction="horizontal">
                                         {
-                                            map_g_check ? (
-                                                <td className="map-grid-headerCell" style={{ width: '47px', textAlign: 'center' }}>
-                                                    <div className="map-grid-headerCell-outer" style={{ paddingLeft: '0px', paddingRight: '2px' }}>
-                                                        <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
-                                                            <span className="map-grid-checkbox map-grid-checkbox__check-all" />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            ) : null
-                                        }
-                                        {/* 序号列 */}
-                                        {
-                                            map_g_num ? (
-                                                <td className="map-grid-headerCell" style={{ width: '47px', textAlign: 'center' }}>
-                                                    <div className="map-grid-headerCell-outer" style={{ paddingLeft: '0px', paddingRight: '2px' }}>
-                                                        <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
-                                                            &nbsp;
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            ) : null
-                                        }
-                                        {
-                                            appGridHeader.length > 0 ?
-                                                <DragDropContext onDragEnd={this.onDragEnd} >
-                                                    <Droppable droppableId="droppable-appGrid" direction="horizontal" >
-                                                        {
-                                                            (provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                                                                <div
-                                                                    ref={provided.innerRef}
-                                                                    className={`drag-container`}
-                                                                >
-                                                                    {appGridHeader}
-                                                                </div>
-                                                            )
-                                                        }
-                                                    </Droppable>
-                                                </DragDropContext>
-                                                :
+                                            (provided: DroppableProvided) =>
                                                 (
-                                                    <td className="map-grid-headerCell" style={{ width: '120px' }} />
+                                                    <tbody ref={provided.innerRef}>
+                                                        <tr style={{ height: '0px' }}>
+                                                            {/* 多选 */}
+                                                            {
+                                                                map_g_check ? (
+                                                                    <td style={{ padding: '0px', border: '0px', margin: '0px', height: '0px', width: '47px' }} />
+                                                                ) : null
+                                                            }
+                                                            {/* 序号列 */}
+                                                            {
+                                                                map_g_num ? (
+                                                                    <td style={{ padding: '0px', border: '0px', margin: '0px', height: '0px', width: '47px' }} />
+                                                                ) : null
+                                                            }
+                                                            {
+                                                                appGridBody.length > 0 ? appGridBody :
+                                                                    (
+                                                                        <td className="map-grid-emptyText" />
+                                                                    )
+                                                            }
+                                                        </tr>
+                                                        <tr style={{ height: '34px' }}>
+                                                            {/* 多选 */}
+                                                            {
+                                                                map_g_check ? (
+                                                                    <td className="map-grid-headerCell" style={{ width: '47px', textAlign: 'center' }}>
+                                                                        <div className="map-grid-headerCell-outer" style={{ paddingLeft: '0px', paddingRight: '2px' }}>
+                                                                            <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
+                                                                                <span className="map-grid-checkbox map-grid-checkbox__check-all" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                ) : null
+                                                            }
+                                                            {/* 序号列 */}
+                                                            {
+                                                                map_g_num ? (
+                                                                    <td className="map-grid-headerCell" style={{ width: '47px', textAlign: 'center' }}>
+                                                                        <div className="map-grid-headerCell-outer" style={{ paddingLeft: '0px', paddingRight: '2px' }}>
+                                                                            <div className="map-grid-headerCell-inner map-grid-headerCell-nowrap">
+                                                                                &nbsp;
+                                                        </div>
+                                                                        </div>
+                                                                    </td>
+                                                                ) : null
+                                                            }
+                                                            {
+                                                                appGridHeader.length > 0 ? appGridHeader :
+                                                                    (
+                                                                        <td className="map-grid-headerCell" style={{ width: '120px' }} />
+                                                                    )
+                                                            }
+                                                        </tr>
+                                                    </tbody>
                                                 )
                                         }
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    </Droppable>
+                                </table>
+                            </DragDropContext>
                         </div>
                         {/* 操作列 */}
                         <div className="map-grid-columns-lock map-grid-columns-lock-right" style={{ width: '124px' }}>
@@ -211,7 +228,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                     </div>
                     {/* 数据 */}
                     <div className="map-grid-body" style={{ height: '165px' }}>
-                        <div className="map-grid-rows-view" style={{ marginLeft: '0px', width: 'auto', marginRight: '125px' }}>
+                        <div className="map-grid-rows-view" style={{ marginLeft: '0px', width: 'auto', marginRight: '125px' }} onScroll={this.onScroll}>
                             <table className="map-grid-table" cellSpacing="0" cellPadding="0" style={{ border: '0px', width: '100%' }}>
                                 <tbody>
                                     <tr style={{ height: '30px' }}>
@@ -241,5 +258,11 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                 </div>
             </div>
         );
+    }
+
+    private onScroll = (e: any) => {
+        if (this.headerCom) {
+            this.headerCom.scrollTo(e.target.scrollLeft, e.target.scrollLeft);
+        }
     }
 }

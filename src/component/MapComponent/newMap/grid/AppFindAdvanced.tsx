@@ -8,7 +8,7 @@ import { AppFindAdvancedItem } from './AppFindAdvancedItem';
 import { GlobalUtil } from '../../../util';
 
 import { Button } from 'antd';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppFindAdvancedProps extends IBaseProps {
@@ -82,36 +82,42 @@ export class AppFindAdvanced extends MapComponent<IAppFindAdvancedProps, IAppFin
 
         return (
             <div className="mc-filter">
-                <div
-                    className="mc-filter-controls"
-                    style={Object.assign({}, this.state.hover)}
-                    ref={(ref) => this.com = ref}
-                    onDragOver={this.handleOver}
-                    onDragLeave={this.handleLeave}
-                >
-                    <DragDropContext onDragEnd={this.onDragEnd} >
-                        <Droppable droppableId="droppable-appFindAdvanced" >
+                <DragDropContext onDragEnd={this.onDragEnd}>
+                    <table
+                        className="mc-filter-controls"
+                        style={Object.assign({}, this.state.hover)}
+                        ref={(ref) => this.com = ref}
+                        onDragOver={this.handleOver}
+                        onDragLeave={this.handleLeave}
+                    >
+                        <Droppable droppableId="droppable-appFindAdvanced">
                             {
-                                (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
+                                (provided: DroppableProvided) =>
                                     (
-                                        <div
-                                            ref={provided.innerRef}
-                                            className={`drag-container`}
-                                        >
+                                        <tbody ref={provided.innerRef}>
+                                            {
+                                                appFindAdvancedItem.length > 0 ? (
+                                                    <tr style={{height: '0px'}}>
+                                                        <th style={{ width: '85px' }} />
+                                                        <td />
+                                                    </tr>
+                                                ) : null
+                                            }
                                             {
                                                 appFindAdvancedItem.length > 0 ? appFindAdvancedItem :
                                                     (
-                                                        <div className="mc-filter-item">
-                                                            <div style={{ width: '200px', color: 'rgb(191, 191, 191)' }}>请添加高级搜索组件...</div>
-                                                        </div>
+                                                        <tr className="mc-filter-item">
+                                                            <th style={{ width: '200px', color: 'rgb(191, 191, 191)' }}>请添加高级搜索组件...</th>
+                                                            <td />
+                                                        </tr>
                                                     )
                                             }
-                                        </div>
+                                        </tbody>
                                     )
                             }
                         </Droppable>
-                    </DragDropContext>
-                </div>
+                    </table>
+                </DragDropContext>
                 <div className="mc-filter-toolbar">
                     <Button
                         type="primary"

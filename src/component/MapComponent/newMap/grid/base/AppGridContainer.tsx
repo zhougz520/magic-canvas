@@ -30,6 +30,7 @@ import { Map, List, OrderedSet } from 'immutable';
 const clone = require('clone');
 
 import '../../sass/AppGrid.scss';
+import { HandleChildCom } from '../../../types';
 
 /* tslint:disable:no-empty-interface jsx-no-string-ref jsx-no-multiline-js jsx-no-lambda */
 export interface IAppGridContainerProps extends IBaseProps {
@@ -190,6 +191,31 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
 
             this.setCustomState(newAppGridContainerState);
         }
+    }
+
+    /**
+     * 操作子控件
+     */
+    public handleChildCom = (handle: string): boolean => {
+        const { selectedId } = this.state;
+        if (!selectedId) return false;
+        const childCom: any = this.getChildComponent(selectedId);
+        if (!childCom) return false;
+
+        let result: boolean = false;
+        switch (handle) {
+            case HandleChildCom.DELETE:         // 删除
+                result = childCom.deleteComponentsById();
+                break;
+            case HandleChildCom.SELECT_PARENT:  // 选中父组件
+                result = childCom.selectedComParent();
+                break;
+            case HandleChildCom.COPY_COM:       // 复制控件
+                result = childCom.copySelectedCom();
+                break;
+        }
+
+        return result;
     }
     /************************************* end 富文本 ****************************************/
 
@@ -562,6 +588,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         this.setState({
             selectedId: id
         });
+        // 调用container的选中
+        this.fireSelectChange(e);
     }
 
     /**

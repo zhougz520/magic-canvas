@@ -33,13 +33,12 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
             hidden: false
         };
     }
-    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
         // change background colour if dragging
-        background: isDragging ? 'blue' : '',
+        background: isDragging ? 'rgba(24, 144, 255, 0.2)' : '',
         width: '100%',
         height: '100%',
-
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -87,8 +86,7 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
         const { hidden } = this.state;
 
         return (
-            <div
-                ref={(ref) => this.com = ref}
+            <li
                 className={`mc-listheader-viewlist-buttongroup__item ${map_gvi_selected ? 'is-selected' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
@@ -110,13 +108,11 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
                                 >
                                     {map_gvi_txt}
                                 </label>
-                                {/* </Droppable> */}
-                                {provided.placeholder}
                             </div >
                         )
                     }
-                </Draggable >
-            </div>
+                </Draggable>
+            </li >
         );
     }
 }
