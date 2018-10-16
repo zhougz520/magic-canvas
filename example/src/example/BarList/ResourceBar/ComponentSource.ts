@@ -325,6 +325,12 @@ const basePage: IBasePage[] = [
                                 p: {
                                     id: 'cs1.cs7'
                                 }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridPage',
+                                p: {
+                                    id: 'cs1.cs8'
+                                }
                             }
                         ]
                     }
