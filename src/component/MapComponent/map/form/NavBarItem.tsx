@@ -2,7 +2,7 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { MapConsumer } from '../MapConsumer';
-import * as DragStyle from '../../DragStyle';
+import * as DragStyle from '../DragStyle';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;

@@ -3,7 +3,7 @@ import { MapComponent } from '../../../index';
 import { IFieldProps } from './IFieldProps';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { Checkbox } from 'antd';
-import * as DragStyle from '../DragStyle';
+import * as DragStyle from '../../DragStyle';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
