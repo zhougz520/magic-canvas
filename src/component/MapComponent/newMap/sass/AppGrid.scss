@@ -245,7 +245,7 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                                 margin-left: -6px;
                                 margin-right: -6px;
                                 height: 41px;
-                                .menu-container{
+                                .drag-container{
                                     line-height: 41px;
                                     list-style: none;
                                 }
@@ -278,7 +278,7 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                                     margin: 0px;
                                     padding: 0px;
                                     .menuItem{
-                                        display: inline-flex;
+                                        float: right;
                                     }
                                 }
 
