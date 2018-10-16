@@ -102,6 +102,7 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
                 className={`menuItem`}
                 ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
+                onDoubleClick={doChildDbClickToEdit}
             >
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {
@@ -115,7 +116,6 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
                                 <Dropdown overlay={menu}>
                                     <Button
                                         className={`${selectedId === id ? 'map-select-open' : ''}`}
-                                        onDoubleClick={doChildDbClickToEdit}
                                     >
                                         <label
                                             ref={(ref) => this.editCom = ref}

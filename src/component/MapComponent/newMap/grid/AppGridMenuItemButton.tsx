@@ -89,9 +89,7 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
         return (
             <div
                 className={`menuItem`}
-                ref={(ref) => {
-                    this.com = ref;
-                }}
+                ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >
