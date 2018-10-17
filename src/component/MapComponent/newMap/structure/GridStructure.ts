@@ -61,6 +61,12 @@ export const gridDetail = {
                 p: {
                     id: '[cid].cs7'
                 }
+            },
+            {
+                t: 'MapComponent/newMap/grid/AppGridPage',
+                p: {
+                    id: '[cid].cs8'
+                }
             }
         ]
     }

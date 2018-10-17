@@ -162,7 +162,7 @@ const basePage: IBasePage[] = [
                     }
                 }
             },
-            { t: 'MapComponent/newMap/grid/base/AppGridContainer', p: { name: '列表', w: 600, h: 500, type: 'base' } },
+            { t: 'MapComponent/newMap/grid/base/AppGridContainer', p: { name: '列表', w: 600, h: 550, type: 'base' } },
             { t: 'MapComponent/newMap/grid/AppFindAdvancedItem', p: { name: '高级搜索组件' } },
             { t: 'MapComponent/newMap/grid/AppGridViewItem', p: { name: '视图标签' } },
             { t: 'MapComponent/newMap/grid/AppGridMenuItemButton', p: { name: '按钮' } },
