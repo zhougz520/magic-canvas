@@ -25,6 +25,7 @@ import { AppGridView } from '../AppGridView';
 import { AppGridTitle } from '../AppGridTitle';
 import { AppGridMenu } from '../AppGridMenu';
 import { AppGrid } from '../AppGrid';
+import { AppGridPage } from '../AppGridPage';
 
 import { Map, List, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
@@ -52,7 +53,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     private appGridTitle: JSX.Element | null = null;
     private appGridMenu: JSX.Element | null = null;
     private appGrid: JSX.Element | null = null;
-    // private appGridPage: JSX.Element | null = null;
+    private appGridPage: JSX.Element | null = null;
     // private modalMenu: JSX.Element | null = null;
 
     private _padding: number = 8;
@@ -249,8 +250,8 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                 { pTitle: '显示视图', pKey: 'showAppGridView', pValue: appGridContainerState.getShowAppGridView(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示标题', pKey: 'showAppGridTitle', pValue: appGridContainerState.getShowAppGridTitle(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示表头', pKey: 'showAppGridMenu', pValue: appGridContainerState.getShowAppGridMenu(), pType: PropertiesEnum.SWITCH },
-                { pTitle: '显示分页', pKey: 'showAppGridPage', pValue: appGridContainerState.getShowAppGridPage(), pType: PropertiesEnum.SWITCH },
-                { pTitle: '显示对话框按钮', pKey: 'showModalMenu', pValue: appGridContainerState.getShowModalMenu(), pType: PropertiesEnum.SWITCH }
+                { pTitle: '显示分页', pKey: 'showAppGridPage', pValue: appGridContainerState.getShowAppGridPage(), pType: PropertiesEnum.SWITCH }
+                // { pTitle: '显示对话框按钮', pKey: 'showModalMenu', pValue: appGridContainerState.getShowModalMenu(), pType: PropertiesEnum.SWITCH }
             );
             propertyGroup = propertyGroup.add(
                 { groupTitle: '列表属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
@@ -363,6 +364,11 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                     {/* AppGrid */}
                     {
                         this.appGrid
+                    }
+
+                    {/* AppGridPage */}
+                    {
+                        appGridContainerState.getShowAppGridPage() ? this.appGridPage : ''
                     }
 
                 </div>
@@ -490,6 +496,23 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                     case 'MapComponent/newMap/grid/AppGrid':
                         this.appGrid = (
                             <AppGrid
+                                ref={`c.${id}`}
+                                theme={appGridContainerState.getTheme()}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={this.selectComChange}
+                                setChildPropertyGroup={this.setChildPropertyGroup}
+                                doChildDbClickToEdit={this.doChildDbClickToEdit}
+                                updateProps={this.updateProps}
+                                getRefs={this.getRefs}
+                                stateData={childData}
+                                {...component.p}
+                            />
+                        );
+                        break;
+                    case 'MapComponent/newMap/grid/AppGridPage':
+                        this.appGridPage = (
+                            <AppGridPage
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
                                 pageMode={pageMode}

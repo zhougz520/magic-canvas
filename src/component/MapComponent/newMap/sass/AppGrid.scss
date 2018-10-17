@@ -333,6 +333,7 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                         margin-left: 0px;
                         margin-right: 125px;
                         overflow: hidden;
+                        position: relative;
                     }
                     .map-grid-columns-lock {
                         padding-bottom: 0;
@@ -455,6 +456,96 @@ $SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
                                 padding: 15px;
                                 text-align: left;
                                 padding-left: 35px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .map-simple-pager {
+            border: 0px;
+            height: auto;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 10px 0 0 0;
+            position: initial;
+
+            .el-pagination {
+                white-space: nowrap;
+                padding: 2px 5px;
+                color: #666;
+                overflow: hidden;
+                height: 28px;
+
+                .el-pagination__rightwrapper {
+                    float: right;
+
+                    .ant-btn {
+                        height: 26px;
+                        float: left;
+                        display: block;
+                        background: 50% center / 16px no-repeat rgb(255, 255, 255);
+                        border-width: 1px;
+                        border-style: solid;
+                        border-color: rgb(217, 217, 217);
+                        border-image: initial;
+                        margin: 0px;
+                        border-radius: 3px;
+                        padding: 0px 5px;
+                    }
+
+                    .el-pager {
+                        display: block;
+                        float: left;
+                        min-height: 28px;
+                        min-width: 10px;
+                        user-select: none;
+                        font-size: 0px;
+                        list-style: none;
+                        padding: 0px;
+                        margin: 0px;
+                    }
+
+                    .el-pagination__jump {
+                        float: left;
+                        display: block;
+                        margin-left: 10px;
+
+                        .ant-input {
+                            height: 26px;
+                            width: 30px;
+                            margin-left: 6px;
+                            margin-right: 6px;
+                            text-align: center;
+                            border-radius: 3px;
+                        }
+                    }
+                }
+
+                .el-pagination__total {
+                    margin-left: 0px;
+                    color: rgb(34, 34, 34);
+                    margin: 0px 10px;
+                }
+
+                .el-pagination__sizes {
+                    margin: 0px 10px 0px 0px;
+
+                    .ant-select {
+                        height: 26px;
+
+                        .ant-select-selection {
+                            height: 26px;
+                            border-radius: 3px;
+
+                            .ant-select-selection__rendered {
+                                height: 24px;
+                                line-height: 24px;
+
+                                .ant-select-selection-selected-value {
+                                    height: 24px;
+                                }
                             }
                         }
                     }
