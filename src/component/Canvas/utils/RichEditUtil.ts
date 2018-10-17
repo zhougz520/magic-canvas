@@ -114,7 +114,7 @@ export class RichEditUtil {
     keepWingmanFocus = () => {
         // 如果页面焦点不在僚机上
         // 判断如果有选择组件、并且焦点在body上：把焦点设置到僚机上
-        if (document.activeElement.id !== 'wingman') {
+        if (document.activeElement && document.activeElement.id !== 'wingman') {
             if (this._canvas._canvasGlobalParam.isSelectedComponent() && document.activeElement.tagName === 'BODY') {
                 if (this._canvas._isRichEditMode === false) {
                     this._canvas.getWingman().setFocus();
