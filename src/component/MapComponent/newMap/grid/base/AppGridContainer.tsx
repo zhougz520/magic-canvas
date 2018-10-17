@@ -16,6 +16,7 @@ import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../Universal
 import { IComponent } from '../../IComponent';
 import { AppGridContainerState, IAppGridContainerState as ICustomState } from './AppGridContainerState';
 import { IComData } from '../../model/types';
+import { gridDetail } from '../../structure';
 
 import { AppProjectTree } from '../AppProjectTree';
 import { AppFindOrdinary } from '../AppFindOrdinary';
@@ -62,8 +63,14 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         super(props, context);
 
         const { childData } = this.props;
+        let structureData: any = null;
+        if (childData === undefined) {
+            structureData = JSON.parse(
+                JSON.stringify(clone(gridDetail.p)).replace(/\[cid\]/g, this.props.baseState.getCurrentContent().getCid())
+            );
+        }
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new AppGridContainerState({ childData })),
+            baseState: this.initBaseStateWithCustomState(new AppGridContainerState({ childData: structureData })),
             unfoldAdv: true,
             selectedId: null,
             hidden: false
@@ -281,7 +288,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         const { hidden, unfoldAdv } = this.state;
         const appGridContainerState: AppGridContainerState = this.getCustomState();
 
-        const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
+        const childData = appGridContainerState.getChildData() && appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
         if (childData && childData.components && childData.components.length > 0) {
             this.initCom(childData.components, clone(childData));
         }

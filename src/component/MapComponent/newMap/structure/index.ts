@@ -1,0 +1,1 @@
+export { gridDetail } from './GridStructure';
