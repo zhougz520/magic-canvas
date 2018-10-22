@@ -157,8 +157,8 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         this.setState({
             hover: {}
         });
-        if (data === undefined) {
-            const { selectedId, stateData, dragChangeField } = this.props;
+        const { selectedId, stateData, dragChangeField, id } = this.props;
+        if (data === undefined && selectedId.substring(0, selectedId.lastIndexOf('.')) === id.substring(0, id.lastIndexOf('.'))) {
             // 判断是否是字段换位置
             const items = this.findComponentParent(stateData, selectedId);
             let targetIndex = -1;
@@ -214,7 +214,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         }
 
         // 获取refs（context中的）
-        const id: string = this.props.id;
+        // const id: string = this.props.id;
         const ids: string[] = id.split('.');
         let currId: string = `c.${id}`;
         let currRef: any;

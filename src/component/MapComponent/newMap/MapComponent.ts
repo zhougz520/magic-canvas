@@ -491,8 +491,8 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      */
     public handleDropAddComponent = (e: any) => {
         const data: any = this.getAddComponent();
+        const { selectedId, stateData, dragChangeField, id } = this.props;
         if (data === undefined) {
-            const { selectedId, stateData, dragChangeField } = this.props;
             // 判断是否是字段换位置
             const items = this.findComponentParent(stateData, selectedId as string);
             let targetIndex = -1;
@@ -533,7 +533,10 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
                     }
                 }
             }
-
+            // 如果字段不在同一分组中，则直接跳过
+            if (selectedId && selectedId.substring(0, selectedId.lastIndexOf('.')) !== id.substring(0, id.lastIndexOf('.'))) {
+                return;
+            }
             const currentIndex = items.findIndex((item: any) => item.p.id === selectedId);
             // let lastTargetIndex = items.findIndex((item: any) => item.p.id === e.target.id);
             if (targetIndex !== -1 && currentIndex !== targetIndex) {
@@ -553,7 +556,6 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         }
 
         // 获取refs（context中的）
-        const id: string = this.props.id;
         const ids: string[] = id.split('.');
         let currId: string = `c.${id}`;
         let currRef: any;
