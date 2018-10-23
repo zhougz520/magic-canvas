@@ -1,6 +1,4 @@
-$SELECT_BORDERCOLOR: rgba(24, 144, 255, 1);
-$SELECT_BACKCOLOR: rgba(24, 144, 255, 0.3);
-
+@import './common.scss';
 .page-appgrid {
     .map-title {
         width: 100%;

@@ -69,6 +69,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
         const currFieldList = this.initFieldList(fieldList);
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
+                className={`${selectedId === id ? 'map-select-open' : ''}`}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
@@ -100,7 +101,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
         return (
             <div
                 ref={(ref) => this.com = ref}
-                className={`section-tb ${selectedId === id ? 'map-select-open' : ''}`}
+                className={`section-tb `}
                 style={Object.assign({}, hover)}
                 onDragOver={this.handleOver}
                 onMouseDown={this.selectedCom}

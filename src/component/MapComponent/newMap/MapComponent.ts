@@ -586,9 +586,15 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (result.type === 'field-row') {
             this.onDragEndBoard(result);
         }
+        // 如果两边droppableId不一样，则跳过
+        if (result.source && result.destination
+            && (result.destination.droppableId !== result.source.droppableId    // 如果目标和操作项不在同一 drag组内
+                || (result.destination.droppableId === result.source.droppableId && result.destination.index === result.source.index))) { // 如果在同一组内，但是没有位置改变
+            return;
+        }
         const { p, id } = this.props;
         // dropped outside the list
-        if (!result.destination || result.destination.index < 0) {
+        if ((!result.destination || result.destination.index < 0)) {
             return;
         }
         const currComs: any = this.findComponentParentByInitId(p, id, result.draggableId) === undefined ? p.components : this.findComponentParentByInitId(p, id, result.draggableId);

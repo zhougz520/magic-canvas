@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-import { AppMenuItem } from './AppMenuItem';
+import { AppGridMenuItemButton } from '../grid/AppGridMenuItemButton';
+import { AppGridMenuItemDropdown } from '../grid/AppGridMenuItemDropdown';
 import { TabForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { Theme } from '../model/types';
@@ -67,21 +68,40 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                             getRefs={getRefs}
                         />
                     );
-                } else if (t === 'MapComponent/newMap/form/AppGridMenuItem') {
+                } else if (t === 'MapComponent/newMap/grid/AppGridMenuItemButton') {
                     tabFormFootList.push(
-                        <AppMenuItem
-                            key={com.p.id}
-                            {...com.p}
+                        <AppGridMenuItemButton
                             ref={`c.${com.p.id}`}
+                            key={com.p.id}
                             index={index}
+                            {...com.p}
+                            theme={theme}
                             pageMode={pageMode}
                             selectedId={selectedId}
                             selectComChange={selectComChange}
                             setChildPropertyGroup={setChildPropertyGroup}
                             doChildDbClickToEdit={doChildDbClickToEdit}
-                            stateData={stateData}
                             updateProps={updateProps}
                             getRefs={getRefs}
+                            stateData={stateData}
+                        />
+                    );
+                } else if (t === 'MapComponent/newMap/grid/AppGridMenuItemDropdown') {
+                    tabFormFootList.push(
+                        <AppGridMenuItemDropdown
+                            ref={`c.${com.p.id}`}
+                            key={com.p.id}
+                            index={index}
+                            {...com.p}
+                            theme={theme}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
+                            selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            stateData={stateData}
                         />
                     );
                 }
@@ -126,9 +146,21 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                     </Droppable>
                 </DragDropContext>
                 <div className={`form-foot`} style={{ display: map_form_foot_show ? '' : 'none' }}>
-                    <ul>
-                        {tabFormFootList.length > 0 ? tabFormFootList : ''}
-                    </ul>
+                    <DragDropContext onDragEnd={this.onDragEnd} >
+                        <Droppable droppableId="droppable-tabFormFoot" direction="horizontal" >
+                            {
+                                (provided: DroppableProvided) =>
+                                    (
+                                        <div
+                                            ref={provided.innerRef}
+                                            style={{ margin: '10px 0', height: '40px', width: '100%', lineHeight: '40px', textAlign: 'center', display: 'inline-block' }}
+                                        >
+                                            {tabFormFootList.length > 0 ? tabFormFootList : ''}
+                                        </div>
+                                    )
+                            }
+                        </Droppable>
+                    </DragDropContext>
                 </div>
             </div >
         );
@@ -180,34 +212,36 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
     }
 
     /*重载添加组件*/
-    // public componentCanBeAdded(t: string) {
-    //     return (t === 'MapComponent/newMap/form/NavBarItem');
-    // }
+    public componentCanBeAdded(t: string) {
+        return (t === 'MapComponent/newMap/form/TabForm') ||
+            (t === 'MapComponent/newMap/grid/AppGridMenuItemButton') ||
+            (t === 'MapComponent/newMap/grid/AppGridMenuItemDropdown');
+    }
 
     public onChangeItem = (navBarId: string) => {
         this.props.updateProps(this.props.id, {
             map_form_sni: navBarId
         });
     }
-    /**
-     * override
-     */
-    public addChildComponent = (id: string, data: any, addData: any): any => {
-        // if (addData.t === 'MapComponent/newMap/form/NavBarItem') {
-        //     const newNavBarItem = this.getChildComponent(id, data, addData);
-        //     let childId = newNavBarItem.p.id;
-        //     const tabForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/TabForm' });
-        //     childId = tabForm.p.id;
-        //     const tabItem = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/TabItem' });
-        //     childId = tabItem.p.id;
-        //     const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/SectionForm' });
-        //     childId = sectionForm.p.id;
-        //     const section = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/Section' });
-        //     childId = section.p.id;
-        //     this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/field/InputField' });
-        // }
+    // /**
+    //  * override
+    //  */
+    // public addChildComponent = (id: string, data: any, addData: any): any => {
+    //     // if (addData.t === 'MapComponent/newMap/form/NavBarItem') {
+    //     //     const newNavBarItem = this.getChildComponent(id, data, addData);
+    //     //     let childId = newNavBarItem.p.id;
+    //     //     const tabForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/TabForm' });
+    //     //     childId = tabForm.p.id;
+    //     //     const tabItem = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/TabItem' });
+    //     //     childId = tabItem.p.id;
+    //     //     const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/SectionForm' });
+    //     //     childId = sectionForm.p.id;
+    //     //     const section = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/Section' });
+    //     //     childId = section.p.id;
+    //     //     this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/field/InputField' });
+    //     // }
 
-        // this.props.updateProps('', data);
-    }
+    //     // this.props.updateProps('', data);
+    // }
 }
 export const AppForm = AppFormClass;

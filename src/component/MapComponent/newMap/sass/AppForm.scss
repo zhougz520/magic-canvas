@@ -1,23 +1,4 @@
-$form-field-cal-ico-width: 36px;
-$form-field-cal-ico-height: 19px;
-$form-field-cal-btn-img-url: '../../../imges/map/btn_off_cal.png';
-$form-field-cal-btn-disabled-img-url: '../../../imges/map/btn_dis_cal.png';
-$SELECT_STYLE: 0 0 0 2px rgba(24, 144, 255, 0.2);
-table {
-    border-collapse: collapse;
-}
-
-.bar-show {
-    display: block;
-}
-
-.bar-hide {
-    display: none;
-}
-
-.map-select-open {
-    box-shadow: $SELECT_STYLE;
-}
+@import './common.scss';
 
 .page-newmap-appform {
     display: flex;
