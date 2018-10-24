@@ -42,7 +42,7 @@ export class PageAction {
         const { cid, template } = param;
         if (template !== null) {
             const com: IComponent | null = this._canvas.getComponent(cid);
-            if (com && com.getComType() === 'Comments') {
+            if (com  && (com as any).initTemplate) {
                 (com as any).initTemplate(template);
             }
         }

@@ -32,6 +32,9 @@ const { cx } = FbjsUtils;
 const clone = require('clone');
 
 import { Map, OrderedSet, List } from 'immutable';
+import { Icon } from 'antd';
+import { getPluginConfig, PluginMap } from '../../../plugin';
+import { Template } from './Template';
 
 // tslint:disable-next-line:no-empty-interface
 export interface ITableProps extends IBaseProps { }
@@ -141,7 +144,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
     public setRichChildNode = (param: any): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            richChildNode: param.value
+            richChildNode: param.value ? param.value : param
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
@@ -355,6 +358,17 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
             }) as any);
         }
     }
+    /**
+     * 加载模版
+     * @param template 模版
+     */
+    public initTemplate = (template: string) => {
+        const customData: any = clone((Template as any)[template]);
+        if (customData) {
+            const contentState: any = convertFromDataToCustomState(customData);
+            this.setCustomState(contentState);
+        }
+    }
 
     render() {
         const { hidden } = this.state;
@@ -383,6 +397,9 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                     onDoubleClick={this.doDbClickToEdit}
                 >
                     {hidden ? '' : this.getRichChildNode()}
+                    <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
+                        <Icon type="setting" className="setting" onClick={this.initTableTemplate} />
+                    </div>
                 </div>
                 <HotTable
                     id={`hot-${this.getCid()}`}
@@ -592,6 +609,16 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
 
             const newTableState: TableState = TableState.set(this.getCustomState(), Map({ colWidths }));
             this.setCustomState(newTableState, true);
+        }
+    }
+
+    /**
+     * 调用模版窗口
+     */
+    private initTableTemplate = () => {
+        const templateFunc = getPluginConfig(PluginMap.OPEN_COMMENTSTEMPLATE_FUNC);
+        if (templateFunc) {
+            templateFunc(this.getCid());
         }
     }
 }

@@ -12,7 +12,7 @@ export enum PluginMap {
 let __config: Map<string, any> = Map();
 
 export const addPluginConfig = (key: string, config: any) => {
-  __config = __config.set(key, config);
+    __config = __config.set(key, config);
 };
 
 export const getPluginConfig = (key: string) => {
