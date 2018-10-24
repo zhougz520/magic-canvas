@@ -36,14 +36,16 @@ import { Icon } from 'antd';
 import { getPluginConfig, PluginMap } from '../../../plugin';
 import { Template } from './Template';
 
-// tslint:disable-next-line:no-empty-interface
+// tslint:disable:no-empty-interface
 export interface ITableProps extends IBaseProps { }
 
 export interface ITableState extends IBaseState {
     hidden: boolean;
+    hover: boolean;
 }
 
 /* tslint:disable:jsx-no-multiline-js no-console */
+// tslint:disable:jsx-no-lambda
 export default class Table extends BaseComponent<ITableProps, ITableState> {
     private hot: HotTable | null = null;
 
@@ -71,7 +73,8 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                 colHeaders: true,
                 rowHeaders: true
             }), '表格'),
-            hidden: false
+            hidden: false,
+            hover: false
         };
     }
 
@@ -371,7 +374,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
     }
 
     render() {
-        const { hidden } = this.state;
+        const { hidden, hover } = this.state;
         const customTableState: TableState = this.getCustomState();
 
         return (
@@ -395,10 +398,12 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                     onMouseDown={this.onTitleMouseDown}
                     onMouseUp={this.onTitleMouseUp}
                     onDoubleClick={this.doDbClickToEdit}
+                    onMouseEnter={() => { this.setState({ hover: true }); }}
+                    onMouseLeave={() => { this.setState({ hover: false }); }}
                 >
                     {hidden ? '' : this.getRichChildNode()}
                     <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
-                        <Icon type="setting" className="setting" onClick={this.initTableTemplate} />
+                        {hover === true ? <Icon type="setting" className="setting" onClick={this.initTableTemplate} /> : ''}
                     </div>
                 </div>
                 <HotTable
