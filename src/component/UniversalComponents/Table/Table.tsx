@@ -147,7 +147,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
     public setRichChildNode = (param: any): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
-            richChildNode: param.value ? param.value : param
+            richChildNode: param.value
         }) as ContentState;
         const newBaseState = BaseState.push(oldBaseState, newContent);
 
@@ -621,7 +621,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
      * 调用模版窗口
      */
     private initTableTemplate = () => {
-        const templateFunc = getPluginConfig(PluginMap.OPEN_COMMENTSTEMPLATE_FUNC);
+        const templateFunc = getPluginConfig(PluginMap.OPEN_TEMPLATE_FUNC);
         if (templateFunc) {
             templateFunc(this.getCid());
         }

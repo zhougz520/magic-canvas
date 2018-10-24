@@ -21,7 +21,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
             componentPosition: props.config.componentPosition
         };
 
-        this.props.openCommentsTemplateModal && addPluginConfig(PluginMap.OPEN_COMMENTSTEMPLATE_FUNC, this.props.openCommentsTemplateModal);
+        this.props.openTemplateModal && addPluginConfig(PluginMap.OPEN_TEMPLATE_FUNC, this.props.openTemplateModal);
     }
 
     /**

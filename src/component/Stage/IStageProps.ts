@@ -44,6 +44,6 @@ export interface IStageProps {
     // 获取选中的组件属性，传给PropertyTool
     onPropertyProperties?: (propertyGroup: OrderedSet<IPropertyGroup>) => void;
 
-    // 打开批注模版窗口
-    openCommentsTemplateModal?: (cid: string) => void;
+    // 打开模版窗口
+    openTemplateModal?: (cid: string) => void;
 }
