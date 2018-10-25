@@ -37,8 +37,8 @@ export class PageAction {
         this._canvas._drawUtil.clearDragBox();
     }
 
-    // 加载批注模版
-    initTemplateComments = (param: { cid: string; template: string | null; }) => {
+    // 加载模版
+    initTemplate = (param: { cid: string; template: string | null; }) => {
         const { cid, template } = param;
         if (template !== null) {
             const com: IComponent | null = this._canvas.getComponent(cid);
