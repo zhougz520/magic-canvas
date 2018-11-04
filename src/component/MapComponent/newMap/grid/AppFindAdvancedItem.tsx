@@ -73,7 +73,7 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
         propertyList = propertyList.push(
             { pTitle: '显示名称', pKey: 'map_fa_txt', pValue: map_fa_txt, pType: PropertiesEnum.INPUT_TEXT },
             { pTitle: '显示方式', pKey: 'map_fa_type', pValue: map_fa_type, pType: PropertiesEnum.SELECT, pList: typeList },
-            { pTitle: '备选项', pKey: 'map_fa_btn', pValue: map_fa_btn, pType: PropertiesEnum.INPUT_TEXTAREA }
+            { pTitle: '备选项', pKey: 'map_fa_btn', pValue: map_fa_btn, pType: PropertiesEnum.INPUT_LIST }
         );
         propertyGroup = propertyGroup.add(
             { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
