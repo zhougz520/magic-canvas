@@ -18,6 +18,8 @@ export interface IBaseProps {
     p: any;
     // childData集合
     stateData?: any;
+    // 拖拽index
+    index?: number;
 
     selectComChange: (e: any, id: string) => void;
     setChildPropertyGroup: (childPropertyGroup: OrderedSet<IPropertyGroup>) => void;
@@ -25,6 +27,4 @@ export interface IBaseProps {
     updateProps: (id: string, data: any) => void;
     dragChangeField?: (fieldList: any) => void;
     getRefs?: () => any;
-
-    index?: number;
 }

@@ -1,29 +1,22 @@
 import * as React from 'react';
 import { MapComponent } from '../../index';
 import { IFieldProps } from './IFieldProps';
-// import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
+import { IFieldState } from './IFieldState';
+
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
 import { getStateClass, getFieldCommonPropertyList } from './common/util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
-// import { Checkbox } from 'antd';
 
-/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent */
-export interface ICurrProps extends IFieldProps {
-	map_form_f_title: string;
-	map_form_f_default: string;
-	map_form_f_state: string;
-	map_form_f_cols: number;
-	map_form_f_disabled: boolean;
-	map_form_f_hidden_t: boolean;
-	map_form_f_type: string;
-	titleWidth: number;
-	currUnit: number;
-	index: number;
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
+export interface IMapProps extends IFieldProps {
 }
 
-export class CheckBoxField extends MapComponent<ICurrProps, any> {
+export interface IMapState extends IFieldState {
+}
+
+export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
