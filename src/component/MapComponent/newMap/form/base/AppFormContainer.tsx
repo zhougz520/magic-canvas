@@ -12,16 +12,14 @@ import {
     IFont
 } from '../../../../BaseComponent';
 import {
-    //  PropertiesEnum,
-    IPropertyGroup,
-    IProperty
+    IPropertyGroup
 } from '../../../../UniversalComponents';
 
 import { IComponent } from '../../IComponent';
 import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
 import { IComData } from '../../model/types';
 
-import { Map, List, OrderedSet } from 'immutable';
+import { Map, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
 const clone = require('clone');
 
@@ -41,7 +39,6 @@ export interface IAppFormContainerState extends IBaseState {
 export default class AppFormContainer extends BaseComponent<IAppFormContainerProps, IAppFormContainerState> {
 
     private appForm: JSX.Element | null = null;
-    // private bottom: JSX.Element | null = null;
 
     private _padding: number = 8;
     private _isCanMove: boolean = false;
@@ -204,33 +201,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
 
         return result;
     }
-
-    // /**
-    //  * 删除控件
-    //  */
-    // public deleteComponentsById = (): any => {
-    //     const { selectedId } = this.state;
-    //     if (selectedId === null || GlobalUtil.isEmptyString(selectedId) || GlobalUtil.isUndefined(selectedId)) {
-    //         // 没有选中子控件，则直接返回
-    //         return false;
-    //     } else {
-    //         // 选中子控件，则删除，并返回true
-    //         const parentId = selectedId.substring(0, selectedId.lastIndexOf('.'));
-    //         const parent: any = this.getChildComponent(parentId);
-    //         if (parent && selectedId) {
-    //             const components = parent.props.p.components;
-    //             if (components) {
-    //                 const idx = components.findIndex((com: any) => com.p.id === selectedId);
-    //                 if (idx >= 0) {
-    //                     components.splice(idx, 1);
-    //                 }
-    //                 this.updateProps(parentId, { p: { components } });
-    //             }
-    //         }
-    //     }
-
-    //     return true;
-    // }
     /************************************* end 富文本 ****************************************/
 
     /************************************* begin 属性设置 ****************************************/
@@ -242,23 +212,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             // 选中子组件，显示子组件的属性栏
             return this._childPropertyGroup;
         } else {
-            // const appFormContainerState: AppFormContainerState = this.getCustomState();
-            let propertyList: List<IProperty> = List();
-            let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
-
-            // 列表属性
-            propertyList = propertyList.push(
-                // { pTitle: '标题', pKey: 'title', pValue: appFormContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT },
-                // { pTitle: '主题', pKey: 'theme', pValue: appFormContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT }
-                // { pTitle: '显示项目控件', pKey: 'showAppProjectTree', pValue: appFormContainerState.getShowHeader(), pType: PropertiesEnum.SWITCH },
-                // { pTitle: '显示普通查询', pKey: 'showAppFindOrdinary', pValue: appFormContainerState.getShowBottom(), pType: PropertiesEnum.SWITCH }
-            );
-            propertyGroup = propertyGroup.add(
-                { groupTitle: '列表属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
-            );
-            propertyList = List();
-
-            return propertyGroup;
+            return OrderedSet();
         }
     }
 
@@ -275,12 +229,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 obj[pKey] = pValue;
                 this.updateProps(selectedId, obj);
             }
-        } else {
-            let properties = Map();
-            properties = properties.set(pKey, pValue);
-            const newAppFormContainerState: AppFormContainerState = AppFormContainerState.set(this.getCustomState(), properties);
-
-            this.setCustomState(newAppFormContainerState, true, callback);
         }
     }
     /************************************* end 属性设置 ****************************************/

@@ -5,43 +5,34 @@ import { GlobalUtil } from '../../../util';
 import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
 
+// tslint:disable-next-line:no-empty-interface
 export interface IMapProps extends IBaseProps {
-    updateProps: (cid: string, updateProp: any) => void;
-    map_gm_txt?: string;
 }
+// tslint:disable-next-line:no-empty-interface
 export interface IMapState extends IBaseState {
-    dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-no-multiline-js
 // tslint:disable:no-shadowed-variable
 // tslint:disable:jsx-wrap-multiline
 export class SectionFormClass extends MapComponent<IMapProps, any> {
-    static defaultProps = {
-        map_gm_txt: '标题',
-        selectedId: undefined
-    };
-
-    public menus: HTMLElement | null = null;
+    static defaultProps = {};
     private sectionList: any;
 
     constructor(props: IMapProps, context?: any) {
         super(props, context);
         this.state = {
-            dragonDrop: null,
-            hover: {},
-            ...props
+            hover: {}
         };
     }
 
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
         background: isDragging ? DragStyle.BaseDragStyle.background : '',
-
         // styles we need to apply on draggables
         ...draggableStyle
     })
+
     render() {
         const { p, id, selectedId } = this.props;
         const { hover } = this.state;
@@ -55,7 +46,6 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
                 style={Object.assign({}, { width: '100%' }, hover)}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
-            // onMouseDown={this.selectedCom}
             >
                 <Droppable droppableId="droppable-sectionList" >
                     {this.sectionList}
@@ -105,6 +95,7 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/newMap/form/Section');
     }
+
     /**
      * override
      */
@@ -118,6 +109,7 @@ export class SectionFormClass extends MapComponent<IMapProps, any> {
 
         this.props.updateProps('', data);
     }
+
     // 更新控件属性
     private updateComProps = (data: any, id: string, prop: any) => {
         let newData: any = data;

@@ -6,11 +6,7 @@ import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beau
 import * as DragStyle from '../DragStyle';
 
 export interface IMapProps extends IBaseProps {
-    updateProps: (cid: string, updateProp: any) => void;
     map_form_st_name?: string;      // tab名称
-    selectOn?: string;              // 选中tab
-    map_form_st?: boolean;          // 是否显示tab
-    index?: number;
     tabSelected?: boolean;
     formState?: string;
     onChangeItem: (id: string) => void;
@@ -19,26 +15,19 @@ export interface IMapProps extends IBaseProps {
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref */
 export class TabItemClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        map_form_st_name: '标签页',
-        map_mi_sa: false,
-        map_mi_line: false,
-        map_form_st: '0',
-        map_form_sti: undefined
+        map_form_st_name: '标签页'
     };
 
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
-            hidden: false,
-            defaultValue: props.map_form_st_name || ''
+            hidden: false
         };
     }
 
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
         background: isDragging ? DragStyle.BaseDragStyle.background : '',
-
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -55,12 +44,6 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
         propertyList = propertyList.push(
             { pTitle: '标题', pKey: 'map_form_st_name', pValue: map_form_st_name, pType: PropertiesEnum.INPUT_TEXT }
         );
-        // propertyList = propertyList.push(
-        //     {
-        //         pTitle: '分区样式', pKey: 'map_form_st', pValue: map_form_st, pType: PropertiesEnum.SELECT,
-        //         pList: [{ key: '0', value: '无边框' }, { key: '1', value: '有边框' }, { key: '2', value: '标签页显示' }]
-        //     }
-        // );
         // 组件属性整理
         propertyGroup = propertyGroup.add(
             { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }

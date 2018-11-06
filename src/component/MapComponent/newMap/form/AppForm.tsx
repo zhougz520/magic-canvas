@@ -4,27 +4,19 @@ import { AppGridMenuItemButton } from '../grid/AppGridMenuItemButton';
 import { AppGridMenuItemDropdown } from '../grid/AppGridMenuItemDropdown';
 import { TabForm } from './index';
 import { GlobalUtil } from '../../../util';
-import { Theme } from '../model/types';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 
 export interface IMapProps extends IBaseProps {
-    showTabItems: boolean;
-    map_form_sni?: string;
-    map_form_header_show?: boolean;
-    map_form_foot_show?: boolean;
-    map_form_title: string;
-    theme?: Theme;
+    map_form_header_show?: boolean;     // 显示标题
+    map_form_foot_show?: boolean;       // 显示底部
+    map_form_title: string;             // 标题
 }
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref */
 export class AppFormClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
-        selectedId: undefined,
-        showTabItems: true,
-        map_form_sni: undefined,
-        theme: '',
         map_form_header_show: true,
         map_form_foot_show: true,
         map_form_title: '标题'
@@ -176,14 +168,8 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
 
         // 列表属性
         propertyList = propertyList.push(
-            { pTitle: '显示标题', pKey: 'map_form_header_show', pValue: map_form_header_show, pType: PropertiesEnum.SWITCH }
-        );
-        if (map_form_header_show) {
-            propertyList = propertyList.push(
-                { pTitle: '标题', pKey: 'map_form_title', pValue: map_form_title, pType: PropertiesEnum.INPUT_TEXT }
-            );
-        }
-        propertyList = propertyList.push(
+            { pTitle: '显示标题', pKey: 'map_form_header_show', pValue: map_form_header_show, pType: PropertiesEnum.SWITCH },
+            { pTitle: '标题', pKey: 'map_form_title', pValue: map_form_title, pType: PropertiesEnum.INPUT_TEXT },
             { pTitle: '显示底部', pKey: 'map_form_foot_show', pValue: map_form_foot_show, pType: PropertiesEnum.SWITCH }
         );
         propertyGroup = propertyGroup.add(
@@ -217,31 +203,5 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/newMap/grid/AppGridMenuItemButton') ||
             (t === 'MapComponent/newMap/grid/AppGridMenuItemDropdown');
     }
-
-    public onChangeItem = (navBarId: string) => {
-        this.props.updateProps(this.props.id, {
-            map_form_sni: navBarId
-        });
-    }
-    // /**
-    //  * override
-    //  */
-    // public addChildComponent = (id: string, data: any, addData: any): any => {
-    //     // if (addData.t === 'MapComponent/newMap/form/NavBarItem') {
-    //     //     const newNavBarItem = this.getChildComponent(id, data, addData);
-    //     //     let childId = newNavBarItem.p.id;
-    //     //     const tabForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/TabForm' });
-    //     //     childId = tabForm.p.id;
-    //     //     const tabItem = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/TabItem' });
-    //     //     childId = tabItem.p.id;
-    //     //     const sectionForm = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/SectionForm' });
-    //     //     childId = sectionForm.p.id;
-    //     //     const section = this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/Section' });
-    //     //     childId = section.p.id;
-    //     //     this.getChildComponent(childId, data, { t: 'MapComponent/newMap/form/field/InputField' });
-    //     // }
-
-    //     // this.props.updateProps('', data);
-    // }
 }
 export const AppForm = AppFormClass;

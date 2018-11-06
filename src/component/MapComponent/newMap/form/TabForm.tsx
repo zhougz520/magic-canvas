@@ -7,32 +7,15 @@ import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalCom
 import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
-// import { GlobalUtil } from '../../../util';
-// import {
-//     // DragDropContext,
-//     // Droppable,
-//     DroppableProvided,
-//     DroppableStateSnapshot
-// } from 'react-beautiful-dnd';
 
-// tslint:disable:jsx-no-string-ref
-// tslint:disable:jsx-no-multiline-js
 export interface IMapProps extends IBaseProps {
-    showNavBar: boolean;
-    showTabItems: boolean;
-    map_form_sti?: string;
-    map_form_st?: string;
+    map_form_sti?: string;      // 选中Tab
+    map_form_st?: string;       // 分区样式
 }
 
-// tslint:disable-next-line:no-empty-interface
-// tslint:disable:jsx-no-string-ref
-// tslint:disable:jsx-wrap-multiline
+// tslint:disable:jsx-wrap-multiline jsx-no-string-ref
 export class TabFormClass extends MapComponent<IMapProps, any> {
-    static defaultProps = {
-        selectedId: undefined,
-        showNavBar: true,
-        showTabItems: true
-    };
+    static defaultProps = {};
     private tabItems: any;
     constructor(props: any, context?: any) {
         super(props, context);
@@ -42,13 +25,12 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
     }
 
     public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-
         // change background colour if dragging
         background: isDragging ? DragStyle.BaseDragStyle.background : '',
-
         // styles we need to apply on draggables
         ...draggableStyle
     })
+
     /**
      * 获取组件属性列表
      */
@@ -58,15 +40,10 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
         // 列表属性
-        // propertyList = propertyList.push(
-        //     { pTitle: '标题', pKey: 'map_form_st_name', pValue: map_form_st_name, pType: PropertiesEnum.INPUT_TEXT }
-        // );
-        propertyList = propertyList.push(
-            {
-                pTitle: '分区样式', pKey: 'map_form_st', pValue: map_form_st, pType: PropertiesEnum.SELECT,
-                pList: [{ key: '0', value: '无边框' }, { key: '1', value: '有边框' }, { key: '2', value: '标签页显示' }]
-            }
-        );
+        propertyList = propertyList.push({
+            pTitle: '分区样式', pKey: 'map_form_st', pValue: map_form_st, pType: PropertiesEnum.SELECT,
+            pList: [{ key: '0', value: '无边框' }, { key: '1', value: '有边框' }, { key: '2', value: '标签页显示' }]
+        });
         // 组件属性整理
         propertyGroup = propertyGroup.add(
             { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
@@ -75,6 +52,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
 
         return propertyGroup;
     }
+
     // tslint:disable:no-shadowed-variable
     public render() {
         const { p, map_form_sti, map_form_st, pageMode, selectedId, selectComChange, index,

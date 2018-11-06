@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../index';
-// import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import {
     CheckBoxField,
     DataTimeField,
@@ -19,20 +18,15 @@ import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
-// import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-// tslint:disable:jsx-no-string-ref
-// tslint:disable:jsx-wrap-multiline
-// tslint:disable:jsx-no-multiline-js
+
 export interface IMapProps extends IBaseProps {
-    updateProps: (cid: string, updateProp: any) => void;
     map_form_ss?: boolean;              // 是否显示section的标题
     map_form_ss_name?: string;          // section标题
     map_form_ss_unit?: number;          // 一行展示的列数
     map_form_ss_tt_w?: number;          // 标题的宽度
-    index?: number;
 }
 
-/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref */
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref jsx-wrap-multiline */
 export class SectionClass extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_ss: true,
@@ -40,6 +34,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
         map_form_ss_unit: 2,
         map_form_ss_tt_w: 110
     };
+
     constructor(props: any, context?: any) {
         super(props, context);
         this.state = {
@@ -48,17 +43,17 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             fieldList: this.props.p !== undefined ? this.props.p.components : []
         };
     }
+
     componentWillReceiveProps(nextProps: any) {
         // 当接收到新的props的时候，将字段列表更新
         this.setState({
             fieldList: nextProps.p !== undefined ? nextProps.p.components : []
         });
     }
-    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
 
+    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
         // change background colour if dragging
         background: isDragging ? DragStyle.BaseDragStyle.background : '',
-
         // styles we need to apply on draggables
         ...draggableStyle
     })
@@ -124,17 +119,9 @@ export class SectionClass extends MapComponent<IMapProps, any> {
 
         // 列表属性
         propertyList = propertyList.push(
-            { pTitle: '显示标题', pKey: 'map_form_ss', pValue: map_form_ss, pType: PropertiesEnum.SWITCH }
-        );
-        if (map_form_ss) {
-            propertyList = propertyList.push(
-                { pTitle: '标题', pKey: 'map_form_ss_name', pValue: map_form_ss_name, pType: PropertiesEnum.INPUT_TEXT }
-            );
-        }
-        propertyList = propertyList.push(
-            { pTitle: '标题宽度', pKey: 'map_form_ss_tt_w', pValue: map_form_ss_tt_w, pType: PropertiesEnum.INPUT_NUMBER }
-        );
-        propertyList = propertyList.push(
+            { pTitle: '显示标题', pKey: 'map_form_ss', pValue: map_form_ss, pType: PropertiesEnum.SWITCH },
+            { pTitle: '标题', pKey: 'map_form_ss_name', pValue: map_form_ss_name, pType: PropertiesEnum.INPUT_TEXT },
+            { pTitle: '标题宽度', pKey: 'map_form_ss_tt_w', pValue: map_form_ss_tt_w, pType: PropertiesEnum.INPUT_NUMBER },
             { pTitle: '列数', pKey: 'map_form_ss_unit', pValue: map_form_ss_unit, pType: PropertiesEnum.INPUT_NUMBER }
         );
         // 组件属性整理
@@ -179,6 +166,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/newMap/form/field/TextField') ||
             (t === 'MapComponent/newMap/grid/AppGrid');
     }
+
     private initFieldList = (currFieldList: any) => {
         const { map_form_ss_unit, map_form_ss_tt_w, updateProps,
             pageMode, selectedId, selectComChange, setChildPropertyGroup, doChildDbClickToEdit, getRefs, stateData } = this.props;
@@ -474,22 +462,10 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                 }
             });
         }
-        // fieldList.forEach((row: any, index: number) => {
-        //     currRowList.push(
-        //         <div
-        //             className="field-list"
-        //             key={index}
-        //         >
-        //             {row}
-        //         </div>
-        //     );
-        // });
 
-        // (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
         return (
             <div
                 className={`section-td`}
-            // ref={provided.innerRef}
             >
                 {fieldList}
             </div>
