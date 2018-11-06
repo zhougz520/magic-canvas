@@ -247,7 +247,8 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 className="page-newmap-appform"
                 style={{
                     ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), true, this.isCanSelected()),
-                    border: '1px solid #d3d5d9'
+                    border: '1px solid #d3d5d9',
+                    backgroundColor: '#FFF'
                 }}
                 onMouseDown={this.fireSelectChange}
             >
