@@ -42,7 +42,7 @@
                         border: 1px solid #e7e7eb;
                         background-color: #f4f5f9;
                         padding-left: 18px;
-                        border-bottom: 1px solid #ccc;
+                        // border-bottom: 1px solid #ccc;
                     }
                     .tab-bar-content {
                         padding-bottom: 0;
@@ -74,6 +74,7 @@
                     }
                     .newTab:hover {
                         border-bottom: 3px solid #A0A3AB;
+                        bottom: -2px;
                         cursor: pointer;
                     }
                     .newTabOn {
@@ -86,7 +87,7 @@
                         border-top: none;
                     }
                     .tab-bar-title-line {
-                        border-bottom: 1px solid #A0A3AB;
+                        border-bottom: 1px solid #e7e7eb;
                         height: 40px;
                     }
                 }
@@ -101,7 +102,7 @@
                 }
             }
             .tab-bg {
-                border: 1px solid #e6e6e6;
+                // border: 1px solid #e6e6e6;
                 background-color: #fff;
                 vertical-align: top;
                 .tab-content {
@@ -158,8 +159,9 @@
             }
             .form-foot {
                 height: 67px;
-                margin: 20px;
-                border-top: 1px solid #dddddd;
+                margin-top: 20px;
+                margin-bottom: 20px;
+                border-top: 1px solid #e7e7eb;
                 .foot {
                     ul {
                         vertical-align: middle;

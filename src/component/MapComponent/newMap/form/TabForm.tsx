@@ -135,7 +135,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
 
         return (
             <div
-                className={`${map_form_st === '1' ? 'margin20-lr-t' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
+                className={`${map_form_st === '1' ? '' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
                 ref={(ref) => this.com = ref}
                 onMouseDown={this.selectedCom}
             >
