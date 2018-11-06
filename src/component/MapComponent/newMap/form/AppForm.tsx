@@ -144,10 +144,13 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                                 (provided: DroppableProvided) =>
                                     (
                                         <div
+                                            className={`foot`}
                                             ref={provided.innerRef}
                                             style={{ margin: '10px 0', height: '40px', width: '100%', lineHeight: '40px', textAlign: 'center', display: 'inline-block' }}
                                         >
-                                            {tabFormFootList.length > 0 ? tabFormFootList : ''}
+                                            <ul>
+                                                {tabFormFootList.length > 0 ? tabFormFootList : ''}
+                                            </ul>
                                         </div>
                                     )
                             }
