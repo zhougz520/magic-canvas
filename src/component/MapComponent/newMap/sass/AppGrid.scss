@@ -126,6 +126,70 @@
                                     vertical-align: top;
                                     width: 100%;
 
+                                    .mc-options {
+                                        padding-top: 2px;
+                                        padding-bottom: 2px;
+                                        padding-right: 60px;
+                                        height: 28px;
+                                        overflow: hidden;
+                                        position: relative;
+
+                                        .mc-options__list {
+                                            content: "";
+                                            display: block;
+                                            clear: both;
+
+                                            .mc-options__item {
+                                                max-width: 160px;
+                                                overflow: hidden;
+                                                vertical-align: top;
+                                                text-overflow: ellipsis;
+                                                white-space: nowrap;
+                                                height: 22px;
+                                                line-height: 22px;
+                                                padding: 0 10px;
+                                                border-radius: 2px;
+                                                cursor: pointer;
+                                                display: inline-block;
+                                                margin: 2px 12px 2px 0;
+                                                border: 1px solid transparent;
+                                                position: relative;
+
+                                                &:hover {
+                                                    background-color: #eee;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    .mc-range__list {
+                                        display: inline-block;
+                                        vertical-align: top;
+                                        margin-right: 12px;
+                                        margin-top: 2px;
+
+                                        .mc-range__item {
+                                            max-width: 160px;
+                                            overflow: hidden;
+                                            vertical-align: top;
+                                            text-overflow: ellipsis;
+                                            white-space: nowrap;
+                                            height: 22px;
+                                            line-height: 22px;
+                                            padding: 0 10px;
+                                            border-radius: 2px;
+                                            cursor: pointer;
+                                            display: inline-block;
+                                            margin: 2px 12px 2px 0;
+                                            border: 1px solid transparent;
+                                            position: relative;
+
+                                            &:hover {
+                                                background-color: #eee;
+                                            }
+                                        }
+                                    }
+
                                     .ant-input {
                                         height: 30px;
                                         border-radius: 0px;

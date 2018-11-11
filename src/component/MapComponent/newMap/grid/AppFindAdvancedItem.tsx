@@ -155,7 +155,7 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
     }
 
     private buildContent = () => {
-        const { map_fa_type } = this.props;
+        const { map_fa_type, map_fa_btn } = this.props;
         let content: JSX.Element | null = null;
 
         switch (map_fa_type) {
@@ -168,12 +168,41 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
                 break;
             case AppFindAdvancedItemType.SELECT:
                 content = (
-                    <div className="mc-filter-item__control" />
+                    <div className="mc-filter-item__control">
+                        <div className="mc-options">
+                            <div className="mc-options__list">
+                                {
+                                    map_fa_btn && map_fa_btn.map(
+                                        (btn, i) => {
+                                            return (
+                                                <span key={i} className="mc-options__item">
+                                                    {btn}
+                                                </span>
+                                            );
+                                        }
+                                    )
+                                }
+                            </div>
+                        </div>
+                    </div>
                 );
                 break;
             case AppFindAdvancedItemType.NUMBER_RANGE:
                 content = (
                     <div className="mc-filter-item__control">
+                        <div className="mc-range__list">
+                            {
+                                map_fa_btn && map_fa_btn.map(
+                                    (btn, i) => {
+                                        return (
+                                            <span key={i} className="mc-range__item">
+                                                {btn}
+                                            </span>
+                                        );
+                                    }
+                                )
+                            }
+                        </div>
                         <Input style={{ width: '145px' }} placeholder="起始值" />
                         &nbsp;-&nbsp;
                         <Input style={{ width: '145px' }} placeholder="截止值" />
@@ -190,6 +219,19 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
             case AppFindAdvancedItemType.DATE:
                 content = (
                     <div className="mc-filter-item__control">
+                        <div className="mc-range__list">
+                            {
+                                map_fa_btn && map_fa_btn.map(
+                                    (btn, i) => {
+                                        return (
+                                            <span key={i} className="mc-range__item">
+                                                {btn}
+                                            </span>
+                                        );
+                                    }
+                                )
+                            }
+                        </div>
                         <DatePicker style={{ width: '130px' }} placeholder="开始时间" locale={zhCN} />
                         &nbsp;-&nbsp;
                         <DatePicker style={{ width: '130px' }} placeholder="结束时间" locale={zhCN} />
