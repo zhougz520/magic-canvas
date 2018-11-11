@@ -158,17 +158,16 @@
                 }
             }
             .form-foot {
-                height: 67px;
-                margin-top: 20px;
-                margin-bottom: 20px;
+                height: 60px;
                 border-top: 1px solid #e7e7eb;
                 .foot {
                     ul {
                         vertical-align: middle;
                         text-align: center;
+                        height: 40px;
                         width: 100%;
                         li {
-                            margin: 20px 5px;
+                            margin: 0px 5px;
 
                             .ant-btn {
                                 margin: 4px 6px 5px;
@@ -238,7 +237,7 @@
                         background-color: #fff;
                         width: 28px;
                         height: 100%;
-                        line-height: 20px;
+                        line-height: 26px;
                         text-align: center;
                         cursor: pointer;
                         border-left: 1px solid #d3d5d9;

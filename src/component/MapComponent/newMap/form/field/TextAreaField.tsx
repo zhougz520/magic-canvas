@@ -132,8 +132,7 @@ export class TextAreaField extends MapComponent<IMapProps, IMapState> {
 										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
 									</td>
 									<td>
-										<Input
-											type="textarea"
+										<Input.TextArea
 											style={{ height: h }}
 											className={`${map_form_f_disabled ? borderClass : ''}`}
 											placeholder=""

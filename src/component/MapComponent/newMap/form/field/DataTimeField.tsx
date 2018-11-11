@@ -9,6 +9,7 @@ import { getStateClass, getFieldCommonPropertyList } from './common/util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
+import * as moment from 'moment';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
 export interface IMapProps extends IFieldProps {
@@ -90,8 +91,8 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 	}
 
 	public render() {
-		const { hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit } = this.props;
+		const { hover, hidden, value } = this.state;
+		const { map_form_f_title, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_default } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
@@ -138,7 +139,7 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 											disabled={map_form_f_disabled}
 											format="YYYY-MM-DD"
 											placeholder=""
-										// value={value === undefined ? map_form_f_default : value}
+											value={(value === undefined || value === '') && map_form_f_default === '' ? undefined : moment(value === undefined ? map_form_f_default : value, 'YYYY-MM-DD')}
 										/>
 									</td>
 								</tr>

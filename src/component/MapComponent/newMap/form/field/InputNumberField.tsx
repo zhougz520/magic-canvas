@@ -141,7 +141,7 @@ export class InputNumberField extends MapComponent<IMapProps, IMapState> {
 											onChange={this.onChangeText}
 											disabled={map_form_f_disabled}
 											defaultValue={map_form_f_default}
-											value={value}
+											value={value === undefined ? map_form_f_default : value}
 										/>
 									</td>
 								</tr>
