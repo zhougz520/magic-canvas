@@ -87,5 +87,8 @@ export enum CommandMap {
     // 保存数据
     DATA_SAVE = 'e.saveData',
     // 退出所有模式
-    MODE_EXIT = 'e.exitAllMode'
+    MODE_EXIT = 'e.exitAllMode',
+
+    // 读取Erp
+    ERP_READ = 'e.readErp'
 }

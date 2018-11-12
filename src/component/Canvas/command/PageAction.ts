@@ -1,7 +1,8 @@
 import { Canvas } from '../Canvas';
-import { IComponent } from '../../BaseComponent';
-import { IRange, IStack, IComponentList, IOperation } from '../model/types';
+import { BaseState, IComponent, IComData } from '../../BaseComponent';
+import { IRange, IStack, IComponentList, IOperation, IOffset } from '../model/types';
 import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
+import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 
 import { getPluginConfig, PluginMap } from '../../../plugin';
 import { Stack, Set, List, OrderedSet, Map } from 'immutable';
@@ -663,5 +664,54 @@ export class PageAction {
         if (this._canvas._isRichEditMode === true) {
             this._canvas._richEditUtil.endEdit();
         }
+    }
+
+    // 读取Erp组件
+    readErp = (dataList: any[]) => {
+        let addComponentList: List<IComponentList> = List();
+        const timeStamp: number = new Date().getTime();
+
+        const stageOffset = this._canvas.props.componentPosition.stageOffset;
+        const position: IOffset = this._canvas._positionUtil.getPositionRelativeCanvas(stageOffset.left, stageOffset.top);
+        const maxComIndex: number = this._canvas._maxComIndex;
+        let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        dataList.map(
+            (data: any, i: number) => {
+                data = JSON.parse(
+                    JSON.stringify(data).replace(/\[cid\]/g, `cs${maxComIndex + i + 1}`)
+                );
+                data.offset = { x: 0, y: 0 };
+
+                const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
+                    data,
+                    { x: position.x + 20 * (i + 1), y: position.y + 20 * (i + 1) },
+                    data.p.customState
+                );
+                const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
+                const component: IComponentList = {
+                    cid: comData.id,
+                    comPath: data.t,
+                    baseState,
+                    childData: comData.p,
+                    initType: 'Read'
+                };
+
+                componentList = componentList.add(component);
+                addComponentList = addComponentList.push(component);
+            }
+        );
+        this._canvas._componentsUtil._addNum = 0;
+
+        this._canvas.setState({
+            componentList
+        }, () => {
+            this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+            // 添加撤销栈
+            this._canvas._stackUtil.setCanvasUndoStack(
+                timeStamp,
+                'create',
+                addComponentList
+            );
+        });
     }
 }

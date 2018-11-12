@@ -601,6 +601,9 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             case 'Paste':
                 newBaseState = baseState;
                 break;
+            case 'Read':
+                newBaseState = baseState;
+                break;
         }
 
         return newBaseState;
