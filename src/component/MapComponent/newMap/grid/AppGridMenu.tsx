@@ -10,6 +10,7 @@ import { GlobalUtil } from '../../../util';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridMenuProps extends IBaseProps {
+    onlyMenu: boolean;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -18,6 +19,10 @@ export interface IAppGridMenuState extends IBaseState {
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
 export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuState> {
+    static defaultProps = {
+        onlyMenu: false
+    };
+
     constructor(props: IAppGridMenuProps, context?: any) {
         super(props, context);
 
@@ -37,7 +42,8 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
             updateProps,
             getRefs,
             stateData,
-            p
+            p,
+            onlyMenu
         } = this.props;
 
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
@@ -86,8 +92,17 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
             );
         }
 
+        let style: React.CSSProperties = {};
+        if (onlyMenu) {
+            style = {
+                position: 'static',
+                border: '1px solid #e7e7eb',
+                marginTop: 0
+            };
+        }
+
         return (
-            <div className="mc-listheader__addon">
+            <div className="mc-listheader__addon" style={style}>
                 <div className="mc-listheader__addon-wrap">
                     <div className="mc-listheader__toolbar">
                         <div className="listheader-toolbar">

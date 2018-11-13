@@ -483,6 +483,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                         );
                         break;
                     case 'MapComponent/newMap/grid/AppGridMenu':
+                        const onlyMenu: boolean = appGridContainerState.getGridStyle() === 'advanced' && !appGridContainerState.getShowAppGridTitle() && !appGridContainerState.getShowAppGridView() ? true : false;
                         this.appGridMenu = (
                             <AppGridMenu
                                 ref={`c.${id}`}
@@ -496,6 +497,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 getRefs={this.getRefs}
                                 stateData={childData}
                                 {...component.p}
+                                onlyMenu={onlyMenu}
                             />
                         );
                         break;
