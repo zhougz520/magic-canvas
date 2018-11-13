@@ -222,9 +222,6 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
             // position: relative;
 
             .mc-listheader {
-                padding-top: 0;
-                padding-bottom: 0;
-                height: auto;
                 background: #f8f8fa;
                 // position: relative;
 
@@ -233,11 +230,8 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                     background-color: $SELECT_BACKCOLOR;
                 }
                 .mc-listheader__views {
-                    display: block;
-                    border-bottom: 1px solid #e7e7eb;
-                    margin-bottom: -1px;
                     // position: relative;
-                    padding: 3px 18px 3px 18px;
+                    padding: 7px 18px;
                     border: 1px solid #e7e7eb;
 
                     .mc-listheader__title {
@@ -291,12 +285,12 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                 }
 
                 .mc-listheader__addon {
-                    border: 1px solid #e7e7eb;
-                    margin-top: 0;
+                    position: absolute;
                     right: 1px;
                     width: auto;
                     padding: 0 18px;
                     top: 50%;
+                    margin-top: -20px;
                     background-color: #f8f8fa;
 
                     .mc-listheader__addon-wrap {
@@ -307,8 +301,6 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                             width: 100%;
                             vertical-align: top;
                             .listheader-toolbar {
-                                margin-left: -6px;
-                                margin-right: -6px;
                                 height: 41px;
 
                                 .listheader-toolbar.map-left {
@@ -367,6 +359,32 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            .mc-listheader--simple {
+                padding-top: 0;
+                padding-bottom: 0;
+                height: auto;
+    
+                .mc-listheader__views {
+                    display: block;
+                    border-bottom: 1px solid #e7e7eb;
+                    margin-bottom: -1px;
+                    padding-top: 3px;
+                    padding-bottom: 3px;
+                }
+
+                .mc-listheader__addon {
+                    position: static;
+                    border: 1px solid #e7e7eb;
+                    border-bottom: 0;
+                    margin-top: 0;
+
+                    .listheader-toolbar {
+                        margin-left: -6px;
+                        margin-right: -6px;
                     }
                 }
             }

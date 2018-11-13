@@ -349,7 +349,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                     {
                         appGridContainerState.getShowAppGridView() || appGridContainerState.getShowAppGridTitle() || appGridContainerState.getShowAppGridMenu() ?
                             <div className="listheader">
-                                <div className="mc-listheader">
+                                <div className={`mc-listheader mc-listheader--${appGridContainerState.getGridStyle()}`}>
                                     {/* 视图 */}
                                     {
                                         appGridContainerState.getShowAppGridView() ? this.appGridView : ''
