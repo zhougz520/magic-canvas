@@ -6,6 +6,7 @@ import { IBaseProps } from '../IBaseProps';
 import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
 
+import { GridStyle } from '../model/types';
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
@@ -13,6 +14,7 @@ import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beau
 export interface IAppGridViewItemProps extends IBaseProps {
     map_gvi_txt?: string;           // 视图名称
     map_gvi_selected?: boolean;     // 选中视图
+    gridStyle: GridStyle;           // 列表样式
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -23,7 +25,8 @@ export interface IAppGridViewItemState extends IBaseState {
 export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGridViewItemState> {
     static defaultProps = {
         map_gvi_txt: '新建视图',
-        map_gvi_selected: false
+        map_gvi_selected: false,
+        gridStyle: 'advanced'
     };
 
     constructor(props: IAppGridViewItemProps, context?: any) {
@@ -82,12 +85,12 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
     }
 
     render() {
-        const { map_gvi_txt, map_gvi_selected, selectedId, id, doChildDbClickToEdit, index } = this.props;
+        const { map_gvi_txt, map_gvi_selected, selectedId, id, doChildDbClickToEdit, index, gridStyle } = this.props;
         const { hidden } = this.state;
 
         return (
             <li
-                className={`mc-listheader-viewlist-buttongroup__item ${map_gvi_selected ? 'is-selected' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
+                className={`${gridStyle === 'advanced' ? 'mc-listheader-viewlist-buttonlist__item' : 'mc-listheader-viewlist-buttongroup__item'} ${map_gvi_selected ? 'is-selected' : ''} ${selectedId === id ? 'map-select-open' : ''}`}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >
@@ -103,7 +106,7 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
                                     ref={(ref) => this.editCom = ref}
                                     style={{
                                         visibility: hidden ? 'hidden' : 'visible',
-                                        margin: '7px 20px'
+                                        margin: `${gridStyle === 'advanced' ? '0px 0px' : '7px 20px'}`
                                     }}
                                 >
                                     {map_gvi_txt}

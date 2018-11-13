@@ -461,6 +461,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 getRefs={this.getRefs}
                                 stateData={childData}
                                 {...component.p}
+                                gridStyle={appGridContainerState.getGridStyle()}
                             />
                         );
                         break;

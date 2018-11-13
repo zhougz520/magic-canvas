@@ -27,7 +27,7 @@ const defaultRecord: IAppGridContainerState = {
     showAppFindOrdinary: true,
     showAppFindAdvanced: true,
     showAppGridView: true,
-    showAppGridTitle: true,
+    showAppGridTitle: false,
     showAppGridMenu: true,
     showAppGrid: true,
     showAppGridPage: true,

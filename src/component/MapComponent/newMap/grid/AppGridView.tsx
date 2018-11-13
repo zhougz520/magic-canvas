@@ -5,11 +5,13 @@ import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
 import { AppGridViewItem } from './AppGridViewItem';
 
+import { GridStyle } from '../model/types';
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridViewProps extends IBaseProps {
+    gridStyle: GridStyle;           // 列表样式
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -18,6 +20,10 @@ export interface IAppGridViewState extends IBaseState {
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
 export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewState> {
+    static defaultProps = {
+        gridStyle: 'advanced'
+    };
+
     constructor(props: IAppGridViewProps, context?: any) {
         super(props, context);
 
@@ -46,7 +52,8 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
             updateProps,
             getRefs,
             stateData,
-            p
+            p,
+            gridStyle
         } = this.props;
 
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
@@ -71,8 +78,14 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
                                 updateProps={updateProps}
                                 getRefs={getRefs}
                                 stateData={stateData}
+                                gridStyle={gridStyle}
                             />
                         );
+                        if (gridStyle === 'advanced') {
+                            appGridViewItem.push(
+                                <li key={`${p.id}_line`} className="mc-listheader-viewlist-buttonlist__line" />
+                            );
+                        }
                     }
                 }
             );
@@ -94,7 +107,7 @@ export class AppGridView extends MapComponent<IAppGridViewProps, IAppGridViewSta
                                     (
                                         <ul
                                             ref={provided.innerRef}
-                                            className="mc-listheader-viewlist-buttongroup"
+                                            className={`${gridStyle === 'advanced' ? 'mc-listheader-viewlist-buttonlist' : 'mc-listheader-viewlist-buttongroup'}`}
                                         >
                                             {
                                                 appGridViewItem.length > 0 ? appGridViewItem :

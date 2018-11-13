@@ -219,18 +219,18 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
         .listheader {
             margin-bottom: -1px;
             border: 0;
-            // position: relative;
+            position: relative;
 
             .mc-listheader {
                 background: #f8f8fa;
-                // position: relative;
+                position: relative;
 
                 .map-select-open.mc-listheader__views {
                     border: 1px dashed $SELECT_BORDERCOLOR;
                     background-color: $SELECT_BACKCOLOR;
                 }
                 .mc-listheader__views {
-                    // position: relative;
+                    position: relative;
                     padding: 7px 18px;
                     border: 1px solid #e7e7eb;
 
@@ -246,6 +246,38 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                         display: inline-block;
                         vertical-align: top;
                         width: 100%;
+
+                        .mc-listheader-viewlist-buttonlist {
+                            list-style: none;
+                            margin: 0;
+                            padding: 0;
+                            height: 30px;
+                            
+                            .mc-listheader-viewlist-buttonlist__item.map-select-open {
+                                border: 1px dashed $SELECT_BORDERCOLOR;
+                                background-color: $SELECT_BACKCOLOR;
+                            }
+                            .mc-listheader-viewlist-buttonlist__item.is-selected {
+                                color: #34A6F8;
+                            }
+                            .mc-listheader-viewlist-buttonlist__item {
+                                padding: 8px 0;
+                                line-height: 1;
+                                color: #666;
+                                cursor: pointer;
+                                float: left;
+                            }
+                            .mc-listheader-viewlist-buttonlist__line {
+                                margin: 7px 12px 0;
+                                height: 16px;
+                                width: 0;
+                                border-left: 1px solid #ddd;
+                                float: left;
+                            }
+                            .mc-listheader-viewlist-buttonlist__line:last-child {
+                                display: none;
+                            }
+                        }
 
                         .mc-listheader-viewlist-buttongroup {
                             list-style: none;
@@ -379,12 +411,24 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                 .mc-listheader__addon {
                     position: static;
                     border: 1px solid #e7e7eb;
-                    border-bottom: 0;
+                    // border-bottom: 0;
                     margin-top: 0;
 
                     .listheader-toolbar {
                         margin-left: -6px;
                         margin-right: -6px;
+                    }
+                }
+            }
+
+            .mc-listheader--advanced {
+                .mc-listheader__addon-wrap {
+                    position: relative;
+                    left: 0;
+                    margin-left: 0;
+
+                    .map-left {
+                        display: none !important;
                     }
                 }
             }
