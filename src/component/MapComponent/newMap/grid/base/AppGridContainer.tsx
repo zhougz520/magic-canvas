@@ -239,10 +239,15 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
             const appGridContainerState: AppGridContainerState = this.getCustomState();
             let propertyList: List<IProperty> = List();
             let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+            const gridStyleList: any[] = [
+                { key: 'simple', value: '简单' },
+                { key: 'advanced', value: '复杂' }
+            ];
 
             // 列表属性
             propertyList = propertyList.push(
                 { pTitle: '标题', pKey: 'title', pValue: appGridContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT },
+                { pTitle: '列表样式', pKey: 'gridStyle', pValue: appGridContainerState.getGridStyle(), pType: PropertiesEnum.SELECT, pList: gridStyleList },
                 // { pTitle: '主题', pKey: 'theme', pValue: appGridContainerState.getTheme(), pType: PropertiesEnum.INPUT_TEXT },
                 { pTitle: '显示项目控件', pKey: 'showAppProjectTree', pValue: appGridContainerState.getShowAppProjectTree(), pType: PropertiesEnum.SWITCH },
                 { pTitle: '显示普通查询', pKey: 'showAppFindOrdinary', pValue: appGridContainerState.getShowAppFindOrdinary(), pType: PropertiesEnum.SWITCH },

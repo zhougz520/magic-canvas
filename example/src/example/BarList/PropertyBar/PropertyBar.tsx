@@ -249,6 +249,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                     <div className="props-col-1 group-end" key={property.pKey}>
                         {property.pTitle}
                         <Select
+                            size="small"
                             value={property.pValue}
                             onChange={(value) => this.handleSelect(value, `${groupKey}.${property.pKey}`)}
                         >

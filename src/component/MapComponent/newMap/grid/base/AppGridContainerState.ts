@@ -1,11 +1,12 @@
 import { Record } from 'immutable';
 
-import { Theme } from '../../model/types';
+import { Theme, GridStyle } from '../../model/types';
 
 /**
  * AppGridContainerState的属性
  */
 export interface IAppGridContainerState {
+    gridStyle: GridStyle;               // 列表样式
     showAppProjectTree: boolean;        // 显示 项目控件
     showAppFindOrdinary: boolean;       // 显示 普通查询
     showAppFindAdvanced: boolean;       // 显示 高级搜索
@@ -21,6 +22,7 @@ export interface IAppGridContainerState {
 }
 
 const defaultRecord: IAppGridContainerState = {
+    gridStyle: 'advanced',
     showAppProjectTree: true,
     showAppFindOrdinary: true,
     showAppFindAdvanced: true,
@@ -63,6 +65,10 @@ export class AppGridContainerState extends AppGridContainerStateRecord {
         );
 
         return new AppGridContainerState(map);
+    }
+
+    getGridStyle(): GridStyle {
+        return this.get('gridStyle');
     }
 
     getShowAppProjectTree(): boolean {

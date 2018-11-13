@@ -14,3 +14,5 @@ export interface IComData {
     t: string;
     p: any;
 }
+
+export type GridStyle = 'simple' | 'advanced';
