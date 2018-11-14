@@ -372,10 +372,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         let newData: any = data;
         data.components.forEach((com: any) => {
             if (com.p.id === id) {
-                // 当 map_form_f_type 存在时
-                if (props.map_form_f_type !== undefined && props.map_form_f_type !== '') {
-                    com.t = props.map_form_f_type;
-                }
                 com.p = Object.assign({}, com.p, props);
                 newData = data;
 

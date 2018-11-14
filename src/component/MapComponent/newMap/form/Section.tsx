@@ -200,7 +200,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             map_form_f_cols={p.map_form_f_cols}
                             index={index}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -223,7 +222,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                                 currUnit={currUnit}
                                 index={index}
                                 map_form_f_cols={p.map_form_f_cols}
-                                map_form_f_type={t}
                                 ref={`c.${p.id}`}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
@@ -245,7 +243,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -267,7 +264,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -289,7 +285,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -311,7 +306,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -333,7 +327,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -355,7 +348,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -377,7 +369,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -399,7 +390,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -421,7 +411,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -443,7 +432,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}
@@ -465,7 +453,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             currUnit={currUnit}
                             index={index}
                             map_form_f_cols={p.map_form_f_cols}
-                            map_form_f_type={t}
                             ref={`c.${p.id}`}
                             pageMode={pageMode}
                             selectedId={selectedId}

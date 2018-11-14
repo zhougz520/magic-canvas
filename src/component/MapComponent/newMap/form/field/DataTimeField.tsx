@@ -21,14 +21,14 @@ export interface IMapState extends IFieldState {
 export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 	static defaultProps = {
 		map_form_f_title: '字段',
+		map_form_f_list: [],
 		map_form_f_default: '',
 		map_form_f_state: '0',
 		map_form_f_cols: 1,
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		currUnit: 2,
-		map_form_f_type: 'MapComponent/newMap/form/field/DataTimeField'
+		currUnit: 2
 	};
 
 	public resizing = false;

@@ -4,9 +4,9 @@ import { IFieldProps } from './IFieldProps';
 import { IFieldState } from './IFieldState';
 
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-import { getStateClass, getFieldCommonPropertyList } from './common/util';
+import { getStateClass } from './common/util';
 import { OrderedSet, List } from 'immutable';
-import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
@@ -19,14 +19,14 @@ export interface IMapState extends IFieldState {
 export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	static defaultProps = {
 		map_form_f_title: '字段',
+		map_form_f_list: [],
 		map_form_f_default: '',
 		map_form_f_state: '0',
 		map_form_f_cols: 1,
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		currUnit: 2,
-		map_form_f_type: 'MapComponent/newMap/form/field/CheckBoxField'
+		currUnit: 2
 	};
 
 	public resizing = false;
@@ -56,9 +56,24 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	 * 获取组件属性列表
 	 */
 	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+		const {
+			map_form_f_title,
+			map_form_f_list,
+			map_form_f_state,
+			map_form_f_cols,
+			map_form_f_disabled,
+			map_form_f_hidden_t
+		} = this.props;
 		let propertyList: List<IProperty> = List();
 		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
-		propertyList = getFieldCommonPropertyList(this.props);
+		propertyList = propertyList.push(
+			{ pTitle: '显示标题', pKey: 'map_form_f_hidden_t', pValue: map_form_f_hidden_t, pType: PropertiesEnum.SWITCH },
+			{ pTitle: '标题', pKey: 'map_form_f_title', pValue: map_form_f_title, pType: PropertiesEnum.INPUT_TEXT },
+			{ pTitle: '默认选项', pKey: 'map_form_f_list', pValue: map_form_f_list, pType: PropertiesEnum.INPUT_LIST },
+			{ pTitle: '只读', pKey: 'map_form_f_disabled', pValue: map_form_f_disabled, pType: PropertiesEnum.SWITCH },
+			{ pTitle: '字段状态', pKey: 'map_form_f_state', pValue: map_form_f_state, pType: PropertiesEnum.SELECT, pList: [{ key: '0', value: '非必填' }, { key: '1', value: '必填' }] },
+			{ pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER }
+		);
 		// 组件属性整理
 		propertyGroup = propertyGroup.add(
 			{ groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
@@ -88,10 +103,8 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	public render() {
 		// const { value } = this.state;
 		const { hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit } = this.props;
+		const { map_form_f_title, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
-
-		const arrRadio = map_form_f_default === undefined ? [] : map_form_f_default.replace(/<br>/g, '\r\n').split(/\r?\n/);
 
 		return (
 			<div
@@ -128,9 +141,7 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 									</td>
 									<td>
 										{
-											arrRadio.map((chkBox, index) => {
-												if (chkBox === '') return '';
-
+											map_form_f_list.map((chkBox, index) => {
 												return (
 													<div key={index} style={{ float: 'left', marginRight: 8 }}>
 														<input className="checkbox ux-checkbox" type="checkbox" onClick={this.onChange} />

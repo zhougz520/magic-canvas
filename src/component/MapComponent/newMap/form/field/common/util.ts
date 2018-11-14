@@ -1,4 +1,3 @@
-import { IpList } from '../../../../../UniversalComponents/model/types';
 import { List } from 'immutable';
 import { IProperty, PropertiesEnum } from '../../../../../UniversalComponents';
 
@@ -13,21 +12,6 @@ export const getStateClass = (state: string) => {
     }
 };
 
-export const fieldTypeList: IpList[] = [
-    { key: 'MapComponent/newMap/form/field/TextField', value: '纯文本' },
-    { key: 'MapComponent/newMap/form/field/InputField', value: '文本录入' },
-    { key: 'MapComponent/newMap/form/field/InputNumberField', value: '数字录入' },
-    { key: 'MapComponent/newMap/form/field/LinkField', value: '超链接' },
-    { key: 'MapComponent/newMap/form/field/SelectField', value: '下拉选择' },
-    { key: 'MapComponent/newMap/form/field/DataTimeField', value: '日期录入' },
-    { key: 'MapComponent/newMap/form/field/LookUpField', value: '弹出选择' },
-    { key: 'MapComponent/newMap/form/field/RadioField', value: '单选框' },
-    { key: 'MapComponent/newMap/form/field/CheckBoxField', value: '复选框' },
-    { key: 'MapComponent/newMap/form/field/InputIconField', value: '文本&图片' },
-    { key: 'MapComponent/newMap/form/field/TextAreaField', value: '多行文本' },
-    { key: 'MapComponent/newMap/form/field/NullField', value: '空白区' }
-];
-
 export const getFieldCommonPropertyList = (props: any) => {
     const {
         map_form_f_title,
@@ -35,8 +19,7 @@ export const getFieldCommonPropertyList = (props: any) => {
         map_form_f_state,
         map_form_f_cols,
         map_form_f_disabled,
-        map_form_f_hidden_t,
-        map_form_f_type
+        map_form_f_hidden_t
     } = props;
     let propertyList: List<IProperty> = List();
 
@@ -47,8 +30,7 @@ export const getFieldCommonPropertyList = (props: any) => {
         { pTitle: '默认值', pKey: 'map_form_f_default', pValue: map_form_f_default, pType: PropertiesEnum.INPUT_TEXT },
         { pTitle: '只读', pKey: 'map_form_f_disabled', pValue: map_form_f_disabled, pType: PropertiesEnum.SWITCH },
         { pTitle: '字段状态', pKey: 'map_form_f_state', pValue: map_form_f_state, pType: PropertiesEnum.SELECT, pList: [{ key: '0', value: '非必填' }, { key: '1', value: '必填' }] },
-        { pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER },
-        { pTitle: '数据类型', pKey: 'map_form_f_type', pValue: map_form_f_type, pType: PropertiesEnum.SELECT, pList: fieldTypeList }
+        { pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER }
     );
 
     return propertyList;
