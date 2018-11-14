@@ -670,6 +670,7 @@ export class PageAction {
     readErp = (dataList: any[]) => {
         let addComponentList: List<IComponentList> = List();
         const timeStamp: number = new Date().getTime();
+        const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
 
         const stageOffset = this._canvas.props.componentPosition.stageOffset;
         const position: IOffset = this._canvas._positionUtil.getPositionRelativeCanvas(stageOffset.left, stageOffset.top);
@@ -684,7 +685,7 @@ export class PageAction {
 
                 const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
                     data,
-                    { x: position.x + 20 * (i + 1), y: position.y + 20 * (i + 1) },
+                    { x: Math.ceil(position.x / scale) + 20 * (i + 1), y: Math.ceil(position.y / scale) + 20 * (i + 1) },
                     data.p.customState
                 );
                 const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
