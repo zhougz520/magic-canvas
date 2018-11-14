@@ -18,6 +18,7 @@ import {
 import { IComponent } from '../../IComponent';
 import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
 import { IComData } from '../../model/types';
+import { formDetail } from '../../structure';
 
 import { Map, OrderedSet } from 'immutable';
 // tslint:disable-next-line:no-var-requires
@@ -48,8 +49,14 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         super(props, context);
 
         const { childData } = this.props;
+        let structureData: any = null;
+        if (childData === undefined) {
+            structureData = JSON.parse(
+                JSON.stringify(clone(formDetail.p)).replace(/\[cid\]/g, this.props.baseState.getCurrentContent().getCid())
+            );
+        }
         this.state = {
-            baseState: this.initBaseStateWithCustomState(new AppFormContainerState({ childData })),
+            baseState: this.initBaseStateWithCustomState(new AppFormContainerState({ childData: structureData })),
             selectedId: null,
             hidden: false
         };
