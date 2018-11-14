@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { Icon, Collapse } from 'antd';
+import { Icon } from 'antd';
 import { GlobalUtil } from '../../../../../src';
-import ComponentChildItem from './ComponentChildItem';
 
 export interface IComItemProps {
     componentType: string;
     componentAdderType: any;
     componentProps: any;
-    children: any[];
 }
 
 export interface IComItemState {
@@ -15,7 +13,7 @@ export interface IComItemState {
 }
 
 /* tslint:disable: jsx-no-multiline-js */
-export default class ComponentItem extends React.PureComponent<IComItemProps, IComItemState> {
+export default class ComponentChildItem extends React.PureComponent<IComItemProps, IComItemState> {
     private dragElement: HTMLLIElement | null = null;
 
     constructor(props: IComItemProps) {
@@ -32,46 +30,20 @@ export default class ComponentItem extends React.PureComponent<IComItemProps, IC
     }
 
     render() {
-        const { componentProps, children } = this.props;
-        const item = (
+        const { componentProps } = this.props;
+
+        return (
             <li
-                className="rLi"
+                className="rChildLi"
                 draggable={this.state.draggable}
                 ref={(container) => { this.dragElement = container; }}
                 onDragStart={this.dragStart}
                 onDragEnd={this.dragEnd}
             >
-                <Icon type="menu-unfold" />
-                <span>{componentProps.name}</span>
+                <Icon type="menu-unfold" style={{ marginLeft: '10px' }} />
+                <span style={{ marginLeft: '10px' }}>{componentProps.name}</span>
             </li>
         );
-
-        if (children) {
-            return (
-                <Collapse bordered={false} style={{ width: '100%' }}>
-                    <Collapse.Panel header={item} key={componentProps.name}>
-                        <ul className="rUl" style={{ paddingLeft: '23px' }}>
-                            {
-                                children.map(
-                                    (child) => {
-                                        return (
-                                            <ComponentChildItem
-                                                key={`${child.t}_${child.at || ''}`}
-                                                componentType={child.t}
-                                                componentAdderType={child.at}
-                                                componentProps={child.p}
-                                            />
-                                        );
-                                    }
-                                )
-                            }
-                        </ul>
-                    </Collapse.Panel>
-                </Collapse>
-            );
-        } else {
-            return item;
-        }
     }
 
     dragStart = (evt: any) => {

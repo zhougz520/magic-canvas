@@ -168,6 +168,28 @@ $props-col-1-input-width: 130px;
     }
 }
 
+.rChildLi {
+    margin-top: -1px;
+    margin-left: -1px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(238, 238, 238);
+    border-image: initial;
+    overflow: hidden;
+    width: 125px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    cursor: default;
+    margin-bottom: 5px;
+    &:last-child {
+        margin-bottom: 0px;
+    }
+    &:hover {
+        background: #f5f5f5;
+    }
+}
+
 .main-editor .command-bar {
     > div {
         &.colorButton {

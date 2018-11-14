@@ -9,7 +9,9 @@ const {
     Universal_TextField,
     Universal_Image,
     Universal_RichText,
-    Universal_Table
+    Universal_Table,
+    NewMap_AppGrid,
+    NewMap_AppForm
 } = ComponentsMap;
 
 export interface IBasePage {
@@ -76,100 +78,8 @@ const basePage: IBasePage[] = [
         categoryKey: 'newERP',
         expanded: false,
         components: [
-            { t: 'MapComponent/newMap/form/field/TextField', p: { name: '纯文本' } },
-            { t: 'MapComponent/newMap/form/field/InputField', p: { name: '文本录入' } },
-            { t: 'MapComponent/newMap/form/field/InputNumberField', p: { name: '数字录入' } },
-            { t: 'MapComponent/newMap/form/field/LinkField', p: { name: '超链接' } },
-            { t: 'MapComponent/newMap/form/field/SelectField', p: { name: '下拉选择' } },
-            { t: 'MapComponent/newMap/form/field/DataTimeField', p: { name: '日期录入' } },
-            { t: 'MapComponent/newMap/form/field/LookUpField', p: { name: '弹出选择' } },
-            { t: 'MapComponent/newMap/form/field/RadioField', p: { name: '单选框' } },
-            { t: 'MapComponent/newMap/form/field/CheckBoxField', p: { name: '复选框' } },
-            { t: 'MapComponent/newMap/form/field/InputIconField', p: { name: '文本&图片' } },
-            { t: 'MapComponent/newMap/form/field/TextAreaField', p: { name: '多行文本' } },
-            { t: 'MapComponent/newMap/form/field/NullField', p: { name: '空白区' } },
-            { t: 'MapComponent/newMap/form/field/UploadField', p: { name: '上传' } },
-            { t: 'MapComponent/newMap/form/Section', p: { name: '分组' } },
-            { t: 'MapComponent/newMap/form/TabItem', p: { name: '标签页' } },
-            {
-                t: 'MapComponent/newMap/form/base/AppFormContainer',
-                p: {
-                    name: '表单',
-                    w: 600,
-                    h: 400,
-                    type: 'base',
-                    p: {
-                        components: [
-                            {
-                                t: 'MapComponent/newMap/form/AppForm',
-                                p: {
-                                    id: 'cs1.cs1',
-                                    p: {
-                                        components: [{
-                                            t: 'MapComponent/newMap/form/TabForm',
-                                            p: {
-                                                id: 'cs1.cs1.cs1',
-                                                l: 197,
-                                                t: 132,
-                                                p: {
-                                                    components: [{
-                                                        t: 'MapComponent/newMap/form/TabItem',
-                                                        p: {
-                                                            id: 'cs1.cs1.cs1.cs1',
-                                                            l: 197,
-                                                            t: 132,
-                                                            p: {
-                                                                components: [{
-                                                                    t: 'MapComponent/newMap/form/SectionForm',
-                                                                    p: {
-                                                                        id: 'cs1.cs1.cs1.cs1.cs1',
-                                                                        l: 197,
-                                                                        t: 132,
-                                                                        p: {
-                                                                            components: [{
-                                                                                t: 'MapComponent/newMap/form/Section',
-                                                                                p: {
-                                                                                    id: 'cs1.cs1.cs1.cs1.cs1.cs1',
-                                                                                    l: 197,
-                                                                                    t: 132,
-                                                                                    p: {
-                                                                                        components: [{
-                                                                                            t: 'MapComponent/newMap/form/field/InputField',
-                                                                                            p: {
-                                                                                                id: 'cs1.cs1.cs1.cs1.cs1.cs1.cs1',
-                                                                                                l: 197,
-                                                                                                t: 132,
-                                                                                                map_form_f_cols: 1
-                                                                                            }
-                                                                                        }]
-                                                                                    }
-                                                                                }
-                                                                            }]
-                                                                        }
-                                                                    }
-                                                                }]
-                                                            }
-                                                        }
-                                                    }]
-                                                },
-                                                map_form_sti: 'cs1.cs1.cs1.cs1',
-                                                map_form_st: '2'
-                                            }
-                                        }]
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            { t: 'MapComponent/newMap/grid/base/AppGridContainer', p: { name: '列表', w: 600, h: 550, type: 'base' } },
-            { t: 'MapComponent/newMap/grid/AppFindAdvancedItem', p: { name: '高级搜索组件' } },
-            { t: 'MapComponent/newMap/grid/AppGridViewItem', p: { name: '视图标签' } },
-            { t: 'MapComponent/newMap/grid/AppGridMenuItemButton', p: { name: '按钮' } },
-            { t: 'MapComponent/newMap/grid/AppGridMenuItemDropdown', p: { name: '菜单按钮' } },
-            { t: 'MapComponent/newMap/grid/AppGridMenuItemSwitch', p: { name: '开关按钮' } },
-            { t: 'MapComponent/newMap/grid/AppGridHeader', p: { name: '列表-列' } }
+            NewMap_AppGrid,
+            NewMap_AppForm
         ]
     },
     {

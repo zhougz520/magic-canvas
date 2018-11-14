@@ -39,6 +39,7 @@ export default class ComponentList extends React.PureComponent<IComListProps, IC
                         componentType={com.t}
                         componentAdderType={com.at}
                         componentProps={com.p}
+                        children={com.children}
                     />;
                 });
                 panels.push(
