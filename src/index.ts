@@ -24,7 +24,8 @@ export {
     IPropertyGroup,
     IEditToolButtonType,
     IToolButtonGroup,
-    emptyButtonGroup
+    emptyButtonGroup,
+    IpList
 } from './component/UniversalComponents';
 
 export {

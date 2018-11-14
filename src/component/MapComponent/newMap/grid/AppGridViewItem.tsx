@@ -6,7 +6,6 @@ import { IBaseProps } from '../IBaseProps';
 import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
 
-import { GridStyle } from '../model/types';
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
@@ -14,7 +13,6 @@ import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beau
 export interface IAppGridViewItemProps extends IBaseProps {
     map_gvi_txt?: string;           // 视图名称
     map_gvi_selected?: boolean;     // 选中视图
-    gridStyle: GridStyle;           // 列表样式
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -25,8 +23,7 @@ export interface IAppGridViewItemState extends IBaseState {
 export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGridViewItemState> {
     static defaultProps = {
         map_gvi_txt: '新建视图',
-        map_gvi_selected: false,
-        gridStyle: 'advanced'
+        map_gvi_selected: false
     };
 
     constructor(props: IAppGridViewItemProps, context?: any) {

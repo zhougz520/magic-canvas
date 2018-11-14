@@ -42,6 +42,7 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
     render() {
         const {
             theme,
+            gridStyle,
             pageMode,
             selectedId,
             selectComChange,
@@ -125,7 +126,7 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         return (
             <ul
                 className="listheader-toolbar map-left"
-                style={Object.assign({}, this.state.hover)}
+                style={Object.assign(gridStyle === 'advanced' ? { minWidth: '150px' } : {}, this.state.hover)}
                 ref={(ref) => this.com = ref}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}

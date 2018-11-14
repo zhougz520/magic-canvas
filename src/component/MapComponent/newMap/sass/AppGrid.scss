@@ -385,6 +385,9 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
                                     background-color: $SELECT_BACKCOLOR;
                                 }
                                 .map-switch {
+                                    padding-left: 6px;
+                                    padding-right: 6px;
+                                    
                                     .ant-switch-small{
                                         top: -1px;
                                     }

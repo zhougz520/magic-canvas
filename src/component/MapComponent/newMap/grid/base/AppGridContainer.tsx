@@ -399,6 +399,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppProjectTree
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -417,6 +418,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppFindOrdinary
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -435,6 +437,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppFindAdvanced
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -452,6 +455,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppGridView
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -461,7 +465,6 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                                 getRefs={this.getRefs}
                                 stateData={childData}
                                 {...component.p}
-                                gridStyle={appGridContainerState.getGridStyle()}
                             />
                         );
                         break;
@@ -470,6 +473,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppGridTitle
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -488,6 +492,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppGridMenu
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -506,6 +511,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppGrid
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}
@@ -523,6 +529,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             <AppGridPage
                                 ref={`c.${id}`}
                                 theme={appGridContainerState.getTheme()}
+                                gridStyle={appGridContainerState.getGridStyle()}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={this.selectComChange}

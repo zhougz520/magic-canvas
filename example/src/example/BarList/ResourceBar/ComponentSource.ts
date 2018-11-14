@@ -88,6 +88,7 @@ const basePage: IBasePage[] = [
             { t: 'MapComponent/newMap/form/field/InputIconField', p: { name: '文本&图片' } },
             { t: 'MapComponent/newMap/form/field/TextAreaField', p: { name: '多行文本' } },
             { t: 'MapComponent/newMap/form/field/NullField', p: { name: '空白区' } },
+            { t: 'MapComponent/newMap/form/field/UploadField', p: { name: '上传' } },
             { t: 'MapComponent/newMap/form/Section', p: { name: '分组' } },
             { t: 'MapComponent/newMap/form/TabItem', p: { name: '标签页' } },
             {

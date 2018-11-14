@@ -12,7 +12,8 @@ import {
     RadioField,
     SelectField,
     TextAreaField,
-    TextField
+    TextField,
+    UploadField
 } from '../form/field';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
@@ -164,6 +165,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/newMap/form/field/SelectField') ||
             (t === 'MapComponent/newMap/form/field/TextAreaField') ||
             (t === 'MapComponent/newMap/form/field/TextField') ||
+            (t === 'MapComponent/newMap/form/field/UploadField') ||
             (t === 'MapComponent/newMap/grid/AppGrid');
     }
 
@@ -434,6 +436,28 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                         break;
                     case 'MapComponent/newMap/form/field/TextField':
                         field = <TextField
+                            titleWidth={map_form_ss_tt_w}
+                            key={p.id}
+                            {...p}
+                            id={p.id}
+                            currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
+                            map_form_f_type={t}
+                            ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
+                            selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
+                            stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
+                        />;
+                        break;
+                    case 'MapComponent/newMap/form/field/UploadField':
+                        field = <UploadField
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}

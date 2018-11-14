@@ -1,7 +1,7 @@
 import { PageMode } from '../../Stage';
 import { IPropertyGroup } from '../../UniversalComponents';
 
-import { Theme } from './model/types';
+import { Theme, GridStyle } from './model/types';
 
 import { OrderedSet } from 'immutable';
 
@@ -20,6 +20,9 @@ export interface IBaseProps {
     stateData?: any;
     // 拖拽index
     index?: number;
+
+    // 列表样式
+    gridStyle?: GridStyle;
 
     selectComChange: (e: any, id: string) => void;
     setChildPropertyGroup: (childPropertyGroup: OrderedSet<IPropertyGroup>) => void;

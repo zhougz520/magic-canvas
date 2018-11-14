@@ -34,6 +34,7 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
     render() {
         const {
             theme,
+            gridStyle,
             pageMode,
             selectedId,
             selectComChange,
@@ -59,6 +60,7 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
                                 ref={`c.${p.id}`}
                                 {...p}
                                 theme={theme}
+                                gridStyle={gridStyle}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={selectComChange}
@@ -77,6 +79,7 @@ export class AppGridMenu extends MapComponent<IAppGridMenuProps, IAppGridMenuSta
                                 ref={`c.${p.id}`}
                                 {...p}
                                 theme={theme}
+                                gridStyle={gridStyle}
                                 pageMode={pageMode}
                                 selectedId={selectedId}
                                 selectComChange={selectComChange}

@@ -10,3 +10,4 @@ export { InputIconField } from './InputIconField';
 export { LookUpField } from './LookUpField';
 export { TextField } from './TextField';
 export { NullField } from './NullField';
+export { UploadField } from './UploadField';
