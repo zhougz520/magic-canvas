@@ -46,7 +46,7 @@ export class AppFindOrdinary extends MapComponent<IAppFindOrdinaryProps, IAppFin
             { pTitle: '查询字段', pKey: 'map_fo_o', pValue: map_fo_o, pType: PropertiesEnum.INPUT_LIST }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

@@ -71,7 +71,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
             { pTitle: '数据类型', pKey: 'map_gh_dataType', pValue: map_gh_dataType, pType: PropertiesEnum.SELECT, pList: [{ key: 'txt', value: '文本' }, { key: 'input', value: '普通输入' }, { key: 'number', value: '数字输入' }, { key: 'date', value: '日期选择' }, { key: 'select', value: '下拉框' }, { key: 'radio', value: '复选' }, { key: 'link', value: '超链接' }, { key: 'lookup', value: '弹出选择' }] }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

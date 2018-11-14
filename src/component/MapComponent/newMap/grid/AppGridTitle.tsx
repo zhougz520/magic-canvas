@@ -43,7 +43,7 @@ export class AppGridTitle extends MapComponent<IAppGridTitleProps, IAppGridTitle
             { pTitle: '标题', pKey: 'map_gt_txt', pValue: map_gt_txt, pType: PropertiesEnum.INPUT_TEXT }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

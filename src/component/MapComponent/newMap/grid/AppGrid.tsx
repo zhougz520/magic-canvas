@@ -62,7 +62,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
             { pTitle: '允许多选', pKey: 'map_g_check', pValue: map_g_check, pType: PropertiesEnum.SWITCH }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

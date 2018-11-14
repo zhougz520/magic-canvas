@@ -57,7 +57,7 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
             { pTitle: '是否选中', pKey: 'map_gvi_selected', pValue: map_gvi_selected, pType: PropertiesEnum.SWITCH }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

@@ -176,7 +176,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
             { pTitle: '显示底部', pKey: 'map_form_foot_show', pValue: map_form_foot_show, pType: PropertiesEnum.SWITCH }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 

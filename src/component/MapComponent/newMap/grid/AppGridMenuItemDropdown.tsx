@@ -59,7 +59,7 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
             { pTitle: '子菜单', pKey: 'map_gmid_o', pValue: map_gmid_o, pType: PropertiesEnum.INPUT_LIST }
         );
         propertyGroup = propertyGroup.add(
-            { groupTitle: '组件属性', groupKey: 'gridProps', isActive: true, colNum: 1, propertyList }
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
         );
         propertyList = List();
 
