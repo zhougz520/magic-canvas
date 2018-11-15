@@ -9,6 +9,7 @@ export interface ICommentsState {
     commentsRectList: OrderedSet<IComponentList>;
     maxRectId: number;
     backgroundColor: string;
+    reviewOpinion: string;
 }
 
 const defaultRecord: ICommentsState = {
@@ -17,7 +18,8 @@ const defaultRecord: ICommentsState = {
     userType: 'Master',
     commentsRectList: OrderedSet(),
     maxRectId: 0,
-    backgroundColor: '#FFFBBA'
+    backgroundColor: '#FFFBBA',
+    reviewOpinion: ''
 };
 
 export const CommentsRecord: Record.Class = Record(defaultRecord);
@@ -59,5 +61,9 @@ export class CommentsState extends CommentsRecord {
 
     getBackgroundColor(): string {
         return this.get('backgroundColor');
+    }
+
+    getReviewOpinion(): string {
+        return this.get('reviewOpinion');
     }
 }

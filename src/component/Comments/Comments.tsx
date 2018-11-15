@@ -201,6 +201,15 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
         );
         propertyList = List();
 
+        // 字段设置
+        propertyList = propertyList.push(
+            { pTitle: '评审意见', pKey: 'reviewOpinion', pValue: this.getCustomState().getReviewOpinion(), pType: PropertiesEnum.INPUT_TEXTAREA }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '备注', groupKey: 'field', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
         return propertyGroup;
     }
 
@@ -506,7 +515,8 @@ export function convertFromCustomStateToData(
         userType: encodeCustomState.getUserType(),
         commentsRectList: components,
         maxRectId: encodeCustomState.getMaxRectId(),
-        backgroundColor: encodeCustomState.getBackgroundColor()
+        backgroundColor: encodeCustomState.getBackgroundColor(),
+        reviewOpinion: encodeCustomState.getReviewOpinion()
     };
 }
 
@@ -525,6 +535,7 @@ export function convertFromDataToCustomState(
         }>;
         maxRectId: number;
         backgroundColor: string;
+        reviewOpinion: string;
     } | any
 ): any {
     const data: ICommentsState = {
@@ -533,7 +544,8 @@ export function convertFromDataToCustomState(
         userType: 'Master',
         commentsRectList: OrderedSet(),
         maxRectId: 0,
-        backgroundColor: '#FFFBBA'
+        backgroundColor: '#FFFBBA',
+        reviewOpinion: ''
     };
     if (customData && customData.commentsRectList) {
         customData.commentsRectList.map(
@@ -555,6 +567,7 @@ export function convertFromDataToCustomState(
         data.userType = customData.userType;
         data.maxRectId = customData.maxRectId;
         data.backgroundColor = customData.backgroundColor;
+        data.reviewOpinion = customData.reviewOpinion;
     }
 
     return CommentsState.create(data);
@@ -619,6 +632,7 @@ export function getPasteCustomState(canvas: Canvas, customData: any): any {
     customData.userType = userType;
     customData.commentsRectList = OrderedSet();
     customData.maxRectId = 0;
+    customData.reviewOpinion = '';
 
     return customData;
 }
