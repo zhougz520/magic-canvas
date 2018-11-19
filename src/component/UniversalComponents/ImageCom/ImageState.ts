@@ -16,6 +16,7 @@ export interface IImageState {
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
+    showHeader: boolean;
 }
 
 const defaultRecord: IImageState = {
@@ -28,7 +29,8 @@ const defaultRecord: IImageState = {
 
     backgroundColor: '#FFF',
     borderColor: '#FFF',
-    borderWidth: 0
+    borderWidth: 0,
+    showHeader: true
 };
 
 export const ImageRecord: Record.Class = Record(defaultRecord);
@@ -82,5 +84,9 @@ export class ImageState extends ImageRecord {
 
     getBorderWidth(): number {
         return this.get('borderWidth');
+    }
+
+    getShowHeader(): boolean {
+        return this.get('showHeader');
     }
 }

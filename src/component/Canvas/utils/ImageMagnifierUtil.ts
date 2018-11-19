@@ -110,6 +110,8 @@ export class ImageMagnifierUtil {
         if (comImage) {
             const imageCustomState: ImageState = comImage.getCustomState();
             const imageMagnifierPositionAndSize = this.getAddImageMagnifierPositionAndSize();
+            const showHeader: boolean = imageCustomState.getShowHeader();
+            const headerHeight: number = showHeader ? 30 : 0;
             if (imageMagnifierPositionAndSize === null) return;
             // 框选大小和位置
             const rectPosition: IPosition = imageMagnifierPositionAndSize.position;
@@ -119,11 +121,11 @@ export class ImageMagnifierUtil {
             const natureHeight: number = imageCustomState.getHeight();
             // 调整后的图片属性
             const imagePosition = {
-                top: comImage.getPosition().top + 41,
+                top: comImage.getPosition().top + 11 + headerHeight,
                 left: comImage.getPosition().left + 11
             };
             const imageSize: ISize = {
-                height: comImage.getSize().height - 52,
+                height: comImage.getSize().height - 22 - headerHeight,
                 width: comImage.getSize().width - 22
             };
             // 放大镜相对位置

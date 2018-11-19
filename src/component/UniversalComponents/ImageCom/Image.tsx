@@ -24,10 +24,10 @@ import { ImageMagnifier } from './ImageMagnifier';
 import { ImageMagnifierState } from './ImageMagnifierState';
 import { ImageState, IImageState, dataUrl } from './ImageState';
 import { ImageLine, IImageLineProps } from './ImageLine';
-import { IToolButtonGroup, emptyButtonGroup } from '../model/types';
+import { IToolButtonGroup, emptyButtonGroup, PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
 
 import { getPluginConfig, PluginMap } from '../../../plugin';
-import { OrderedSet, Map } from 'immutable';
+import { OrderedSet, Map, List } from 'immutable';
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
 export default class Image extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
@@ -151,6 +151,43 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         ];
     }
 
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 外观
+        propertyList = propertyList.push(
+            { pTitle: '显示标题', pKey: 'showHeader', pValue: this.getCustomState().getShowHeader(), pType: PropertiesEnum.SWITCH }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+
+    /**
+     * 设置属性
+     */
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
+        let properties = Map();
+        properties = properties.set(pKey, pValue);
+        const newImageState: ImageState = ImageState.set(this.getCustomState(), properties);
+        if (pKey === 'showHeader') {
+            if (pValue === true) {
+                callback = () => { this.setSize({ width: this.getSize().width, height: this.getSize().height + 30 }); };
+            } else {
+                callback = () => { this.setSize({ width: this.getSize().width, height: this.getSize().height - 30 }); };
+            }
+        }
+
+        this.setCustomState(newImageState, true, callback);
+    }
+
     componentDidMount() {
         const uid = (this.getCustomState() as ImageState).getUid();
         if (uid === undefined || uid === null || uid.length === 0) return;
@@ -193,6 +230,8 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         const magnifierList: JSX.Element[] = this.buildMagnifier(imageMagnifierList);
         const lineList: JSX.Element[] = this.buildLine(imageMagnifierList);
         const comSize: ISize = this.getSize();
+        const showHeader: boolean = this.getCustomState().getShowHeader();
+        const headerHeight: number = showHeader ? 30 : 0;
 
         return (
             <React.Fragment>
@@ -211,7 +250,8 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                             backgroundColor: '#f0f0ff',
                             borderBottom: '1px solid #d3d5d9',
                             lineHeight: '30px',
-                            paddingLeft: '8px'
+                            paddingLeft: '8px',
+                            display: showHeader ? 'block' : 'none'
                         }}
                         onDoubleClick={this.doDbClickToEdit}
                     >
@@ -223,13 +263,13 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                             position: 'absolute',
                             zIndex: 1000,
                             width: comSize.width,
-                            height: comSize.height - 30
+                            height: comSize.height - headerHeight
                         }}
                     />
                     <img
                         style={{
                             width: comSize.width - 22,
-                            height: comSize.height - 52,
+                            height: comSize.height - 22 - headerHeight,
                             display: 'inline-block',
                             margin: '10px'
                         }}
@@ -351,13 +391,16 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
         const rectSize: ISize = imageMagnifierCustomState.getRectSize();
         const rectPosition: IPosition = imageMagnifierCustomState.getRectPosition();
 
+        const showHeader: boolean = this.getCustomState().getShowHeader();
+        const headerHeight: number = showHeader ? 30 : 0;
+
         return {
             x1: Math.ceil(imageMagnifierPositionState.getLeft() + imageMagnifierSizeState.getWidth() / 2),
             y1: imageMagnifierPositionState.getTop(),
             x2: Math.ceil(imagePositionState.getLeft() + 11 + rectPosition.left + rectSize.width / 2),
-            y2: imagePositionState.getTop() + 41 + rectPosition.top + rectSize.height,
+            y2: imagePositionState.getTop() + 11 + headerHeight + rectPosition.top + rectSize.height,
             rectSize,
-            rectPosition: { top: imagePositionState.getTop() + 41 + rectPosition.top, left: imagePositionState.getLeft() + 11 + rectPosition.left }
+            rectPosition: { top: imagePositionState.getTop() + 11 + headerHeight + rectPosition.top, left: imagePositionState.getLeft() + 11 + rectPosition.left }
         };
     }
 
@@ -424,7 +467,8 @@ export function convertFromCustomStateToData(
         maxMagnifierId: encodeCustomState.getMaxMagnifierId(),
         backgroundColor: encodeCustomState.getBackgroundColor(),
         borderColor: encodeCustomState.getBorderColor(),
-        borderWidth: encodeCustomState.getBorderWidth()
+        borderWidth: encodeCustomState.getBorderWidth(),
+        showHeader: encodeCustomState.getShowHeader()
     };
 }
 
@@ -446,6 +490,7 @@ export function convertFromDataToCustomState(
         backgroundColor: string;
         borderColor: string;
         borderWidth: number;
+        showHeader: boolean;
     } | any
 ): any {
     const data: IImageState = {
@@ -457,7 +502,8 @@ export function convertFromDataToCustomState(
         maxMagnifierId: 0,
         backgroundColor: '#FFF',
         borderColor: '#FFF',
-        borderWidth: 0
+        borderWidth: 0,
+        showHeader: true
     };
     if (customData && customData.imageMagnifierList) {
         customData.imageMagnifierList.map(
@@ -483,6 +529,7 @@ export function convertFromDataToCustomState(
         data.backgroundColor = customData.backgroundColor;
         data.borderColor = customData.borderColor;
         data.borderWidth = customData.borderWidth;
+        data.showHeader = customData.showHeader;
     }
 
     return ImageState.create(data);
