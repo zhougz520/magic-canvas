@@ -567,7 +567,7 @@ export function convertFromDataToCustomState(
         data.userType = customData.userType;
         data.maxRectId = customData.maxRectId;
         data.backgroundColor = customData.backgroundColor;
-        data.reviewOpinion = customData.reviewOpinion;
+        customData.reviewOpinion !== undefined && (data.reviewOpinion = customData.reviewOpinion);
     }
 
     return CommentsState.create(data);

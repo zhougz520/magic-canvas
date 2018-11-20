@@ -529,7 +529,7 @@ export function convertFromDataToCustomState(
         data.backgroundColor = customData.backgroundColor;
         data.borderColor = customData.borderColor;
         data.borderWidth = customData.borderWidth;
-        data.showHeader = customData.showHeader;
+        customData.showHeader !== undefined && (data.showHeader = customData.showHeader);
     }
 
     return ImageState.create(data);
