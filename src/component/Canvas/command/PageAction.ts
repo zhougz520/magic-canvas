@@ -596,9 +596,43 @@ export class PageAction {
                     const detail = JSON.parse(data.text);
                     const type = detail.type;
                     const content = detail.content;
-                    if (content && type && type === 'BaseComponent') {
-                        const components = content.components;
-                        this._canvas._componentsUtil.pasteCanvasComponent(components);
+                    if (content && type) {
+                        switch (type) {
+                            case 'BaseComponent':
+                                const componentsBase: any[] = content.components;
+                                this._canvas._componentsUtil.pasteCanvasComponent(componentsBase);
+                                break;
+                            case 'Page':
+                                const componentsPage: any[] = content.components;
+                                const widthPage: number = parseInt(content.width, 10);
+                                const heightPage: number = parseInt(content.height, 10);
+                                if (componentsPage.length > 0) {
+                                    const showModalFunc = getPluginConfig(PluginMap.PDU_SHOW_MODAL);
+                                    showModalFunc && showModalFunc(
+                                        '确认替换当前页所有内容',
+                                        '此操作将会替换当前页所有内容，是否继续？',
+                                        '确定',
+                                        '取消',
+                                        'confirm',
+                                        'danger',
+                                        () => {
+                                            this._canvas.initCanvas(
+                                                componentsPage,
+                                                {
+                                                    width: widthPage,
+                                                    height: heightPage
+                                                }
+                                            );
+                                            // 如果画布是干净的，设置画布已经变脏
+                                            if (this._canvas._isDirty === false) {
+                                                this._canvas.setIsDirty(true);
+                                                this._canvas.props.setPageDirty && this._canvas.props.setPageDirty();
+                                            }
+                                        }
+                                    );
+                                }
+                                break;
+                        }
                     }
                 }
 
