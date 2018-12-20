@@ -1,4 +1,5 @@
 // 属性栏定义
+$panel-box-padding: 16px;
 $props-title-height: 8px;
 $props-collapse-header-height:32px;
 $props-collapse-header-arrow-margin: -4px;
@@ -7,8 +8,7 @@ $props-item-input-margin-top: 2px;
 $props-item-switch-margin-top: 6px;
 $props-col-2-input-width: 55px;
 $props-col-1-input-width: 130px;
-
-.main-editor .title-bar{
+.main-editor .title-bar {
     position: absolute;
     top: 0;
     left: 0;
@@ -17,10 +17,10 @@ $props-col-1-input-width: 130px;
     background-color: #fff;
     transition-property: height;
     transition-duration: .3s;
-    transition-timing-function: cubic-bezier(.65,.05,.36,1);
+    transition-timing-function: cubic-bezier(.65, .05, .36, 1);
 }
 
-.main-editor .title-bar.collapsed{
+.main-editor .title-bar.collapsed {
     height: 0;
 }
 
@@ -38,24 +38,27 @@ $props-col-1-input-width: 130px;
     align-items: center;
     transition-property: top;
     transition-duration: .3s;
-    transition-timing-function: cubic-bezier(.65,.05,.36,1);
+    transition-timing-function: cubic-bezier(.65, .05, .36, 1);
 }
 
-.main-editor .command-bar.title-bar-collapsed{
+.main-editor .command-bar.title-bar-collapsed {
     top: 0px;
 }
 
-.main-editor .props-bar{
+.main-editor .props-bar {
     position: absolute;
     top: 80px;
-    right: 0;
+    right: 0px;
     width: 250px;
+    box-sizing: border-box;
     bottom: 35px;
     border-left: 1px solid #cbcbcb;
-    background-color: #fff;
+    padding-right: 24px;
+    background: rgba(255, 255, 255, 1);
     transition-property: top, width;
     transition-duration: .3s;
-    transition-timing-function: cubic-bezier(.65,.05,.36,1);
+    transition-timing-function: cubic-bezier(.65, .05, .36, 1);
+    box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.16);
 }
 
 .main-editor .props-bar.title-bar-collapsed {
@@ -70,70 +73,105 @@ $props-col-1-input-width: 130px;
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 0;
+    right: 0px;
     width: 24px;
     border-left: 1px solid #cbcbcb;
 }
 
-.main-editor .props-bar .bar {
-    position: absolute;
-    left: 0;
-    right: 24px;
-    border-right: 1px solid #fafafa;
+.main-editor .props-bar .column2 {
+    .ant-collapse-content-box>.props-col-1 {
+        width: 50%;
+        overflow: hidden;
+        border-bottom: none;
+        padding: 4px 0;
+        box-sizing: border-box;
+    }
+    .ant-collapse-content-box>.props-col-1:nth-child(even) {
+        padding-left: 15px;
+    }
+    .ant-collapse-content-box>.props-col-1:nth-child(odd) {
+        padding-right: 15px;
+    }
+    .ant-input {
+        width: 60px;
+    }
+    .ant-slider-step {
+        background: rgba(239, 239, 239, 100);
+    }
+}
 
-    .props-col-cross {
-        min-height: $props-item-height;
-        line-height: $props-item-height;
-        &.group-end {
-          margin-bottom: $props-title-height;
+.main-editor .props-bar .column1 {
+    .ant-collapse-content-box>.props-col-1 {
+        width: 100%;
+        overflow: hidden;
+        border-bottom: none;
+        border-bottom: 1px solid rgba(239, 239, 239, 1);
+    }
+    .ant-input {
+        width: 134px;
+    }
+    .ant-slider {
+        width: 120px;
+        margin: 10px 0;
+    }
+}
+
+.main-editor .props-bar .bar {
+    .ant-collapse>.ant-collapse-item>.ant-collapse-header {
+        padding: 6px 0 6px 20px;
+        border-bottom: 1px solid rgba(239, 239, 239, 1);
+        position: relative;
+        >.arrow {
+            left: 6px;
+            top: 18px;
+            line-height: 0px;
         }
     }
-
-    .props-col-1 {
-        height: $props-item-height;
-        line-height: $props-item-height;
-        position: relative;
-        > div, > input,> label{
-            width: $props-col-1-input-width;
-            position: absolute;
-            right: 0;
-            top: $props-item-input-margin-top;
+    .ant-collapse-content {
+        background: rgba(249, 249, 249, 1);
+        >.ant-collapse-content-box {
+            padding: 0px 0px;
+            padding-top: 0px!important;
+            color: rgba(85, 85, 85, 1);
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
         }
-        > div {
-            &.ant-slider {
-            margin: 6px;
-            width: $props-col-1-input-width - 12;
+        .props-col-cross {
+            display: flex;
+            padding: 6px $panel-box-padding;
+            flex-direction: column;
+            width: 100%;
+            >.ant-input {
+                margin-top: 4px;
+                width: 100%!important;
             }
         }
-        > span {
-            &.ant-switch {
-                position: absolute;
-                right: 0;
-                top: $props-item-switch-margin-top;                
-            }
+        .props-col-1 {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px $panel-box-padding;
         }
-        > div {
-            &.colorButton {
-                padding: 5px;
+        >div {
+            .colorButton {
+                padding: 4px;
                 background: #f6f7f8;
                 border-radius: 1px;
-                box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+                box-shadow: 0 0 0 1px rgba(0, 0, 0, .1);
                 display: inline-block;
                 cursor: pointer;
                 width: auto;
-
-                > div {
+                >div {
                     &.colorButton-inner {
                         width: 24px;
                         height: 14px;
                         border-radius: 2px;
-                        box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+                        box-shadow: 0 0 0 1px rgba(0, 0, 0, .1);
                     }
                 }
             }
-        }
-        &.group-end {
-            margin-bottom: $props-title-height;
         }
     }
 }
@@ -191,17 +229,16 @@ $props-col-1-input-width: 130px;
 }
 
 .main-editor .command-bar {
-    > div {
+    >div {
         &.colorButton {
             padding: 5px;
             background: #fff;
             border-radius: 1px;
-            box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, .1);
             display: inline-block;
             cursor: pointer;
             width: auto;
-
-            > div {
+            >div {
                 &.colorButton-inner {
                     width: 24px;
                     height: 14px;

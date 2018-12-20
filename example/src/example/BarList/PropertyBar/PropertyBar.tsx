@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { PropertiesEnum, CommandMap, IPropertyGroup, IProperty } from '../../../../../src';
-import { List, OrderedSet } from 'immutable';
+import { List, OrderedSet, fromJS } from 'immutable';
 
 import { SketchPicker } from 'react-color';
 import { Input, Switch, Slider, Collapse, Popover, Select } from 'antd';
-import { IpList } from '../../../../../src/component/UniversalComponents/model/types';
+import { IpList, IFilterList } from '../../../../../src/component/UniversalComponents/model/types';
 const { TextArea } = Input;
 
 export interface IPropertyProps {
@@ -94,21 +94,31 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     private buildPropertyGroup = () => {
         const { propsGroup } = this.state;
         const group: JSX.Element[] = [];
+        let groupLineNum: string = '';
         const activeKeys: string[] = [];
-
         propsGroup.map(
             (propGroup: IPropertyGroup) => {
-                group.push(
-                    <Collapse.Panel header={propGroup.groupTitle} key={propGroup.groupKey}>
-                        {this.buildPropertyList(propGroup.propertyList, propGroup.groupKey)}
-                    </Collapse.Panel>
-                );
-                if (propGroup.isActive === true) activeKeys.push(propGroup.groupKey);
+                switch (propGroup.colNum) {
+                    case 1:
+                        groupLineNum = 'column1';
+                        break;
+                    case 2:
+                        groupLineNum = 'column2';
+                        break;
+                }
+                if (!propGroup.groupRequire) {
+                    group.push(
+                        <Collapse.Panel header={propGroup.groupTitle} key={propGroup.groupKey} className={groupLineNum}>
+                            {this.buildPropertyList(propGroup.propertyList, propGroup.groupKey)}
+                        </Collapse.Panel>
+                    );
+                    if (propGroup.isActive === true) activeKeys.push(propGroup.groupKey);
+                }
             }
         );
 
         return (
-            <Collapse bordered={false} activeKey={activeKeys}>
+            <Collapse bordered={false} activeKey={activeKeys} onChange={(key) => this.changePropertyActive(key)}>
                 {group}
             </Collapse>
         );
@@ -119,7 +129,6 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
      */
     private buildPropertyList = (propertyList: List<IProperty>, groupKey: string) => {
         const list: JSX.Element[] = [];
-
         propertyList.map(
             (property: IProperty) => {
                 const element: JSX.Element | null = this.buildPropertyElement(property, groupKey);
@@ -140,8 +149,8 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
 
         switch (property.pType) {
             case PropertiesEnum.INPUT_TEXT:
-                element = (
-                    <div className="props-col-1 group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Input
                             type="text"
@@ -156,23 +165,23 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                 );
                 break;
             case PropertiesEnum.INPUT_TEXTAREA:
-                element = (
-                    <div className="props-col-cross group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-cross" key={property.pKey}>
                         {property.pTitle}
                         <TextArea
                             rows={4}
                             autosize={false}
                             value={property.pValue}
                             id={`${groupKey}.${property.pKey}`}
-                            onBlur={(e) => this.handleInputText(e, 'blur')}
+                            onFocus={(e) => this.handleInputText(e, 'blur')}
                             onChange={this.changePropertyValue}
                         />
                     </div>
                 );
                 break;
             case PropertiesEnum.INPUT_NUMBER:
-                element = (
-                    <div className="props-col-1 group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Input
                             type="number"
@@ -187,8 +196,8 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                 );
                 break;
             case PropertiesEnum.INPUT_LIST:
-                element = (
-                    <div className="props-col-cross group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-cross" key={property.pKey}>
                         {property.pTitle}
                         <TextArea
                             rows={4}
@@ -196,28 +205,28 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             value={property.pValue.join('\n')}
                             id={`${groupKey}.${property.pKey}`}
                             onBlur={(e) => this.handleInputList(e)}
-                            onChange={(e) => this.changePropertyValue(e, e.target.value.split(/[\r\n]/))}
+                            onChange={(e) => this.changePropertyValue(e, e.target.value.split(/[\r\n]/), property)}
                         />
                     </div>
                 );
                 break;
             case PropertiesEnum.SWITCH:
-                element = (
+                element = property.pRequire ? null : (
                     <div className="props-col-1 group-end" key={property.pKey}>
                         {property.pTitle}
                         <Switch
                             size="small"
                             checked={property.pValue}
-                            onChange={(value) => this.handleSwitch(value, `${groupKey}.${property.pKey}`)}
+                            onChange={(value) => this.handleSwitch(value, `${groupKey}.${property.pKey}`, property)}
                         />
                     </div>
                 );
                 break;
             case PropertiesEnum.COLOR_PICKER:
-                element = (
-                    <div className="props-col-1 group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
-                        <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`)} trigger="hover">
+                        <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`, property)} trigger="hover">
                             <div className="colorButton">
                                 <div
                                     className="colorButton-inner"
@@ -231,27 +240,27 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                 );
                 break;
             case PropertiesEnum.SLIDER:
-                element = (
-                    <div className="props-col-1 group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Slider
                             min={0}
                             max={10}
                             value={property.pValue}
-                            onChange={(value) => this.changePropertyValue(null, value, `${groupKey}.${property.pKey}`)}
+                            onChange={(value) => this.changePropertyValue(property, value, `${groupKey}.${property.pKey}`)}
                             onAfterChange={(value) => this.handleSlider(value, `${groupKey}.${property.pKey}`)}
                         />
                     </div>
                 );
                 break;
             case PropertiesEnum.SELECT:
-                element = (
-                    <div className="props-col-1 group-end" key={property.pKey}>
+                element = property.pRequire ? null : (
+                    <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Select
                             size="small"
                             value={property.pValue}
-                            onChange={(value) => this.handleSelect(value, `${groupKey}.${property.pKey}`)}
+                            onChange={(value) => this.handleSelect(value, `${groupKey}.${property.pKey}`, property)}
                         >
                             {
                                 property.pList !== undefined ?
@@ -271,11 +280,11 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     /**
      * 获取颜色选择器
      */
-    private buildColorPicker = (pValue: any, pId: any): JSX.Element => {
+    private buildColorPicker = (pValue: any, pId: any, e: any): JSX.Element => {
         const colorPicker = (
             <SketchPicker
                 color={pValue}
-                onChangeComplete={(color) => this.handleColorPicker(`rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, pId)}
+                onChangeComplete={(color) => this.handleColorPicker(`rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`, pId, e)}
             />
         );
 
@@ -290,6 +299,13 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         const pValue = value;
         const pKey = id.split('.')[1];
         const groupKey = id.split('.')[0];
+        if (e.pFilterFun) {
+            switch (e.pFilterFun) {
+                case 'isShow':
+                    this.isShow(e, groupKey, pValue);
+                    break;
+            }
+        }
 
         const newPropsGroup: OrderedSet<IPropertyGroup> = oldPropsGroup.toList().update(
             (propsGroup: List<IPropertyGroup>) => {
@@ -320,7 +336,6 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     private handleInputText = (e: any, type: 'enter' | 'blur') => {
         const pValue = e.target.value;
         const pKey = e.target.id.split('.')[1];
-
         switch (type) {
             case 'enter':
                 // 把焦点移动到僚机，顺便触发当前文本框的onBlur
@@ -344,10 +359,9 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     /**
      * Switch值改变
      */
-    private handleSwitch = (pValue: any, pId: any) => {
+    private handleSwitch = (pValue: any, pId: any, e: any) => {
         const pKey = pId.split('.')[1];
-
-        this.changePropertyValue(null, pValue, pId);
+        this.changePropertyValue(e, pValue, pId);
         this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
     }
 
@@ -363,20 +377,100 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     /**
      * ColorPicker值改变
      */
-    private handleColorPicker = (pValue: any, pId: any) => {
+    private handleColorPicker = (pValue: any, pId: any, e: any) => {
         const pKey = pId.split('.')[1];
 
-        this.changePropertyValue(null, pValue, pId);
+        this.changePropertyValue(e, pValue, pId);
         this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
     }
 
     /**
      * Select值改变
      */
-    private handleSelect = (pValue: any, pId: any) => {
+    private handleSelect = (pValue: any, pId: any, e: any) => {
         const pKey = pId.split('.')[1];
 
-        this.changePropertyValue(null, pValue, pId);
+        this.changePropertyValue(e, pValue, pId);
         this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
+    }
+
+    /**
+     * propsGroup控制面板显示隐藏联动
+     */
+    private isShow = (e: any, pgroupKey: string, value: boolean) => {
+        const pFilterKey: IFilterList[] = e.pFilterKey;
+        const propsGroupList: OrderedSet<IPropertyGroup> = this.state.propsGroup;
+
+        pFilterKey.forEach((cs: any) => {
+            propsGroupList.toList().update(
+                (propsGroup: List<IPropertyGroup>) => {
+                    if (!cs.pKey) {
+                        propsGroup.find(
+                            (propGroup: IPropertyGroup) => propGroup.groupKey === cs.groupKey
+                        ).groupRequire = value;
+                    } else {
+                        propsGroup.find(
+                            (propGroup: IPropertyGroup) => propGroup.groupKey === cs.groupKey
+                        ).propertyList.update(
+                            (list: List<IProperty>) => {
+                                list.find(
+                                    (p: IProperty) => p.pKey === cs.pKey
+                                ).pRequire = value;
+
+                                return list;
+                            }
+                        );
+                    }
+
+                    return propsGroup;
+                }
+            ).toOrderedSet();
+        });
+
+        this.setState({
+            propsGroup: propsGroupList
+        });
+    }
+
+    /**
+     * Collapse的active值改变
+     */
+    private changePropertyActive = (allKey: string | string[]) => {
+        const IallKey = fromJS(allKey).toList();
+        let oldPropsGroup: OrderedSet<IPropertyGroup> = this.state.propsGroup;
+        // 收起所有折叠面板
+        oldPropsGroup = oldPropsGroup.toList().update(
+            (propsGroup: List<IPropertyGroup>) => {
+                propsGroup.map(
+                    (item: IPropertyGroup) => {
+                        item.isActive = false;
+                    }
+                );
+
+                return propsGroup;
+            }
+        ).toOrderedSet();
+        if (!IallKey.first()) {
+            this.setState({
+                propsGroup: oldPropsGroup
+            });
+
+            return;
+        }
+        // 展开激活折叠面板
+        OrderedSet(IallKey).forEach((key: string) => {
+            const newPropsGroup: OrderedSet<IPropertyGroup> = oldPropsGroup.toList().update(
+                (propsGroup: List<IPropertyGroup>) => {
+                    propsGroup.find(
+                        (propGroup: IPropertyGroup) => propGroup.groupKey === key
+                    ).isActive = true;
+
+                    return propsGroup;
+                }
+            ).toOrderedSet();
+            this.setState({
+                propsGroup: newPropsGroup
+            });
+        });
     }
 }

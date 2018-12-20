@@ -16,7 +16,7 @@
             true,
             "never"
         ],
-        "max-line-length": [true, 240],
+        "max-line-length": [true, 300],
         "trailing-comma": [
             true,
             {

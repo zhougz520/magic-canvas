@@ -7,6 +7,10 @@ export interface ICheckBoxState extends IFontState {
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
+    X: string;
+    Y: string;
+    W: string;
+    H: string;
 }
 
 const defaultRecord: ICheckBoxState = {
@@ -21,7 +25,11 @@ const defaultRecord: ICheckBoxState = {
     fontWeight: 'normal',
     textAlign: 'left',
     textDecoration: 'none',
-    textValue: 'Checkbox'
+    textValue: 'Checkbox',
+    X: '',
+    Y: '',
+    W: '',
+    H: ''
 };
 
 export const CheckBoxRecord: Record.Class = Record(defaultRecord);
@@ -88,5 +96,21 @@ export class CheckBoxState extends CheckBoxRecord {
 
     getTextValue(): string {
         return this.get('textValue');
+    }
+
+    getTextX(): string {
+        return this.get('X');
+    }
+
+    getTextY(): string {
+        return this.get('Y');
+    }
+
+    getTextW(): string {
+        return this.get('W');
+    }
+
+    getTextH(): string {
+        return this.get('H');
     }
 }

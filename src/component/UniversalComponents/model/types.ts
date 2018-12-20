@@ -15,6 +15,12 @@ export interface IpList {
     key: string;
     value: string;
 }
+
+export interface IFilterList {
+    groupKey: string;
+    pKey?: string;
+}
+
 /**
  * 属性类型
  */
@@ -24,6 +30,10 @@ export interface IProperty {
     pValue: any;
     pType: PropertiesEnum;
     pList?: IpList[];
+    pFilterFun?: string;
+    pFilterKey?: IFilterList[];
+    pFilterValue?: any;
+    pRequire?: boolean;
 }
 
 /**
@@ -35,6 +45,7 @@ export interface IPropertyGroup {
     isActive: boolean;
     colNum: number;
     propertyList: List<IProperty>;
+    groupRequire?: boolean;
 }
 
 /**
