@@ -173,7 +173,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             autosize={false}
                             value={property.pValue}
                             id={`${groupKey}.${property.pKey}`}
-                            onFocus={(e) => this.handleInputText(e, 'blur')}
+                            onBlur={(e) => this.handleInputText(e, 'blur')}
                             onChange={this.changePropertyValue}
                         />
                     </div>
@@ -205,7 +205,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             value={property.pValue.join('\n')}
                             id={`${groupKey}.${property.pKey}`}
                             onBlur={(e) => this.handleInputList(e)}
-                            onChange={(e) => this.changePropertyValue(e, e.target.value.split(/[\r\n]/), property)}
+                            onChange={(e) => this.changePropertyValue(property, e.target.value.split(/[\r\n]/), `${groupKey}.${property.pKey}`)}
                         />
                     </div>
                 );
