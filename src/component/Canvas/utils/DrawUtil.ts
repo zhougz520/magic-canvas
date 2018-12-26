@@ -2,6 +2,7 @@ import { Canvas } from '../Canvas';
 import { IComponentList, DragType, IOffset } from '../model/types';
 import { IComponent } from '../../BaseComponent';
 import { emptyButtonGroup } from '../../UniversalComponents';
+import { CommandMap } from '../command/CommandEmitted';
 
 import { OrderedSet, Set } from 'immutable';
 
@@ -58,12 +59,14 @@ export class DrawUtil {
         const selectedComponents = this._canvas._canvasGlobalParam.getSelectedComponents();
         // 当选中组件不为空时才进行清空操作
         if (selectedComponents.size > 0) {
-            this._canvas._canvasGlobalParam.clearSelectedComponent();
-            this.hideSelected();
-            // 向CommandBar传递当前选中的组件集合
+            // 1.把焦点指向僚机（触发属性栏text控件丢失焦点事件）
+            this._canvas.executeCommand({t: CommandMap.WINGMAN_FOCUS});
+            // 2.向CommandBar传递当前选中的组件集合
             this._canvas.props.onCommandProperties && this._canvas.props.onCommandProperties(emptyButtonGroup);
             this._canvas.props.onPropertyProperties && this._canvas.props.onPropertyProperties(OrderedSet());
-
+            // 3.清除选中组件（先处理其他逻辑，最后清除组件选中）
+            this._canvas._canvasGlobalParam.clearSelectedComponent();
+            this.hideSelected();
         }
     }
 

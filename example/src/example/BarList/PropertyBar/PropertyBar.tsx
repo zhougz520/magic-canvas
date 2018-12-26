@@ -49,10 +49,9 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
      * 设置属性分组
      */
     setPropertyState = (propertyGroup: OrderedSet<IPropertyGroup>) => {
-        this.setState(
-            {
-                propsGroup: propertyGroup
-            });
+        this.setState({
+            propsGroup: propertyGroup
+        });
     }
 
     /**
