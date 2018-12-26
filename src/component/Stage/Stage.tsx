@@ -17,7 +17,6 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         super(props);
 
         this.state = {
-            highPerformance: props.config.highPerformance,
             componentPosition: props.config.componentPosition
         };
 
@@ -44,15 +43,6 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
         });
         this.setState({
             componentPosition: Object.assign({}, this.state.componentPosition, { stageOffset: newStageOffset })
-        });
-    }
-
-    /**
-     * 切换高低效果模式
-     */
-    public changeHighPerformance = (value: boolean) => {
-        this.setState({
-            highPerformance: value
         });
     }
 
@@ -84,7 +74,7 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
     }
 
     render() {
-        const { componentPosition, highPerformance } = this.state;
+        const { componentPosition } = this.state;
         const {
             pageMode,
             canvasSize,
@@ -119,7 +109,6 @@ export class Stage extends React.PureComponent<IStageProps, IStageState> {
                     components={components}
                     componentPosition={componentPosition}
                     scale={scale}
-                    highPerformance={highPerformance}
                     getDraw={this.getDraw}
                     getStageScroll={this.getStageScroll}
                     setStageScroll={this.setStageScroll}

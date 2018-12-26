@@ -16,7 +16,6 @@ export interface ICompos {
 
 // config格式
 export interface IConfig {
-    highPerformance: boolean;   // 高性能模式
     componentPosition: ICompos; // 画布的初始偏移量
 }
 

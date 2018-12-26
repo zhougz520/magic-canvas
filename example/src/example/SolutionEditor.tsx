@@ -29,10 +29,6 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
         this.getStage().changeStageOffset(resourceBarCollapsed, propsBarCollapsed);
     }
 
-    highPerformance = (value: boolean) => {
-        this.getStage().changeHighPerformance(value);
-    }
-
     // 获取命令，并传给canvas
     onCommandEmitted = (cmd: any) => {
         this.getStage().onCommandEmitted(cmd);
@@ -70,7 +66,6 @@ export default class SolutionEditor extends React.PureComponent<any, any> {
                     ref={(render) => this.barList = render}
                     changeStageOffset={this.changeStageOffset}
                     onCommandEmitted={this.onCommandEmitted}
-                    highPerformance={this.highPerformance}
                     getSaveData={this.getSaveData}
                     setScale={this.setScale}
                 />

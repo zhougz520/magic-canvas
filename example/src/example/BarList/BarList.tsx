@@ -11,7 +11,6 @@ import { OrderedSet } from 'immutable';
 
 export interface IBarProps {
     changeStageOffset: (leftCollapsed: boolean, rightCollapsed: boolean) => void;
-    highPerformance: (value: boolean) => void;
     onCommandEmitted: (cmd: any) => void;
     getSaveData: () => void;
     setScale: (scale: number) => void;
@@ -59,7 +58,6 @@ export class BarList extends React.PureComponent<IBarProps, IBarState> implement
                     onCommandEmitted={this.props.onCommandEmitted}
                     // tslint:disable-next-line:jsx-no-lambda
                     onTitleBarCollapse={(collapsed) => this.collapseBar(collapsed)}
-                    highPerformance={this.props.highPerformance}
                     getSaveData={this.props.getSaveData}
                     setScale={this.props.setScale}
                 />

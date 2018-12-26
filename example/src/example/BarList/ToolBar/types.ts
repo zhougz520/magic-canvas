@@ -4,7 +4,6 @@ export interface IToolbarProps {
     // 是否折叠的样式
     titleBarCollapsed: boolean;
     onTitleBarCollapse: (collapsed: boolean) => void;
-    highPerformance: (value: boolean) => void;
     // 发送命令
     onCommandEmitted: (cmd: any) => void;
     getSaveData: () => void;

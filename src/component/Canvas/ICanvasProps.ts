@@ -14,8 +14,6 @@ export interface ICanvasProps {
     components: ComponentsType;
     // 画布大小
     canvasSize: { width: number, height: number };
-    // 高性能模式
-    highPerformance: boolean;
     // 画布偏移量
     componentPosition: ICompos;
     // 画布缩放比例（0-1）

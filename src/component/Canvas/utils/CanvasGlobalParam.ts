@@ -378,7 +378,7 @@ export class CanvasGlobalParam {
                 const height: number = value.size.height + nextH < 10 ? 10 : value.size.height + nextH;
                 const position: IPosition = { top, left };
                 const size: ISize = { width, height };
-                if (end || this._canvas.props.highPerformance) {
+                if (end) {
                     // 高性能模式，组件立即变化
                     com.setPosition(position);
                     com.setSize(size);
@@ -529,55 +529,41 @@ export class CanvasGlobalParam {
         if (!stageBoundary) return;
         this.dargging = true;
         const scale: number = this._canvas.props.scale ? this._canvas.props.scale : 1;
-        if (this._canvas.props.highPerformance) {
-            // 高性能模式，直接拖动组件
-            this.selectedComponents.map((component, cid) => {
-                if (component && cid) {
-                    if (component.isCanMove() === false) return;
-                    const value = this.currentComponentSize.getValue(cid);
-                    const top = value.position.top + Math.ceil(offset.y / scale);
-                    const left = value.position.left + Math.ceil(offset.x / scale);
-                    component.setPosition({ top, left });
-                }
-            });
-        } else {
-            // 低性能模式，移动拖动框
-            // if (stageBoundary) {
-            //     // 碰撞检测, 检查组件是否碰到边界
-            //     const leftCrash = this.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
-            //     const topCrash = this.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
-            //     const rightCrash = this.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
-            //     const bottomCrash = this.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
+        // 低性能模式，移动拖动框
+        // if (stageBoundary) {
+        //     // 碰撞检测, 检查组件是否碰到边界
+        //     const leftCrash = this.dragDivVolume.startPoint.x <= stageBoundary.startPoint.x;
+        //     const topCrash = this.dragDivVolume.startPoint.y <= stageBoundary.startPoint.y;
+        //     const rightCrash = this.dragDivVolume.endPoint.x >= stageBoundary.endPoint.x;
+        //     const bottomCrash = this.dragDivVolume.endPoint.y >= stageBoundary.endPoint.y;
 
-            //     // 碰撞到边界后滚动stage的滚动条
-            //     if (leftCrash || topCrash || rightCrash || bottomCrash) {
-            //         this.startScroll({
-            //             x: leftCrash ? -15 : rightCrash ? 15 : 0,
-            //             y: topCrash ? -15 : bottomCrash ? 15 : 0
-            //         } as IOffset, setStageScroll);
-            //     } else {
-            //         this.stopScroll();
-            //     }
-            // }
-            this.dragDivList.map((item: IDragDiv | undefined) => {
-                if (item !== undefined) {
-                    if (item.component.isCanMove() === false) return;
-                    const pos = item.component.getPosition();
-                    const div = item.documentDiv;
-                    div.style.display = 'block';
-                    item.hasChange = true;
-                    if (div.style.left) {
-                        const left = Math.ceil(pos.left * scale) + offset.x + this.componentOffset.x;
-                        div.style.left = `${left}px`;
-                    }
-                    if (div.style.top) {
-                        const right = Math.ceil(pos.top * scale) + offset.y + this.componentOffset.y;
-                        div.style.top = `${right}px`;
-                    }
+        //     // 碰撞到边界后滚动stage的滚动条
+        //     if (leftCrash || topCrash || rightCrash || bottomCrash) {
+        //         this.startScroll({
+        //             x: leftCrash ? -15 : rightCrash ? 15 : 0,
+        //             y: topCrash ? -15 : bottomCrash ? 15 : 0
+        //         } as IOffset, setStageScroll);
+        //     } else {
+        //         this.stopScroll();
+        //     }
+        // }
+        this.dragDivList.map((item: IDragDiv | undefined) => {
+            if (item !== undefined) {
+                if (item.component.isCanMove() === false) return;
+                const pos = item.component.getPosition();
+                const div = item.documentDiv;
+                div.style.display = 'block';
+                item.hasChange = true;
+                if (div.style.left) {
+                    const left = Math.ceil(pos.left * scale) + offset.x + this.componentOffset.x;
+                    div.style.left = `${left}px`;
                 }
-            });
-        }
-
+                if (div.style.top) {
+                    const right = Math.ceil(pos.top * scale) + offset.y + this.componentOffset.y;
+                    div.style.top = `${right}px`;
+                }
+            }
+        });
     }
 
     // 在body中删除组件的移动框

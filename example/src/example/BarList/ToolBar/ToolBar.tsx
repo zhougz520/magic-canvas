@@ -4,7 +4,7 @@ import { IToolbarProps, IToolbarState, IToolbarComponent } from './types';
 import { CommandMap, getListStyleTypeMap, IToolButtonGroup, emptyButtonGroup } from '../../../../../src';
 
 import { SketchPicker } from 'react-color';
-import { Switch, Button, Dropdown, Menu, Icon, InputNumber, Radio, Popover } from 'antd';
+import { Button, Dropdown, Menu, Icon, InputNumber, Radio, Popover } from 'antd';
 
 import '../sass/bar.scss';
 
@@ -18,11 +18,6 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
     // 折叠
     onClick = (e: any) => {
         this.props.onTitleBarCollapse(!this.props.titleBarCollapsed);
-    }
-
-    // 高性能开关
-    onChange = (e: boolean) => {
-        this.props.highPerformance(e);
     }
 
     /**
@@ -141,10 +136,6 @@ export class ToolBar extends React.PureComponent<IToolbarProps, IToolbarState> i
         return (
             <div className={`command-bar ${titleBarCollapsed ? 'title-bar-collapsed' : ''}`}>
                 <div onClick={this.onClick}>折叠</div>
-                <div>
-                    <span>高性能</span>
-                    <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked onChange={this.onChange} />
-                </div>
 
                 <Button
                     onClick={() => this.fireCommand(CommandMap.EDITOR_BOLD)}

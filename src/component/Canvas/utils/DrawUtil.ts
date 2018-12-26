@@ -220,20 +220,14 @@ export class DrawUtil {
      */
     moveDragBox = (e: any) => {
         let stageBoundary = this._canvas.props.getStageBoundary();
-        // 低性能模式，创建拖动框并拖动
-        let start = this._canvas._canvasGlobalParam.getPointerStart('dom');
-        let offset = { x: e.pageX - start.x, y: e.pageY - start.y };
+        // 创建拖动框并拖动
+        const start = this._canvas._canvasGlobalParam.getPointerStart('dom');
+        const offset = { x: e.pageX - start.x, y: e.pageY - start.y };
         if (stageBoundary) {
             stageBoundary = {
                 startPoint: { x: stageBoundary.startPoint.x - offset.x, y: stageBoundary.startPoint.y - offset.y },
                 endPoint: { x: stageBoundary.endPoint.x - offset.x, y: stageBoundary.endPoint.y - offset.y }
             };
-        }
-        if (this._canvas.props.highPerformance) {
-            // 高性能模式，直接拖动组件
-            start = this._canvas._canvasGlobalParam.getPointerStart('canvas');
-            const end = this._canvas._positionUtil.getPositionRelativeCanvas(e.pageX, e.pageY);
-            offset = { x: end.x - start.x, y: end.y - start.y };
         }
 
         // 档偏移量超过10后才开始处理拖拽事件，并隐藏选中框
