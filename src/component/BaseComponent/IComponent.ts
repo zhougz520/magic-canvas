@@ -1,7 +1,6 @@
 import { ISize } from './model/SizeState';
 import { IPosition } from './model/PositionState';
 import { IBaseProps } from './IBaseProps';
-import { ContentState } from './model/ContentState';
 import { BaseState } from './model/BaseState';
 import { EditType, IRichEditOption, ICommentsList, ComponentType, IFont } from './model/types';
 import { IReactData, IBaseData } from '../Draw';
@@ -36,7 +35,7 @@ export interface IComponent {
      * 获取、设置position属性
      */
     getPosition: () => IPosition;
-    setPosition: (position: IPosition, isSetUndo?: boolean) => void;
+    setPosition: (position: IPosition) => void;
 
     /**
      * 获取、设置richChildNode
@@ -61,11 +60,6 @@ export interface IComponent {
      */
     redo: () => void;
     undo: () => void;
-
-    /**
-     * 手动设置堆栈
-     */
-    setUndoStack: () => void;
 
     /**
      * 获取、设置组件层级
@@ -93,11 +87,6 @@ export interface IComponent {
      * 获取组件类型
      */
     getType: () => string;
-
-    /**
-     * 获取组件的临时状态
-     */
-    getTempContentState: () => ContentState;
 
     /**
      * 获取组件富文本编辑模式

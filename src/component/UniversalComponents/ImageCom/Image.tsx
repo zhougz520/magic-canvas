@@ -48,14 +48,17 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
      * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
      * @param position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public setPosition = (position: IPosition, isSetUndo: boolean = false): void => {
+    public setPosition = (position: IPosition): void => {
         const oldPositionState: PositionState = this.getPositionState();
         const newPositionState: PositionState = PositionState.create(position);
 
-        this.setPositionState(newPositionState, isSetUndo, () => {
-            this.updateCommentsList(oldPositionState);
-            this.updateImageMagnifierList(oldPositionState);
-        });
+        this.setPositionState(
+            newPositionState,
+            () => {
+                this.updateCommentsList(oldPositionState);
+                this.updateImageMagnifierList(oldPositionState);
+            }
+        );
     }
 
     /**
@@ -204,8 +207,7 @@ export default class Image extends BaseUniversalComponent<IBaseUniversalComponen
                         customState: newImageState
                     }) as ContentState;
                     const newBaseState = BaseState.set(oldBaseState, {
-                        currentContent: newContent,
-                        tempContentState: newContent
+                        currentContent: newContent
                     });
 
                     if (this._willUnmount === false) {

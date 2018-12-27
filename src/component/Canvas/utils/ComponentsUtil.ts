@@ -565,7 +565,7 @@ export class ComponentsUtil {
                     top: position.top + comSize.height,
                     left: position.left + comSize.width
                 };
-                com.setPosition(position, true);
+                com.setPosition(position);
             }
         );
     }

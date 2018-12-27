@@ -7,13 +7,6 @@ import { Record, Stack } from 'immutable';
 export interface IBase {
     // 当前内容：ContentState类型的对象
     currentContent: ContentState | null;
-    /**
-     * Add by zhougz
-     * 记录临时的ContentState：做撤销栈时使用,size、position是线性调整,堆栈只记录线性调整开始时的状态。
-     * 常规调整：改变BaseState的时候记录最新的ContentState
-     * 线性调整：过程中不修改tempContentState，线性调整结束后tempContentState为上次常规调整后的值，调用setUndoStack把它设置到最新的撤销栈中
-     */
-    tempContentState: ContentState | null;
     // 重做：ContentState类型的堆栈
     redoStack: Stack<ContentState>;
     // 撤销：ContentState类型的堆栈
@@ -22,7 +15,6 @@ export interface IBase {
 
 const defaultRecord: IBase = {
     currentContent: null,
-    tempContentState: null,
     redoStack: Stack(),
     undoStack: Stack()
 };
@@ -50,7 +42,6 @@ export class BaseState extends BaseStateRecord {
     static createWithContent(contentState: ContentState): BaseState {
         const baseState: IBase = {
             currentContent: contentState,
-            tempContentState: contentState,
             redoStack: Stack(),
             undoStack: Stack()
         };
@@ -93,19 +84,16 @@ export class BaseState extends BaseStateRecord {
         }
 
         const currentContent: ContentState = baseState.getCurrentContent();
-        let tempContentState: ContentState = baseState.getTempContentState();
         let undoStack: Stack<ContentState> = baseState.getUndoStack();
         const redoStack: Stack<ContentState> = baseState.getRedoStack();
         const newContent: ContentState = contentState;
 
         if (newContent !== currentContent && isSetUndo === true) {
-            tempContentState = newContent;
             undoStack = undoStack.push(currentContent);
         }
 
         const editorStateChanges: any = {
             currentContent: newContent,
-            tempContentState,
             undoStack,
             redoStack
         };
@@ -128,7 +116,6 @@ export class BaseState extends BaseStateRecord {
 
         return BaseState.set(baseState, {
             currentContent: newCurrentContent,
-            tempContentState: newCurrentContent,
             undoStack: undoStack.shift(),
             redoStack: baseState.getRedoStack().push(currentContent)
         });
@@ -149,7 +136,6 @@ export class BaseState extends BaseStateRecord {
 
         return BaseState.set(baseState, {
             currentContent: newCurrentContent,
-            tempContentState: newCurrentContent,
             undoStack: baseState.getUndoStack().push(currentContent),
             redoStack: redoStack.shift()
         });
@@ -157,10 +143,6 @@ export class BaseState extends BaseStateRecord {
 
     getCurrentContent(): ContentState {
         return this.get('currentContent');
-    }
-
-    getTempContentState(): ContentState {
-        return this.get('tempContentState');
     }
 
     getUndoStack(): Stack<ContentState> {

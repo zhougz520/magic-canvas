@@ -13,7 +13,6 @@ export function docKeyUp(canvas: Canvas, e: any): void {
             case 'right':
             case 'left':
                 canvas._canvasGlobalParam.clearTimer();
-                canvas._canvasGlobalParam.setUndoStack();
                 e.preventDefault();
                 break;
         }

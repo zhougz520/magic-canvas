@@ -1,11 +1,11 @@
 import { Canvas } from '../Canvas';
-import { IComponent, IPosition, ISize, ICommentsList } from '../../BaseComponent';
+import { IComponent, IPosition, ISize } from '../../BaseComponent';
 import { ComponentsMap } from '../../Stage';
-import { IDragDiv, DragType, IOffset, IBoundary, IComponentList } from '../model/types';
+import { IDragDiv, DragType, IOffset, IBoundary } from '../model/types';
 import { IBaseData } from '../../Draw/model/types';
 import { IAnchor } from '../../util';
 
-import { Map, Set, List, OrderedSet } from 'immutable';
+import { Map, Set } from 'immutable';
 
 export class CanvasGlobalParam {
     public body: HTMLBodyElement;
@@ -208,8 +208,6 @@ export class CanvasGlobalParam {
 
     // canvas上的鼠标点击事件
     canvasMouseUp(e: any) {
-        // 当组件经历过形状位置改变后，手动设置一次组件堆栈
-        if (this.dargging) this.setUndoStack();
         this.mouseDown = false;
         this.dargging = false;
         this.dragType = DragType.None;
@@ -241,8 +239,6 @@ export class CanvasGlobalParam {
 
     // 组件传递而来的鼠标点击事件
     componentMouseUp(e: any) {
-        // 当组件经历过形状位置改变后，手动设置一次组件堆栈
-        if (this.dargging) this.setUndoStack();
         this.mouseDown = false;
         this.dargging = false;
         this.dragType = DragType.None;
@@ -256,41 +252,6 @@ export class CanvasGlobalParam {
     // 返回鼠标按下时的初始位置
     getPointerStart(type: string) {
         return this.pointStart.getValue(type);
-    }
-
-    // 手动设置组件堆栈(当组件位置和大小改变完成后，在设置，其他情况请慎用)
-    setUndoStack() {
-        this.selectedComponents.map(
-            (com: IComponent, cid: string) => {
-                // 1.组件手动设栈
-                com.setUndoStack();
-
-                // 2.组件对应的选中框手动设栈
-                const commentsRectList: List<ICommentsList> = com.getCommentsList();
-                commentsRectList.map(
-                    (commentsRect: ICommentsList) => {
-                        const commentsRectCom: IComponent | null = this._canvas.getComponent(commentsRect.cid);
-                        if (commentsRectCom) {
-                            commentsRectCom.setUndoStack();
-                        }
-                    }
-                );
-
-                // 3.如果是图片组件，对放大镜设栈
-                const customState: any = com.getCustomState();
-                if (customState && customState.getImageMagnifierList) {
-                    const imageMagnifierList: OrderedSet<IComponentList> = customState.getImageMagnifierList();
-                    imageMagnifierList.map(
-                        (imageMagnifier: IComponentList) => {
-                            const componentMagnifier: IComponent | null = this._canvas.getComponent(imageMagnifier.cid);
-                            if (componentMagnifier) {
-                                componentMagnifier.setUndoStack();
-                            }
-                        }
-                    );
-                }
-            }
-        );
     }
 
     // 获取当前鼠标所在锚点
@@ -380,8 +341,8 @@ export class CanvasGlobalParam {
                 const size: ISize = { width, height };
                 if (end) {
                     // 高性能模式，组件立即变化
-                    com.setPosition(position);
                     com.setSize(size);
+                    com.setPosition(position);
                 } else {
                     // 低性能模式，组件在鼠标放下时变化
                     comData.push({ cid, position, size, anchorKey, type: com.getType() } as IBaseData);

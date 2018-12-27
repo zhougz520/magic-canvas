@@ -15,7 +15,7 @@ import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
 import { IPropertyGroup, IToolButtonGroup, emptyButtonGroup } from '../UniversalComponents';
 import { IContextMenuItems } from '../Stage';
-import { Stack, List, OrderedSet } from 'immutable';
+import { List, OrderedSet } from 'immutable';
 
 /**
  * 基类
@@ -147,11 +147,11 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 注意：设置结束后请手动调用setUndoStack方法增加撤销栈
      * @param position IPosition类型的对象{left: 10, right: 10, top: 10, bottom: 10}
      */
-    public setPosition = (position: IPosition, isSetUndo: boolean = false): void => {
+    public setPosition = (position: IPosition): void => {
         const oldPositionState: PositionState = this.getPositionState();
         const newPositionState: PositionState = PositionState.create(position);
 
-        this.setPositionState(newPositionState, isSetUndo, () => this.updateCommentsList(oldPositionState));
+        this.setPositionState(newPositionState, () => this.updateCommentsList(oldPositionState));
     }
 
     /**
@@ -263,15 +263,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
     }
 
     /**
-     * 获取组件的临时状态
-     */
-    public getTempContentState = (): ContentState => {
-        const baseState: BaseState = this.getBaseState();
-
-        return baseState.getTempContentState();
-    }
-
-    /**
      * 重做
      */
     public redo = (): void => {
@@ -289,28 +280,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const newBaseState: BaseState = BaseState.undo(oldBaseState);
 
         this.setBaseState(newBaseState);
-    }
-
-    /**
-     * 手动设置堆栈
-     */
-    public setUndoStack = (): void => {
-        const oldBaseState: BaseState = this.getBaseState();
-        const currentContent: ContentState = oldBaseState.getCurrentContent();
-        // tempContentState记录的线性调整开始前的ContentState
-        const tempContentState: ContentState = oldBaseState.getTempContentState();
-        const undoStack: Stack<ContentState> = oldBaseState.getUndoStack().push(tempContentState);
-
-        const newBaseState: BaseState = BaseState.set(oldBaseState, {
-            currentContent,
-            tempContentState: currentContent,
-            undoStack,
-            redoStack: Stack()
-        });
-
-        this.setState({
-            baseState: newBaseState
-        }, () => this.callBackForRender('Stack'));
     }
 
     /**
@@ -624,17 +593,18 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * @param newSizeState 构建好的新的sizeState
      */
     protected setSizeState = (newSizeState: SizeState): void => {
+        const isSetUndo: boolean = false;
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             sizeState: newSizeState
         }) as ContentState;
 
-        // 不自动设置撤销栈，由画布手动设置
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, false);
+        // 不自动设置撤销栈，size改变伴随着position改变，由position一起设置
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, isSetUndo);
 
         this.setState({
             baseState: newBaseState
-        }, () => this.callBackForRender('Size'));
+        }, () => this.callBackForRender('Size', isSetUndo));
     }
 
     /**
@@ -651,19 +621,19 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 设置组件的PositionState
      * @param newPositionState 构建好的新的PositionState
      */
-    protected setPositionState = (newPositionState: PositionState, isSetUndo: boolean = false, callback?: () => void): void => {
+    protected setPositionState = (newPositionState: PositionState, callback?: () => void): void => {
         const oldBaseState: BaseState = this.getBaseState();
         const newContent: ContentState = oldBaseState.getCurrentContent().merge({
             positionState: newPositionState
         }) as ContentState;
 
         // 不自动设置撤销栈，由画布手动设置
-        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent, isSetUndo);
+        const newBaseState: BaseState = BaseState.push(oldBaseState, newContent);
 
         this.setState({
             baseState: newBaseState
         }, () => {
-            this.callBackForRender('Position', isSetUndo);
+            this.callBackForRender('Position');
             callback && callback();
         });
     }
@@ -712,9 +682,6 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             case 'Comments':
                 isSetUndo && this.setCanvasUndoStack();
                 break;
-            case 'Stack':
-                isSetUndo && this.setCanvasUndoStack();
-                break;
         }
     }
 
@@ -747,7 +714,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      */
     protected setCanvasUndoStack = (): void => {
         if (this.props.setCanvasUndoStack) {
-            const timeStamp: number = Date.parse(new Date().toString());
+            const timeStamp: number = parseInt(new Date().getTime().toString().substr(0, 11) + '00', 10);
             const operationType: OperationType = 'modify';
             const componentList: List<IComponentList> = List().push({
                 cid: this.getCid(),
