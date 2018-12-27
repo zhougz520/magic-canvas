@@ -150,6 +150,9 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
      * 初始化画布数据，切换标签页时调用
      */
     initCanvas = (components: ComponentsType, canvasSize: { width: number; height: number; }): void => {
+        // 滚动条位置重置
+        const scroll = this.props.getStageScroll();
+        this.props.setStageScroll({ x: -scroll.scrollLeft, y: -scroll.scrollTop });
         // 清除选中
         this._drawUtil.clearSelected();
 
