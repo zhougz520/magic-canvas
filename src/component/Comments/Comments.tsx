@@ -37,7 +37,6 @@ const clone = require('clone');
 
 export interface ICommentsBaseState extends IBaseState {
     hidden: boolean;
-    hover: boolean;
 }
 
 /* tslint:disable:jsx-no-string-ref jsx-no-lambda jsx-no-multiline-js */
@@ -74,8 +73,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                 new CommentsState({ author, authorId, userType, backgroundColor }),
                 EditorState.createEmpty('需求' + this.props.baseState.getCurrentContent().getCid().replace('cm', '') + '：\n')
             ),
-            hidden: false,
-            hover: false
+            hidden: false
         };
     }
 
@@ -249,7 +247,7 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
 
     render() {
         const { pageMode } = this.props;
-        const { hidden, hover } = this.state;
+        const { hidden } = this.state;
         const commentsCustomState: CommentsState = this.getCustomState();
         const commentsRectList: OrderedSet<IComponentList> = commentsCustomState.getCommentsRectList();
         const rectList: JSX.Element[] = this.buildRect(commentsRectList);
@@ -321,13 +319,11 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                                 ...BaseStyle(this.getPositionState(), this.getSizeState(), this.getHierarchy(), false, this.isCanSelected()),
                                 backgroundColor: commentsCustomState.getBackgroundColor()
                             }}
-                            onMouseEnter={() => { this.setState({ hover: true }); }}
-                            onMouseLeave={() => { this.setState({ hover: false }); }}
                         >
                             {/* <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} /> */}
                             <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
                                 {commentsCustomState.getAuthor()}：
-                                {hover === true ? <Icon type="setting" className="setting" onClick={this.initCommentsTemplate} /> : ''}
+                                {pageMode === 'Edit' ? <Icon type="setting" className="setting" onClick={this.initCommentsTemplate} /> : ''}
                             </div>
                             <div
                                 style={{

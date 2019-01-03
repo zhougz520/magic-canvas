@@ -41,7 +41,6 @@ export interface ITableProps extends IBaseProps { }
 
 export interface ITableState extends IBaseState {
     hidden: boolean;
-    hover: boolean;
 }
 
 /* tslint:disable:jsx-no-multiline-js no-console */
@@ -73,8 +72,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                 colHeaders: true,
                 rowHeaders: true
             }), '表格'),
-            hidden: false,
-            hover: false
+            hidden: false
         };
     }
 
@@ -374,7 +372,8 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
     }
 
     render() {
-        const { hidden, hover } = this.state;
+        const { pageMode } = this.props;
+        const { hidden } = this.state;
         const customTableState: TableState = this.getCustomState();
 
         return (
@@ -398,12 +397,10 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                     onMouseDown={this.onTitleMouseDown}
                     onMouseUp={this.onTitleMouseUp}
                     onDoubleClick={this.doDbClickToEdit}
-                    onMouseEnter={() => { this.setState({ hover: true }); }}
-                    onMouseLeave={() => { this.setState({ hover: false }); }}
                 >
                     {hidden ? '' : this.getRichChildNode()}
                     <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
-                        {hover === true ? <Icon type="setting" className="setting" onClick={this.initTableTemplate} /> : ''}
+                        {pageMode === 'Edit' ? <Icon type="setting" className="setting" onClick={this.initTableTemplate} /> : ''}
                     </div>
                 </div>
                 <HotTable
