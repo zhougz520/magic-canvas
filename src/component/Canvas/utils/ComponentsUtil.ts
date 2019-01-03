@@ -221,11 +221,12 @@ export class ComponentsUtil {
      * @param dataUrl 图片的dataUrl
      * @param size 图片大小
      */
-    pasteImage = (
-        uid: string,
-        size: { width: number; height: number; }
-    ): void => {
+    pasteImage = ( uid: string, size: { width: number; height: number; }, image?: any): void => {
         const currentMousePosition = this._canvas._canvasGlobalParam.currentMousePosition;
+        if (currentMousePosition && image.type) {
+            currentMousePosition.x = 20;
+            currentMousePosition.y = 20;
+        }
         const data = {
             t: 'UniversalComponents/ImageCom/Image',
             p: {

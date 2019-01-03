@@ -589,7 +589,6 @@ export class PageAction {
         try {
             const clipboardTypes: string[] | undefined = this._canvas.props.checkClipboard && this._canvas.props.checkClipboard();
             const data = this._canvas.props.readFromClipboard && this._canvas.props.readFromClipboard();
-
             if (clipboardTypes && clipboardTypes.length > 0 && data) {
                 // text
                 if (clipboardTypes.includes('text') && data.text && data.text !== '') {
@@ -644,7 +643,7 @@ export class PageAction {
                     }
                     const imageData = pasteImageFunc();
                     const { size, uid } = imageData;
-                    this._canvas._componentsUtil.pasteImage(uid, size);
+                    this._canvas._componentsUtil.pasteImage(uid, size, imageData);
                 }
             }
         } catch (err) {
