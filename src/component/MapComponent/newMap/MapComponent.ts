@@ -6,6 +6,7 @@ import { IComponent } from './IComponent';
 
 import { IPropertyGroup } from '../../UniversalComponents';
 import { IPosition, IRichEditOption, IFont } from '../../BaseComponent';
+import { addPluginConfig, PluginMap, getPluginConfig } from '../../../plugin';
 
 import { OrderedSet } from 'immutable';
 import { GlobalUtil } from '../../util';
@@ -306,6 +307,8 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     }
     // TODO:这里是查找当前id对应的父级别数组(还没找完，明天继续)
     public findComponentParent = (p: any, id: string) => {
+        if (!id) return false;
+
         const ids = id.split('.');
         if (ids.length === 1) {
             return p.components;
@@ -436,7 +439,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
     /**
      * 复制控件
      */
-    public copySelectedCom = (): boolean => {
+    public copySelectedCom = (fromFun: any): boolean => {
         const cid: string = this.props.selectedId as string;
         const state = this.props.stateData;
         if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) {
@@ -453,16 +456,45 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
                 // 复制选中控件的结构,并重置结构中所有id
                 // tslint:disable-next-line:no-eval
                 const newCom = JSON.parse(JSON.stringify(selectedCom).replace(eval(`/\"${selectedCom.p.id}/g`), `"${newId}`));
-                // console.log('newCom', newCom);
-                parent.push(newCom);
+                if ( fromFun === 'isClick' ) {
+                    parent.push(newCom);
+                    this.props.updateProps(parentId, { p: { components: parent } });
+                    const { selectComChange } = this.props;
+                    selectComChange(undefined, newId);
+                }
+                if (fromFun === 'isKeyCode') {
+                    const detail = {
+                        type: 'ChildComponent',
+                        content: [parent, parentId, newCom, newId]
+                    };
+                    addPluginConfig(PluginMap.COPY_TO_CLIPBOARD, {
+                        text: JSON.stringify(detail)
+                    });
+                }
             }
         }
-        this.props.updateProps(parentId, { p: { components: parent } });
-        const { selectComChange } = this.props;
-        selectComChange(undefined, newId);
 
         return true;
     }
+
+    public parseSelectedCom = (): boolean => {
+        const pasteComponent = getPluginConfig(PluginMap.COPY_TO_CLIPBOARD);
+        if (pasteComponent && pasteComponent.text) {
+            const detail = JSON.parse(pasteComponent.text);
+            const content = detail.content;
+            content[0].push(content[2]);
+            this.props.updateProps(content[1], { p: { components: content[0] } });
+            const { selectComChange } = this.props;
+            selectComChange(undefined, content[3]);
+            this.copySelectedCom ('isKeyCode');
+
+            return true;
+
+        }
+
+        return false;
+    }
+
     /**
      * 删除控件
      */
@@ -486,6 +518,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
 
         return true;
     }
+
     /**
      *  drop 添加控件
      */

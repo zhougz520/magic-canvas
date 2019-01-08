@@ -527,7 +527,7 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
      * 操作子控件
      * 默认：false, 没有选中子组件
      */
-    public handleChildCom = (handle: string): boolean => {
+    public handleChildCom = (handle: string, fromFun?: string): boolean => {
         return false;
     }
 

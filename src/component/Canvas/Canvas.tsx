@@ -263,8 +263,10 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         let multiselect: boolean = false;
         if (e !== null) {
             const args = this._mouseAndKeyUtil.pointerArgs(e);
-            const { ctrl } = (args as IPointerArgs).keyArgs as IKeyArgs;
-            multiselect = ctrl;
+            if (args) {
+                const { ctrl } = (args as IPointerArgs).keyArgs as IKeyArgs;
+                multiselect = ctrl;
+            }
         }
 
         // 选中组件就把焦点给到编辑框，随时准备输入

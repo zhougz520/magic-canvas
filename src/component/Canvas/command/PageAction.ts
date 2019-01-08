@@ -1,7 +1,6 @@
 import { Canvas } from '../Canvas';
 import { BaseState, IComponent, IComData } from '../../BaseComponent';
 import { IRange, IStack, IComponentList, IOperation, IOffset } from '../model/types';
-import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
 import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 
 import { getPluginConfig, PluginMap } from '../../../plugin';
@@ -538,48 +537,27 @@ export class PageAction {
     }
 
     /**
+     * 复制&粘贴子组件
+     */
+    copyPaste = () => {
+        this._canvas._componentsUtil.copyCanvasComponent(this._canvas._canvasGlobalParam.getSelectedCids(), 'isClick');
+    }
+
+    /**
      * 复制组件
      */
     copyCom = () => {
-        const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
-
-        const components: any[] = [];
-        currentSelectedComponent.map(
-            (component: IComponent) => {
-                const isCanCopy: boolean = component.isCanCopy();
-                if (isCanCopy) {
-                    components.push(
-                        convertFromBaseStateToData(
-                            component.getBaseState(),
-                            {
-                                comPath: component.getBaseProps().comPath,
-                                childData: component.getBaseProps().childData
-                            }
-                        )
-                    );
-                }
-            }
-        );
-
-        let detail: {} = {};
-        if (components.length > 0) {
-            detail = {
-                type: 'BaseComponent',
-                content: {
-                    components
-                }
-            };
-        }
-
-        this._canvas.props.copyToClipboard && this._canvas.props.copyToClipboard({
-            text: JSON.stringify(detail)
-        });
-        this._canvas._componentsUtil._pasteNum = 0;
+        this._canvas._componentsUtil.copyCanvasComponent(this._canvas._canvasGlobalParam.getSelectedCids(), 'isKeyCode');
     }
 
     // 剪切
     cutCom = () => {
         this.copyCom();
+        const pasteComponent = getPluginConfig(PluginMap.COPY_TO_CLIPBOARD);
+        if (pasteComponent && pasteComponent.text) {
+            const detail = JSON.parse(pasteComponent.text);
+            if (detail.type === 'ChildComponent') return;
+        }
         this._canvas._componentsUtil.deleteCanvasComponent(this._canvas._canvasGlobalParam.getSelectedCids());
         this._canvas._componentsUtil._pasteNum = -1;
     }
@@ -597,10 +575,6 @@ export class PageAction {
                     const content = detail.content;
                     if (content && type) {
                         switch (type) {
-                            case 'BaseComponent':
-                                const componentsBase: any[] = content.components;
-                                this._canvas._componentsUtil.pasteCanvasComponent(componentsBase);
-                                break;
                             case 'Page':
                                 const componentsPage: any[] = content.components;
                                 const widthPage: number = parseInt(content.width, 10);
@@ -644,6 +618,23 @@ export class PageAction {
                     const imageData = pasteImageFunc();
                     const { size, uid } = imageData;
                     this._canvas._componentsUtil.pasteImage(uid, size, imageData);
+                }
+            }
+            const pasteComponent = getPluginConfig(PluginMap.COPY_TO_CLIPBOARD);
+            if (pasteComponent && pasteComponent.text) {
+                const detail = JSON.parse(pasteComponent.text);
+                const type = detail.type;
+                const content = detail.content;
+                if (content && type) {
+                    switch (type) {
+                        case 'BaseComponent':
+                            const componentsBase: any[] = content.components;
+                            this._canvas._componentsUtil.pasteCanvasComponent(componentsBase);
+                            break;
+                        case 'ChildComponent':
+                            this._canvas._componentsUtil.pasteCanvasComponent(null);
+                            break;
+                    }
                 }
             }
         } catch (err) {

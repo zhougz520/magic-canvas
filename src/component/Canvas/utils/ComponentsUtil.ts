@@ -11,9 +11,11 @@ import {
 } from '../../BaseComponent';
 import { Canvas } from '../Canvas';
 import { IComponentList } from '../model/types';
+import { convertFromBaseStateToData } from '../encoding/convertFromBaseStateToData';
 import { convertFromDataToBaseState } from '../encoding/convertFromDataToBaseState';
 import { Map, OrderedSet, Set, List } from 'immutable';
 import { HandleChildCom } from '../../MapComponent/types';
+import { addPluginConfig, PluginMap } from '../../../plugin';
 
 export class ComponentsUtil {
     // 粘贴次数
@@ -88,13 +90,96 @@ export class ComponentsUtil {
     }
 
     /**
+     * 复制组件
+     * @param cids 组件的cids
+     * @param fromFun 判断哪一种操作
+     */
+    copyCanvasComponent = (cids: Set<string>, fromFun: string) => {
+        const copyComponentList: List<IComponentList> = List();
+        const timeStamp: number = Date.parse(new Date().toString());
+        const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+        let copyChildComponent = false;
+        // 清除原有剪切板内容
+        addPluginConfig(PluginMap.COPY_TO_CLIPBOARD, null);
+
+        componentList.map(
+            (component: IComponentList) => {
+                if (cids.contains(component.cid)) {
+                    let detail: object = {};
+                    // 判断是否存在子组件选中
+                    if ((this._canvas.getComponent(component.cid) as IComponent).handleChildCom) {
+                        copyChildComponent = (this._canvas.getComponent(component.cid) as IComponent).handleChildCom(HandleChildCom.COPY_COM, fromFun);
+                        detail = {
+                            type: 'ChildComponent',
+                            content: {}
+                        };
+                        this._canvas.props.copyToClipboard && this._canvas.props.copyToClipboard({
+                            text: JSON.stringify(detail)
+                        });
+                        this._canvas._componentsUtil._pasteNum = 0;
+                    }
+                    // 未复制子组件，则复制大控件
+                    if (!copyChildComponent) {
+                        const currentSelectedComponent: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
+                        const components: any[] = [];
+                        currentSelectedComponent.map(
+                            (componented: IComponent) => {
+                                const isCanCopy: boolean = componented.isCanCopy();
+                                if (isCanCopy) {
+                                    components.push(
+                                        convertFromBaseStateToData(
+                                            componented.getBaseState(),
+                                            {
+                                                comPath: componented.getBaseProps().comPath,
+                                                childData: componented.getBaseProps().childData
+                                            }
+                                        )
+                                    );
+                                }
+                            }
+                        );
+                        if (components.length > 0) {
+                            detail = {
+                                type: 'BaseComponent',
+                                content: {
+                                    components
+                                }
+                            };
+                        }
+                        this._canvas.props.copyToClipboard && this._canvas.props.copyToClipboard({
+                            text: JSON.stringify(detail)
+                        });
+                        addPluginConfig(PluginMap.COPY_TO_CLIPBOARD, {
+                            text: JSON.stringify(detail)
+                        });
+                        this._canvas._componentsUtil._pasteNum = 0;
+                    }
+                }
+            }
+        );
+        if (fromFun === 'isClick') {
+            this._canvas.setState({
+                componentList
+            }, () => {
+                // 添加撤销栈
+                this._canvas._canvasUtil.repaintCanvas(0, 0, true);
+                // 添加撤销栈
+                this._canvas._stackUtil.setCanvasUndoStack(
+                    timeStamp,
+                    'create',
+                    copyComponentList
+                );
+            });
+        }
+    }
+
+    /**
      * 画布删除组件
      */
     deleteCanvasComponent = (cids: Set<string>, isSetUndoStack: boolean = true) => {
         let delComponentList: List<IComponentList> = List();
         const timeStamp: number = Date.parse(new Date().toString());
         let commentsNum: number = 0;
-
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
         let deletedChildCom = false;
         componentList.map(
@@ -107,7 +192,6 @@ export class ComponentsUtil {
                     // 未删除子组件，则删除大map控件
                     if (!deletedChildCom) {
                         componentList = componentList.delete(component);
-
                         delComponentList = delComponentList.push({
                             cid: component.cid,
                             comPath: component.comPath,
@@ -170,35 +254,47 @@ export class ComponentsUtil {
      * @param position 组件在画布上添加的位置
      */
     pasteCanvasComponent = (
-        dataList: any[]
+        dataList: any
     ): void => {
         this._pasteNum += 1;
         let addComponentList: List<IComponentList> = List();
         const timeStamp: number = new Date().getTime();
 
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
-        dataList.map(
-            (data: any) => {
-                data.offset = { x: 0, y: 0 };
-                const { l, t } = data.p;
-                const getPasteCustomStateFun = require(`../../${data.t}`).getPasteCustomState;
-                const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
-                    data,
-                    { x: l + 10 * this._pasteNum, y: t + 10 * this._pasteNum },
-                    getPasteCustomStateFun ? getPasteCustomStateFun(this._canvas, data.p.customState) : data.p.customState
-                );
-                const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
-                const component: IComponentList = {
-                    cid: comData.id,
-                    comPath: data.t,
-                    baseState,
-                    childData: comData.p,
-                    initType: 'Paste'
-                };
-
-                componentList = componentList.add(component);
-                addComponentList = addComponentList.push(component);
-                this._canvas._newComponentCid = comData.id;
+        const cids = this._canvas._canvasGlobalParam.getSelectedCids();
+        if (dataList) {
+            dataList.map(
+                (data: any) => {
+                    data.offset = { x: 0, y: 0 };
+                    const { l, t } = data.p;
+                    const getPasteCustomStateFun = require(`../../${data.t}`).getPasteCustomState;
+                    const comData: IComData = this._canvas._componentsUtil.convertComponentToData(
+                        data,
+                        { x: l + 10 * this._pasteNum, y: t + 10 * this._pasteNum },
+                        getPasteCustomStateFun ? getPasteCustomStateFun(this._canvas, data.p.customState) : data.p.customState
+                    );
+                    const baseState: BaseState = convertFromDataToBaseState(comData, data.t);
+                    const component: IComponentList = {
+                        cid: comData.id,
+                        comPath: data.t,
+                        baseState,
+                        childData: comData.p,
+                        initType: 'Paste'
+                    };
+                    componentList = componentList.add(component);
+                    addComponentList = addComponentList.push(component);
+                    this._canvas._newComponentCid = comData.id;
+                }
+            );
+        }
+        componentList.map(
+            (component: IComponentList) => {
+                if (cids.contains(component.cid)) {
+                    // 判断是否存在子组件选中
+                    if ((this._canvas.getComponent(component.cid) as IComponent).handleChildCom) {
+                        (this._canvas.getComponent(component.cid) as IComponent).handleChildCom(HandleChildCom.PASTE_COM);
+                    }
+                }
             }
         );
         this._addNum = 0;
