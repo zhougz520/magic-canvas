@@ -738,16 +738,23 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
     min-width: 100%;
     overflow-x: auto;
 }
+
 .rowItem {
     border: 1px solid #eee;
-    line-height: 45px;
     text-align: center;
+    line-height: 45px;
 }
+
 .cellStyle {
-    width: 90%;
-    margin-left: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    height: 45px;
 }
-.cellStyle * {
-    width: 100%;
-    box-sizing: border-box!important;
+
+.cellStyle .ant-input-sm {
+    max-width: 90%;
+    display: block;
 }

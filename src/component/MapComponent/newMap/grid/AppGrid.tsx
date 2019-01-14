@@ -79,8 +79,8 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         } = this.props;
 
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
-        const componentsColumnsChild = components[0].p.p ? components[0].p.p.components : null;
-        const componentsRowChild = components[1].p.p ? components[1].p.p.components : null;
+        const componentsColumnsChild = (components && components[0].p.p) ? components[0].p.p.components : null;
+        const componentsRowChild = (components && components[1].p.p) ? components[1].p.p.components : null;
         const columns: any = [];
         let rows: any = [];
         // 获取表格columns
@@ -104,7 +104,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         }
         let appGridHeader: JSX.Element | null = null;
         let appGridContent: JSX.Element | null = null;
-        if (columns.length === 0 && p.components[1].p.p) {
+        if (columns.length === 0 && components && components[1].p.p) {
             rows = [];
             this.props.updateProps(components[1].p.id, { p: { components: [] } });
         }
@@ -195,7 +195,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                         }
                     </div>
                      {/* 标题头 */}
-                     <div className="flex1 map-grid-table">
+                     <div className="flex1">
                         <div id="table" style={{width: '100%', height: '250px', overflow: 'auto'}}>
                             {appGridHeader !== null ? appGridHeader : ''}
                             {appGridContent !== null ? appGridContent : ''}

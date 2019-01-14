@@ -46,7 +46,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                     rowItemState.p[item.id.replace(/\./g, '')] = value.target.value;
                     break;
                 case 'date':
-                    rowItemState.p[item.id.replace(/\./g, '')] = value;
+                    rowItemState.p[item.id.replace(/\./g, '')] = value ? value.format('YYYY-MM-DD') : '';
                     break;
             }
             updateProps(selectedId, rowItemState.p);
@@ -87,10 +87,10 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                             element = <Input placeholder="请输入" style={{color: '#1890ff'}} size="small" value={rowItem.p[item.id.replace(/\./g, '')]} onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')} />;
                                             break;
                                         case 'select':
-                                            element = <Select size="small"/>;
+                                            element = <Select defaultValue="选择框" size="small"/>;
                                             break;
                                         case 'date':
-                                            element = <DatePicker size="small" placeholder="请选择" format={rowItem.p[item.id.replace(/\./g, '')]} onChange={(date, dateString) => this.mapComponentChange(dateString, item, rowItem, 'date')} />;
+                                            element = <DatePicker size="small" placeholder="请选择"  format={rowItem.p[item.id.replace(/\./g, '')]} onChange={(value, dateString) => this.mapComponentChange(value, item, rowItem, 'date')} />;
                                             break;
                                         case 'number':
                                             element = <Input size="small" placeholder="请选择" value={rowItem.p[item.id.replace(/\./g, '')]} onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')} />;
