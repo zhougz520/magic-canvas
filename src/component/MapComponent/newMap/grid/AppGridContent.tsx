@@ -3,33 +3,32 @@ import * as React from 'react';
 import { IBaseProps } from '../IBaseProps';
 import { IBaseState } from '../IBaseState';
 import { MapComponent } from '../MapComponent';
-import { AppGridTableTitle } from './AppGridTableTitle';
+import { AppGridTableItem } from './AppGridTableItem';
 
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided } from 'react-beautiful-dnd';
 
 // tslint:disable-next-line:no-empty-interface
-export interface IAppGridHeaderProps extends IBaseProps {
-    map_g_check: boolean;
-    map_g_num: boolean;
+export interface IAppGridContentProps extends IBaseProps {
+    columns: any[];
 }
 
 // tslint:disable-next-line:no-empty-interface
-export interface IAppGridHeaderState extends IBaseState {
+export interface IAppGridContentState extends IBaseState {
 }
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
-export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHeaderState> {
+export class AppGridContent extends MapComponent<IAppGridContentProps, IAppGridContentState> {
     static defaultProps = {
-        map_g_check: false,
-        map_g_num: true
+        columns: []
     };
 
-    constructor(props: IAppGridHeaderProps, context?: any) {
+    constructor(props: IAppGridContentProps, context?: any) {
         super(props, context);
 
         this.state = {
-            hidden: false
+            hidden: false,
+            hover: {}
         };
     }
 
@@ -38,7 +37,11 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
      * @param t 组件路径
      */
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/newMap/grid/AppGridHeader');
+        if (this.props.columns.length === 0) {
+            t = 'undefined';
+        }
+
+        return (t === 'MapComponent/newMap/grid/AppGridContent');
     }
 
     render() {
@@ -49,21 +52,21 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
             selectedId,
             selectComChange,
             setChildPropertyGroup,
-            doChildDbClickToEdit,
             updateProps,
             getRefs,
             stateData,
+            columns,
             p
         } = this.props;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
-        const appGridTableTitle: any[] = [];
+        const appGridTableItem: any[] = [];
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
                 (com: any, index: number) => {
                     const { t, p } = com;
-                    if (t === 'MapComponent/newMap/grid/AppGridHeader') {
-                        appGridTableTitle.push(
-                            <AppGridTableTitle
+                    if (t === 'MapComponent/newMap/grid/AppGridContent' && columns.length > 0) {
+                        appGridTableItem.push(
+                            <AppGridTableItem
                                 ref={`c.${p.id}`}
                                 key={p.id}
                                 index={index}
@@ -73,11 +76,11 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
                                 selectedId={selectedId}
                                 selectComChange={selectComChange}
                                 setChildPropertyGroup={setChildPropertyGroup}
-                                doChildDbClickToEdit={doChildDbClickToEdit}
                                 updateProps={updateProps}
                                 getRefs={getRefs}
                                 stateData={stateData}
-
+                                columns={columns}
+                                components={components}
                             />
                         );
                     }
@@ -90,23 +93,22 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
                 <Droppable droppableId="droppable-appGridView" direction="horizontal">
                     {
                         (provided: DroppableProvided) =>
-
                             (
                                 <div
+                                    className="listheader-toolbar map-left"
                                     style={Object.assign(gridStyle === 'advanced' ? { minWidth: '150px' } : {}, this.state.hover)}
                                     ref={(ref) => this.com = ref}
                                     onDragOver={this.handleOver}
                                     onDragLeave={this.handleLeave}
                                 >
                                     <div
-                                        className="flex-row"
                                         ref={provided.innerRef}
-                                        style={{ width: '100%', lineHeight: '42px', textAlign: 'left', background: '#fafafa'}}
+                                        style={{ height: '100%', width: '100%', lineHeight: '45px', textAlign: 'left'}}
                                     >
                                         {
-                                            appGridTableTitle.length > 0 ? appGridTableTitle :
+                                            appGridTableItem.length > 0 ? appGridTableItem :
                                                 (
-                                                    <div style={{ color: '#bfbfbf', fontWeight: 'bold', textIndent: 20}}>请在此处添加列</div>
+                                                    <div style={{ color: '#bfbfbf', fontWeight: 'bold', textIndent: 20}}>请在此处添加表格数据</div>
                                                 )
                                         }
                                     </div>

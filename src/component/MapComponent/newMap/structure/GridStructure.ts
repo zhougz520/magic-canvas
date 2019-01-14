@@ -59,7 +59,23 @@ export const gridDetail = {
             {
                 t: 'MapComponent/newMap/grid/AppGrid',
                 p: {
-                    id: '[cid].cs7'
+                    id: '[cid].cs7',
+                    p: {
+                        components: [
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridHeader',
+                                p: {
+                                    id: '[cid].cs7.cs1'
+                                }
+                            },
+                            {
+                                t: 'MapComponent/newMap/grid/AppGridContent',
+                                p: {
+                                    id: '[cid].cs7.cs2'
+                                }
+                            }
+                        ]
+                    }
                 }
             },
             {

@@ -465,7 +465,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
                 if (fromFun === 'isKeyCode') {
                     const detail = {
                         type: 'ChildComponent',
-                        content: [parent, parentId, newCom, newId]
+                        content: [parent, parentId, selectedCom, newId]
                     };
                     addPluginConfig(PluginMap.COPY_TO_CLIPBOARD, {
                         text: JSON.stringify(detail)
@@ -482,11 +482,21 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (pasteComponent && pasteComponent.text) {
             const detail = JSON.parse(pasteComponent.text);
             const content = detail.content;
-            content[0].push(content[2]);
+            const newId = this.newComponentsId(content[0], `${content[1]}.cs`);
+            // tslint:disable-next-line:no-eval
+            const newCom = JSON.parse(JSON.stringify(content[0][content[0].length - 1]).replace(eval(`/\"${content[0][content[0].length - 1].p.id}/g`), `"${newId}`));
+            content[0].push(newCom);
             this.props.updateProps(content[1], { p: { components: content[0] } });
             const { selectComChange } = this.props;
-            selectComChange(undefined, content[3]);
-            this.copySelectedCom ('isKeyCode');
+            selectComChange(undefined, newId);
+
+            const newDetail = {
+                type: 'ChildComponent',
+                content: [content[0], content[1], content[0][content[0].length - 1], newId]
+            };
+            addPluginConfig(PluginMap.COPY_TO_CLIPBOARD, {
+                text: JSON.stringify(newDetail)
+            });
 
             return true;
 

@@ -45,7 +45,8 @@ export const ComponentsMap = {
             { t: 'MapComponent/newMap/grid/AppGridMenuItemButton', p: { name: '按钮' } },
             { t: 'MapComponent/newMap/grid/AppGridMenuItemDropdown', p: { name: '菜单按钮' } },
             { t: 'MapComponent/newMap/grid/AppGridMenuItemSwitch', p: { name: '开关按钮' } },
-            { t: 'MapComponent/newMap/grid/AppGridHeader', p: { name: '列表-列' } }
+            { t: 'MapComponent/newMap/grid/AppGridHeader', p: { name: '列表-列' } },
+            { t: 'MapComponent/newMap/grid/AppGridContent', p: { name: '表格数据-行' } }
         ]
     },
     NewMap_AppForm: {
