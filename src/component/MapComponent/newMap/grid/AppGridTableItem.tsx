@@ -77,7 +77,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                     let element: any = '';
                                     const map_gh_dataType = item.map_gh_dataType ?  item.map_gh_dataType : 'txt';
                                     const map_gh_align = item.map_gh_align ?  item.map_gh_align : 'center';
-                                    const map_gh_width = item.map_gh_width ?  item.map_gh_width : '0px';
+                                    const map_gh_width = item.map_gh_width ?  item.map_gh_width + 'px' : '0px';
                                     switch (map_gh_dataType) {
                                         case 'txt':
                                         case 'input':

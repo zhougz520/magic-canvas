@@ -292,7 +292,7 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
      */
     public getAddComponent() {
         if (GlobalUtil.isEmptyString((localStorage as any).__dnd_type) || GlobalUtil.isEmptyString((localStorage as any).__dnd_value)) return;
-        if ((localStorage as any).__dnd_type !== 'dragging_map') return;
+        // if ((localStorage as any).__dnd_type !== 'dragging_map') return;
 
         return JSON.parse((localStorage as any).__dnd_value);
     }

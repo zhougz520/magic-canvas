@@ -19,6 +19,10 @@ import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
+import AppGridContainer from './base/AppGridContainer';
+import { gridDetail } from '../structure';
+// tslint:disable-next-line:no-var-requires
+const clone = require('clone');
 
 export interface IMapProps extends IBaseProps {
     map_form_ss?: boolean;              // 是否显示section的标题
@@ -46,7 +50,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
     }
 
     componentWillReceiveProps(nextProps: any) {
-        // 当接收到新的props的时候，将字段列表更新
         this.setState({
             fieldList: nextProps.p !== undefined ? nextProps.p.components : []
         });
@@ -166,7 +169,28 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/newMap/form/field/TextAreaField') ||
             (t === 'MapComponent/newMap/form/field/TextField') ||
             (t === 'MapComponent/newMap/form/field/UploadField') ||
-            (t === 'MapComponent/newMap/grid/AppGrid');
+            (t === 'MapComponent/newMap/grid/base/AppGridContainer');
+    }
+
+    /**
+     * override
+     */
+    public addChildComponent = (id: string, data: any, addData: any): any => {
+        if (addData.t === 'MapComponent/newMap/grid/base/AppGridContainer') {
+            const section = this.getChildComponent(id, data, addData);
+            if (!section.p.p) {
+                const childId = section.p.id;
+                const gridInit: any = JSON.stringify(clone(gridDetail.p)).replace(/\[cid\]/g, childId);
+                const childDataComponent = gridInit && gridInit.toJS ? gridInit.toJS() : JSON.parse(gridInit);
+                childDataComponent.components.forEach((ele: any) => {
+                    this.getChildComponent(childId, data, {t: ele.t});
+                });
+                this.props.updateProps('', data);
+            }
+        } else {
+            data = this.initChildComponent(id, data, addData).props;
+            this.props.updateProps(id, { p: data.p.p });
+        }
     }
 
     private initFieldList = (currFieldList: any) => {
@@ -446,6 +470,27 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                         break;
                     case 'MapComponent/newMap/form/field/UploadField':
                         field = <UploadField
+                            titleWidth={map_form_ss_tt_w}
+                            key={p.id}
+                            {...p}
+                            id={p.id}
+                            currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
+                            ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
+                            selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
+                            stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
+                        />;
+                        break;
+                    case 'MapComponent/newMap/grid/base/AppGridContainer':
+                        field = <AppGridContainer
                             titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
