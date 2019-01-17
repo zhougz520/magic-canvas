@@ -321,10 +321,12 @@ export default class Comments extends BaseComponent<IBaseProps, ICommentsBaseSta
                             }}
                         >
                             {/* <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} /> */}
-                            <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
-                                {commentsCustomState.getAuthor()}：
-                                {pageMode === 'Edit' ? <Icon type="setting" className="setting" onClick={this.initCommentsTemplate} /> : ''}
-                            </div>
+                            {pageMode === 'Edit' ?
+                                <div style={{ width: '100%', height: '24px', lineHeight: '24px', paddingLeft: this._padding, fontWeight: 'bold', fontSize: '12px' }}>
+                                    {commentsCustomState.getAuthor()}
+                                    <Icon type="setting" className="setting" onClick={this.initCommentsTemplate} />
+                                </div> : ''
+                            }
                             <div
                                 style={{
                                     pointerEvents: 'auto',

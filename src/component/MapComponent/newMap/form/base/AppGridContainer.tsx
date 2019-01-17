@@ -501,4 +501,5 @@ export default class AppGridContainer extends MapComponent<IAppGridContainerProp
             unfoldAdv: !this.state.unfoldAdv
         });
     }
+
 }

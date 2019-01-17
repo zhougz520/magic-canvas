@@ -182,9 +182,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                 const childId = section.p.id;
                 const gridInit: any = JSON.stringify(clone(gridDetail.p)).replace(/\[cid\]/g, childId);
                 const childDataComponent = gridInit && gridInit.toJS ? gridInit.toJS() : JSON.parse(gridInit);
-                childDataComponent.components.forEach((ele: any) => {
-                    this.getChildComponent(childId, data, {t: ele.t});
-                });
+                this.findComponentProps({p: data.p}, childId).p.p = childDataComponent;
                 this.props.updateProps('', data);
             }
         } else {
