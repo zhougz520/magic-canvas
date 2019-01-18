@@ -57,7 +57,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
 
     // 初始化加载控件
     public initTabForm = (components: any[]) => {
-        const { selectedId, map_form_sni, showTabItems, updateProps, selectComChange } = this.props;
+        const { selectedId, map_form_sni, showTabItems, updateProps, selectComChange, getRefs } = this.props;
         components.forEach((com: any, index: number) => {
             const { p, t } = com;
             if (t === 'MapComponent/map/form/NavBarItem') {
@@ -79,6 +79,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                                         selectComChange={selectComChange}
                                         {...tab.p}
                                         showTabItems={showTabItems}
+                                        getRefs={getRefs}
                                     />
                                 );
                             }
@@ -90,7 +91,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
     }
     // 初始化加载控件
     public initNavBarItem = (components: any[]) => {
-        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sni } = this.props;
+        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sni, getRefs } = this.props;
         const navBarList: any[] = [];
         components.forEach((com: any, index: number) => {
             const { t, p } = com;
@@ -107,6 +108,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                         {...p}
                         showTabItems={showTabItems}
                         onChangeItem={this.onChangeItem}
+                        getRefs={getRefs}
                     />);
             }
         });

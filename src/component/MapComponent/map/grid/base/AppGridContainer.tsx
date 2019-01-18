@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent';
-import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from './grid/index';
-import { MapProvider } from './MapProvider';
-import { gridDetail } from './StructureDemo';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../BaseComponent';
+import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from '../index';
+import { MapProvider } from '../../MapProvider';
+import { gridDetail } from '../../structureDemo';
 
-import '../sass/Map.scss';
-import '../sass/Field.scss';
+import '../../sass/Map.scss';
+import '../../sass/Field.scss';
 
 export interface IDemoProps extends IBaseProps {
     showProj: boolean;              // 显示 项目控件
@@ -49,7 +49,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         const cid = this.getCid();
         let initData: any = this.props.childData;
         if (initData === undefined) {
-            initData = JSON.stringify(gridDetail.p).replace(/【cs】/g, cid);
+            initData = JSON.stringify(gridDetail.p).replace(/\[cid\]/g, cid);
             this.setCustomState(JSON.parse(initData));
         }
     }
@@ -165,6 +165,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -177,6 +178,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -189,6 +191,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -201,6 +204,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -214,6 +218,7 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
                             {...com.p}
                             w={this.getSizeState().getWidth()}
                             updateProps={this.updateProps}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -254,6 +259,13 @@ export default class AppGridContainer extends BaseComponent<IDemoProps, IDemoSta
         // this.setIsCanMove(true);
         this.selectComChange(e, undefined);
         this.fireSelectChange(e);
+    }
+
+    /**
+     * 获取refs
+     */
+    private getRefs = () => {
+        return this.refs;
     }
 
     // private ontitleMouseUp = (): void => {

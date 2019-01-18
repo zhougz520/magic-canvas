@@ -58,7 +58,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
 
     // 初始化加载控件
     public initSectionForm = (components: any[]) => {
-        const { selectedId, map_form_sti, showTabItems, updateProps, selectComChange } = this.props;
+        const { selectedId, map_form_sti, showTabItems, updateProps, selectComChange, getRefs } = this.props;
         components.forEach((com, index) => {
             const { p, t } = com;
             if (t === 'MapComponent/map/form/TabItem') {
@@ -80,6 +80,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                                         selectComChange={selectComChange}
                                         {...sec.p}
                                         showTabItems={showTabItems}
+                                        getRefs={getRefs}
                                     />
                                 );
                             }
@@ -91,7 +92,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
     }
     // 初始化加载控件
     public initTabItem = (components: any[]) => {
-        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sti } = this.props;
+        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sti, getRefs } = this.props;
         const tabList: any[] = [];
         components.forEach((com: any, index: number) => {
             const { t, p } = com;
@@ -108,6 +109,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                         index={index}
                         showTabItems={showTabItems}
                         onChangeItem={this.onChangeItem}
+                        getRefs={getRefs}
                     />);
             }
         });

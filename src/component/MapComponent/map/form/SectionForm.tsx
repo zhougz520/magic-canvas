@@ -35,7 +35,8 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
             updateProps,
             p,
             selectedId,
-            selectComChange
+            selectComChange,
+            getRefs
         } = this.props;
         const components = p === undefined ? undefined : p.components;
         const sections: any[] = [];
@@ -53,6 +54,7 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
                             {...com.p}
                             updateProps={updateProps}
                             index={index}
+                            getRefs={getRefs}
                         />
                     );
                 }

@@ -106,7 +106,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/map/form/field/UploadFiles');
     }
     private initFieldList = (currFieldList: any) => {
-        const { map_form_ss_unit, selectComChange, updateProps, selectedId } = this.props;
+        const { map_form_ss_unit, selectComChange, updateProps, selectedId, getRefs } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
         const components = currFieldList === undefined ? undefined : currFieldList;
         const fieldList: any[] = [];
@@ -126,7 +126,6 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                     p.map_form_f_cols = 1;
                 }
                 let field: any = null;
-
                 switch (t) {
                     case 'MapComponent/map/form/field/InputField':
                         field = <InputField
@@ -141,6 +140,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             selectedId={selectedId}
                             index={index % currUnit}
                             dragChangeField={this.dragChangeField}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/InputNumberField':
@@ -155,6 +155,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/CheckBoxField':
@@ -169,6 +170,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/LinkField':
@@ -183,6 +185,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/RadioField':
@@ -197,6 +200,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/SelectField':
@@ -211,6 +215,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/TextAreaField':
@@ -225,6 +230,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/DataTimeField':
@@ -239,6 +245,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/LookUpField':
@@ -253,6 +260,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                     case 'MapComponent/map/form/field/NullField':
@@ -267,6 +275,7 @@ export class SectionClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             selectedId={selectedId}
                             index={index % currUnit}
+                            getRefs={getRefs}
                         />;
                         break;
                 }

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../BaseComponent/index';
-import { AppFormMenu, AppForm } from './form/index';
-import { formDetail } from './StructureDemo';
-import { MapProvider } from './MapProvider';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../BaseComponent/index';
+import { AppFormMenu, AppForm } from '../..//form/index';
+import { formDetail } from '../../StructureDemo';
+import { MapProvider } from '../../MapProvider';
 
-import '../sass/AppForm.scss';
-import '../sass/Field.scss';
+import '../../sass/AppForm.scss';
+import '../../sass/Field.scss';
 
 // tslint:disable-next-line:no-empty-interface
 // tslint:disable:jsx-no-string-ref
@@ -44,7 +44,7 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
         const cid = this.getCid();
         let initData: any = this.props.childData;
         if (initData === undefined) {
-            initData = JSON.stringify(formDetail.p).replace(/【cs】/g, cid);
+            initData = JSON.stringify(formDetail.p).replace(/\[cid\]/g, cid);
             this.setCustomState(JSON.parse(initData));
         }
     }
@@ -152,6 +152,7 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -165,6 +166,7 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                             {...com.p}
                             showNavBar={showNavBar}
                             showTabItems={showTabItems}
+                            getRefs={this.getRefs}
                         />
                     );
                     break;
@@ -205,5 +207,12 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
         });
 
         return newData;
+    }
+
+    /**
+     * 获取refs
+     */
+    private getRefs = () => {
+        return this.refs;
     }
 }
