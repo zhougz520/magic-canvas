@@ -14,7 +14,7 @@ import {
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import { IContextMenuItems } from '../../../../Stage';
 
-import { IComponent } from '../../IComponent';
+import { IComponent } from '../../../IComponent';
 import { AppGridContainerState, IAppGridContainerState as ICustomState } from './AppGridContainerState';
 import { IComData } from '../../model/types';
 import { gridDetail } from '../../structure';

@@ -16,7 +16,7 @@ import {
 } from '../../../../UniversalComponents';
 
 import { IContextMenuItems } from '../../../../Stage';
-import { IComponent } from '../../IComponent';
+import { IComponent } from '../../../IComponent';
 import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
 import { IComData } from '../../model/types';
 import { formDetail } from '../../structure';

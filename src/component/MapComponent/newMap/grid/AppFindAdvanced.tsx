@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { IBaseProps } from '../IBaseProps';
-import { IBaseState } from '../IBaseState';
-import { MapComponent } from '../MapComponent';
+import { IBaseProps } from '../../IBaseProps';
+import { IBaseState } from '../../IBaseState';
+import { MapComponent } from '../../MapComponent';
 import { AppFindAdvancedItem } from './AppFindAdvancedItem';
 
 import { GlobalUtil } from '../../../util';

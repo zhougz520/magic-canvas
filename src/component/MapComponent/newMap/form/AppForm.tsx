@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps } from '../../index';
 import { AppGridMenuItemButton } from '../grid/AppGridMenuItemButton';
 import { AppGridMenuItemDropdown } from '../grid/AppGridMenuItemDropdown';
 import { TabForm } from './index';

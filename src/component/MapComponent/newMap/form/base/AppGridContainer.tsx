@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { MapComponent } from '../../index';
-import { IBaseProps } from '../../IBaseProps';
-import { IBaseState } from '../../IBaseState';
+import { MapComponent } from '../../../index';
+import { IBaseProps } from '../../../IBaseProps';
+import { IBaseState } from '../../../IBaseState';
 
-import { IComponent } from '../../IComponent';
+import { IComponent } from '../../../IComponent';
 import { IComData } from '../../model/types';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../../UniversalComponents';
 
