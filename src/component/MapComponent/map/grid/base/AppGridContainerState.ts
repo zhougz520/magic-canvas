@@ -1,4 +1,4 @@
-import { Record, List } from 'immutable';
+import { Record } from 'immutable';
 
 import { Theme } from '../../../model/types';
 

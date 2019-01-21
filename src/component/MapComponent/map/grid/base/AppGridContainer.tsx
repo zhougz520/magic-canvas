@@ -44,8 +44,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         }
         this.state = {
             baseState: this.initBaseStateWithCustomState(new AppGridContainerState({ childData: structureData })),
-            refs: this.refs,
-            selectedId: null
+            refs: this.refs
         };
     }
 
@@ -61,20 +60,6 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     public setIsCanMove = (isCanMove: boolean): void => {
         this._isCanMove = isCanMove;
     }
-    // /**
-    //  * map控件选中
-    //  * @param id 组件id
-    //  */
-    // public selectComChange = (e: any, id: string | undefined) => {
-    //     if (id !== undefined) {
-    //         this.setIsCanMove(false);
-    //     } else {
-    //         this.setIsCanMove(true);
-    //     }
-    //     this.setState({
-    //         selectedId: id
-    //     });
-    // }
 
     /**
      * 获取组件属性列表
@@ -157,12 +142,12 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                     className="ps-map"
                     style={currStyle}
                     ref={(ref) => this.com = ref}
-                // onMouseDown={this.selectComTitle}
+                    onMouseDown={this.fireSelectChange}
                 >
                     <div
                         className="ps-map-title"
                         onMouseDown={this.ontitleMouseDown}
-                    // onMouseUp={this.ontitleMouseUp}
+                        onMouseUp={this.ontitleMouseUp}
                     >
                         {appGridContainerState.getTitle()}
                     </div>
@@ -195,7 +180,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     }
 
     // 初始化加载控件
-    public initCom = (components: any[], childData: any) => {
+    public initCom = (components: any[]) => {
         const { selectedId } = this.state;
         components.forEach((com: any) => {
             switch (com.t) {
@@ -328,12 +313,6 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         return (ref as IComponent) || null;
     }
 
-    private ontitleMouseDown = (e: any): void => {
-        // this.setIsCanMove(true);
-        this.selectComChange(e, null);
-        this.fireSelectChange(e);
-    }
-
     /**
      * 设置子组件属性列表
      */
@@ -352,7 +331,6 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         } else {
             this.setChildPropertyGroup(OrderedSet());
         }
-
         this.setState({
             selectedId: id
         });
@@ -367,7 +345,15 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
         return this.refs;
     }
 
-    // private ontitleMouseUp = (): void => {
-    //     this.setIsCanMove(false);
-    // }
+    /**
+     * title组件鼠标控制画布是否可移动
+     */
+    private ontitleMouseDown = (e: any): void => {
+        this.selectComChange(e, null);
+        this.setIsCanMove(true);
+    }
+
+    private ontitleMouseUp = (): void => {
+        this.setIsCanMove(false);
+    }
 }

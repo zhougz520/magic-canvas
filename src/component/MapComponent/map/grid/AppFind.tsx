@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { Checkbox, Select, Input, Button } from 'antd';
 import {
@@ -11,7 +10,10 @@ import {
     // NullField
 } from '../form/field';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-import { MapConsumer } from '../MapConsumer';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+import { MapComponent, IBaseProps, IBaseState } from '../../index';
+
+import { OrderedSet, List } from 'immutable';
 
 const Option = Select.Option;
 // tslint:disable:jsx-no-string-ref
@@ -34,7 +36,7 @@ export interface IMapState extends IBaseState {
     h: number;
     // map_af_se: boolean;
 }
-export class AppFindClass extends MapComponent<IMapProps, any> {
+export class AppFind extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_af_se: false,
         map_af_o: [],
@@ -55,7 +57,6 @@ export class AppFindClass extends MapComponent<IMapProps, any> {
     componentDidUpdate() {
         if (this.com !== null) {
             const currMaskLayer = document.getElementById(this.props.id);
-            // console.log('id', this.props.id);
             if (currMaskLayer !== null) {
                 currMaskLayer.style.width = this.com.offsetWidth + 'px';
                 currMaskLayer.style.height = (this.com.offsetHeight - 24) + 'px';
@@ -64,6 +65,46 @@ export class AppFindClass extends MapComponent<IMapProps, any> {
             }
         }
     }
+
+    /**
+     * 获取组件属性列表
+     */
+    // public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+    //     const {
+    //         map_v_txt,
+    //         map_v_o
+    //     } = this.props;
+    //     let propertyList: List<IProperty> = List();
+    //     let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+    //     // 列表属性
+    //     propertyList = propertyList.push(
+    //         { pTitle: '控件名称', pKey: 'map_v_txt', pValue: map_v_txt, pType: PropertiesEnum.INPUT_TEXT }
+    //     );
+    //     propertyGroup = propertyGroup.add(
+    //         { groupTitle: '组件名称', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+    //     );
+    //     propertyList = List();
+
+    //     // 字段设置
+    //     propertyList = propertyList.push(
+    //         { pTitle: '选项', pKey: 'map_v_o', pValue: map_v_o, pType: PropertiesEnum.INPUT_LIST }
+    //     );
+    //     propertyGroup = propertyGroup.add(
+    //         { groupTitle: '字段设置', groupKey: 'field', isActive: true, colNum: 1, propertyList }
+    //     );
+    //     propertyList = List();
+
+    //     return propertyGroup;
+    // }
+
+    // /**
+    //  * 获取组件文本
+    //  */
+    // public getRichChildNode = (): any => {
+    //     return this.props.map_v_txt;
+    // }
+
     public render() {
         const { map_sm, map_af_o, p, id } = this.props;
         const { map_af_se, hover } = this.state;
@@ -225,6 +266,7 @@ export class AppFindClass extends MapComponent<IMapProps, any> {
             (t === 'MapComponent/map/form/field/TextAreaField') ||
             (t === 'MapComponent/map/form/field/UploadFiles');
     }
+
     private initHightMode = (data: any) => {
         const { map_form_ss_unit, selectComChange, updateProps, selectedId } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
@@ -396,5 +438,3 @@ export class AppFindClass extends MapComponent<IMapProps, any> {
         background: isDraggingOver ? 'lightblue' : ''
     })
 }
-
-export const AppFind = MapConsumer(AppFindClass);

@@ -1,52 +1,49 @@
 import * as React from 'react';
-import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../BaseComponent/index';
+import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../BaseComponent';
 import { AppFormMenu, AppForm } from '../..//form/index';
-import { formDetail } from '../../StructureDemo';
 import { MapProvider } from '../../MapProvider';
-
+import { formDetail } from '../../structureDemo';
+import { AppFormContainerState } from './AppFormContainerState';
+import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+import { IComponent } from '../../../IComponent';
+import { Map, List, OrderedSet } from 'immutable';
 import '../../sass/AppForm.scss';
 import '../../sass/Field.scss';
 
+// tslint:disable-next-line:no-var-requires
+const clone = require('clone');
+
 // tslint:disable-next-line:no-empty-interface
-// tslint:disable:jsx-no-string-ref
-export interface IDemoProps extends IBaseProps {
-    showMenu: boolean;              // 显示 项目控件
-    showNavBar: boolean;            // 显示 视图
-    showTabItems: boolean;          // 显示 查询控件
-    map_sm: string;                 // 版本(皮肤？)
+export interface IAppFormContainerProps extends IBaseProps {
 }
 
-export interface IDemoState extends IBaseState {
-    selectedId?: string;  // 先...只能单选，后面看情况在调整
+export interface IAppFormContainerState extends IBaseState {
+    selectedId?: string | null;  // 先...只能单选，后面看情况在调整
     title?: string;
     refs?: any;
 }
-// tslint:disable:jsx-no-string-ref
-export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoState> {
-    static defaultProps = {
-        showMenu: true,                 // 显示 项目控件
-        showNavBar: true,               // 显示 左侧标签页
-        showTabItems: true              // 显示 横向标签页
-    };
 
+export default class AppFormContainer extends BaseComponent<IAppFormContainerProps, IAppFormContainerState> {
     public com: HTMLElement | null = null;
     private menu: any = '';
     private form: any = '';
     private _isCanMove: boolean = false;
-    constructor(props: IDemoProps, context?: any) {
+    private _childPropertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+    constructor(props: IAppFormContainerProps, context?: any) {
         super(props, context);
+
+        const { childData } = this.props;
+        let structureData: any = null;
+        if (childData === undefined) {
+            structureData = JSON.parse(
+                JSON.stringify(clone(formDetail.p)).replace(/\[cid\]/g, this.props.baseState.getCurrentContent().getCid())
+            );
+        }
         this.state = {
-            baseState: this.initBaseStateWithCustomState(props.childData),
+            baseState: this.initBaseStateWithCustomState(new AppFormContainerState({ childData: structureData })),
             refs: this.refs
         };
-    }
-    componentDidMount() {
-        const cid = this.getCid();
-        let initData: any = this.props.childData;
-        if (initData === undefined) {
-            initData = JSON.stringify(formDetail.p).replace(/\[cid\]/g, cid);
-            this.setCustomState(JSON.parse(initData));
-        }
     }
     componentDidUpdate() {
         this.setState({
@@ -60,34 +57,62 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     public setIsCanMove = (isCanMove: boolean): void => {
         this._isCanMove = isCanMove;
     }
+
     /**
-     * map控件选中
-     * @param id 组件id
+     * 获取组件属性列表
      */
-    public selectComChange = (e: any, id: string | undefined) => {
-        if (id !== undefined) {
-            this.setIsCanMove(false);
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        if (this._childPropertyGroup.size > 0) {
+            // 选中子组件，显示子组件的属性栏
+            return this._childPropertyGroup;
         } else {
-            this.setIsCanMove(true);
+            const appGridContainerState: AppFormContainerState = this.getCustomState();
+            let propertyList: List<IProperty> = List();
+            let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+            // 列表属性
+            propertyList = propertyList.push(
+                { pTitle: '标题', pKey: 'title', pValue: appGridContainerState.getTitle(), pType: PropertiesEnum.INPUT_TEXT }
+            );
+            propertyGroup = propertyGroup.add(
+                { groupTitle: '列表属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+            );
+            propertyList = List();
+
+            return propertyGroup;
         }
-        this.setState({
-            selectedId: id
-        });
     }
+
     /**
-     * map控件选中
-     * @param id 组件id
+     * 设置属性
      */
-    public ontitleMouseDown = (e: any): void => {
-        // this.setIsCanMove(true);
-        this.selectComChange(e, undefined);
-        this.fireSelectChange(e);
+    public setPropertiesFromProperty = (pKey: string, pValue: any, callback?: () => void) => {
+        const { selectedId } = this.state;
+        if (selectedId) {
+            // 选中子组件
+            const childCom: IComponent | null = this.getChildComponent(selectedId);
+            if (childCom) {
+                const obj: any = {};
+                obj[pKey] = pValue;
+                this.updateProps(selectedId, obj);
+            }
+        } else {
+            let properties = Map();
+            properties = properties.set(pKey, pValue);
+            const newAppGridContainerState: AppFormContainerState = AppFormContainerState.set(this.getCustomState(), properties);
+
+            this.setCustomState(newAppGridContainerState, true, callback);
+        }
     }
+
     public render() {
-        const { showMenu, pageMode, map_sm } = this.props;
-        const { title } = this.state;
-        const childData = this.getCustomState() !== null && this.getCustomState() !== undefined ? this.getCustomState().toJS() : undefined;
-        if (childData !== undefined && childData.components.length > 0) {
+        const {
+            pageMode
+        } = this.props;
+        const appFormContainerState: AppFormContainerState = this.getCustomState();
+
+        const childData = appFormContainerState.getChildData() && appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
+        if (childData && childData.components && childData.components.length > 0) {
             this.initCom(childData.components);
         }
 
@@ -105,10 +130,9 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
 
         return (
             <MapProvider
-                map_sm={map_sm}
+                map_sm={appFormContainerState.getTheme()}
                 updateProps={this.updateProps}
                 selectComChange={this.selectComChange}
-                selectedId={this.state.selectedId}
                 pageMode={pageMode}
                 stateData={childData}
                 refs={this.refs}
@@ -117,17 +141,19 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                     className="ps-map"
                     style={currStyle}
                     ref={(ref) => this.com = ref}
+                    onMouseDown={this.fireSelectChange}
                 >
                     <div
                         className="ps-map-title"
                         onMouseDown={this.ontitleMouseDown}
+                        onMouseUp={this.ontitleMouseUp}
                     >
-                        {title === undefined ? '标题' : title}
+                        {appFormContainerState.getTitle()}
                     </div>
                     <div
                         className="form-form"
                     >
-                        <div className="form-menu" style={{ display: !showMenu ? 'none' : '' }} >
+                        <div className="form-menu" style={{ display: !appFormContainerState.getShowMenu() ? 'none' : '' }} >
                             {this.menu}
                         </div>
                         {this.form}
@@ -140,15 +166,13 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     // 初始化加载控件
     public initCom = (components: any[]) => {
         const { selectedId } = this.state;
-        const { showNavBar, showTabItems } = this.props;
-
+        const appFormContainerState: AppFormContainerState = this.getCustomState();
         components.forEach((com: any) => {
             switch (com.t) {
                 case 'MapComponent/map/form/AppFormMenu':
                     this.menu = (
                         <AppFormMenu
                             selectedId={selectedId}
-                            ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
@@ -159,13 +183,12 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
                 case 'MapComponent/map/form/AppForm':
                     this.form = (
                         <AppForm
-                            ref={`c.${com.p.id}`}
                             selectedId={selectedId}
                             updateProps={this.updateProps}
                             selectComChange={this.selectComChange}
                             {...com.p}
-                            showNavBar={showNavBar}
-                            showTabItems={showTabItems}
+                            showNavBar={appFormContainerState.getShowNavBar()}
+                            showTabItems={appFormContainerState.getShowTabItems()}
                             getRefs={this.getRefs}
                         />
                     );
@@ -175,34 +198,29 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     }
 
     // 更新控件
-    protected updateProps = (id: string, props: any) => {
+    private updateProps = (id: string, props: any) => {
+        const appGridContainerState: AppFormContainerState = this.getCustomState();
         // 获取当前数据
-        const childData = this.getCustomState().toJS();
-        let newData: any;
-        if (id === '') {
-            // 当没有id的时候，直接更新整体data(新增组件的时候，直接更新整个CustomState)
-            newData = props.p;
-        } else {
-            // 通过id查找到数据节点
-            newData = this.updateComProps(childData, id, props);
-        }
+        const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
+        // 通过id查找到数据节点
+        const newData = this.updateComProps(clone(childData), id, props);
         // 更新数据到CustomState
-        this.setCustomState(newData);
+        this.setCustomState(AppFormContainerState.set(appGridContainerState, { childData: newData }));
     }
 
     // 更新控件属性
-    private updateComProps = (data: any, id: string, prop: any) => {
+    private updateComProps = (data: any, id: string, props: any) => {
         let newData: any = data;
         data.components.forEach((com: any) => {
             if (com.p.id === id) {
-                com.p = Object.assign({}, com.p, prop);
+                com.p = Object.assign({}, com.p, props);
                 newData = data;
 
                 return newData;
             }
             // 如果存在子控件，则
             if (com.p.p !== undefined && com.p.p.components !== undefined) {
-                this.updateComProps(com.p.p, id, prop);
+                this.updateComProps(com.p.p, id, props);
             }
         });
 
@@ -210,9 +228,75 @@ export default class AppFormContainer extends BaseComponent<IDemoProps, IDemoSta
     }
 
     /**
+     * 根据子组件id获取子组件对象
+     */
+    private getChildComponent = (cid: string | null): IComponent | null => {
+        if (!cid) {
+            return null;
+        }
+
+        const idList: string[] = cid.split('.');
+        let currRefs: any = this.refs;
+        let currCid: string = 'c.' + idList[0];
+
+        let ref: any = null;
+        for (let i = 1; i < idList.length; i++) {
+            currCid += '.' + idList[i];
+            ref = currRefs[`${currCid}`] as any;
+            if (ref === undefined) {
+                return null;
+            }
+            if (currRefs[`${currCid}`] !== undefined && Object.keys(currRefs[`${currCid}`].refs).length > 0) {
+                // 正常情况下一级只有一个，
+                // 如果存在多个，则直接进入下一次循环
+                currRefs = currRefs[`${currCid}`].refs as any;
+            }
+        }
+
+        return (ref as IComponent) || null;
+    }
+
+    /**
+     * 设置子组件属性列表
+     */
+    private setChildPropertyGroup = (childPropertyGroup: OrderedSet<IPropertyGroup>) => {
+        this._childPropertyGroup = childPropertyGroup;
+    }
+
+    /**
+     * map控件选中
+     * @param id 组件id
+     */
+    private selectComChange = (e: any, id: string | null) => {
+        const childCom: IComponent | null = this.getChildComponent(id);
+        if (childCom) {
+            this.setChildPropertyGroup(childCom.getPropertiesToProperty());
+        } else {
+            this.setChildPropertyGroup(OrderedSet());
+        }
+        this.setState({
+            selectedId: id
+        });
+        // 调用container的选中
+        this.fireSelectChange(e);
+    }
+
+    /**
      * 获取refs
      */
     private getRefs = () => {
         return this.refs;
+    }
+
+    /**
+     * title组件鼠标控制画布是否可移动
+     */
+    private ontitleMouseDown = (e: any): void => {
+        this.selectComChange(e, null);
+        this.setIsCanMove(true);
+    }
+
+    private ontitleMouseUp = (): void => {
+        this.setIsCanMove(false);
     }
 }

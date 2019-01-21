@@ -1,13 +1,8 @@
 import * as React from 'react';
-// import { MapComponent, IBaseProps } from '../../index';
 import { Select } from 'antd';
-// import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-import { MapConsumer } from '../MapConsumer';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
-
-import { IBaseProps } from '../../IBaseProps';
-// import { IBaseState } from '../../IBaseState';
-import { MapComponent } from '../../MapComponent';
+import { MapComponent, IBaseProps } from '../../index';
 
 import { OrderedSet, List } from 'immutable';
 
@@ -17,11 +12,10 @@ export interface IMapProps extends IBaseProps {
     map_pddt_o?: string[];
 }
 
-export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
+export class ProjectDDTree extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_pddt_txt: '组织架构',
-        map_pddt_o: [],
-        selectedId: undefined
+        map_pddt_o: []
     };
 
     constructor(props: any, context?: any) {
@@ -36,7 +30,10 @@ export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
      * 获取组件属性列表
      */
     public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
-        const { map_pddt_txt, map_pddt_o } = this.props;
+        const {
+            map_pddt_txt,
+            map_pddt_o
+        } = this.props;
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
@@ -94,11 +91,12 @@ export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
                         </td>
                         <td>
                             <div className="first-page">
-                                {/* <MaskLayer id={id} /> */}
+                                <MaskLayer id={id} />
                                 <Select
                                     style={{ width: '100%' }}
                                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                                    onChange={this.onProjectValueChange}
+                                    onChange={this.handleChange}
+                                    value={this.state.projectValue}
                                 >
                                     {options}
                                 </Select>
@@ -110,10 +108,9 @@ export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
         );
     }
 
-    public onProjectValueChange = (value: string) => {
+    handleChange = (value: string) => {
         this.setState({
             projectValue: value
         });
     }
 }
-export const ProjectDDTree = MapConsumer(ProjectDDTreeClass);
