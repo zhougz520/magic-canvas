@@ -239,7 +239,8 @@ export default class AppGridContainer extends MapComponent<IAppGridContainerProp
             <div
                 className={`page-appgrid ${selectedId === id ? 'map-select-open' : ''}`}
                 style={{
-                    border: '1px solid #d3d5d9'
+                    border: '1px solid #d3d5d9',
+                    background: 'white'
                 }}
                 onMouseDown={this.selectedCom}
                 draggable

@@ -1,40 +1,30 @@
-import { Record } from 'immutable';
+import { Record, List } from 'immutable';
 
-import { Theme, GridStyle } from '../../model/types';
+import { Theme } from '../../../model/types';
 
 /**
  * AppGridContainerState的属性
  */
 export interface IAppGridContainerState {
-    gridStyle: GridStyle;               // 列表样式
-    showAppProjectTree: boolean;        // 显示 项目控件
-    showAppFindOrdinary: boolean;       // 显示 普通查询
-    showAppFindAdvanced: boolean;       // 显示 高级搜索
-    showAppGridView: boolean;           // 显示 视图
-    showAppGridTitle: boolean;          // 显示 标题
-    showAppGridMenu: boolean;           // 显示 表头
-    showAppGrid: boolean;               // 显示 列表
-    showAppGridPage: boolean;           // 显示 分页
-    showModalMenu: boolean;             // 显示 对话框按钮
-    title: string;                      // 标题
-    childData: any;                     // 子组件数据
-    theme: Theme;                       // 皮肤{ black:经典黑, blue:宝石蓝, green:橄榄绿, light-blue:天空蓝, light-green:荷叶绿, red:活力红, orange:欢快橙 }
+    showProj: boolean;              // 显示 项目控件
+    showView: boolean;              // 显示 视图
+    showAppFind: boolean;           // 显示 查询控件
+    showAppGridMenu: boolean;       // 显示 列表菜单
+    showAppGrid: boolean;           // 显示 列表
+    map_sm: Theme;                  // 版本(皮肤？)
+    title: string;                  // 标题
+    childData: any;                 // 子组件数据
 }
 
 const defaultRecord: IAppGridContainerState = {
-    gridStyle: 'advanced',
-    showAppProjectTree: true,
-    showAppFindOrdinary: true,
-    showAppFindAdvanced: true,
-    showAppGridView: true,
-    showAppGridTitle: false,
-    showAppGridMenu: true,
-    showAppGrid: true,
-    showAppGridPage: true,
-    showModalMenu: false,
-    title: '标题',
-    childData: null,
-    theme: 'black'
+    showProj: true,              // 显示 项目控件
+    showView: true,              // 显示 视图
+    showAppFind: true,           // 显示 查询控件
+    showAppGridMenu: true,       // 显示 列表菜单
+    showAppGrid: true,           // 显示 列表
+    map_sm: 'black',             // 皮肤 黑色
+    title: '标题',               // 标题
+    childData: null              // 子组件数据
 };
 
 export const AppGridContainerStateRecord: Record.Class = Record(defaultRecord);
@@ -67,44 +57,24 @@ export class AppGridContainerState extends AppGridContainerStateRecord {
         return new AppGridContainerState(map);
     }
 
-    getGridStyle(): GridStyle {
-        return this.get('gridStyle');
+    showProj(): boolean {
+        return this.get('showProj');
     }
 
-    getShowAppProjectTree(): boolean {
-        return this.get('showAppProjectTree');
+    showView(): boolean {
+        return this.get('showView');
     }
 
-    getShowAppFindOrdinary(): boolean {
-        return this.get('showAppFindOrdinary');
+    showAppFind(): boolean {
+        return this.get('showAppFind');
     }
 
-    getShowAppFindAdvanced(): boolean {
-        return this.get('showAppFindAdvanced');
-    }
-
-    getShowAppGridView(): boolean {
-        return this.get('showAppGridView');
-    }
-
-    getShowAppGridTitle(): boolean {
-        return this.get('showAppGridTitle');
-    }
-
-    getShowAppGridMenu(): boolean {
+    showAppGridMenu(): boolean {
         return this.get('showAppGridMenu');
     }
 
-    getShowAppGrid(): boolean {
+    showAppGrid(): boolean {
         return this.get('showAppGrid');
-    }
-
-    getShowAppGridPage(): boolean {
-        return this.get('showAppGridPage');
-    }
-
-    getShowModalMenu(): boolean {
-        return this.get('showModalMenu');
     }
 
     getTitle(): string {
@@ -116,6 +86,6 @@ export class AppGridContainerState extends AppGridContainerStateRecord {
     }
 
     getTheme(): Theme {
-        return this.get('theme');
+        return this.get('map_sm');
     }
 }

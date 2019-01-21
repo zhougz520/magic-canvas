@@ -93,7 +93,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
 
                             (
                                 <div
-                                    style={Object.assign(gridStyle === 'advanced' ? { minWidth: '150px' } : {}, this.state.hover)}
+                                    style={Object.assign(gridStyle === 'advanced' ? { minWidth: '150px' } : {}, {background: '#fafafa'})}
                                     ref={(ref) => this.com = ref}
                                     onDragOver={this.handleOver}
                                     onDragLeave={this.handleLeave}
@@ -101,7 +101,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
                                     <div
                                         className="flex-row"
                                         ref={provided.innerRef}
-                                        style={{ width: '100%', lineHeight: '42px', textAlign: 'left', background: '#fafafa'}}
+                                        style={Object.assign({ width: '100%', lineHeight: '42px', textAlign: 'left'}, this.state.hover)}
                                     >
                                         {
                                             appGridTableTitle.length > 0 ? appGridTableTitle :

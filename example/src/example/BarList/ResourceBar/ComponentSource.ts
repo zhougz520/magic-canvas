@@ -36,7 +36,7 @@ const basePage: IBasePage[] = [
     {
         category: '基础组件',
         categoryKey: 'basic',
-        expanded: true,
+        expanded: false,
         components: [
             Universal_Button,
             Universal_CheckBox,
@@ -53,7 +53,7 @@ const basePage: IBasePage[] = [
     {
         category: 'ERP页面',
         categoryKey: 'erp',
-        expanded: false,
+        expanded: true,
         components: [
             // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
             { t: 'MapComponent/map/form/base/AppFormContainer', p: { name: '表单', w: 600, h: 400, type: 'base' } },
