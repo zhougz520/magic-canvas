@@ -96,8 +96,7 @@ export class AppFind extends MapComponent<IMapProps, any> {
     // }
 
     public render() {
-        const { map_sm, map_af_o, p, id, selectedId, selectComChange } = this.props;
-        console.log('-----', selectedId, id)
+        const { map_sm, map_af_o, p, id, selectedId } = this.props;
         const { map_af_se, hover } = this.state;
 
         const options: any[] = [];
