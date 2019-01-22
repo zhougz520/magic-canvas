@@ -3,7 +3,6 @@ import { MapComponent, IBaseProps } from '../../index';
 import { TabItem, SectionForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { MapConsumer } from '../MapConsumer';
 
 // tslint:disable:jsx-no-string-ref
 // tslint:disable:jsx-no-multiline-js
@@ -15,7 +14,7 @@ export interface IMapProps extends IBaseProps {
 
 // tslint:disable-next-line:no-empty-interface
 // tslint:disable:jsx-no-string-ref
-export class TabFormClass extends MapComponent<IMapProps, any> {
+export class TabForm extends MapComponent<IMapProps, any> {
     static defaultProps = {
         selectedId: undefined,
         showNavBar: true,
@@ -58,7 +57,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
 
     // 初始化加载控件
     public initSectionForm = (components: any[]) => {
-        const { selectedId, map_form_sti, showTabItems, updateProps, selectComChange, getRefs } = this.props;
+        const { selectedId, map_form_sti, showTabItems, updateProps, selectComChange, getRefs, stateData } = this.props;
         components.forEach((com, index) => {
             const { p, t } = com;
             if (t === 'MapComponent/map/form/TabItem') {
@@ -81,6 +80,7 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
                                         {...sec.p}
                                         showTabItems={showTabItems}
                                         getRefs={getRefs}
+                                        stateData={stateData}
                                     />
                                 );
                             }
@@ -148,4 +148,3 @@ export class TabFormClass extends MapComponent<IMapProps, any> {
         this.props.updateProps('', data);
     }
 }
-export const TabForm = MapConsumer(TabFormClass);

@@ -2,8 +2,11 @@ import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../../index';
 import { Input } from 'antd';
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-import { MapConsumer } from '../../MapConsumer';
 import * as DragStyle from '../../DragStyle';
+import { getStateClass, getFieldCommonPropertyList } from './common/util';
+import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+
+import { OrderedSet, List } from 'immutable';
 
 // tslint:disable:indent
 // tslint:disable:jsx-no-multiline-js
@@ -21,7 +24,7 @@ export interface IMapProps extends IBaseProps {
 	index: number;
 }
 
-export class InputFieldClass extends MapComponent<IMapProps, any> {
+export class InputField extends MapComponent<IMapProps, any> {
 	static defaultProps = {
 		map_form_f_title: '字段',
 		map_form_f_default: '',
@@ -48,7 +51,8 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 		this.state = {
 			currX: 0,
 			resizing: false,
-			hover: {}
+			hover: {},
+			value: undefined
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -59,6 +63,39 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 		...draggableStyle
 	})
 
+	/**
+	 * 获取组件属性列表
+	 */
+	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+		let propertyList: List<IProperty> = List();
+		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+		propertyList = getFieldCommonPropertyList(this.props);
+		// 组件属性整理
+		propertyGroup = propertyGroup.add(
+			{ groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+		);
+		propertyList = List();
+
+		return propertyGroup;
+	}
+
+	/**
+	 * 获取组件文本
+	 */
+	public getRichChildNode = (): any => {
+		return this.props.map_form_f_title;
+	}
+
+    /**
+     * 构建要设置的文本属性对象
+     */
+	public buildRichChildNode = (value: any): any => {
+		const obj: any = {};
+		obj.map_form_f_title = value;
+
+		return obj;
+	}
+
 	public render() {
 		const {
 			map_form_f_title,
@@ -66,20 +103,27 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 			id,
 			titleWidth,
 			map_form_f_disabled,
-			unit,
 			currUnit,
-			selectedId
+			selectedId,
+			map_form_f_hidden_t,
+			map_form_f_state,
+			map_form_f_cols
 		} = this.props;
-		const { hover } = this.state;
+		const {
+			hover,
+			value
+		 } = this.state;
+		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
 			borderClass = ' read-only';
 		}
+		console.log('aaaa', map_form_f_default, value)
 
 		return (
 			<div
 				ref={(ref) => this.com = ref}
-				style={Object.assign({}, { width: `${((unit / currUnit) * 100).toFixed(2)}%` }, hover)}
+				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
 				className={`field-bar `}
 				onMouseDown={this.selectedCom}
 				draggable
@@ -92,19 +136,22 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 				<table className={`field-tb ${selectedId === id ? 'map-selected' : ''}`}>
 					<tbody>
 						<tr>
-							<td className={`field-title`} style={{ width: titleWidth }}>
+							<td className={`field-title ${map_form_f_hidden_t ? '' : 'bar-hide'}`} style={{ width: titleWidth + 'px' }}>
 								{map_form_f_title}
 							</td>
 							<td className="field-content">
-								<Input
-									type="text"
-									className={map_form_f_disabled ? borderClass : ''}
-									placeholder=""
-									// onChange={this.onChangeText}
-									disabled={map_form_f_disabled}
-									defaultValue={map_form_f_default}
-									value={map_form_f_default}
-								/>
+								<div className="flex-row">
+									<span className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}`, marginRight: '2px' }}>*</span>
+									<Input
+										type="text"
+										className={map_form_f_disabled ? borderClass : ''}
+										placeholder=""
+										onChange={this.onChangeText}
+										disabled={map_form_f_disabled}
+										defaultValue={map_form_f_default}
+										value={value === undefined ? map_form_f_default : value}
+									/>
+								</div>
 							</td>
 						</tr>
 					</tbody>
@@ -112,5 +159,10 @@ export class InputFieldClass extends MapComponent<IMapProps, any> {
 			</div>
 		);
 	}
+
+	private onChangeText = (e: any) => {
+		this.setState({
+			value: e.target.value
+		});
+	}
 }
-export const InputField = MapConsumer(InputFieldClass);

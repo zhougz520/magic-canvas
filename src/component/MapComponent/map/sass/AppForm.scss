@@ -168,3 +168,16 @@ table {
         }
     }
 }
+
+.bar-show {
+    display: block;
+}
+
+.bar-hide {
+    display: none;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}

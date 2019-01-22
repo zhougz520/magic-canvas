@@ -2,7 +2,6 @@ import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { AppFormMenuItem } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -12,7 +11,7 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
-export class AppFormMenuClass extends MapComponent<IMapProps, any> {
+export class AppFormMenu extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
         selectedId: undefined
@@ -36,7 +35,8 @@ export class AppFormMenuClass extends MapComponent<IMapProps, any> {
             map_sm,
             p,
             selectedId,
-            selectComChange
+            selectComChange,
+            stateData
         } = this.props;
         const components = p === undefined ? undefined : p.components;
         const menus: any[] = [];
@@ -54,6 +54,7 @@ export class AppFormMenuClass extends MapComponent<IMapProps, any> {
                             {...com.p}
                             updateProps={updateProps}
                             index={index}
+                            stateData={stateData}
                         />
                     );
                 }
@@ -104,4 +105,3 @@ export class AppFormMenuClass extends MapComponent<IMapProps, any> {
         return (t === 'MapComponent/map/form/AppFormMenuItem');
     }
 }
-export const AppFormMenu = MapConsumer(AppFormMenuClass);

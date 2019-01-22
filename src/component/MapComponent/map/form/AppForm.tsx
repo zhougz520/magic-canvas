@@ -3,7 +3,6 @@ import { MapComponent, IBaseProps } from '../../index';
 import { NavBarItem, TabForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     showNavBar: boolean;
@@ -13,7 +12,7 @@ export interface IMapProps extends IBaseProps {
 
 // tslint:disable-next-line:no-empty-interface
 // tslint:disable:jsx-no-string-ref
-export class AppFormClass extends MapComponent<IMapProps, any> {
+export class AppForm extends MapComponent<IMapProps, any> {
     static defaultProps = {
         selectedId: undefined,
         showNavBar: true,
@@ -57,7 +56,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
 
     // 初始化加载控件
     public initTabForm = (components: any[]) => {
-        const { selectedId, map_form_sni, showTabItems, updateProps, selectComChange, getRefs } = this.props;
+        const { selectedId, map_form_sni, showTabItems, updateProps, selectComChange, getRefs, stateData} = this.props;
         components.forEach((com: any, index: number) => {
             const { p, t } = com;
             if (t === 'MapComponent/map/form/NavBarItem') {
@@ -80,6 +79,7 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
                                         {...tab.p}
                                         showTabItems={showTabItems}
                                         getRefs={getRefs}
+                                        stateData={stateData}
                                     />
                                 );
                             }
@@ -147,8 +147,6 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
             childId = section.p.id;
             this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
         }
-
         this.props.updateProps('', data);
     }
 }
-export const AppForm = MapConsumer(AppFormClass);

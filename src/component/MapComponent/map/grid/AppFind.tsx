@@ -10,10 +10,10 @@ import {
     // NullField
 } from '../form/field';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+// import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
 
-import { OrderedSet, List } from 'immutable';
+// import { OrderedSet, List } from 'immutable';
 
 const Option = Select.Option;
 // tslint:disable:jsx-no-string-ref

@@ -7,6 +7,7 @@ import { AppFormContainerState } from './AppFormContainerState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import { IComponent } from '../../../IComponent';
 import { Map, List, OrderedSet } from 'immutable';
+import { HandleChildCom } from '../../../types';
 import '../../sass/AppForm.scss';
 import '../../sass/Field.scss';
 
@@ -113,7 +114,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
 
         const childData = appFormContainerState.getChildData() && appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
         if (childData && childData.components && childData.components.length > 0) {
-            this.initCom(childData.components);
+            this.initCom(childData.components, clone(childData));
         }
 
         // 汇总style
@@ -134,7 +135,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 updateProps={this.updateProps}
                 selectComChange={this.selectComChange}
                 pageMode={pageMode}
-                stateData={childData}
                 refs={this.refs}
             >
                 <div
@@ -164,7 +164,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
     }
 
     // 初始化加载控件
-    public initCom = (components: any[]) => {
+    public initCom = (components: any[], childData: any) => {
         const { selectedId } = this.state;
         const appFormContainerState: AppFormContainerState = this.getCustomState();
         components.forEach((com: any) => {
@@ -172,17 +172,22 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 case 'MapComponent/map/form/AppFormMenu':
                     this.menu = (
                         <AppFormMenu
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectedId={selectedId}
                             selectComChange={this.selectComChange}
                             {...com.p}
                             updateProps={this.updateProps}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
                 case 'MapComponent/map/form/AppForm':
                     this.form = (
                         <AppForm
+                            // tslint:disable-next-line:jsx-no-string-ref
+                            ref={`c.${com.p.id}`}
                             selectedId={selectedId}
                             updateProps={this.updateProps}
                             selectComChange={this.selectComChange}
@@ -190,6 +195,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                             showNavBar={appFormContainerState.getShowNavBar()}
                             showTabItems={appFormContainerState.getShowTabItems()}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
@@ -197,15 +203,49 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         });
     }
 
+    /**
+     * 操作子控件
+     */
+    public handleChildCom = (handle: string, fromFun?: string): boolean => {
+        const { selectedId } = this.state;
+        if (!selectedId) return false;
+        const childCom: any = this.getChildComponent(selectedId);
+        if (!childCom) return false;
+        let result: boolean = false;
+        switch (handle) {
+            case HandleChildCom.DELETE:         // 删除
+                result = childCom.deleteComponentsById();
+                break;
+            case HandleChildCom.SELECT_PARENT:  // 选中父组件
+                result = childCom.selectedComParent();
+                break;
+            case HandleChildCom.COPY_COM:       // 复制控件
+                result = childCom.copySelectedCom(fromFun);
+                break;
+            case HandleChildCom.PASTE_COM:       // 粘贴控件
+                result = childCom.parseSelectedCom();
+                break;
+        }
+
+        return result;
+    }
+
     // 更新控件
     private updateProps = (id: string, props: any) => {
-        const appGridContainerState: AppFormContainerState = this.getCustomState();
+        const appFormContainerState: AppFormContainerState = this.getCustomState();
         // 获取当前数据
-        const childData = appGridContainerState.getChildData().toJS ? appGridContainerState.getChildData().toJS() : appGridContainerState.getChildData();
+        const childData = appFormContainerState.getChildData() && appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
         // 通过id查找到数据节点
-        const newData = this.updateComProps(clone(childData), id, props);
+        let newData: any;
+        if (id === '') {
+            // 当没有id的时候，直接更新整体data(新增组件的时候，直接更新整个CustomState)
+            newData = props.p;
+        } else {
+            // 通过id查找到数据节点
+            newData = this.updateComProps(clone(childData), id, props);
+        }
         // 更新数据到CustomState
-        this.setCustomState(AppFormContainerState.set(appGridContainerState, { childData: newData }));
+        this.setCustomState(AppFormContainerState.set(appFormContainerState, { childData: newData }));
     }
 
     // 更新控件属性
@@ -234,7 +274,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         if (!cid) {
             return null;
         }
-
         const idList: string[] = cid.split('.');
         let currRefs: any = this.refs;
         let currCid: string = 'c.' + idList[0];
@@ -268,9 +307,14 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
      * @param id 组件id
      */
     private selectComChange = (e: any, id: string | null) => {
+        console.log(123, this.getChildComponent(id))
         const childCom: IComponent | null = this.getChildComponent(id);
         if (childCom) {
             this.setChildPropertyGroup(childCom.getPropertiesToProperty());
+            // const appFormContainerState: AppFormContainerState = this.getCustomState();
+            // // 获取当前数据
+            // const childData = appFormContainerState.getChildData() && appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
+            // this.updateProps('', childData);
         } else {
             this.setChildPropertyGroup(OrderedSet());
         }

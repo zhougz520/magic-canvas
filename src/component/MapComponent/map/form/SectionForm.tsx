@@ -2,7 +2,6 @@ import * as React from 'react';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
 import { Section } from './index';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { MapConsumer } from '../MapConsumer';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -12,7 +11,7 @@ export interface IMapState extends IBaseState {
     dragonDrop: any;
 }
 // tslint:disable:jsx-no-string-ref
-class SectionFormClass extends MapComponent<IMapProps, any> {
+export class SectionForm extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_gm_txt: '标题',
         selectedId: undefined
@@ -36,7 +35,8 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
             p,
             selectedId,
             selectComChange,
-            getRefs
+            getRefs,
+            stateData
         } = this.props;
         const components = p === undefined ? undefined : p.components;
         const sections: any[] = [];
@@ -55,6 +55,7 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
                             updateProps={updateProps}
                             index={index}
                             getRefs={getRefs}
+                            stateData={stateData}
                         />
                     );
                 }
@@ -86,6 +87,7 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
             </div>
         );
     }
+
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
         return (t === 'MapComponent/map/form/Section');
@@ -100,9 +102,9 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
             childId = section.p.id;
             this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
         }
-
         this.props.updateProps('', data);
     }
+
     // 更新控件属性
     private updateComProps = (data: any, id: string, prop: any) => {
         let newData: any = data;
@@ -122,4 +124,3 @@ class SectionFormClass extends MapComponent<IMapProps, any> {
         return newData;
     }
 }
-export const SectionForm = MapConsumer(SectionFormClass);

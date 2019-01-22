@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { MapComponent, IBaseProps } from '../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
-import { MapConsumer } from '../MapConsumer';
 import * as DragStyle from '../DragStyle';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+
+import { OrderedSet, List } from 'immutable';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -13,7 +15,7 @@ export interface IMapProps extends IBaseProps {
     onChangeItem: (id: string) => void;
 }
 
-export class TabItemClass extends MapComponent<IMapProps, any> {
+export class TabItem extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_form_st_name: '标签页',
         map_mi_sa: false,
@@ -33,6 +35,35 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
         // styles we need to apply on draggables
         ...draggableStyle
     })
+
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        const {
+            map_form_st_name
+        } = this.props;
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 列表属性
+        propertyList = propertyList.push(
+            { pTitle: '控件名称', pKey: 'map_form_st_name', pValue: map_form_st_name, pType: PropertiesEnum.INPUT_TEXT }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '组件名称', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        return this.props.map_form_st_name;
+    }
 
     public render() {
         const { map_form_st_name, id, selectedId, index, selectOn } = this.props;
@@ -66,4 +97,3 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
         this.selectedCom(e);
     }
 }
-export const TabItem = MapConsumer(TabItemClass);
