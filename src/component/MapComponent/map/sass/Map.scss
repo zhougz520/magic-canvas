@@ -3,8 +3,8 @@ table {
 }
 
 .map-selected {
-    border: 2px dashed blue !important;
-    padding: 1px !important;
+    border: 1px dashed blue !important;
+    padding: 0px !important;
     position: relative;
 }
 
@@ -43,6 +43,8 @@ table {
         }
         .grid-table {
             flex: 1;
+            display: flex;
+            flex-direction: column;
         }
     }
     background: #FBFBFB;
@@ -178,6 +180,7 @@ table {
         border-top: 0;
         height: 100%;
         overflow-x: auto;
+        position: relative;
         .grid-title {
             white-space: nowrap;
             .grid-title-index {
@@ -285,4 +288,95 @@ table {
         filter: alpha(opacity=20);
         list-style: none;
     }
+}
+
+.grid-bottom {
+    position: absolute;
+    bottom: 0;
+    height: 30px;
+    width: 100%;
+    border-top: 1px solid #e6e6e6;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.space-between {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column
+}
+
+.item-center {
+    align-items: center;
+    justify-items: center
+}
+
+.full-item {
+    width: 100%;
+    height: 100%;
+}
+
+.flex1 {
+    flex: 1;
+}
+
+.table-title {
+    border: 1px solid #eee;
+    font-weight: bold;
+    flex-shrink: 0;
+    line-height: 40px;
+    box-sizing: border-box;
+}
+
+.font-narmal {
+    font-weight: n
+}
+
+.title-width {
+    width: 50px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.component-placeholder {
+    color: '#bfbfbf';
+    font-weight: 'bold';
+    line-height: 40px;
+    text-align: 20px;
+}
+
+.table-content {
+    min-width: 100%;
+    overflow-x: auto;
+}
+
+.rowItem {
+    border: 1px solid #eee;
+    text-align: center;
+    line-height: 45px;
+}
+
+.cellStyle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    height: 45px;
+}
+
+.cellStyle .ant-input-sm {
+    max-width: 90%;
+    display: block;
+}
+
+.backgroundTitle {
+    background: #fafafa;
 }

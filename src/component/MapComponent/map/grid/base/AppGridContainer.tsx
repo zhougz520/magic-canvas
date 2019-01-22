@@ -7,6 +7,7 @@ import { AppGridContainerState } from './AppGridContainerState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import { IComponent } from '../../../IComponent';
 import { Map, List, OrderedSet } from 'immutable';
+import { HandleChildCom } from '../../../types';
 // tslint:disable-next-line:no-var-requires
 const clone = require('clone');
 
@@ -194,6 +195,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             {...com.p}
                             updateProps={this.updateProps}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
@@ -207,6 +209,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             {...com.p}
                             updateProps={this.updateProps}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
@@ -218,8 +221,10 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             ref={`c.${com.p.id}`}
                             selectComChange={this.selectComChange}
                             {...com.p}
+                            w={this.getSizeState().getWidth()}
                             updateProps={this.updateProps}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
@@ -233,6 +238,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             {...com.p}
                             updateProps={this.updateProps}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
@@ -247,11 +253,40 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
                             w={this.getSizeState().getWidth()}
                             updateProps={this.updateProps}
                             getRefs={this.getRefs}
+                            stateData={childData}
                         />
                     );
                     break;
             }
         });
+    }
+
+    /**
+     * 操作子控件
+     */
+    public handleChildCom = (handle: string, fromFun?: string): boolean => {
+        const { selectedId } = this.state;
+        if (!selectedId) return false;
+        const childCom: any = this.getChildComponent(selectedId);
+        if (!childCom) return false;
+
+        let result: boolean = false;
+        switch (handle) {
+            case HandleChildCom.DELETE:         // 删除
+                result = childCom.deleteComponentsById();
+                break;
+            case HandleChildCom.SELECT_PARENT:  // 选中父组件
+                result = childCom.selectedComParent();
+                break;
+            case HandleChildCom.COPY_COM:       // 复制粘贴控件
+                result = childCom.copySelectedCom(fromFun);
+                break;
+            case HandleChildCom.PASTE_COM:       // 粘贴控件
+                result = childCom.parseSelectedCom();
+                break;
+        }
+
+        return result;
     }
 
     // 更新控件

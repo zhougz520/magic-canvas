@@ -51,30 +51,50 @@ export const gridDetail = {
                 }
             },
             {
+                // t: 'MapComponent/map/grid/AppGrid',
+                // p: {
+                //     id: '[cid].cs5',
+                //     p: {
+                //         components: [
+                //             {
+                //                 t: 'MapComponent/map/grid/AppGridTitle',
+                //                 p: {
+                //                     id: '[cid].cs5.cs1',
+                //                     map_gt_txt: 'AAA'
+                //                 }
+                //             },
+                //             {
+                //                 t: 'MapComponent/map/grid/AppGridTitle',
+                //                 p: {
+                //                     id: '[cid].cs5.cs2',
+                //                     map_gt_txt: 'BBB'
+                //                 }
+                //             },
+                //             {
+                //                 t: 'MapComponent/map/grid/AppGridTitle',
+                //                 p: {
+                //                     id: '[cid].cs5.cs3',
+                //                     map_gt_txt: 'CCC'
+                //                 }
+                //             }
+                //         ]
+                //     }
+                // }
                 t: 'MapComponent/map/grid/AppGrid',
                 p: {
-                    id: '[cid].cs5',
+                    id: '[cid].cs7',
                     p: {
                         components: [
                             {
-                                t: 'MapComponent/map/grid/AppGridTitle',
+                                t: 'MapComponent/map/grid/AppGridHeader',
                                 p: {
-                                    id: '[cid].cs5.cs1',
-                                    map_gt_txt: 'AAA'
+                                    id: '[cid].cs7.cs1'
                                 }
                             },
                             {
-                                t: 'MapComponent/map/grid/AppGridTitle',
+                                t: 'MapComponent/map/grid/AppGridContent',
                                 p: {
-                                    id: '[cid].cs5.cs2',
-                                    map_gt_txt: 'BBB'
-                                }
-                            },
-                            {
-                                t: 'MapComponent/map/grid/AppGridTitle',
-                                p: {
-                                    id: '[cid].cs5.cs3',
-                                    map_gt_txt: 'CCC'
+                                    id: '[cid].cs7.cs2'
                                 }
                             }
                         ]
