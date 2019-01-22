@@ -307,7 +307,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
      * @param id 组件id
      */
     private selectComChange = (e: any, id: string | null) => {
-        console.log(123, this.getChildComponent(id))
         const childCom: IComponent | null = this.getChildComponent(id);
         if (childCom) {
             this.setChildPropertyGroup(childCom.getPropertiesToProperty());

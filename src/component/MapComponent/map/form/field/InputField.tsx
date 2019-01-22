@@ -118,7 +118,6 @@ export class InputField extends MapComponent<IMapProps, any> {
 		if (map_form_f_disabled) {
 			borderClass = ' read-only';
 		}
-		console.log('aaaa', map_form_f_default, value)
 
 		return (
 			<div

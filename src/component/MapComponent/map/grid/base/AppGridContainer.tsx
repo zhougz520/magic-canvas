@@ -180,7 +180,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     }
 
     // 初始化加载控件
-    public initCom = (components: any[]) => {
+    public initCom = (components: any[], childData: any []) => {
         const { selectedId } = this.state;
         components.forEach((com: any) => {
             switch (com.t) {
