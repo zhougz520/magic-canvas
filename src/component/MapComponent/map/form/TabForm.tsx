@@ -50,7 +50,7 @@ export class TabForm extends MapComponent<IMapProps, any> {
                         {this.tabItem}
                     </Droppable>
                 </DragDropContext>
-                {this.sectionForm}
+                {components.length > 0 ? this.sectionForm : ''}
             </div>
         );
     }
@@ -92,7 +92,7 @@ export class TabForm extends MapComponent<IMapProps, any> {
     }
     // 初始化加载控件
     public initTabItem = (components: any[]) => {
-        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sti, getRefs } = this.props;
+        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sti, getRefs, stateData } = this.props;
         const tabList: any[] = [];
         components.forEach((com: any, index: number) => {
             const { t, p } = com;
@@ -110,6 +110,7 @@ export class TabForm extends MapComponent<IMapProps, any> {
                         showTabItems={showTabItems}
                         onChangeItem={this.onChangeItem}
                         getRefs={getRefs}
+                        stateData={stateData}
                     />);
             }
         });
@@ -135,6 +136,7 @@ export class TabForm extends MapComponent<IMapProps, any> {
      * override
      */
     public addChildComponent = (id: string, data: any, addData: any): any => {
+        if (!data.p) return;
         if (addData.t === 'MapComponent/map/form/TabItem') {
             const tabItem = this.getChildComponent(id, data, addData);
             let childId = tabItem.p.id;

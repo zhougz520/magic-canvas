@@ -3,6 +3,7 @@ import { MapComponent, IBaseProps } from '../../index';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+import { GlobalUtil } from '../../../util';
 
 import { OrderedSet, List } from 'immutable';
 
@@ -63,6 +64,30 @@ export class TabItem extends MapComponent<IMapProps, any> {
      */
     public getRichChildNode = (): any => {
         return this.props.map_form_st_name;
+    }
+
+    /**
+     * 删除子组件
+     */
+    public deleteComponentsById = (): boolean => {
+        const cid: string = this.props.selectedId as string;
+        const state = this.props.stateData;
+        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) {
+            return false;
+        }
+        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return false;
+
+        const parent = this.findComponentParent(state, cid as string);
+        if (!GlobalUtil.isUndefined(parent)) {
+            const idx = parent.findIndex((com: any) => com.p.id === cid);
+            if (idx >= 0) {
+                parent.splice(idx, 1);
+            }
+        }
+        const parentId = cid.substring(0, cid.lastIndexOf('.'));
+        this.props.updateProps(parentId, { p: { components: parent },  map_form_sti: undefined});
+
+        return true;
     }
 
     public render() {

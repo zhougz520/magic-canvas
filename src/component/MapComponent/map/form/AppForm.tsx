@@ -49,7 +49,7 @@ export class AppForm extends MapComponent<IMapProps, any> {
                         {this.navBar}
                     </Droppable>
                 </DragDropContext>
-                {this.tabForm}
+                {components.length > 0 ? this.tabForm : ''}
             </div>
         );
     }
@@ -91,7 +91,7 @@ export class AppForm extends MapComponent<IMapProps, any> {
     }
     // 初始化加载控件
     public initNavBarItem = (components: any[]) => {
-        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sni, getRefs } = this.props;
+        const { selectedId, showTabItems, updateProps, selectComChange, showNavBar, map_form_sni, getRefs, stateData } = this.props;
         const navBarList: any[] = [];
         components.forEach((com: any, index: number) => {
             const { t, p } = com;
@@ -109,6 +109,7 @@ export class AppForm extends MapComponent<IMapProps, any> {
                         showTabItems={showTabItems}
                         onChangeItem={this.onChangeItem}
                         getRefs={getRefs}
+                        stateData={stateData}
                     />);
             }
         });

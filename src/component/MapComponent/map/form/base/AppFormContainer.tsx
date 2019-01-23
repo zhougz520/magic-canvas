@@ -310,10 +310,6 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         const childCom: IComponent | null = this.getChildComponent(id);
         if (childCom) {
             this.setChildPropertyGroup(childCom.getPropertiesToProperty());
-            // const appFormContainerState: AppFormContainerState = this.getCustomState();
-            // // 获取当前数据
-            // const childData = appFormContainerState.getChildData() && appFormContainerState.getChildData().toJS ? appFormContainerState.getChildData().toJS() : appFormContainerState.getChildData();
-            // this.updateProps('', childData);
         } else {
             this.setChildPropertyGroup(OrderedSet());
         }

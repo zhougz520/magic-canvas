@@ -82,7 +82,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         const componentsColumnsChild = (components && components[0].p.p) ? components[0].p.p.components : null;
         const componentsRowChild = (components && components[1].p.p) ? components[1].p.p.components : null;
         const columns: any = [];
-        let rows: any = [];
+        const rows: any = [];
         // 获取表格columns
         if (componentsColumnsChild) {
             componentsColumnsChild.map(
@@ -94,7 +94,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         }
 
         // 获取表格rows
-        if (componentsRowChild) {
+        if (componentsRowChild && columns.length > 0) {
             componentsRowChild.map(
                 (com: any) => {
                     const { p } = com;
@@ -104,10 +104,6 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         }
         let appGridHeader: JSX.Element | null = null;
         let appGridContent: JSX.Element | null = null;
-        if (columns.length === 0 && components && components[1].p.p) {
-            rows = [];
-            this.props.updateProps(components[1].p.id, { p: { components: [] } });
-        }
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
                 (com: any, index: number) => {
