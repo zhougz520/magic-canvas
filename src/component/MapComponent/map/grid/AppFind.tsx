@@ -2,18 +2,21 @@ import * as React from 'react';
 import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
 import { Checkbox, Select, Input, Button } from 'antd';
 import {
+    CheckBoxField,
+    DataTimeField,
     InputField,
-    // InputNumberField,
-    // SelectField,
-    // DataTimeField,
-    // LookUpField,
-    // NullField
+    InputIconField,
+    InputNumberField,
+    LinkField,
+    LookUpField,
+    RadioField,
+    SelectField,
+    TextAreaField,
+    TextField,
+    UploadField
 } from '../field';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-// import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
-// import { MapProvider } from '../MapProvider';
-// import { OrderedSet, List } from 'immutable';
 
 const Option = Select.Option;
 // tslint:disable:jsx-no-string-ref
@@ -65,35 +68,6 @@ export class AppFind extends MapComponent<IMapProps, any> {
             }
         }
     }
-
-    /**
-     * 获取组件属性列表
-     */
-    // public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
-    //     const {
-    //         map_af_o
-    //     } = this.props;
-    //     let propertyList: List<IProperty> = List();
-    //     let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
-
-    //     // 列表属性
-    //     propertyList = propertyList.push(
-    //         { pTitle: '普通查询项', pKey: 'map_af_o', pValue: map_af_o, pType: PropertiesEnum.INPUT_LIST }
-    //     );
-    //     propertyGroup = propertyGroup.add(
-    //         { groupTitle: '属性列表', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
-    //     );
-    //     propertyList = List();
-
-    //     return propertyGroup;
-    // }
-
-    // /**
-    //  * 获取组件文本
-    //  */
-    // public getRichChildNode = (): any => {
-    //     return this.props.map_af_o;
-    // }
 
     public render() {
         const { map_sm, map_af_o, p, id, selectedId } = this.props;
@@ -243,27 +217,38 @@ export class AppFind extends MapComponent<IMapProps, any> {
 
     /*重载添加组件*/
     public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/form/field/CheckBoxField') ||
-            (t === 'MapComponent/map/form/field/DataTimeField') ||
-            (t === 'MapComponent/map/form/field/InputField') ||
-            (t === 'MapComponent/map/form/field/InputIconField') ||
-            (t === 'MapComponent/map/form/field/InputNumberField') ||
-            (t === 'MapComponent/map/form/field/LinkField') ||
-            (t === 'MapComponent/map/form/field/LookUpField') ||
-            (t === 'MapComponent/map/form/field/NullField') ||
-            (t === 'MapComponent/map/form/field/RadioField') ||
-            (t === 'MapComponent/map/form/field/SelectField') ||
-            (t === 'MapComponent/map/form/field/TextAreaField') ||
-            (t === 'MapComponent/map/form/field/UploadFiles');
+        return (t === 'MapComponent/map/grid/field/CheckBoxField') ||
+            (t === 'MapComponent/map/grid/field/DataTimeField') ||
+            (t === 'MapComponent/map/grid/field/InputField') ||
+            (t === 'MapComponent/map/grid/field/InputIconField') ||
+            (t === 'MapComponent/map/grid/field/InputNumberField') ||
+            (t === 'MapComponent/map/grid/field/LinkField') ||
+            (t === 'MapComponent/map/grid/field/LookUpField') ||
+            (t === 'MapComponent/map/grid/field/RadioField') ||
+            (t === 'MapComponent/map/grid/field/SelectField') ||
+            (t === 'MapComponent/map/grid/field/TextAreaField') ||
+            (t === 'MapComponent/map/grid/field/TextField') ||
+            (t === 'MapComponent/map/grid/field/UploadField');
     }
 
     private initHightMode = (data: any) => {
-        const { map_form_ss_unit, selectComChange, updateProps, selectedId, stateData } = this.props;
+        const {
+            map_form_ss_unit,
+            selectComChange,
+            updateProps,
+            selectedId,
+            stateData,
+            setChildPropertyGroup,
+            doChildDbClickToEdit,
+            pageMode,
+            getRefs
+        } = this.props;
         const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
         const components = data === undefined ? undefined : data.components;
         const fieldList: any[] = [];
         const currComList: any[] = [];
         const currRowList: any[] = [];
+        const map_form_ss_tt_w: string = '80px';
         if (components !== undefined) {
             // 初始化行组
             for (let row = 0;
@@ -280,127 +265,257 @@ export class AppFind extends MapComponent<IMapProps, any> {
                 let field: any = null;
 
                 switch (t) {
-                    case 'MapComponent/map/form/field/InputField':
+                    case 'MapComponent/map/grid/field/InputField':
                         field = <InputField
-                            titleWidth={110}
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            map_form_f_cols={p.map_form_f_cols}
+                            index={index}
                             ref={`c.${p.id}`}
-                            selectComChange={selectComChange}
-                            updateProps={updateProps}
+                            pageMode={pageMode}
                             selectedId={selectedId}
-                            index={index % currUnit}
+                            selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/InputNumberField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/InputNumberField':
+                        field =
+                            <InputNumberField
+                                titleWidth={map_form_ss_tt_w}
+                                key={p.id}
+                                {...p}
+                                id={p.id}
+                                currUnit={currUnit}
+                                index={index}
+                                map_form_f_cols={p.map_form_f_cols}
+                                ref={`c.${p.id}`}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={selectComChange}
+                                setChildPropertyGroup={setChildPropertyGroup}
+                                doChildDbClickToEdit={doChildDbClickToEdit}
+                                stateData={stateData}
+                                updateProps={updateProps}
+                                getRefs={getRefs}
+                                dragChangeField={this.dragChangeField}
+                            />;
+                        break;
+                    case 'MapComponent/map/grid/field/CheckBoxField':
+                        field = <CheckBoxField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/CheckBoxField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/LinkField':
+                        field = <LinkField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/LinkField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/RadioField':
+                        field = <RadioField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/RadioField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/SelectField':
+                        field = <SelectField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/SelectField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/TextAreaField':
+                        field = <TextAreaField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/TextAreaField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/DataTimeField':
+                        field = <DataTimeField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/DataTimeField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/LookUpField':
+                        field = <LookUpField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/LookUpField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/InputIconField':
+                        field = <InputIconField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
-                    case 'MapComponent/map/form/field/NullField':
-                        field = <InputField
-                            titleWidth={110}
+                    case 'MapComponent/map/grid/field/TextField':
+                        field = <TextField
+                            titleWidth={map_form_ss_tt_w}
                             key={p.id}
                             {...p}
-                            unit={1}
+                            id={p.id}
                             currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
                             ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
                             selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
                             stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
+                        />;
+                        break;
+                    case 'MapComponent/map/grid/field/UploadField':
+                        field = <UploadField
+                            titleWidth={map_form_ss_tt_w}
+                            key={p.id}
+                            {...p}
+                            id={p.id}
+                            currUnit={currUnit}
+                            index={index}
+                            map_form_f_cols={p.map_form_f_cols}
+                            ref={`c.${p.id}`}
+                            pageMode={pageMode}
+                            selectedId={selectedId}
+                            selectComChange={selectComChange}
+                            setChildPropertyGroup={setChildPropertyGroup}
+                            doChildDbClickToEdit={doChildDbClickToEdit}
+                            stateData={stateData}
+                            updateProps={updateProps}
+                            getRefs={getRefs}
+                            dragChangeField={this.dragChangeField}
                         />;
                         break;
                 }
@@ -437,4 +552,8 @@ export class AppFind extends MapComponent<IMapProps, any> {
     private getListStyle = (isDraggingOver: any) => ({
         background: isDraggingOver ? 'lightblue' : ''
     })
+
+    private dragChangeField = (newFieldList: any) => {
+        this.props.updateProps(this.props.id, { p: { components: newFieldList } });
+    }
 }

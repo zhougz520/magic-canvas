@@ -82,7 +82,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         const componentsColumnsChild = (components && components[0].p.p) ? components[0].p.p.components : null;
         const componentsRowChild = (components && components[1].p.p) ? components[1].p.p.components : null;
         const columns: any = [];
-        let rows: any = [];
+        const rows: any = [];
         // 获取表格columns
         if (componentsColumnsChild) {
             componentsColumnsChild.map(
@@ -94,7 +94,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         }
 
         // 获取表格rows
-        if (componentsRowChild) {
+        if (componentsRowChild && columns.length > 0) {
             componentsRowChild.map(
                 (com: any) => {
                     const { p } = com;
@@ -104,10 +104,6 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
         }
         let appGridHeader: JSX.Element | null = null;
         let appGridContent: JSX.Element | null = null;
-        if (columns.length === 0 && components && components[1].p.p) {
-            rows = [];
-            this.props.updateProps(components[1].p.id, { p: { components: [] } });
-        }
         if (!GlobalUtil.isUndefined(components)) {
             components.map(
                 (com: any, index: number) => {
@@ -165,9 +161,9 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                 onDragLeave={this.handleLeave}
                 onMouseDown={this.selectedCom}
             >
-                 <div className="map-grid-viewport map-table-header flex-row" style={{ height: '200px', position: 'relative'}}>
+                 <div className="map-grid-viewport map-table-header flex-row" style={{ height: '200px', position: 'relative', overflow: 'auto'}}>
                     {/* 序号 & 复选 */}
-                    <div className="">
+                    <div style={{minHeight: '200px'}}>
                         {/* 表头 */}
                         <div className="flex-row item-center">
                             {
@@ -196,7 +192,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                     </div>
                      {/* 标题头 */}
                      <div className="flex1">
-                        <div id="table" style={{width: '100%', height: '250px', overflow: 'auto'}}>
+                        <div style={{width: '100%', minHeight: '200px'}}>
                             {appGridHeader !== null ? appGridHeader : ''}
                             {appGridContent !== null ? appGridContent : ''}
                         </div>
@@ -216,5 +212,6 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                 </div>
             </div>
         );
+
     }
 }

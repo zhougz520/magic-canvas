@@ -742,7 +742,7 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
 .rowItem {
     border: 1px solid #eee;
     text-align: center;
-    line-height: 45px;
+    line-height: 40px;
 }
 
 .cellStyle {
@@ -751,13 +751,14 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
     justify-content: center;
     justify-items: center;
     align-items: center;
-    height: 45px;
+    height: 40px;
 }
 
 .cellStyle .ant-input-sm {
     max-width: 90%;
     display: block;
 }
-.backgroundTitle{
+
+.backgroundTitle {
     background: #fafafa;
 }

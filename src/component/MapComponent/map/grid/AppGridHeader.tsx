@@ -12,6 +12,7 @@ import { DragDropContext, Droppable, DroppableProvided } from 'react-beautiful-d
 export interface IAppGridHeaderProps extends IBaseProps {
     map_g_check: boolean;
     map_g_num: boolean;
+    gridData: any;
 }
 
 // tslint:disable-next-line:no-empty-interface
@@ -22,7 +23,8 @@ export interface IAppGridHeaderState extends IBaseState {
 export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHeaderState> {
     static defaultProps = {
         map_g_check: false,
-        map_g_num: true
+        map_g_num: true,
+        gridData: {}
     };
 
     constructor(props: IAppGridHeaderProps, context?: any) {
@@ -44,6 +46,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
     render() {
         const {
             theme,
+            gridStyle,
             pageMode,
             selectedId,
             selectComChange,
@@ -52,7 +55,8 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
             updateProps,
             getRefs,
             stateData,
-            p
+            p,
+            gridData
         } = this.props;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
         const appGridTableTitle: any[] = [];
@@ -76,7 +80,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
                                 updateProps={updateProps}
                                 getRefs={getRefs}
                                 stateData={stateData}
-
+                                gridData={gridData}
                             />
                         );
                     }
@@ -92,7 +96,7 @@ export class AppGridHeader extends MapComponent<IAppGridHeaderProps, IAppGridHea
 
                             (
                                 <div
-                                    style={{background: '#fafafa'}}
+                                    style={Object.assign(gridStyle === 'advanced' ? { minWidth: '150px' } : {}, {background: '#fafafa'})}
                                     ref={(ref) => this.com = ref}
                                     onDragOver={this.handleOver}
                                     onDragLeave={this.handleLeave}

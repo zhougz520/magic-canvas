@@ -45,6 +45,7 @@ table {
             flex: 1;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
     }
     background: #FBFBFB;
@@ -360,7 +361,7 @@ table {
 .rowItem {
     border: 1px solid #eee;
     text-align: center;
-    line-height: 45px;
+    line-height: 40px;
 }
 
 .cellStyle {
@@ -369,7 +370,7 @@ table {
     justify-content: center;
     justify-items: center;
     align-items: center;
-    height: 45px;
+    height: 40px;
 }
 
 .cellStyle .ant-input-sm {

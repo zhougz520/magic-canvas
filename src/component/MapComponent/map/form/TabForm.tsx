@@ -144,7 +144,7 @@ export class TabForm extends MapComponent<IMapProps, any> {
             childId = sectionForm.p.id;
             const section = this.getChildComponent(childId, data, { t: 'MapComponent/map/form/Section' });
             childId = section.p.id;
-            this.getChildComponent(childId, data, { t: 'MapComponent/map/form/field/InputField' });
+            this.getChildComponent(childId, data, { t: 'MapComponent/map/field/InputField' });
         }
 
         this.props.updateProps('', data);

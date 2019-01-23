@@ -56,7 +56,8 @@ export class AppGridContent extends MapComponent<IAppGridContentProps, IAppGridC
             getRefs,
             stateData,
             columns,
-            p
+            p,
+            doChildDbClickToEdit
         } = this.props;
         const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
         const appGridTableItem: any[] = [];
@@ -81,6 +82,7 @@ export class AppGridContent extends MapComponent<IAppGridContentProps, IAppGridC
                                 stateData={stateData}
                                 columns={columns}
                                 components={components}
+                                doChildDbClickToEdit={doChildDbClickToEdit}
                             />
                         );
                     }
@@ -103,7 +105,7 @@ export class AppGridContent extends MapComponent<IAppGridContentProps, IAppGridC
                                 >
                                     <div
                                         ref={provided.innerRef}
-                                        style={{ height: '100%', width: '100%', lineHeight: '45px', textAlign: 'left'}}
+                                        style={{ width: '100%', lineHeight: '40px', textAlign: 'left'}}
                                     >
                                         {
                                             appGridTableItem.length > 0 ? appGridTableItem :

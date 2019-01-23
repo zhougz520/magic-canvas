@@ -161,11 +161,11 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                 onDragLeave={this.handleLeave}
                 onMouseDown={this.selectedCom}
             >
-                 <div className="map-grid-viewport map-table-header flex-row" style={{ height: '260px', position: 'relative'}}>
+                 <div className="map-grid-viewport map-table-header flex-row" style={{ height: '270px', position: 'relative', overflow: 'auto'}}>
                     {/* 序号 & 复选 */}
-                    <div className="flex-column">
+                    <div className="flex-column" style={{minHeight: '270px'}}>
                         {/* 表头 */}
-                        <div className="flex-row item-center">
+                        <div className="item-center">
                             {
                                 map_g_check ? (
                                     <div className="table-title title-width" style={{width: 40, lineHeight: '40px', textAlign: 'center', background: '#fafafa'}}><Checkbox /></div>
@@ -182,7 +182,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                         {rows.map(
                             (com: any, index: number) => {
                                 return (
-                                    <div className="flex-row item-center" key={index}>
+                                    <div className="item-center" key={index}>
                                         {map_g_check ? <div className="rowItem" style={{width: 40}}><Checkbox /></div> : null}
                                         {map_g_num ? (<div className="rowItem" style={{width: 60}}>{index + 1}</div>) : null}
                                     </div>
@@ -192,7 +192,7 @@ export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
                     </div>
                      {/* 标题头 */}
                      <div className="flex1">
-                        <div id="table" style={{width: '100%', height: '250px', overflow: 'auto'}}>
+                        <div style={{width: '100%', minHeight: '270px'}}>
                             {appGridHeader !== null ? appGridHeader : ''}
                             {appGridContent !== null ? appGridContent : ''}
                         </div>

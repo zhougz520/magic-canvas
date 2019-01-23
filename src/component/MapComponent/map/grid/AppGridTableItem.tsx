@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Input, Select, DatePicker, Checkbox} from 'antd';
+import { Input, Select, DatePicker, Checkbox, InputNumber} from 'antd';
 
 import { IBaseProps } from '../../IBaseProps';
 import { IBaseState } from '../../IBaseState';
@@ -16,6 +16,7 @@ export interface IAppGridTableItemProps extends IBaseProps {
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridTableItemState extends IBaseState {
     rowItem: any;
+    showControlId: string;
 }
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal */
@@ -26,7 +27,8 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
         this.state = {
             hidden: false,
             hover: {},
-            rowItem: this.props.components[0] || {}
+            rowItem: this.props.components[0] || {},
+            showControlId: ''
         };
     }
 
@@ -38,23 +40,9 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
         return (t === 'MapComponent/map/grid/AppGridTableItem');
     }
 
-    public mapComponentChange(value: any, item: any, rowItemState: any, type: string) {
-        const { updateProps, selectedId } = this.props;
-        if (selectedId) {
-            switch (type) {
-                case 'input':
-                    rowItemState.p[item.id.replace(/\./g, '')] = value.target.value;
-                    break;
-                case 'date':
-                    rowItemState.p[item.id.replace(/\./g, '')] = value ? value.format('YYYY-MM-DD') : '';
-                    break;
-            }
-            updateProps(selectedId, rowItemState.p);
-        }
-    }
-
     render() {
         const { selectedId, id, index, columns, components } = this.props;
+        const { showControlId } = this.state;
         let { rowItem } = this.state;
         if (index) {
             rowItem = components[index];
@@ -65,7 +53,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                 {
                     (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                         <div
-                            className={`flex-row ${selectedId === id ? 'map-selected' : ''}`}
+                            className={`flex-row ${selectedId === id ? 'map-select-open' : ''}`}
                             ref={provided.innerRef}
                             {...provided.dragHandleProps}
                             onMouseDown={(e) => {
@@ -80,29 +68,80 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                     const map_gh_width = item.map_gh_width ?  item.map_gh_width + 'px' : '0px';
                                     switch (map_gh_dataType) {
                                         case 'txt':
+                                            element = (
+                                                showControlId === item.id ?
+                                                <Input
+                                                    placeholder="请输入"
+                                                    size="small"
+                                                    value={rowItem.p[item.id.replace(/\./g, '')]}
+                                                    onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')}
+                                                /> :
+                                                <span>{rowItem.p[item.id.replace(/\./g, '')]}</span>
+                                            );
+                                            break;
                                         case 'input':
-                                            element = <Input placeholder="请输入"size="small" value={rowItem.p[item.id.replace(/\./g, '')]} onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')} />;
+                                            element = <Input
+                                                placeholder="请输入"
+                                                size="small"
+                                                value={rowItem.p[item.id.replace(/\./g, '')]}
+                                                onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')}
+                                            />;
                                             break;
                                         case 'link':
-                                            element = <Input placeholder="请输入" style={{color: '#1890ff'}} size="small" value={rowItem.p[item.id.replace(/\./g, '')]} onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')} />;
+                                            element = (
+                                                showControlId === item.id ?
+                                                <Input
+                                                    placeholder="请输入"
+                                                    size="small"
+                                                    value={rowItem.p[item.id.replace(/\./g, '')]}
+                                                    onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')}
+                                                /> :
+                                                <a href={rowItem.p[item.id.replace(/\./g, '')]} style={{textDecoration: 'underline'}}>{rowItem.p[item.id.replace(/\./g, '')]}</a>
+                                            );
                                             break;
                                         case 'select':
                                             element = <Select defaultValue="选择框" size="small"/>;
                                             break;
                                         case 'date':
-                                            element = <DatePicker size="small" placeholder="请选择"  format={rowItem.p[item.id.replace(/\./g, '')]} onChange={(value, dateString) => this.mapComponentChange(value, item, rowItem, 'date')} />;
+                                            element = <DatePicker
+                                                size="small"
+                                                placeholder="请选择"
+                                                format={rowItem.p[item.id.replace(/\./g, '')]}
+                                                onChange={(value, dateString) => this.mapComponentChange(value, item, rowItem, 'date')}
+                                            />;
                                             break;
                                         case 'number':
-                                            element = <Input size="small" placeholder="请选择" value={rowItem.p[item.id.replace(/\./g, '')]} onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')} />;
+                                            element = <InputNumber
+                                                placeholder="请输入"
+                                                size="small"
+                                                value={rowItem.p[item.id.replace(/\./g, '')]}
+                                                onChange={(e) => this.mapComponentChange(e, item, rowItem, 'inputNumber')}
+                                            />;
                                             break;
                                         case 'radio':
                                             element = <Checkbox />;
                                             break;
+                                        case 'lookup':
+                                            console.log(111);
+                                            element = <span>＋</span>;
+                                            break;
                                         default:
-                                            element = <span>&nbsp</span>;
+                                            element = '';
                                     }
 
-                                    return <div key={item.id} className="flex1 rowItem" style={{minWidth: map_gh_width, textAlign: map_gh_align}}><div className="cellStyle">{element}</div></div>;
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className="flex1 rowItem"
+                                            onMouseEnter={() => this.setState({showControlId: item.id})}
+                                            onMouseLeave={() => this.setState({showControlId: ''})}
+                                            style={{minWidth: map_gh_width, textAlign: map_gh_align}}
+                                        >
+                                            <div className="cellStyle" ref={(ref) => this.editCom = ref}>
+                                                {element}
+                                            </div>
+                                        </div>
+                                    );
                                 })
                             }
                         </div>
@@ -110,5 +149,23 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                 }
             </Draggable>
         );
+    }
+
+    private mapComponentChange(value: any, item: any, rowItemState: any, type: string) {
+        const { updateProps, selectedId } = this.props;
+        if (selectedId) {
+            switch (type) {
+                case 'input':
+                    rowItemState.p[item.id.replace(/\./g, '')] = value.target.value;
+                    break;
+                case 'date':
+                    rowItemState.p[item.id.replace(/\./g, '')] = value ? value.format('YYYY-MM-DD') : '';
+                    break;
+                case 'inputNumber':
+                    rowItemState.p[item.id.replace(/\./g, '')] = `${value}`;
+                    break;
+            }
+            updateProps(selectedId, rowItemState.p);
+        }
     }
 }

@@ -5,10 +5,10 @@ import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalCom
 import { IBaseProps } from '../../IBaseProps';
 import { IBaseState } from '../../IBaseState';
 import { MapComponent } from '../../MapComponent';
-
 import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
+import { GlobalUtil } from '../../../util';
 
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridTableTitleProps extends IBaseProps {
@@ -95,6 +95,54 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
         return obj;
     }
 
+    /**
+     * 删除子组件
+     */
+    public deleteComponentsById = (): boolean => {
+        const cid: string = this.props.selectedId as string;
+        const state = this.props.stateData;
+        if (GlobalUtil.isEmptyString(cid) || GlobalUtil.isUndefined(cid)) {
+            return false;
+        }
+        if (GlobalUtil.isEmptyString(state) || GlobalUtil.isUndefined(state)) return false;
+
+        const parent = this.findComponentParent(state, cid as string);
+        if (!GlobalUtil.isUndefined(parent)) {
+            const idx = parent.findIndex((com: any) => com.p.id === cid);
+            if (idx >= 0) {
+                parent.splice(idx, 1);
+            }
+        }
+        const parentId = cid.substring(0, cid.lastIndexOf('.'));
+        const gridId = parentId.substring(0, parentId.lastIndexOf('.'));
+        if (parent.length >= 1) {
+            this.props.updateProps(parentId, { p: { components: parent }});
+        } else {
+            this.props.updateProps(gridId, { p: { components: [
+                {
+                    t: 'MapComponent/map/grid/AppGridHeader',
+                    p: {
+                        id: parentId,
+                        p: {
+                            components: []
+                        }
+                    }
+                },
+                {
+                    t: 'MapComponent/map/grid/AppGridContent',
+                    p: {
+                        id: gridId + '.cs2',
+                        p: {
+                            components: []
+                        }
+                    }
+                }
+            ] }});
+        }
+
+        return true;
+    }
+
     render() {
         const { map_gh_txt, map_gh_width, map_gh_seq, map_gh_req, map_gh_align, selectedId, id, doChildDbClickToEdit, index } = this.props;
         const { hidden } = this.state;
@@ -104,7 +152,7 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
                 {
                     (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                         <div
-                            className={`flex1 table-title  ${selectedId === id ? 'map-selected' : ''}`}
+                            className={`flex1 table-title  ${selectedId === id ? 'map-select-open' : ''}`}
                             ref={provided.innerRef}
                             {...provided.dragHandleProps}
                             style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging, map_gh_width, map_gh_align)}
