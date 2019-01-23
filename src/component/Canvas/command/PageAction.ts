@@ -597,9 +597,10 @@ export class PageAction {
                                                 }
                                             );
                                             // 如果画布是干净的，设置画布已经变脏
-                                            if (this._canvas._isDirty === false) {
-                                                this._canvas.setIsDirty(true);
+                                            if (this._canvas._isDirty === false || (this._canvas.props.getPageDirty && !this._canvas.props.getPageDirty())) {
+                                                // console.log('pasteCom:' + (this._canvas.props.getPageDirty && this._canvas.props.getPageDirty()));
                                                 this._canvas.props.setPageDirty && this._canvas.props.setPageDirty();
+                                                this._canvas.setIsDirty(true);
                                             }
                                         }
                                     );
