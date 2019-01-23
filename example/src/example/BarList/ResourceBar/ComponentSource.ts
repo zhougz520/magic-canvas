@@ -10,6 +10,8 @@ const {
     Universal_Image,
     Universal_RichText,
     Universal_Table,
+    Map_AppGrid,
+    Map_AppForm,
     NewMap_AppGrid,
     NewMap_AppForm
 } = ComponentsMap;
@@ -55,17 +57,8 @@ const basePage: IBasePage[] = [
         categoryKey: 'erp',
         expanded: true,
         components: [
-            // TODO: 此处暂时以此方式设置组件初始宽高，之后由周周再修改
-            { t: 'MapComponent/map/form/base/AppFormContainer', p: { name: '表单', w: 600, h: 400, type: 'base' } },
-            { t: 'MapComponent/map/grid/base/AppGridContainer', p: { name: '列表', w: 600, h: 400, type: 'base' } },
-            { t: 'MapComponent/map/grid/AppGridMenuItem', p: { name: 'grid菜单' } },
-            { t: 'MapComponent/map/form/AppFormMenuItem', p: { name: 'form菜单' } },
-            { t: 'MapComponent/map/form/NavBarItem', p: { name: 'NavBarItem' } },
-            { t: 'MapComponent/map/form/TabItem', p: { name: 'TabItem' } },
-            { t: 'MapComponent/map/form/Section', p: { name: 'Section' } },
-            { t: 'MapComponent/map/form/field/InputField', p: { name: '输入框' } },
-            { t: 'MapComponent/map/grid/AppGridHeader', p: { name: '表格-列' } },
-            { t: 'MapComponent/map/grid/AppGridContent', p: { name: '表格-行' } }
+            Map_AppGrid,
+            Map_AppForm
         ]
     },
     {

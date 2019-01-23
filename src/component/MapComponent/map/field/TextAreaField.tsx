@@ -1,41 +1,34 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../../../index';
+import { MapComponent } from '../../index';
+import { IFieldProps } from './IFieldProps';
+import { IFieldState } from './IFieldState';
+
 import { Input } from 'antd';
-import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-import * as DragStyle from '../../DragStyle';
+import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 import { getStateClass, getFieldCommonPropertyList } from './common/util';
-import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
-
 import { OrderedSet, List } from 'immutable';
+import { IPropertyGroup, IProperty } from '../../../UniversalComponents';
+import * as DragStyle from '../DragStyle';
 
-// tslint:disable:indent
-// tslint:disable:jsx-no-multiline-js
-export interface IMapProps extends IBaseProps {
-	map_form_f_title: string;
-	map_form_f_default: string;
-	map_form_f_state: string;
-	map_form_f_cols: number;
-	map_form_f_disabled: boolean;
-	map_form_f_hidden_t: boolean;
-	map_form_f_type: string;
-	titleWidth: number;
-	unit: number;
-	currUnit: number;
-	index: number;
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
+export interface IMapProps extends IFieldProps {
+	h?: number;
 }
 
-export class InputField extends MapComponent<IMapProps, any> {
+export interface IMapState extends IFieldState {
+}
+
+export class TextAreaField extends MapComponent<IMapProps, IMapState> {
 	static defaultProps = {
 		map_form_f_title: '字段',
+		map_form_f_list: [],
 		map_form_f_default: '',
 		map_form_f_state: '0',
 		map_form_f_cols: 1,
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		unit: 1,
-		currUnit: 2,
-		map_form_f_type: 'MapComponent/map/form/field/InputField'
+		currUnit: 2
 	};
 
 	public resizing = false;
@@ -49,10 +42,10 @@ export class InputField extends MapComponent<IMapProps, any> {
 		super(props, context);
 
 		this.state = {
+			hidden: false,
 			currX: 0,
 			resizing: false,
-			hover: {},
-			value: undefined
+			hover: {}
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -91,28 +84,14 @@ export class InputField extends MapComponent<IMapProps, any> {
      */
 	public buildRichChildNode = (value: any): any => {
 		const obj: any = {};
-		obj.map_form_f_title = value;
+		obj['map_form_f_title'] = value;
 
 		return obj;
 	}
 
 	public render() {
-		const {
-			map_form_f_title,
-			map_form_f_default,
-			id,
-			titleWidth,
-			map_form_f_disabled,
-			currUnit,
-			selectedId,
-			map_form_f_hidden_t,
-			map_form_f_state,
-			map_form_f_cols
-		} = this.props;
-		const {
-			hover,
-			value
-		 } = this.state;
+		const { value, hover, hidden } = this.state;
+		const { h, map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
@@ -123,7 +102,7 @@ export class InputField extends MapComponent<IMapProps, any> {
 			<div
 				ref={(ref) => this.com = ref}
 				style={Object.assign({}, { width: `${((map_form_f_cols / currUnit) * 100).toFixed(2)}%` }, hover)}
-				className={`field-bar `}
+				className={`field-bar ${selectedId === id ? 'map-select-open' : ''}`}
 				onMouseDown={this.selectedCom}
 				draggable
 				onDragOver={this.handleFieldOver}
@@ -131,30 +110,42 @@ export class InputField extends MapComponent<IMapProps, any> {
 				onDragLeave={this.handleLeave}
 				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} />
-				<table className={`field-tb ${selectedId === id ? 'map-selected' : ''}`}>
-					<tbody>
-						<tr>
-							<td className={`field-title ${map_form_f_hidden_t ? '' : 'bar-hide'}`} style={{ width: titleWidth + 'px' }}>
-								{map_form_f_title}
-							</td>
-							<td className="field-content">
-								<div className="flex-row">
-									<span className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}`, marginRight: '2px' }}>*</span>
-									<Input
-										type="text"
-										className={map_form_f_disabled ? borderClass : ''}
-										placeholder=""
-										onChange={this.onChangeText}
-										disabled={map_form_f_disabled}
-										defaultValue={map_form_f_default}
-										value={value === undefined ? map_form_f_default : value}
-									/>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div
+					className="field-tb"
+				>
+					<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
+						<label
+							ref={(ref) => this.editCom = ref}
+							style={{
+								visibility: hidden ? 'hidden' : 'visible'
+							}}
+						>
+							{map_form_f_title}
+						</label>
+					</div>
+					<div className="field-content">
+						<table style={{ width: '100%' }}>
+							<tbody>
+								<tr>
+									<td className="new-require">
+										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
+									</td>
+									<td>
+										<Input.TextArea
+											style={{ height: h }}
+											className={`${map_form_f_disabled ? borderClass : ''}`}
+											placeholder=""
+											onChange={this.onChangeText}
+											disabled={map_form_f_disabled}
+											value={map_form_f_default || value}
+										/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 			</div>
 		);
 	}

@@ -181,3 +181,64 @@ table {
     display: flex;
     flex-direction: row;
 }
+
+.field-content {
+    flex: 1;
+    padding-top: 1px;
+    .new-require {
+        height: 30px;
+        width: 15px;
+    }
+    .input-number {
+        text-align: right;
+    }
+    .input-date-time {
+        text-align: center;
+    }
+    .input-disable {
+        background-color: transparent;
+        border-color: #cccccc;
+    }
+    a {
+        color: #0000ff;
+        text-decoration: underline;
+    }
+    .read-only {
+        border-color: #cccccc;
+        background-color: #fff;
+        overflow: hidden;
+        font-weight: bold;
+        text-overflow: ellipsis;
+    }
+    .ant-radio-wrapper {
+        margin: 0;
+    }
+    >div {
+        width: 100%;
+    }
+    .ant-checkbox-inner {
+        background-color: #fff;
+        border-color: #D3D5D9;
+        input:checked {
+            background-color: #9999AA;
+            color: #9999AA;
+            margin: 3px 0.5ex;
+            padding: initial;
+            border: initial;
+        }
+    }
+    .checkbox {
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        margin-top: 2px;
+        border: 1px solid #c6c8cc;
+    }
+    .ant-radio-inner {
+        background-color: #fff;
+        border-color: #D3D5D9;
+    }
+    .ant-radio-inner:after {
+        background-color: #9999AA;
+    }
+}

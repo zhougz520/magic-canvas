@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { IProperty, PropertiesEnum } from '../../../../../UniversalComponents';
+import { IProperty, PropertiesEnum } from '../../../../UniversalComponents';
 
 export const getStateClass = (state: string) => {
     switch (state) {

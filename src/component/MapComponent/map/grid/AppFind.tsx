@@ -8,7 +8,7 @@ import {
     // DataTimeField,
     // LookUpField,
     // NullField
-} from '../form/field';
+} from '../field';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 // import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { MapComponent, IBaseProps, IBaseState } from '../../index';
