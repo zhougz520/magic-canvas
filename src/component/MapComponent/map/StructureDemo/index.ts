@@ -1,2 +1,2 @@
-export { formDetail } from './FormStructure';
-export { gridDetail } from './GridStructure';
+export { FormDetail } from './FormStructure';
+export { GridDetail } from './GridStructure';

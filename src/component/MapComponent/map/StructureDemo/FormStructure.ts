@@ -1,4 +1,4 @@
-export const formDetail = {
+export const FormDetail = {
     p: {
         components: [
             {

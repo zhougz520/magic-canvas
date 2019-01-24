@@ -1,4 +1,4 @@
-export const gridDetail = {
+export const GridDetail = {
     p: {
         components: [
             {
@@ -51,35 +51,6 @@ export const gridDetail = {
                 }
             },
             {
-                // t: 'MapComponent/map/grid/AppGrid',
-                // p: {
-                //     id: '[cid].cs5',
-                //     p: {
-                //         components: [
-                //             {
-                //                 t: 'MapComponent/map/grid/AppGridTitle',
-                //                 p: {
-                //                     id: '[cid].cs5.cs1',
-                //                     map_gt_txt: 'AAA'
-                //                 }
-                //             },
-                //             {
-                //                 t: 'MapComponent/map/grid/AppGridTitle',
-                //                 p: {
-                //                     id: '[cid].cs5.cs2',
-                //                     map_gt_txt: 'BBB'
-                //                 }
-                //             },
-                //             {
-                //                 t: 'MapComponent/map/grid/AppGridTitle',
-                //                 p: {
-                //                     id: '[cid].cs5.cs3',
-                //                     map_gt_txt: 'CCC'
-                //                 }
-                //             }
-                //         ]
-                //     }
-                // }
                 t: 'MapComponent/map/grid/AppGrid',
                 p: {
                     id: '[cid].cs7',

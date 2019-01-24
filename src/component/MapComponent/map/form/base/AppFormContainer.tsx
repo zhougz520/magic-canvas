@@ -2,12 +2,13 @@ import * as React from 'react';
 import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../BaseComponent';
 import { AppFormMenu, AppForm } from '../..//form/index';
 import { MapProvider } from '../../MapProvider';
-import { formDetail } from '../../structureDemo';
+import { FormDetail } from '../../StructureDemo';
 import { AppFormContainerState } from './AppFormContainerState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import { IComponent } from '../../../IComponent';
 import { Map, List, OrderedSet } from 'immutable';
 import { HandleChildCom } from '../../../types';
+import { IContextMenuItems } from '../../../../Stage';
 import '../../sass/AppForm.scss';
 import '../../sass/Field.scss';
 
@@ -38,7 +39,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         let structureData: any = null;
         if (childData === undefined) {
             structureData = JSON.parse(
-                JSON.stringify(clone(formDetail.p)).replace(/\[cid\]/g, this.props.baseState.getCurrentContent().getCid())
+                JSON.stringify(clone(FormDetail.p)).replace(/\[cid\]/g, this.props.baseState.getCurrentContent().getCid())
             );
         }
         this.state = {
@@ -106,6 +107,47 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
         }
     }
 
+    /**
+     * 设置子组件右键菜单
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        const { selectedId } = this.state;
+        if (selectedId) {
+            // 选中子组件
+            const childCom: IComponent | null = this.getChildComponent(selectedId);
+            if (childCom) {
+                return [
+                    {
+                        type: 'menu',
+                        label: '删除图层',
+                        click: () => {
+                            this.props.executeCommand({
+                                t: 'e.deleteCom'
+                            });
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        type: 'menu',
+                        label: '复制图层',
+                        click: () => {
+                            this.props.executeCommand({
+                                t: 'e.copyPaste'
+                            });
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    }
+                ];
+            }
+        }
+
+        return this.defaultContextMenuItems;
+    }
+
     public render() {
         const {
             pageMode
@@ -145,8 +187,8 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 >
                     <div
                         className="ps-map-title"
-                        onMouseDown={this.ontitleMouseDown}
-                        onMouseUp={this.ontitleMouseUp}
+                        onMouseDown={this.onTitleMouseDown}
+                        onMouseUp={this.onTitleMouseUp}
                     >
                         {appFormContainerState.getTitle()}
                     </div>
@@ -330,12 +372,12 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
     /**
      * title组件鼠标控制画布是否可移动
      */
-    private ontitleMouseDown = (e: any): void => {
+    private onTitleMouseDown = (e: any): void => {
         this.selectComChange(e, null);
         this.setIsCanMove(true);
     }
 
-    private ontitleMouseUp = (): void => {
+    private onTitleMouseUp = (): void => {
         this.setIsCanMove(false);
     }
 }
