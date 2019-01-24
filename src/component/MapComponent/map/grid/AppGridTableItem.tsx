@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Input, Select, DatePicker, Checkbox, InputNumber} from 'antd';
-
+import * as moment from 'moment';
 import { IBaseProps } from '../../IBaseProps';
 import { IBaseState } from '../../IBaseState';
 import { MapComponent } from '../../MapComponent';
@@ -103,10 +103,13 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                             element = <Select defaultValue="选择框" size="small"/>;
                                             break;
                                         case 'date':
+                                            const dateValue = rowItem.p[item.id.replace(/\./g, '')];
+                                            const isDate = /^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/.test(dateValue);
                                             element = <DatePicker
                                                 size="small"
                                                 placeholder="请选择"
-                                                format={rowItem.p[item.id.replace(/\./g, '')]}
+                                                format={'YYYY-MM-DD'}
+                                                value={(isDate ? moment(dateValue, 'YYYY-MM-DD') : undefined )}
                                                 onChange={(value, dateString) => this.mapComponentChange(value, item, rowItem, 'date')}
                                             />;
                                             break;

@@ -55,7 +55,7 @@ const basePage: IBasePage[] = [
     {
         category: 'ERP页面',
         categoryKey: 'erp',
-        expanded: true,
+        expanded: false,
         components: [
             Map_AppGrid,
             Map_AppForm
@@ -70,7 +70,7 @@ const basePage: IBasePage[] = [
     {
         category: '重构页面(试用)',
         categoryKey: 'newERP',
-        expanded: false,
+        expanded: true,
         components: [
             NewMap_AppGrid,
             NewMap_AppForm
