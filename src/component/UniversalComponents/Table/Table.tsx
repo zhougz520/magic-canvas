@@ -288,7 +288,7 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
                 }
             }
 
-            this.setCellData();
+            this.setRenderTableData('fromProperty');
             setTimeout(() => {
                 callback && callback();
             }, 0);
@@ -309,52 +309,52 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
             // 合并、取消合并
             this.hot.hotInstance.addHook('afterMergeCells', ((cellRange: any, mergeParent: any, auto: any) => {
                 if (auto === false) {
-                    this.setMergeCellsData();
+                    this.setRenderTableData('merge');
                 }
             }) as any);
             this.hot.hotInstance.addHook('afterUnmergeCells', ((cellRange: any, auto: any) => {
                 if (auto === false) {
-                    this.setMergeCellsData();
+                    this.setRenderTableData('unmerge');
                 }
             }) as any);
 
             // 修改列宽
             this.hot.hotInstance.addHook('afterColumnResize', ((currentColumn: any, newSize: any, isDoubleClick: any) => {
-                this.setColWidths();
+                this.setRenderTableData('colWidths');
             }) as any);
 
             // 修改
             this.hot.hotInstance.addHook('afterChange', ((changes: any, source: any) => {
                 if (source === 'edit' || source === 'CopyPaste.paste') {
-                    this.setFormulaData();
+                    this.setRenderTableData('edit');
                 }
             }) as any);
 
             // 删除行
             this.hot.hotInstance.addHook('afterRemoveRow', ((index: any, amount: any, physicalRows: any, source: any) => {
                 if (source === 'ContextMenu.removeRow') {
-                    this.setFormulaData();
+                    this.setRenderTableData('remove');
                 }
             }) as any);
 
             // 删除列
             this.hot.hotInstance.addHook('afterRemoveCol', ((index: any, amount: any, physicalRows: any, source: any) => {
                 if (source === 'ContextMenu.removeColumn') {
-                    this.setFormulaData();
+                    this.setRenderTableData('remove');
                 }
             }) as any);
 
             // 新增行
             this.hot.hotInstance.addHook('afterCreateRow', ((index: any, amount: any, source: any) => {
                 if (source === 'ContextMenu.rowAbove' || source === 'ContextMenu.rowBelow') {
-                    this.setFormulaData();
+                    this.setRenderTableData('add');
                 }
             }) as any);
 
             // 新增列
             this.hot.hotInstance.addHook('afterCreateCol', ((index: any, amount: any, source: any) => {
                 if (source === 'ContextMenu.columnRight' || source === 'ContextMenu.columnLeft') {
-                    this.setFormulaData();
+                    this.setRenderTableData('add');
                 }
             }) as any);
         }
@@ -531,87 +531,78 @@ export default class Table extends BaseComponent<ITableProps, ITableState> {
     /**
      * 设置数据
      */
-    private setFormulaData = () => {
+    private setRenderTableData = (type: string) => {
         setTimeout(() => {
             if (this.hot) {
+                // 设置表格value数据
                 const formulaData = clone(this.hot.hotInstance.getData());
-
-                const newTableState: TableState = TableState.set(this.getCustomState(), Map({ formulaData }));
-                this.setCustomState(newTableState, true);
-            }
-        }, 0);
-    }
-
-    /**
-     * 设置样式数据
-     */
-    private setCellData = () => {
-        if (this.hot) {
-            const cellData: any[] = [];
-            const rowsCount: number = this.hot.hotInstance.countRows();
-            for (let i = 0; i < rowsCount; i++) {
-                const cellMetaAtRow = this.hot.hotInstance.getCellMetaAtRow(i);
-                cellMetaAtRow.map(
-                    (cellMeta: any, cellIndex: number) => {
-                        cellData.push({
-                            row: i,
-                            col: cellIndex,
-                            textAlign: cellMeta.textAlign ? cellMeta.textAlign : '',
-                            fontColor: cellMeta.fontColor ? cellMeta.fontColor : '',
-                            fontStyle: cellMeta.fontStyle ? cellMeta.fontStyle : '',
-                            fontSize: cellMeta.fontSize ? cellMeta.fontSize : '',
-                            fontWeight: cellMeta.fontWeight ? cellMeta.fontWeight : '',
-                            textDecoration: cellMeta.textDecoration ? cellMeta.textDecoration : '',
-                            backgroundColor: cellMeta.backgroundColor ? cellMeta.backgroundColor : ''
+                // 设置合并单元格数据
+                const mergeData: any[] = [];
+                const mergedCells = this.hot.hotInstance.getPlugin('mergeCells').mergedCellsCollection.mergedCells;
+                mergedCells.map(
+                    (merged) => {
+                        mergeData.push({
+                            row: merged.row,
+                            col: merged.col,
+                            rowspan: merged.rowspan,
+                            colspan: merged.colspan
                         });
                     }
                 );
+                // 设置样式数据
+                const cellData: any[] = [];
+                const rowsCount: number = this.hot.hotInstance.countRows();
+                for (let i = 0; i < rowsCount; i++) {
+                    const cellMetaAtRow = this.hot.hotInstance.getCellMetaAtRow(i);
+                    cellMetaAtRow.map(
+                        (cellMeta: any, cellIndex: number) => {
+                            cellData.push({
+                                row: i,
+                                col: cellIndex,
+                                textAlign: cellMeta.textAlign ? cellMeta.textAlign : '',
+                                fontColor: cellMeta.fontColor ? cellMeta.fontColor : '',
+                                fontStyle: cellMeta.fontStyle ? cellMeta.fontStyle : '',
+                                fontSize: cellMeta.fontSize ? cellMeta.fontSize : '',
+                                fontWeight: cellMeta.fontWeight ? cellMeta.fontWeight : '',
+                                textDecoration: cellMeta.textDecoration ? cellMeta.textDecoration : '',
+                                backgroundColor: cellMeta.backgroundColor ? cellMeta.backgroundColor : ''
+                            });
+                        }
+                    );
+                }
+                // 设置列宽数据
+                const colWidths = (this.getCustomState() as TableState).getColWidths();
+                const newColWidths = this.hot.hotInstance.getPlugin('manualColumnResize').manualColumnWidths;
+                newColWidths.map(
+                    (colWidth, index) => {
+                        colWidths[index] = colWidth;
+                    }
+                );
+
+                let setTableData: any = {};
+                switch (type) {
+                    case 'edit':
+                        setTableData = {formulaData};
+                        break;
+                    case 'add':
+                    case 'remove':
+                        setTableData = {formulaData, mergeData, cellData};
+                        break;
+                    case 'merge':
+                    case 'unmerge':
+                        setTableData = {mergeData};
+                        break;
+                    case 'fromProperty':
+                        setTableData = {cellData};
+                        break;
+                    case 'colWidths':
+                        setTableData = {colWidths};
+
+                }
+                const newTableState: TableState = TableState.set(this.getCustomState(), Map(setTableData));
+                this.setCustomState(newTableState, true);
             }
-
-            const newTableState: TableState = TableState.set(this.getCustomState(), Map({ cellData }));
-            this.setCustomState(newTableState);
-        }
-    }
-
-    /**
-     * 设置合并单元格数据
-     */
-    private setMergeCellsData = () => {
-        if (this.hot) {
-            const mergeData: any[] = [];
-            const mergedCells = this.hot.hotInstance.getPlugin('mergeCells').mergedCellsCollection.mergedCells;
-            mergedCells.map(
-                (merged) => {
-                    mergeData.push({
-                        row: merged.row,
-                        col: merged.col,
-                        rowspan: merged.rowspan,
-                        colspan: merged.colspan
-                    });
-                }
-            );
-
-            const newTableState: TableState = TableState.set(this.getCustomState(), Map({ mergeData }));
-            this.setCustomState(newTableState);
-        }
-    }
-
-    /**
-     * 设置列宽数据
-     */
-    private setColWidths = () => {
-        if (this.hot) {
-            const colWidths = (this.getCustomState() as TableState).getColWidths();
-            const newColWidths = this.hot.hotInstance.getPlugin('manualColumnResize').manualColumnWidths;
-            newColWidths.map(
-                (colWidth, index) => {
-                    colWidths[index] = colWidth;
-                }
-            );
-
-            const newTableState: TableState = TableState.set(this.getCustomState(), Map({ colWidths }));
-            this.setCustomState(newTableState, true);
-        }
+        }, 0);
     }
 
     /**
