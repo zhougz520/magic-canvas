@@ -452,7 +452,6 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         if (!GlobalUtil.isUndefined(parent)) {
             const selectedCom = parent.find((com: any) => com.p.id === cid);
             if (selectedCom) {
-                // console.log('selectedCom', selectedCom);
                 // 复制选中控件的结构,并重置结构中所有id
                 // tslint:disable-next-line:no-eval
                 const newCom = JSON.parse(JSON.stringify(selectedCom).replace(eval(`/\"${selectedCom.p.id}/g`), `"${newId}`));
@@ -477,29 +476,33 @@ export class MapComponent<P extends IBaseProps, S extends IBaseState>
         return true;
     }
 
+    /**
+     * 粘贴控件
+     */
     public parseSelectedCom = (): boolean => {
         const pasteComponent = getPluginConfig(PluginMap.COPY_TO_CLIPBOARD);
         if (pasteComponent && pasteComponent.text) {
             const detail = JSON.parse(pasteComponent.text);
-            const content = detail.content;
-            const newId = this.newComponentsId(content[0], `${content[1]}.cs`);
+            const parent = detail.content[0];
+            const parentId = detail.content[1];
+            const selectedCom = detail.content[2];
+            const newId = this.newComponentsId(parent, `${parentId}.cs`);
             // tslint:disable-next-line:no-eval
-            const newCom = JSON.parse(JSON.stringify(content[0][content[0].length - 1]).replace(eval(`/\"${content[0][content[0].length - 1].p.id}/g`), `"${newId}`));
-            content[0].push(newCom);
-            this.props.updateProps(content[1], { p: { components: content[0] } });
+            const newCom = JSON.parse(JSON.stringify(selectedCom).replace(eval(`/\"${selectedCom.p.id}/g`), `"${newId}`));
+            parent.push(newCom);
+            this.props.updateProps(parentId, { p: { components: parent } });
             const { selectComChange } = this.props;
             selectComChange(undefined, newId);
 
             const newDetail = {
                 type: 'ChildComponent',
-                content: [content[0], content[1], content[0][content[0].length - 1], newId]
+                content: [parent, parentId, selectedCom, newId]
             };
             addPluginConfig(PluginMap.COPY_TO_CLIPBOARD, {
                 text: JSON.stringify(newDetail)
             });
 
             return true;
-
         }
 
         return false;
