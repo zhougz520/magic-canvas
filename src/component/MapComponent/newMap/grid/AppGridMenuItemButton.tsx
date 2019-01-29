@@ -89,7 +89,7 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
 
         return (
             <li
-                style={{ display: 'inline-block' }}
+                style={{ float: 'left' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >

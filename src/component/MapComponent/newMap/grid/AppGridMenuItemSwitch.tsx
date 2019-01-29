@@ -90,7 +90,7 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
         return (
             <li
                 className={`map-switch ${selectedId === id ? 'map-select-open' : ''}`}
-                style={{ display: 'inline-block' }}
+                style={{ float: 'left' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >

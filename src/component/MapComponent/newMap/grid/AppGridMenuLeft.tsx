@@ -124,7 +124,7 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
         }
 
         return (
-            <ul
+            <div
                 className="listheader-toolbar map-left"
                 style={Object.assign(gridStyle === 'advanced' ? { minWidth: '150px' } : {}, this.state.hover)}
                 ref={(ref) => this.com = ref}
@@ -136,9 +136,9 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                         {
                             (provided: DroppableProvided) =>
                                 (
-                                    <div
+                                    <ul
                                         ref={provided.innerRef}
-                                        style={{ height: '100%', width: '100%', lineHeight: '40px', textAlign: 'left', display: 'inline-block' }}
+                                        style={{ height: '100%', width: '100%', lineHeight: '40px', textAlign: 'right', listStyle: 'none' }}
                                     >
                                         {
                                             appGridMenuItem.length > 0 ? appGridMenuItem :
@@ -146,12 +146,12 @@ export class AppGridMenuLeft extends MapComponent<IAppGridMenuLeftProps, IAppGri
                                                     <div style={{ color: '#bfbfbf', fontWeight: 'bold' }}>请添加菜单左侧按钮...</div>
                                                 )
                                         }
-                                    </div>
+                                    </ul>
                                 )
                         }
                     </Droppable>
                 </DragDropContext>
-            </ul>
+            </div>
         );
     }
 }

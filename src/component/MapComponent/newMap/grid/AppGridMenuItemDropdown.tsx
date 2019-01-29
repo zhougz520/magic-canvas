@@ -100,7 +100,7 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
 
         return (
             <li
-                style={{ display: 'inline-block' }}
+                style={{ float: 'left' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >
