@@ -89,9 +89,9 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
         propertyList = propertyList.push(
             { pTitle: '是否选中', pKey: 'isCheck', pValue: this.getCustomState().getIsCheck(), pType: PropertiesEnum.SWITCH },
             { pTitle: '是否禁用', pKey: 'disabled', pValue: this.getCustomState().getDisabled(), pType: PropertiesEnum.SWITCH },
-            { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER },
-            { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
-            { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
+            { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER }
+            // { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
+            // { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
         );
         propertyGroup = propertyGroup.add(
             { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
