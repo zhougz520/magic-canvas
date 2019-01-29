@@ -84,6 +84,21 @@ export class ImageMagnifierUtil {
     getAddImageMagnifierPositionAndSize = (): { position: IPosition; size: ISize; } | null => {
         const { startPoint, endPoint } = this._addImageMagnifierParam;
         if (startPoint === null || endPoint === null) return null;
+        if (this._imageComponentCid === null) return null;
+
+        // 判断选择放大区域是否在图片范围内
+        const comImage: IComponent | null = this._canvas.getComponent(this._imageComponentCid);
+        if (comImage) {
+            const top = comImage.getPosition().top;
+            const left = comImage.getPosition().left;
+            const width = comImage.getSize().width;
+            const height = comImage.getSize().height;
+            const imageMagnifierMaxX = Math.max(startPoint.x, endPoint.x);
+            const imageMagnifierMaxY = Math.max(startPoint.y, endPoint.y);
+            const imageMagnifierMinX = Math.min(startPoint.x, endPoint.x);
+            const imageMagnifierMinY = Math.min(startPoint.y, endPoint.y);
+            if (imageMagnifierMaxY < top ||  imageMagnifierMinY > top + height ||  imageMagnifierMaxX < left ||  imageMagnifierMinX > left + width) return null;
+        }
 
         const position: IPosition = {
             left: Math.min(startPoint.x, endPoint.x),

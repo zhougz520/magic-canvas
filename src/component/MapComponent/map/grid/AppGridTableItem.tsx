@@ -125,7 +125,6 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                             element = <Checkbox />;
                                             break;
                                         case 'lookup':
-                                            console.log(111);
                                             element = <span>＋</span>;
                                             break;
                                         default:
