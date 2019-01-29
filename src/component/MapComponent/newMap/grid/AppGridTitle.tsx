@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 
-import { IBaseProps } from '../IBaseProps';
-import { IBaseState } from '../IBaseState';
-import { MapComponent } from '../MapComponent';
+import { IBaseProps } from '../../IBaseProps';
+import { IBaseState } from '../../IBaseState';
+import { MapComponent } from '../../MapComponent';
 
 import { OrderedSet, List } from 'immutable';
 

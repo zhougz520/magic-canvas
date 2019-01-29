@@ -19,6 +19,9 @@ export interface IStageProps {
 
     // 设置页签变脏
     setPageDirty?: () => void;
+    // 获取页面状态
+    getPageDirty?: () => boolean;
+
     // 右键菜单
     onContextMenu?: (e: any, contextMenuItems: IContextMenuItems[]) => void;
     // 保存数据

@@ -12,8 +12,9 @@ import {
     IFont
 } from '../../../../BaseComponent';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+import { IContextMenuItems } from '../../../../Stage';
 
-import { IComponent } from '../../IComponent';
+import { IComponent } from '../../../IComponent';
 import { AppGridContainerState, IAppGridContainerState as ICustomState } from './AppGridContainerState';
 import { IComData } from '../../model/types';
 import { gridDetail } from '../../structure';
@@ -204,7 +205,7 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     /**
      * 操作子控件
      */
-    public handleChildCom = (handle: string): boolean => {
+    public handleChildCom = (handle: string, fromFun?: string): boolean => {
         const { selectedId } = this.state;
         if (!selectedId) return false;
         const childCom: any = this.getChildComponent(selectedId);
@@ -218,13 +219,17 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
             case HandleChildCom.SELECT_PARENT:  // 选中父组件
                 result = childCom.selectedComParent();
                 break;
-            case HandleChildCom.COPY_COM:       // 复制控件
-                result = childCom.copySelectedCom();
+            case HandleChildCom.COPY_COM:       // 复制粘贴控件
+                result = childCom.copySelectedCom(fromFun);
+                break;
+            case HandleChildCom.PASTE_COM:       // 粘贴控件
+                result = childCom.parseSelectedCom();
                 break;
         }
 
         return result;
     }
+
     /************************************* end 富文本 ****************************************/
 
     /************************************* begin 属性设置 ****************************************/
@@ -288,8 +293,73 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
             this.setCustomState(newAppGridContainerState, true, callback);
         }
     }
-    /************************************* end 属性设置 ****************************************/
 
+    /**
+     * 设置子组件右键属性
+     */
+    public setPropertiesFroma = (pKey: string, pValue: any, callback?: () => void) => {
+        const { selectedId } = this.state;
+        if (selectedId) {
+            // 选中子组件
+            const childCom: IComponent | null = this.getChildComponent(selectedId);
+            if (childCom) {
+                const obj: any = {};
+                obj[pKey] = pValue;
+                this.updateProps(selectedId, obj);
+            }
+        } else {
+            let properties = Map();
+            properties = properties.set(pKey, pValue);
+            const newAppGridContainerState: AppGridContainerState = AppGridContainerState.set(this.getCustomState(), properties);
+
+            this.setCustomState(newAppGridContainerState, true, callback);
+        }
+    }
+
+    /**
+     * 设置子组件右键菜单
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        const { selectedId } = this.state;
+        if (selectedId) {
+            // 选中子组件
+            const childCom: IComponent | null = this.getChildComponent(selectedId);
+            const ids: string[] = selectedId.split('.');
+            if (childCom) {
+                if (ids.length < 3) return [];
+
+                return [
+                    {
+                        type: 'menu',
+                        label: '删除图层',
+                        click: () => {
+                            this.props.executeCommand({
+                                t: 'e.deleteCom'
+                            });
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        type: 'menu',
+                        label: '复制图层',
+                        click: () => {
+                            this.props.executeCommand({
+                                t: 'e.copyPaste'
+                            });
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    }
+                ];
+            }
+        }
+
+        return this.defaultContextMenuItems;
+    }
+    /************************************* end 属性设置 ****************************************/
     render() {
         const { hidden, unfoldAdv } = this.state;
         const appGridContainerState: AppGridContainerState = this.getCustomState();
@@ -566,7 +636,11 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
             if (ref === undefined) {
                 return null;
             }
-            currRefs = currRefs[`${currCid}`].refs as any;
+            if (currRefs[`${currCid}`] !== undefined && Object.keys(currRefs[`${currCid}`].refs).length > 0) {
+                // 正常情况下一级只有一个，
+                // 如果存在多个，则直接进入下一次循环
+                currRefs = currRefs[`${currCid}`].refs as any;
+            }
         }
 
         return (ref as IComponent) || null;

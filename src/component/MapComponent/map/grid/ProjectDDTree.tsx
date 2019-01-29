@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../../index';
-import { TreeSelect } from 'antd';
+import { Select } from 'antd';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-import { MapConsumer } from '../MapConsumer';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+import { MapComponent, IBaseProps } from '../../index';
+
+import { OrderedSet, List } from 'immutable';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -10,11 +12,10 @@ export interface IMapProps extends IBaseProps {
     map_pddt_o?: string[];
 }
 
-export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
+export class ProjectDDTree extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_pddt_txt: '组织架构',
-        map_pddt_o: [],
-        selectedId: undefined
+        map_pddt_o: []
     };
 
     constructor(props: any, context?: any) {
@@ -25,21 +26,56 @@ export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
         };
     }
 
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        const {
+            map_pddt_txt,
+            map_pddt_o
+        } = this.props;
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 列表属性
+        propertyList = propertyList.push(
+            { pTitle: '控件名称', pKey: 'map_pddt_txt', pValue: map_pddt_txt, pType: PropertiesEnum.INPUT_TEXT }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '组件名称', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        // 字段设置
+        propertyList = propertyList.push(
+            { pTitle: '选项', pKey: 'map_pddt_o', pValue: map_pddt_o, pType: PropertiesEnum.INPUT_LIST }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '字段设置', groupKey: 'field', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        return this.props.map_pddt_txt;
+    }
+
     public render() {
         const { map_pddt_txt, map_pddt_o, selectedId, id } = this.props;
+
         const options: any[] = [];
         if (map_pddt_o !== undefined) {
-            map_pddt_o.map((mi: string) => {
+            map_pddt_o.map((mi: string, index: number) => {
                 options.push(
-                    {
-                        label: mi,
-                        value: mi,
-                        key: mi
-                    }
+                    <Select.Option key={index} value={mi}>{mi}</Select.Option>
                 );
             });
         }
-        const treeData = options;
 
         return (
             <table
@@ -56,13 +92,14 @@ export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
                         <td>
                             <div className="first-page">
                                 <MaskLayer id={id} />
-                                <TreeSelect
+                                <Select
                                     style={{ width: '100%' }}
                                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                                    treeData={treeData}
-                                    treeDefaultExpandAll
-                                    onChange={this.onProjectValueChange}
-                                />
+                                    onChange={this.handleChange}
+                                    value={this.state.projectValue}
+                                >
+                                    {options}
+                                </Select>
                             </div>
                         </td>
                     </tr>
@@ -71,10 +108,9 @@ export class ProjectDDTreeClass extends MapComponent<IMapProps, any> {
         );
     }
 
-    public onProjectValueChange = (value: string) => {
+    handleChange = (value: string) => {
         this.setState({
             projectValue: value
         });
     }
 }
-export const ProjectDDTree = MapConsumer(ProjectDDTreeClass);

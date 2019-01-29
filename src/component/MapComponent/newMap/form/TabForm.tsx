@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps } from '../../index';
 import { TabItem, SectionForm } from './index';
 import { GlobalUtil } from '../../../util';
 import { OrderedSet, List } from 'immutable';

@@ -3,7 +3,6 @@ import { MapComponent, IBaseProps } from '../../index';
 import { Dropdown, Menu, Icon } from 'antd';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
-import { MapConsumer } from '../MapConsumer';
 import * as DragStyle from '../DragStyle';
 
 export interface IMapProps extends IBaseProps {
@@ -18,7 +17,7 @@ export interface IMapProps extends IBaseProps {
     map_mi_line?: boolean;
 }
 
-export class AppFormMenuItemClass extends MapComponent<IMapProps, any> {
+export class AppFormMenuItem extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_mi_txt: '按钮',
         map_mi_sa: false,
@@ -96,4 +95,3 @@ export class AppFormMenuItemClass extends MapComponent<IMapProps, any> {
         );
     }
 }
-export const AppFormMenuItem = MapConsumer(AppFormMenuItemClass);

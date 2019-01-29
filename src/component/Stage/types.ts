@@ -36,6 +36,50 @@ export const ComponentsMap = {
     Universal_Image: { t: 'UniversalComponents/ImageCom/Image', p: { name: '图片', w: 300, h: 200 } },
     Universal_RichText: { t: 'UniversalComponents/RichText/RichText', p: { name: '文本', w: 204, h: 170 } },
     Universal_Table: { t: 'UniversalComponents/Table/Table', p: { name: '表格', w: 600, h: 300 } },
+    Map_AppGrid: {
+        t: 'MapComponent/map/grid/base/AppGridContainer',
+        p: { name: '列表', w: 600, h: 400, type: 'base' },
+        children: [
+            { t: 'MapComponent/map/grid/AppGridMenuItem', p: { name: 'grid菜单' } },
+            { t: 'MapComponent/map/grid/AppGridHeader', p: { name: '表格-列' } },
+            { t: 'MapComponent/map/grid/AppGridContent', p: { name: '表格-行' } },
+            { t: 'MapComponent/map/grid/field/TextField', p: { name: '纯文本' } },
+            { t: 'MapComponent/map/grid/field/InputField', p: { name: '文本录入' } },
+            { t: 'MapComponent/map/grid/field/InputNumberField', p: { name: '数字录入' } },
+            { t: 'MapComponent/map/grid/field/LinkField', p: { name: '超链接' } },
+            { t: 'MapComponent/map/grid/field/SelectField', p: { name: '下拉选择' } },
+            { t: 'MapComponent/map/grid/field/DataTimeField', p: { name: '日期录入' } },
+            { t: 'MapComponent/map/grid/field/LookUpField', p: { name: '弹出选择' } },
+            { t: 'MapComponent/map/grid/field/RadioField', p: { name: '单选框' } },
+            { t: 'MapComponent/map/grid/field/CheckBoxField', p: { name: '复选框' } },
+            { t: 'MapComponent/map/grid/field/InputIconField', p: { name: '文本&图片' } },
+            { t: 'MapComponent/map/grid/field/TextAreaField', p: { name: '多行文本' } },
+            { t: 'MapComponent/map/grid/field/UploadField', p: { name: '上传' } }
+
+        ]
+    },
+    Map_AppForm: {
+        t: 'MapComponent/map/form/base/AppFormContainer',
+        p: { name: '表单', w: 600, h: 400, type: 'base' },
+        children: [
+            { t: 'MapComponent/map/form/AppFormMenuItem', p: { name: 'form菜单' } },
+            { t: 'MapComponent/map/form/NavBarItem', p: { name: 'NavBarItem' } },
+            { t: 'MapComponent/map/form/TabItem', p: { name: 'TabItem' } },
+            { t: 'MapComponent/map/form/Section', p: { name: '分组' } },
+            { t: 'MapComponent/map/form/field/TextField', p: { name: '纯文本' } },
+            { t: 'MapComponent/map/form/field/InputField', p: { name: '文本录入' } },
+            { t: 'MapComponent/map/form/field/InputNumberField', p: { name: '数字录入' } },
+            { t: 'MapComponent/map/form/field/LinkField', p: { name: '超链接' } },
+            { t: 'MapComponent/map/form/field/SelectField', p: { name: '下拉选择' } },
+            { t: 'MapComponent/map/form/field/DataTimeField', p: { name: '日期录入' } },
+            { t: 'MapComponent/map/form/field/LookUpField', p: { name: '弹出选择' } },
+            { t: 'MapComponent/map/form/field/RadioField', p: { name: '单选框' } },
+            { t: 'MapComponent/map/form/field/CheckBoxField', p: { name: '复选框' } },
+            { t: 'MapComponent/map/form/field/InputIconField', p: { name: '文本&图片' } },
+            { t: 'MapComponent/map/form/field/TextAreaField', p: { name: '多行文本' } },
+            { t: 'MapComponent/map/form/field/UploadField', p: { name: '上传' } }
+        ]
+    },
     NewMap_AppGrid: {
         t: 'MapComponent/newMap/grid/base/AppGridContainer',
         p: { name: '列表', w: 600, h: 550, type: 'base' },
@@ -45,7 +89,8 @@ export const ComponentsMap = {
             { t: 'MapComponent/newMap/grid/AppGridMenuItemButton', p: { name: '按钮' } },
             { t: 'MapComponent/newMap/grid/AppGridMenuItemDropdown', p: { name: '菜单按钮' } },
             { t: 'MapComponent/newMap/grid/AppGridMenuItemSwitch', p: { name: '开关按钮' } },
-            { t: 'MapComponent/newMap/grid/AppGridHeader', p: { name: '列表-列' } }
+            { t: 'MapComponent/newMap/grid/AppGridHeader', p: { name: '列表-列' } },
+            { t: 'MapComponent/newMap/grid/AppGridContent', p: { name: '表格数据-行' } }
         ]
     },
     NewMap_AppForm: {

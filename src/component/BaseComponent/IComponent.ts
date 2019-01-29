@@ -166,5 +166,5 @@ export interface IComponent {
     /**
      * 操作子组件
      */
-    handleChildCom: (handle: string) => boolean;
+    handleChildCom: (handle: string, fromFun?: string) => boolean;
 }

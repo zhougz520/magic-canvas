@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 
-import { IBaseProps } from '../IBaseProps';
-import { IBaseState } from '../IBaseState';
-import { MapComponent } from '../MapComponent';
+import { IBaseProps } from '../../IBaseProps';
+import { IBaseState } from '../../IBaseState';
+import { MapComponent } from '../../MapComponent';
 
 import { Switch } from 'antd';
 import { OrderedSet, List } from 'immutable';
@@ -90,7 +90,7 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
         return (
             <li
                 className={`map-switch ${selectedId === id ? 'map-select-open' : ''}`}
-                style={{ display: 'inline-block' }}
+                style={{ float: 'left' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >

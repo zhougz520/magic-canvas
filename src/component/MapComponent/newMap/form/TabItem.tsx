@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps } from '../index';
+import { MapComponent, IBaseProps } from '../../index';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';

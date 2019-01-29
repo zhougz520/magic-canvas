@@ -1,151 +1,217 @@
 import * as React from 'react';
-import { MapComponent, IBaseProps, IBaseState } from '../../index';
-import { Checkbox } from 'antd';
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { AppGridTitle } from './index';
-import { MapConsumer } from '../MapConsumer';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 
-export interface IMapProps extends IBaseProps {
-    updateProps: (cid: string, updateProp: any) => void;
-    map_g_mc: boolean;   // 是否多选
-    map_g_sl: number;   // 滚动条位置
-    map_g_pg: boolean;   // 是否显示分页栏
+import { IBaseProps } from '../../IBaseProps';
+import { IBaseState } from '../../IBaseState';
+import { MapComponent } from '../../MapComponent';
+import { AppGridHeader } from './AppGridHeader';
+import { AppGridContent } from './AppGridContent';
 
-    map_g_data: any;   // grid数据
-    map_g_modal: boolean;  // 是否开启grid数据编辑
-    map_g_tree: boolean;    // 是否TreeGrid
-    w: number;   // 宽度 (用于列表横向滚动条)
-    h: number;   // 高度 (用于列表数据竖向滚动条)
-    p: any;
-    scroll: number; // 滚动条位置
+import { GlobalUtil } from '../../../util';
+import { OrderedSet, List } from 'immutable';
+
+import { Checkbox} from 'antd';
+
+// tslint:disable-next-line:no-empty-interface
+export interface IAppGridProps extends IBaseProps {
+    map_g_check?: boolean;
+    map_g_num?: boolean;
 }
-export interface IMapState extends IBaseState {
-    dragonDrop?: any;
-    // map_af_se: boolean;
+
+// tslint:disable-next-line:no-empty-interface
+export interface IAppGridState extends IBaseState {
 }
-export class AppGridClass extends MapComponent<IMapProps, any> {
+
+/* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref no-shadowed-variable */
+export class AppGrid extends MapComponent<IAppGridProps, IAppGridState> {
+
     static defaultProps = {
-        map_g_mc: false,
-        map_g_sl: false,
-        map_g_pg: false,
-        map_g_data: false,
-        map_g_modal: false,
-        map_g_tree: false,
-        scroll: 0
+        map_g_check: false,
+        map_g_num: true
     };
 
-    public title: HTMLElement | null = null;
-    public titles: any;
+    public headerCom: HTMLElement | null = null;
 
-    constructor(props: any, context?: any) {
+    constructor(props: IAppGridProps, context?: any) {
         super(props, context);
         this.state = {
-            dragonDrop: null,
+            hidden: false,
             hover: {}
         };
     }
 
-    componentDidUpdate() {
-        // 记住滚动条的位置，在改变的时候更新
-        if (this.com !== null) {
-            this.com.scrollLeft = this.props.scroll;
-        }
-    }
-    public getItemStyle = (draggableStyle: any, isDragging: any) => ({
-        background: isDragging ? 'lightblue' : 'lightgrey',
-        display: 'flex',
-        // padding: grid,
-        overflow: 'auto'
-    })
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        const { map_g_check, map_g_num } = this.props;
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
-    public render() {
-        // const { map_g_mc, map_g_sl, map_g_pg, map_g_data, map_g_modal, map_g_tree, w, h } = this.props;
-        const { map_sm, selectedId, id, w, p } = this.props;
-        const { hover } = this.state;
-        // 加载 GridTitle
-        this.initTitle(p);
+        // 列表属性
+        propertyList = propertyList.push(
+            { pTitle: '显示序号列', pKey: 'map_g_num', pValue: map_g_num, pType: PropertiesEnum.SWITCH },
+            { pTitle: '允许多选', pKey: 'map_g_check', pValue: map_g_check, pType: PropertiesEnum.SWITCH }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+
+    render() {
+        const {
+            theme,
+            pageMode,
+            selectedId,
+            selectComChange,
+            setChildPropertyGroup,
+            doChildDbClickToEdit,
+            updateProps,
+            getRefs,
+            stateData,
+            p,
+            map_g_check,
+            map_g_num,
+            id
+        } = this.props;
+
+        const components = GlobalUtil.isUndefined(p) ? undefined : p.components;
+        const componentsColumnsChild = (components && components[0].p.p) ? components[0].p.p.components : null;
+        const componentsRowChild = (components && components[1].p.p) ? components[1].p.p.components : null;
+        const columns: any = [];
+        const rows: any = [];
+        // 获取表格columns
+        if (componentsColumnsChild) {
+            componentsColumnsChild.map(
+                (com: any) => {
+                    const { p } = com;
+                    columns.push(p);
+                }
+            );
+        }
+
+        // 获取表格rows
+        if (componentsRowChild && columns.length > 0) {
+            componentsRowChild.map(
+                (com: any) => {
+                    const { p } = com;
+                    rows.push(p);
+                }
+            );
+        }
+        let appGridHeader: JSX.Element | null = null;
+        let appGridContent: JSX.Element | null = null;
+        if (!GlobalUtil.isUndefined(components)) {
+            components.map(
+                (com: any, index: number) => {
+                    const { t, p } = com;
+                    if (t === 'MapComponent/map/grid/AppGridHeader') {
+                        appGridHeader = (
+                            <AppGridHeader
+                                ref={`c.${p.id}`}
+                                key={p.id}
+                                index={index}
+                                {...p}
+                                theme={theme}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={selectComChange}
+                                setChildPropertyGroup={setChildPropertyGroup}
+                                doChildDbClickToEdit={doChildDbClickToEdit}
+                                updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
+                                map_g_check={map_g_check}
+                                map_g_num={map_g_num}
+                            />
+                        );
+                    }
+                    if (t === 'MapComponent/map/grid/AppGridContent') {
+                        appGridContent = (
+                            <AppGridContent
+                                ref={`c.${p.id}`}
+                                key={p.id}
+                                index={index}
+                                {...p}
+                                theme={theme}
+                                pageMode={pageMode}
+                                selectedId={selectedId}
+                                selectComChange={selectComChange}
+                                setChildPropertyGroup={setChildPropertyGroup}
+                                doChildDbClickToEdit={doChildDbClickToEdit}
+                                updateProps={updateProps}
+                                getRefs={getRefs}
+                                stateData={stateData}
+                                columns={columns}
+                            />
+                        );
+                    }
+                }
+            );
+        }
 
         return (
             <div
-                // onMouseDown={this.selectedCom}
+                className={`flex1 ${selectedId === id ? 'map-selected' : ''}`}
                 ref={(ref) => this.com = ref}
-                className={`csr-pc-map-app-grid ${map_sm || ''} ${selectedId === id ? 'map-selected' : ''}`}
                 onDragOver={this.handleOver}
                 onDragLeave={this.handleLeave}
-                onScroll={this.scrollHandle}
-                style={Object.assign({}, hover)}
+                onMouseDown={this.selectedCom}
             >
-                <div className={`grid-title`} style={{ width: w - 20 }}>
-                    <div className={`grid-title-content`} ref={(ref) => this.title = ref}>
-                        <DragDropContext onDragEnd={this.onDragEnd} >
-                            <Droppable droppableId="droppable" direction="horizontal">
-                                {this.titles}
-                            </Droppable>
-                        </DragDropContext>
+                 <div className="map-grid-viewport map-table-header flex-row" style={{ height: '200px', position: 'relative', overflow: 'auto'}}>
+                    {/* 序号 & 复选 */}
+                    <div style={{minHeight: '200px'}}>
+                        {/* 表头 */}
+                        <div className="flex-row item-center">
+                            {
+                                map_g_check ? (
+                                    <div className="table-title title-width" style={{width: 40, lineHeight: '40px', textAlign: 'center', background: '#fafafa'}}><Checkbox /></div>
+                                ) : null
+                            }
+                            {/* 序号列 */}
+                            {
+                                map_g_num ? (
+                                    <div className="table-title" style={{width: 60, lineHeight: '40px', textAlign: 'center', background: '#fafafa'}}>序列号</div>
+                                ) : null
+                            }
+                        </div>
+                        {/* 表体 */}
+                        {rows.map(
+                            (com: any, index: number) => {
+                                return (
+                                    <div className="flex-row item-center" key={index}>
+                                        {map_g_check ? <div className="rowItem" style={{width: 40}}><Checkbox /></div> : null}
+                                        {map_g_num ? (<div className="rowItem" style={{width: 60}}>{index + 1}</div>) : null}
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                     {/* 标题头 */}
+                     <div className="flex1">
+                        <div style={{width: '100%', minHeight: '200px'}}>
+                            {appGridHeader !== null ? appGridHeader : ''}
+                            {appGridContent !== null ? appGridContent : ''}
+                        </div>
                     </div>
                 </div>
-                <div className={`grid-bottom`}>
-                    <div className={`grid-bottom-left`}>
-                        <span style={{ marginLeft: 8 }}>页次： <input /> /0</span>
-                        <span style={{ marginLeft: 8 }}>每页 <input /> 条/共0条</span>
-                    </div>
-                    <div className={`grid-bottom-right`}>
+                <div className="grid-bottom flex-row space-between">
+                     <div>
+                        <span style={{ marginLeft: 8 }}>页次：1/0</span>
+                       <span style={{ marginLeft: 8 }}>每页 20 条/共0条</span>
+                     </div>
+                     <div>
                         <span className="g-bottom-page">[末页]</span>
                         <span className="g-bottom-page">[下页]</span>
-                        <span className="g-bottom-page">[上页]</span>
+                         <span className="g-bottom-page">[上页]</span>
                         <span className="g-bottom-page">[首页]</span>
-                    </div>
+                     </div>
                 </div>
-            </div >
+            </div>
         );
-    }
-    /*重载添加组件*/
-    public componentCanBeAdded(t: string) {
-        return (t === 'MapComponent/map/grid/AppGridTitle');
-    }
-    // 初始化标题
-    protected initTitle = (p: any) => {
-        const { selectComChange, selectedId, updateProps, map_g_tree, map_g_mc } = this.props;
-        if (p !== undefined) {
-            const currTitles: JSX.Element[] = [];
-            p.components.forEach((com: any, index: number) => {
-                // 如果当前正在拖拽title, 则更新推拽title的宽度
-                currTitles.push(
-                    <AppGridTitle
-                        key={`c.${com.p.id}`}
-                        selectedId={selectedId}
-                        // tslint:disable-next-line:jsx-no-string-ref
-                        ref={`c.${com.p.id}`}
-                        selectComChange={selectComChange}
-                        {...com.p}
-                        updateProps={updateProps}
-                        index={index}
-                    // scroll={scroll}
-                    />
-                );
-            });
-            this.titles = (provided: DroppableProvided, snapshot: DroppableStateSnapshot) =>
-                (
-                    <div
-                        className="title-list"
-                        ref={provided.innerRef}
-                    >
-                        <div
-                            className={`app-grid-title-item`}
-                        >
-                            <div>
-                                <div className={`title grid-title-index`} style={{ display: map_g_tree ? 'none' : '' }}>
-                                    {map_g_mc ? (<Checkbox defaultChecked={false} />) : `序号`}
-                                </div>
-                            </div>
-                            <div className="title-split no-ctrl" />
-                        </div>
-                        {currTitles}
-                    </div>
-                );
-        }
-    }
 
+    }
 }
-
-export const AppGrid = MapConsumer(AppGridClass);

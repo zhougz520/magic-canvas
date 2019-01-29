@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
 
-import { IBaseProps } from '../IBaseProps';
-import { IBaseState } from '../IBaseState';
-import { MapComponent } from '../MapComponent';
+import { IBaseProps } from '../../IBaseProps';
+import { IBaseState } from '../../IBaseState';
+import { MapComponent } from '../../MapComponent';
 
 import { Button } from 'antd';
 import { OrderedSet, List } from 'immutable';
@@ -89,7 +89,7 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
 
         return (
             <li
-                style={{ display: 'inline-block' }}
+                style={{ float: 'left' }}
                 onMouseDown={this.selectedCom}
                 onDoubleClick={doChildDbClickToEdit}
             >

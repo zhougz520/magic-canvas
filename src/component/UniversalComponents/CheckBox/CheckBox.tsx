@@ -85,25 +85,13 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
-        // 测试
-        propertyList = propertyList.push(
-            { pTitle: 'xq', pKey: 'X', pValue: this.getCustomState().getTextX(), pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: 'y', pKey: 'Y', pValue: this.getCustomState().getTextY(), pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: '宽', pKey: 'W', pValue: this.getCustomState().getTextW(), pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: '高', pKey: 'H', pValue: this.getCustomState().getTextH(), pType: PropertiesEnum.INPUT_TEXT }
-        );
-        propertyGroup = propertyGroup.add(
-            { groupTitle: '位置大小', groupKey: 'position', isActive: true, colNum: 2, propertyList}
-        );
-        propertyList = List();
-
         // 外观
         propertyList = propertyList.push(
             { pTitle: '是否选中', pKey: 'isCheck', pValue: this.getCustomState().getIsCheck(), pType: PropertiesEnum.SWITCH, pFilterValue: false, pFilterFun: 'isShow', pFilterKey: [{groupKey: 'exterior', pKey: 'backgroundColor'}, {groupKey: 'field'}]},
             { pTitle: '是否禁用', pKey: 'disabled', pValue: this.getCustomState().getDisabled(), pType: PropertiesEnum.SWITCH },
-            { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER },
-            { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
-            { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
+            { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER }
+            // { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },
+            // { pTitle: '边框宽度', pKey: 'borderWidth', pValue: this.getCustomState().getBorderWidth(), pType: PropertiesEnum.SLIDER }
         );
         propertyGroup = propertyGroup.add(
             { groupTitle: '外观', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }

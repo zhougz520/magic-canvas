@@ -15,7 +15,8 @@ import {
     IPropertyGroup
 } from '../../../../UniversalComponents';
 
-import { IComponent } from '../../IComponent';
+import { IContextMenuItems } from '../../../../Stage';
+import { IComponent } from '../../../IComponent';
 import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
 import { IComData } from '../../model/types';
 import { formDetail } from '../../structure';
@@ -187,12 +188,11 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
     /**
      * 操作子控件
      */
-    public handleChildCom = (handle: string): boolean => {
+    public handleChildCom = (handle: string, fromFun?: string): boolean => {
         const { selectedId } = this.state;
         if (!selectedId) return false;
         const childCom: any = this.getChildComponent(selectedId);
         if (!childCom) return false;
-
         let result: boolean = false;
         switch (handle) {
             case HandleChildCom.DELETE:         // 删除
@@ -202,7 +202,10 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 result = childCom.selectedComParent();
                 break;
             case HandleChildCom.COPY_COM:       // 复制控件
-                result = childCom.copySelectedCom();
+                result = childCom.copySelectedCom(fromFun);
+                break;
+            case HandleChildCom.PASTE_COM:       // 粘贴控件
+                result = childCom.parseSelectedCom();
                 break;
         }
 
@@ -237,6 +240,47 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
                 this.updateProps(selectedId, obj);
             }
         }
+    }
+
+    /**
+     * 设置子组件右键菜单
+     */
+    public getContextMenuItems = (): IContextMenuItems[] => {
+        const { selectedId } = this.state;
+        if (selectedId) {
+            // 选中子组件
+            const childCom: IComponent | null = this.getChildComponent(selectedId);
+            if (childCom) {
+                return [
+                    {
+                        type: 'menu',
+                        label: '删除图层',
+                        click: () => {
+                            this.props.executeCommand({
+                                t: 'e.deleteCom'
+                            });
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        type: 'menu',
+                        label: '复制图层',
+                        click: () => {
+                            this.props.executeCommand({
+                                t: 'e.copyPaste'
+                            });
+                        }
+                    },
+                    {
+                        type: 'separator'
+                    }
+                ];
+            }
+        }
+
+        return this.defaultContextMenuItems;
     }
     /************************************* end 属性设置 ****************************************/
 

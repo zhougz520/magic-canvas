@@ -1,4 +1,4 @@
-import { IBaseState } from '../../IBaseState';
+import { IBaseState } from '../../../IBaseState';
 
 /**
  * 构建BaseComponent的Props

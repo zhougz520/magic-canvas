@@ -1,4 +1,4 @@
-import { IBaseProps } from '../../IBaseProps';
+import { IBaseProps } from '../../../IBaseProps';
 
 /**
  * 构建BaseComponent的Props

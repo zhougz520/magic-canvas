@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapComponent } from '../../index';
+import { MapComponent } from '../../../index';
 import { IFieldProps } from './IFieldProps';
 import { IFieldState } from './IFieldState';
 
@@ -138,7 +138,7 @@ export class LookUpField extends MapComponent<IMapProps, IMapState> {
 												placeholder=""
 												onChange={this.onChangeText}
 												disabled={map_form_f_disabled}
-												defaultValue={map_form_f_default}
+												value={map_form_f_default}
 											/>
 											<div className="miniux-lookpopup-button miniux-icon icon-add miniux-lookpopup-button-hide newlookup" >＋</div>
 										</div>

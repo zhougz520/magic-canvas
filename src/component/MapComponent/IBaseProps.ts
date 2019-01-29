@@ -1,27 +1,34 @@
-import { OrderedSet } from 'immutable';
-import { IPropertyGroup } from '../UniversalComponents';
-import { Theme } from './newMap/model/types';
 import { PageMode } from '../Stage';
+import { IPropertyGroup } from '../UniversalComponents';
+import { Theme, GridStyle } from './model/types';
+import { OrderedSet } from 'immutable';
 
-/**
- * 构建BaseComponent的Props
- * 传递给State进行修改
- */
 export interface IBaseProps {
-    selectedId: string;
-    selectComChange: (e: any, cid: string) => void;
-    map_sm?: string;
-    id: string;
-    p?: any;
-    w?: number;
-    h?: number;
-    updateProps: (id: string, data: any) => void;
-    stateData?: any;
-    refs?: any;
-    dragChangeField?: (fieldList: any) => void;
-    setChildPropertyGroup: (childPropertyGroup: OrderedSet<IPropertyGroup>) => void;
-    doChildDbClickToEdit: (e: any) => void;
+    // 主题
     theme?: Theme;
     // 页面模式
     pageMode: PageMode;
+    // 组件id
+    id: string;
+    // 当前选中组件id
+    selectedId: string | null;
+    // 子组件
+    p?: any;
+    // childData集合
+    stateData?: any;
+    // 拖拽index
+    index?: number;
+
+    // 列表样式
+    gridStyle?: GridStyle;
+
+    // ERP页面皮肤
+    map_sm?: string;
+
+    selectComChange: (e: any, id: string) => void;
+    setChildPropertyGroup: (childPropertyGroup: OrderedSet<IPropertyGroup>) => void;
+    doChildDbClickToEdit: (e: any) => void;
+    updateProps: (id: string, data: any) => void;
+    dragChangeField?: (fieldList: any) => void;
+    getRefs?: () => any;
 }

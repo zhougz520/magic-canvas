@@ -1,8 +1,4 @@
-/**
- * 构建BaseComponent的State
- * 传递给State进行修改
- */
 export interface IBaseState {
+    hidden: boolean;
     hover?: any;
-    mouseBgnPosition?: any;
 }
