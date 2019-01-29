@@ -85,18 +85,6 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
 
-        // 测试
-        propertyList = propertyList.push(
-            { pTitle: 'xq', pKey: 'X', pValue: this.getCustomState().getTextX(), pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: 'y', pKey: 'Y', pValue: this.getCustomState().getTextY(), pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: '宽', pKey: 'W', pValue: this.getCustomState().getTextW(), pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: '高', pKey: 'H', pValue: this.getCustomState().getTextH(), pType: PropertiesEnum.INPUT_TEXT }
-        );
-        propertyGroup = propertyGroup.add(
-            { groupTitle: '位置大小', groupKey: 'position', isActive: true, colNum: 2, propertyList}
-        );
-        propertyList = List();
-
         // 外观
         propertyList = propertyList.push(
             { pTitle: '是否选中', pKey: 'isCheck', pValue: this.getCustomState().getIsCheck(), pType: PropertiesEnum.SWITCH, pFilterValue: false, pFilterFun: 'isShow', pFilterKey: [{groupKey: 'exterior', pKey: 'backgroundColor'}, {groupKey: 'field'}]},
