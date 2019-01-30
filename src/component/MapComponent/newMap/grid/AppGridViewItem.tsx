@@ -106,7 +106,7 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
                                         margin: `${gridStyle === 'advanced' ? '0px 0px' : '7px 20px'}`
                                     }}
                                 >
-                                    {map_gvi_txt}
+                                    {map_gvi_txt ? map_gvi_txt : '视图'}
                                 </label>
                             </div >
                         )

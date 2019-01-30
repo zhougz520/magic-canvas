@@ -701,6 +701,7 @@ export class PageAction {
         const position: IOffset = this._canvas._positionUtil.getPositionRelativeCanvas(stageOffset.left, stageOffset.top);
         const maxComIndex: number = this._canvas._maxComIndex;
         let componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+
         dataList.map(
             (data: any, i: number) => {
                 data = JSON.parse(

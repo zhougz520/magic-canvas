@@ -171,7 +171,7 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
                                     color: map_gh_req ? 'red' : undefined
                                 }}
                             >
-                                {map_gh_txt}
+                                {map_gh_txt ? map_gh_txt : '列名称'}
                                 {
                                     map_gh_seq ? (<span className="map-grid-sortIcon" />) : null
                                 }
