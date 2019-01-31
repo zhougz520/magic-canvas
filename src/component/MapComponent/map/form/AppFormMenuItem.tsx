@@ -4,6 +4,8 @@ import { Dropdown, Menu, Icon } from 'antd';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import { MaskLayer } from '../../../BaseComponent/mask/MaskLayer';
 import * as DragStyle from '../DragStyle';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../UniversalComponents';
+import { OrderedSet, List } from 'immutable';
 
 export interface IMapProps extends IBaseProps {
     updateProps: (cid: string, updateProp: any) => void;
@@ -37,6 +39,61 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
         ...draggableStyle
     })
 
+    /**
+     * 获取组件属性列表
+     */
+    public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+        const {
+            map_mi_txt,
+            map_mi_sa,
+            map_mi_line
+        } = this.props;
+        let propertyList: List<IProperty> = List();
+        let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+
+        // 属性列表
+        propertyList = propertyList.push(
+            { pTitle: '控件名称', pKey: 'map_mi_txt', pValue: map_mi_txt, pType: PropertiesEnum.INPUT_TEXT },
+            { pTitle: '下拉箭头', pKey: 'map_mi_sa', pValue: map_mi_sa, pType: PropertiesEnum.SWITCH },
+            { pTitle: '分割线', pKey: 'map_mi_line', pValue: map_mi_line, pType: PropertiesEnum.SWITCH }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '属性列表', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        // 子菜单
+        propertyList = propertyList.push(
+            { pTitle: '子菜单', pKey: 'map_mi_dd', pValue: [], pType: PropertiesEnum.INPUT_LIST }
+        );
+        propertyGroup = propertyGroup.add(
+            { groupTitle: '菜单列表', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
+        );
+        propertyList = List();
+
+        return propertyGroup;
+    }
+
+    /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        console.log('map_mi_txt', this.props.map_mi_txt);
+
+        return this.props.map_mi_txt;
+    }
+
+    /**
+     * 构建要设置的文本属性对象
+     */
+    public buildRichChildNode = (value: any): any => {
+        console.log('value', value);
+        const obj: any = {};
+        obj.map_mi_txt = value;
+
+        return obj;
+    }
+
     public render() {
         const { map_mi_txt, map_mi_dd, map_mi_ico, map_mi_si, map_mi_sa, selectedId, id, index, map_mi_line } = this.props;
 
@@ -62,9 +119,7 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
                 ref={provided.innerRef}
                 {...provided.dragHandleProps}
                 style={this.getItemStyle(provided.draggableProps.style, snapshot.isDragging)}
-                // className={``}
             >
-                <MaskLayer id={id} />
                 <Dropdown overlay={menu} trigger={['click']}>
                     <div
                         className={`menu-item ${selectedId === id ? 'map-selected' : ''}`}
@@ -88,6 +143,7 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
                 onMouseDown={this.selectedCom}
                 ref={(ref) => this.com = ref}
             >
+                <MaskLayer id={id} />
                 <Draggable key={id} draggableId={id} index={index === undefined ? 0 : index}>
                     {initDrag}
                 </Draggable>

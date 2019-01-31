@@ -38,7 +38,7 @@ const basePage: IBasePage[] = [
     {
         category: '基础组件',
         categoryKey: 'basic',
-        expanded: true,
+        expanded: false,
         components: [
             Universal_Button,
             Universal_CheckBox,
@@ -55,7 +55,7 @@ const basePage: IBasePage[] = [
     {
         category: 'ERP页面',
         categoryKey: 'erp',
-        expanded: false,
+        expanded: true,
         components: [
             Map_AppGrid,
             Map_AppForm

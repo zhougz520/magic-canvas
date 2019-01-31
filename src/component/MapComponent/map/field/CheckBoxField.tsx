@@ -103,7 +103,7 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	public render() {
 		// const { value } = this.state;
 		const { hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit } = this.props;
+		const { map_form_f_title, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_disabled } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		return (
@@ -143,9 +143,9 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 										{
 											map_form_f_list.map((chkBox, index) => {
 												return (
-													<div key={index} style={{ float: 'left', marginRight: 8 }}>
-														<input className="checkbox ux-checkbox" type="checkbox" onClick={this.onChange} />
-														{chkBox}
+													<div key={index} style={{ float: 'left', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+														<input style={{width: '16px', height: '16px'}} type="checkbox" disabled={map_form_f_disabled} onClick={this.onChange} />
+														<span style={{marginRight: '15px', marginLeft: '5px'}}>{chkBox}</span>
 													</div>
 												);
 											})
