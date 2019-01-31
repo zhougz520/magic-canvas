@@ -23,7 +23,8 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
     static defaultProps = {
         map_mi_txt: '按钮',
         map_mi_sa: false,
-        map_mi_line: false
+        map_mi_line: false,
+        map_mi_dd: []
     };
 
     constructor(props: any, context?: any) {
@@ -46,7 +47,8 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
         const {
             map_mi_txt,
             map_mi_sa,
-            map_mi_line
+            map_mi_line,
+            map_mi_dd
         } = this.props;
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
@@ -64,7 +66,7 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
 
         // 子菜单
         propertyList = propertyList.push(
-            { pTitle: '子菜单', pKey: 'map_mi_dd', pValue: [], pType: PropertiesEnum.INPUT_LIST }
+            { pTitle: '子菜单', pKey: 'map_mi_dd', pValue: map_mi_dd, pType: PropertiesEnum.INPUT_LIST }
         );
         propertyGroup = propertyGroup.add(
             { groupTitle: '菜单列表', groupKey: 'exterior', isActive: true, colNum: 1, propertyList }
