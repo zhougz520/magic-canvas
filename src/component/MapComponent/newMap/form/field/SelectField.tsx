@@ -91,7 +91,7 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 	}
 
 	public render() {
-		const { selectType, value, hover, hidden } = this.state;
+		const { selectType, hover, hidden } = this.state;
 		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId, doChildDbClickToEdit } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		// 获取下拉选项
@@ -143,8 +143,7 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 												<Input
 													readOnly
 													className={`select-field-text ${map_form_f_disabled ? borderClass : ''}`}
-													// onBlur={this.onBlur}
-													value={value}
+													value={map_form_f_default}
 												/>
 												<span onClick={this.onSelectClick} className="select-field-btn">
 													<Icon style={{ color: '#BFBFBF' }} type={selectType ? 'caret-up' : 'caret-down'} />
