@@ -131,7 +131,8 @@ export class RadioField extends MapComponent<IMapProps, IMapState> {
 						<label
 							ref={(ref) => this.editCom = ref}
 							style={{
-								visibility: hidden ? 'hidden' : 'visible'
+								visibility: hidden ? 'hidden' : 'visible',
+								width: titleWidth
 							}}
 						>
 							{map_form_f_title}

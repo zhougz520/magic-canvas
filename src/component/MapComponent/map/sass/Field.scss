@@ -106,6 +106,13 @@ table {
                 .field-title {
                     width: 110px;
                     line-height: 34px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    label {
+                        min-height: 30px;
+                        display: inline-block;
+                    }
                 }
                 .required {
                     color: #e60012;
