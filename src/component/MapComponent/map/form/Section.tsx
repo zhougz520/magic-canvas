@@ -72,8 +72,8 @@ export class Section extends MapComponent<IMapProps, any> {
         propertyList = propertyList.push(
             { pTitle: '显示标题', pKey: 'map_form_ss', pValue: map_form_ss, pType: PropertiesEnum.SWITCH },
             { pTitle: '标题', pKey: 'map_form_ss_name', pValue: map_form_ss_name, pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: '标题宽度', pKey: 'map_form_ss_tt_w', pValue: map_form_ss_tt_w, pType: PropertiesEnum.INPUT_NUMBER },
-            { pTitle: '列数', pKey: 'map_form_ss_unit', pValue: map_form_ss_unit, pType: PropertiesEnum.INPUT_NUMBER }
+            { pTitle: '列数', pKey: 'map_form_ss_unit', pValue: map_form_ss_unit, pType: PropertiesEnum.INPUT_NUMBER },
+            { pTitle: '字段标题宽度', pKey: 'map_form_ss_tt_w', pValue: map_form_ss_tt_w, pType: PropertiesEnum.INPUT_NUMBER }
         );
         // 组件属性整理
         propertyGroup = propertyGroup.add(
@@ -174,7 +174,7 @@ export class Section extends MapComponent<IMapProps, any> {
             doChildDbClickToEdit,
             pageMode
         } = this.props;
-        const currUnit: number = map_form_ss_unit === undefined ? 2 : map_form_ss_unit;
+        const currUnit: number = map_form_ss_unit === undefined || Number(map_form_ss_unit) <= 0 ? 1 : map_form_ss_unit;
         const components = currFieldList === undefined ? undefined : currFieldList;
         const fieldList: any[] = [];
         const currComList: any[] = [];
@@ -182,7 +182,7 @@ export class Section extends MapComponent<IMapProps, any> {
         if (components !== undefined) {
             // 初始化行组
             for (let row = 0;
-                row < (components.length <= currUnit ? 1 : Math.ceil(components.length / currUnit));
+                row < (components.length <= currUnit || currUnit === 0 ? 1 : Math.ceil(components.length / currUnit));
                 row++) {
                 fieldList.push([]);
                 currComList.push([]);
