@@ -52,6 +52,21 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         this.setState({
             propsGroup: propertyGroup
         });
+        propertyGroup.map(
+            (propGroup: IPropertyGroup) => {
+                propGroup.propertyList.map(
+                    (property: IProperty) => {
+                        if (String(property.pFilterValue) && property.pFilterValue !== property.pValue && property.pFilterKey) {
+                            const e: any = {
+                                pFilterKey: property.pFilterKey,
+                                pFilterValue: property.pFilterValue
+                            };
+                            this.isShow(e, property.pValue, propertyGroup);
+                        }
+                    }
+                );
+            }
+        );
     }
 
     /**
@@ -301,7 +316,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         if (e.pFilterFun) {
             switch (e.pFilterFun) {
                 case 'isShow':
-                    this.isShow(e, groupKey, pValue);
+                    this.isShow(e, pValue);
                     break;
             }
         }
@@ -396,10 +411,11 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     /**
      * propsGroup控制面板显示隐藏联动
      */
-    private isShow = (e: any, pgroupKey: string, value: boolean) => {
+    private isShow = (e: any, pValue: any, pGroup?: any) => {
+        const propsGroupList: OrderedSet<IPropertyGroup> = pGroup ? pGroup : this.state.propsGroup;
         const pFilterKey: IFilterList[] = e.pFilterKey;
-        const propsGroupList: OrderedSet<IPropertyGroup> = this.state.propsGroup;
-
+        const pFilterValue: any = e.pFilterValue;
+        const value: boolean = pValue === pFilterValue ? false : true;
         pFilterKey.forEach((cs: any) => {
             propsGroupList.toList().update(
                 (propsGroup: List<IPropertyGroup>) => {

@@ -696,6 +696,7 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
 }
 
 .item-center {
+    display: flex;
     align-items: center;
     justify-items: center
 }

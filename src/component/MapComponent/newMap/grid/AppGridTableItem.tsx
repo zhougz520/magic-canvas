@@ -99,7 +99,18 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                             );
                                             break;
                                         case 'select':
-                                            element = <Select defaultValue="选择框" size="small"/>;
+                                            const optionList: any[] = item.map_gh_selectOption ? item.map_gh_selectOption : [];
+                                            const res: any[] = [];
+                                            optionList.forEach((option: any, optionIndex: number) => {
+                                                res.push(
+                                                    <Select.Option
+                                                        key={optionIndex}
+                                                    >
+                                                        {option}
+                                                    </Select.Option>
+                                                );
+                                            });
+                                            element = <Select size="small" defaultValue="请选的人">{res}</Select>;
                                             break;
                                         case 'date':
                                             const dateValue = rowItem.p[item.id.replace(/\./g, '')];
@@ -164,6 +175,10 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                     break;
                 case 'inputNumber':
                     rowItemState.p[item.id.replace(/\./g, '')] = `${value}`;
+                    break;
+                case 'select':
+                    rowItemState.p[item.id.replace(/\./g, '')] = value.target.value;
+                    console.log(22223, value.target.value, rowItemState.p[item.id.replace(/\./g, '')]);
                     break;
             }
             updateProps(selectedId, rowItemState.p);
