@@ -16,7 +16,7 @@ import { MaskLayer } from '../../BaseComponent';
 
 import { HyperlinkState, IHyperlinkState } from './HyperlinkState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
-import { BoxType } from '../../util';
+// import { BoxType } from '../../util';
 
 import { Map, OrderedSet, List } from 'immutable';
 
@@ -31,9 +31,9 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
         };
     }
 
-    public getType(): string {
-        return BoxType.BarType;
-    }
+    // public getType(): string {
+    //     return BoxType.Base;
+    // }
 
     /**
      * 获取富文本编辑器的大小和位置
@@ -42,8 +42,14 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
         const comPosition: IPosition = this.getPosition();
         const comSize: ISize = this.getSize();
 
-        const position: IPosition = comPosition;
-        const size: ISize = comSize;
+        const position: IPosition = {
+            top: comPosition.top,
+            left: comPosition.left
+        };
+        const size: ISize = {
+            width: comSize.width,
+            height: comSize.height
+        };
         const font: IFont = {
             textAlign: this.getCustomState().getTextAlign(),
             fontColor: this.getCustomState().getFontColor(),
@@ -129,13 +135,17 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
                 <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <a
                     href={this.getCustomState().getHerf()}
+                    style={{
+                        visibility: hidden ? 'hidden' : 'visible',
+                        display: 'flex',
+                        width: '100%',
+                        height: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
                 >
                     <div
                         style={{
-                            visibility: hidden ? 'hidden' : 'visible',
-                            display: 'inline-block',
-                            width: '100%',
-                            height: '100%',
                             textAlign: this.getCustomState().getTextAlign(),
                             color: this.getCustomState().getFontColor(),
                             fontStyle: this.getCustomState().getFontStyle(),

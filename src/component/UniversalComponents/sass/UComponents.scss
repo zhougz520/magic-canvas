@@ -1,176 +1,183 @@
 // 附件
 .csr-pc-attachment {
-  > a {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 100%;
-
-    > div{
-      position: absolute;
-      &.att-head {
-        top:0;
-        left: 0;
-        background-color: #e6e7e9;
-        //right:
-      }
-      &.att-edge {
-        width: 0;
-        height: 0;
-        right:0;
-        top:0;
-        border-top: 1px solid transparent;
-        border-left: 1px solid #f1f3f2;
-      }
-      &.att-edge-shadow {
-        width: 0;
-        height: 0;
-        right:0;
-        //top:0;
-        border-top: 1px solid #d0d1d3;
-        border-left: 1px solid transparent;
-        z-index: 1;
-      }
-      &.att-body {
-        //top:0;
-        left:0;
-        right: 0;
-        bottom: 0;
-        background-color: #e6e7e9;
-        color: #666;
-        > div {
-          padding-left: 8px;
-          padding-right: 8px;
-          position: relative;
-          display: table-cell;
-          text-align: center;
-          vertical-align: middle;
-          > p{
-            white-space:nowrap;
-            text-overflow:ellipsis;
-          }
+    >a {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 100%;
+        >div {
+            position: absolute;
+            &.att-head {
+                top: 0;
+                left: 0;
+                background-color: #e6e7e9;
+                //right:
+            }
+            &.att-edge {
+                width: 0;
+                height: 0;
+                right: 0;
+                top: 0;
+                border-top: 1px solid transparent;
+                border-left: 1px solid #f1f3f2;
+            }
+            &.att-edge-shadow {
+                width: 0;
+                height: 0;
+                right: 0;
+                //top:0;
+                border-top: 1px solid #d0d1d3;
+                border-left: 1px solid transparent;
+                z-index: 1;
+            }
+            &.att-body {
+                //top:0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #e6e7e9;
+                color: #666;
+                >div {
+                    padding-left: 8px;
+                    padding-right: 8px;
+                    position: relative;
+                    display: table-cell;
+                    text-align: center;
+                    vertical-align: middle;
+                    >p {
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
         }
-      }
     }
-  }
-
-  &.zip, &.rar {
-    > a {
-      > div{
-        &.att-head {
-          background-color: #4e4e4e;
+    &.zip,
+    &.rar {
+        >a {
+            >div {
+                &.att-head {
+                    background-color: #4e4e4e;
+                }
+                &.att-edge {
+                    border-left-color: #717177;
+                }
+                &.att-edge-shadow {
+                    border-top-color: #3f4042;
+                }
+                &.att-body {
+                    background-color: #4e4e4e;
+                    color: #fff;
+                }
+            }
         }
-        &.att-edge {
-          border-left-color: #717177;
-        }
-        &.att-edge-shadow {
-          border-top-color: #3f4042;
-        }
-        &.att-body {
-          background-color: #4e4e4e;
-          color: #fff;
-        }
-      }
     }
-  }
-
-  &.xls, &.xlsx, &.number {
-    > a {
-      > div{
-        &.att-head {
-          background-color: #88c643;
+    &.xls,
+    &.xlsx,
+    &.number {
+        >a {
+            >div {
+                &.att-head {
+                    background-color: #88c643;
+                }
+                &.att-edge {
+                    border-left-color: #b5d835;
+                }
+                &.att-edge-shadow {
+                    border-top-color: #70a53a;
+                }
+                &.att-body {
+                    background-color: #88c643;
+                    color: #fff;
+                }
+            }
         }
-        &.att-edge {
-          border-left-color: #b5d835;
-        }
-        &.att-edge-shadow {
-          border-top-color: #70a53a;
-        }
-        &.att-body {
-          background-color: #88c643;
-          color: #fff;
-        }
-      }
     }
-  }
-
-  &.doc, &.docx, &.page {
-    > a {
-      > div{
-        &.att-head {
-          background-color: #5d71b8;
+    &.doc,
+    &.docx,
+    &.page {
+        >a {
+            >div {
+                &.att-head {
+                    background-color: #5d71b8;
+                }
+                &.att-edge {
+                    border-left-color: #718fca;
+                }
+                &.att-edge-shadow {
+                    border-top-color: #50609c;
+                }
+                &.att-body {
+                    background-color: #5d71b8;
+                    color: #fff;
+                }
+            }
         }
-        &.att-edge {
-          border-left-color: #718fca;
-        }
-        &.att-edge-shadow {
-          border-top-color: #50609c;
-        }
-        &.att-body {
-          background-color: #5d71b8;
-          color: #fff;
-        }
-      }
     }
-  }
-
-  &.ppt, &.pptx, &.key {
-    > a {
-      > div{
-        &.att-head {
-          background-color: #f97410;
+    &.ppt,
+    &.pptx,
+    &.key {
+        >a {
+            >div {
+                &.att-head {
+                    background-color: #f97410;
+                }
+                &.att-edge {
+                    border-left-color: #f59c13;
+                }
+                &.att-edge-shadow {
+                    border-top-color: #f74915;
+                }
+                &.att-body {
+                    background-color: #f97410;
+                    color: #fff;
+                }
+            }
         }
-        &.att-edge {
-          border-left-color: #f59c13;
-        }
-        &.att-edge-shadow {
-          border-top-color: #f74915;
-        }
-        &.att-body {
-          background-color: #f97410;
-          color: #fff;
-        }
-      }
     }
-  }
-
-  &.image {
-    > a {
-      > div{
-        &.att-head {
-          background-color: #8f92c7;
+    &.image {
+        >a {
+            >div {
+                &.att-head {
+                    background-color: #8f92c7;
+                }
+                &.att-edge {
+                    border-left-color: #b6b8dc;
+                }
+                &.att-edge-shadow {
+                    border-top-color: #787ca8;
+                }
+                &.att-body {
+                    background-color: #8f92c7;
+                    color: #fff;
+                }
+            }
         }
-        &.att-edge {
-          border-left-color: #b6b8dc;
-        }
-        &.att-edge-shadow {
-          border-top-color: #787ca8;
-        }
-        &.att-body {
-          background-color: #8f92c7;
-          color: #fff;
-        }
-      }
     }
-  }
-
-  &.pdf {
-    > a {
-      > div{
-        &.att-head {
-          background-color: #d14d2b;
+    &.pdf {
+        >a {
+            >div {
+                &.att-head {
+                    background-color: #d14d2b;
+                }
+                &.att-edge {
+                    border-left-color: #e26c24;
+                }
+                &.att-edge-shadow {
+                    border-top-color: #af401f;
+                }
+                &.att-body {
+                    background-color: #d14d2b;
+                    color: #fff;
+                }
+            }
         }
-        &.att-edge {
-          border-left-color: #e26c24;
-        }
-        &.att-edge-shadow {
-          border-top-color: #af401f;
-        }
-        &.att-body {
-          background-color: #d14d2b;
-          color: #fff;
-        }
-      }
     }
-  }
+}
+
+.universalSelect .ant-select-selection {
+    height: 100%!important;
+    display: flex;
+    justify-items: center;
+    align-items: center;
 }

@@ -17,7 +17,7 @@ import { MaskLayer } from '../../BaseComponent';
 
 import { RadioState, IRadioState } from './RadioState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
-import { BoxType } from '../../util';
+// import { BoxType } from '../../util';
 
 import { Map, OrderedSet, List } from 'immutable';
 
@@ -34,9 +34,9 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
         };
     }
 
-    public getType(): string {
-        return BoxType.BarType;
-    }
+    // public getType(): string {
+    //     return BoxType.BarType;
+    // }
 
     /**
      * 获取富文本编辑器的大小和位置
@@ -136,6 +136,9 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
                     style={{
                         width: '100%',
                         height: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         backgroundColor: this.getCustomState().getBackgroundColor(),
                         borderColor: this.getCustomState().getBorderColor(),
                         borderWidth: this.getCustomState().getBorderWidth(),
@@ -164,7 +167,6 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
             </div>
         );
     }
-
 }
 
 /**

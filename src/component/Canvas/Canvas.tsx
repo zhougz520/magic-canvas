@@ -270,7 +270,7 @@ export class Canvas extends React.PureComponent<ICanvasProps, ICanvasState> impl
         }
 
         // 选中组件就把焦点给到编辑框，随时准备输入
-        this.getWingman().setFocus();
+        // this.getWingman().setFocus();
 
         // 如果是编辑模式：切换选中或者点击当前组件，结束编辑状态。
         if (this._isRichEditMode === true) {

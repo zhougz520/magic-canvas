@@ -763,3 +763,10 @@ $classic-icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAXQAAAAZCAMAAAAWoC
 .backgroundTitle {
     background: #fafafa;
 }
+
+.tableRowItem {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

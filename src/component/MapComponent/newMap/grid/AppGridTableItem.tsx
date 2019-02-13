@@ -75,7 +75,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                                     value={rowItem.p[item.id.replace(/\./g, '')]}
                                                     onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')}
                                                 /> :
-                                                <span>{rowItem.p[item.id.replace(/\./g, '')]}</span>
+                                                <span className="tableRowItem">{rowItem.p[item.id.replace(/\./g, '')]}</span>
                                             );
                                             break;
                                         case 'input':
@@ -95,7 +95,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                                     value={rowItem.p[item.id.replace(/\./g, '')]}
                                                     onChange={(e) => this.mapComponentChange(e, item, rowItem, 'input')}
                                                 /> :
-                                                <a href={rowItem.p[item.id.replace(/\./g, '')]} style={{textDecoration: 'underline'}}>{rowItem.p[item.id.replace(/\./g, '')]}</a>
+                                                <a className="tableRowItem" href={rowItem.p[item.id.replace(/\./g, '')]} style={{textDecoration: 'underline'}}>{rowItem.p[item.id.replace(/\./g, '')]}</a>
                                             );
                                             break;
                                         case 'select':
@@ -110,7 +110,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                                     </Select.Option>
                                                 );
                                             });
-                                            element = <Select size="small" defaultValue="请选的人">{res}</Select>;
+                                            element = <Select className="tableRowItem" size="small" value={rowItem.p[item.id.replace(/\./g, '')] || '请选择'} onChange={(value) => this.mapComponentChange(value, item, rowItem, 'select')}>{res}</Select>;
                                             break;
                                         case 'date':
                                             const dateValue = rowItem.p[item.id.replace(/\./g, '')];
@@ -132,7 +132,7 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                                             />;
                                             break;
                                         case 'radio':
-                                            element = <Checkbox />;
+                                            element = <Checkbox checked={rowItem.p[item.id.replace(/\./g, '')]} onChange={(e) => this.mapComponentChange(e, item, rowItem, 'checkbox')}/>;
                                             break;
                                         case 'lookup':
                                             element = <span>＋</span>;
@@ -177,8 +177,11 @@ export class AppGridTableItem extends MapComponent<IAppGridTableItemProps, IAppG
                     rowItemState.p[item.id.replace(/\./g, '')] = `${value}`;
                     break;
                 case 'select':
-                    rowItemState.p[item.id.replace(/\./g, '')] = value.target.value;
-                    console.log(22223, value.target.value, rowItemState.p[item.id.replace(/\./g, '')]);
+                    const optionList: any[] = item.map_gh_selectOption ? item.map_gh_selectOption : [];
+                    rowItemState.p[item.id.replace(/\./g, '')] = optionList[value];
+                    break;
+                case 'checkbox':
+                    rowItemState.p[item.id.replace(/\./g, '')] = value.target.checked;
                     break;
             }
             updateProps(selectedId, rowItemState.p);

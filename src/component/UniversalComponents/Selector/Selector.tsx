@@ -18,9 +18,10 @@ import { MaskLayer } from '../../BaseComponent';
 
 import { SelectorState, ISelectorState } from './SelectorState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
-import { BoxType } from '../../util';
+// import { BoxType } from '../../util';
 
 import { Map, OrderedSet, List } from 'immutable';
+import '../../UniversalComponents/sass/UComponents.scss';
 
 // tslint:disable:jsx-no-multiline-js
 export default class Selector extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
@@ -33,9 +34,9 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
         };
     }
 
-    public getType(): string {
-        return BoxType.BarType;
-    }
+    // public getType(): string {
+    //     return BoxType.BarType;
+    // }
 
     /**
      * 调用富文本编辑器
@@ -133,6 +134,7 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
             >
                 <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
                 <AntSelector
+                    className="universalSelect"
                     style={{
                         width: '100%',
                         height: '100%',
@@ -145,6 +147,7 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
                     }}
                     disabled={this.getCustomState().getDisabled()}
                     value={this.getCustomState().getTextValue()}
+                    onChange={this.changeValue}
                 >
                     {this.optionElem()}
                 </AntSelector>
@@ -158,10 +161,10 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
 
         const res: any[] = [];
         optionList.map(
-            (option) => {
+            (option: any, index: number) => {
                 res.push(
                     <AntSelector.Option
-                        key={option}
+                        key={index}
                     >
                         {option}
                     </AntSelector.Option>
@@ -170,6 +173,10 @@ export default class Selector extends BaseUniversalComponent<IBaseUniversalCompo
         );
 
         return res;
+    }
+
+    private changeValue = (value: any) => {
+        this.setPropertiesFromProperty('textValue', value);
     }
 }
 
