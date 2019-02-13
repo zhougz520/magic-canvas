@@ -3,7 +3,7 @@ import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../Ba
 import { AppFormMenu, AppForm } from '../..//form/index';
 import { MapProvider } from '../../MapProvider';
 import { FormDetail } from '../../StructureDemo';
-import { AppFormContainerState } from './AppFormContainerState';
+import { AppFormContainerState, IAppFormContainerState as ICustomState } from './AppFormContainerState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import { IComponent } from '../../../IComponent';
 import { Map, List, OrderedSet } from 'immutable';
@@ -380,4 +380,14 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
     private onTitleMouseUp = (): void => {
         this.setIsCanMove(false);
     }
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：ICustomState
+ */
+export function convertFromDataToCustomState(
+    customData: ICustomState
+): any {
+    return new AppFormContainerState(customData);
 }

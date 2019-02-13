@@ -3,7 +3,7 @@ import { BaseComponent, IBaseProps, IBaseState, BaseStyle } from '../../../../Ba
 import { AppView, ProjectDDTree, AppFind, AppGridMenu, AppGrid } from '../index';
 import { MapProvider } from '../../MapProvider';
 import { GridDetail } from '../../StructureDemo';
-import { AppGridContainerState } from './AppGridContainerState';
+import { AppGridContainerState, IAppGridContainerState as ICustomState} from './AppGridContainerState';
 import { PropertiesEnum, IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import { IComponent } from '../../../IComponent';
 import { Map, List, OrderedSet } from 'immutable';
@@ -433,4 +433,14 @@ export default class AppGridContainer extends BaseComponent<IAppGridContainerPro
     private onTitleMouseUp = (): void => {
         this.setIsCanMove(false);
     }
+}
+
+/**
+ * 把数据库存储的data转换为customState
+ * @param customData 可能的类型：ICustomState
+ */
+export function convertFromDataToCustomState(
+    customData: ICustomState
+): any {
+    return new AppGridContainerState(customData);
 }
