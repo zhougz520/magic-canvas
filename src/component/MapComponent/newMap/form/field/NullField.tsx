@@ -26,7 +26,8 @@ export class NullField extends MapComponent<IMapProps, IMapState> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		currUnit: 2
+		currUnit: 2,
+		map_form_f_type: 'MapComponent/newMap/form/field/NullField'
 	};
 
 	public resizing = false;

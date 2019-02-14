@@ -4,7 +4,7 @@ import { IFieldProps } from './IFieldProps';
 import { IFieldState } from './IFieldState';
 
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-import { getStateClass } from './common/util';
+import { getStateClass, fieldTypeList } from './common/util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
@@ -26,7 +26,8 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 		map_form_f_disabled: false,
 		map_form_f_hidden_t: true,
 		titleWidth: 110,
-		currUnit: 2
+		currUnit: 2,
+		map_form_f_type: 'MapComponent/newMap/form/field/CheckBoxField'
 	};
 
 	public resizing = false;
@@ -62,7 +63,8 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 			map_form_f_state,
 			map_form_f_cols,
 			map_form_f_disabled,
-			map_form_f_hidden_t
+			map_form_f_hidden_t,
+			map_form_f_type
 		} = this.props;
 		let propertyList: List<IProperty> = List();
 		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
@@ -72,7 +74,9 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 			{ pTitle: '默认选项', pKey: 'map_form_f_list', pValue: map_form_f_list, pType: PropertiesEnum.INPUT_LIST },
 			{ pTitle: '只读', pKey: 'map_form_f_disabled', pValue: map_form_f_disabled, pType: PropertiesEnum.SWITCH },
 			{ pTitle: '字段状态', pKey: 'map_form_f_state', pValue: map_form_f_state, pType: PropertiesEnum.SELECT, pList: [{ key: '0', value: '非必填' }, { key: '1', value: '必填' }] },
-			{ pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER }
+			{ pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER },
+			{ pTitle: '数据类型', pKey: 'map_form_f_type', pValue: map_form_f_type, pType: PropertiesEnum.SELECT, pList: fieldTypeList }
+
 		);
 		// 组件属性整理
 		propertyGroup = propertyGroup.add(
@@ -145,8 +149,8 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 											map_form_f_list.map((chkBox, index) => {
 												return (
 													<div key={index} style={{ float: 'left', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-														<input style={{width: '16px', height: '16px'}} type="checkbox" disabled={map_form_f_disabled} onClick={this.onChange} />
-														<span style={{marginRight: '15px', marginLeft: '5px'}}>{chkBox}</span>
+														<input style={{ width: '16px', height: '16px' }} type="checkbox" disabled={map_form_f_disabled} onClick={this.onChange} />
+														<span style={{ marginRight: '15px', marginLeft: '5px' }}>{chkBox}</span>
 													</div>
 												);
 											})

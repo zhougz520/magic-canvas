@@ -14,4 +14,5 @@ export interface IFieldProps extends IBaseProps {
     map_form_f_hidden_t: boolean;       // 显示标题
     titleWidth: number;
     currUnit: number;
+    map_form_f_type: string;            // 字段类型
 }
