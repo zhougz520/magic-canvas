@@ -109,7 +109,7 @@ export class RadioField extends MapComponent<IMapProps, IMapState> {
 	public render() {
 		const RadioGroup = Radio.Group;
 		const { value, hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId, doChildDbClickToEdit } = this.props;
+		const { map_form_f_title, map_form_f_default, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId, doChildDbClickToEdit, pageMode } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		return (
@@ -127,7 +127,7 @@ export class RadioField extends MapComponent<IMapProps, IMapState> {
 				<div
 					className="field-tb"
 				>
-					<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+					<MaskLayer id={id}  pageMode={pageMode} onDoubleClick={doChildDbClickToEdit} />
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 						<label
 							ref={(ref) => this.editCom = ref}
@@ -150,7 +150,7 @@ export class RadioField extends MapComponent<IMapProps, IMapState> {
 										<RadioGroup
 											onChange={this.onChange}
 											disabled={map_form_f_disabled}
-											value={map_form_f_default || value}
+											value={value ? value : map_form_f_default}
 										>
 											{
 												map_form_f_list.map((radio: any, index: number) => {

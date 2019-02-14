@@ -16,6 +16,7 @@ export interface IMapProps extends IFieldProps {
 }
 
 export interface IMapState extends IFieldState {
+	dateValue: string;
 }
 
 export class DataTimeField extends MapComponent<IMapProps, IMapState> {
@@ -47,7 +48,8 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 			currX: 0,
 			resizing: false,
 			hover: {},
-			value: undefined
+			value: undefined,
+			dateValue: ''
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -92,13 +94,14 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 	}
 
 	public render() {
-		const { hover, hidden, value } = this.state;
-		const { map_form_f_title, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_default } = this.props;
+		const { hover, hidden, dateValue } = this.state;
+		const { map_form_f_title, map_form_f_cols, currUnit, map_form_f_state, map_form_f_disabled, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_default, pageMode } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
 		if (map_form_f_disabled) {
 			borderClass = ' read-only';
 		}
+		const isDate = /^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/.test(map_form_f_default);
 
 		return (
 			<div
@@ -115,7 +118,7 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 				<div
 					className="field-tb"
 				>
-					<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+					<MaskLayer id={id} pageMode={pageMode} onDoubleClick={doChildDbClickToEdit} />
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 						<label
 							ref={(ref) => this.editCom = ref}
@@ -139,9 +142,10 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 											style={{ width: '100%' }}
 											className={map_form_f_disabled ? borderClass : ''}
 											disabled={map_form_f_disabled}
-											format="YYYY-MM-DD"
 											placeholder=""
-											value={(value === undefined || value === '') && map_form_f_default === '' ? undefined : moment(value === undefined ? map_form_f_default : value, 'YYYY-MM-DD')}
+											format={'YYYY-MM-DD'}
+											value={(dateValue ? moment(dateValue, 'YYYY-MM-DD') : (isDate ? moment(map_form_f_default, 'YYYY-MM-DD') : undefined ))}
+											onChange={this.changeValue}
 										/>
 									</td>
 								</tr>
@@ -152,4 +156,10 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 			</div>
 		);
 	}
+
+	private changeValue = (value: any) => {
+		this.setState({
+			dateValue: value
+		});
+    }
 }

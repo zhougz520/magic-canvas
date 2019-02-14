@@ -137,7 +137,7 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
                         width: '100%',
                         height: '100%',
                         display: 'flex',
-                        justifyContent: 'center',
+                        justifyContent: 'left',
                         alignItems: 'center',
                         backgroundColor: this.getCustomState().getBackgroundColor(),
                         borderColor: this.getCustomState().getBorderColor(),
@@ -147,6 +147,8 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
                     }}
                     checked={this.getCustomState().getIsCheck()}
                     disabled={this.getCustomState().getDisabled()}
+                    // tslint:disable-next-line:jsx-no-lambda no-empty
+                    onChange={(e) => this.changeValue(e)}
                 >
                     <div
                         style={{
@@ -166,6 +168,13 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
                 </AntRadio>
             </div>
         );
+    }
+
+    private changeValue = (e: any) => {
+        console.log('eee', e);
+        if (e.target) {
+            this.setPropertiesFromProperty('isCheck', e.target.checked);
+        }
     }
 }
 

@@ -90,11 +90,16 @@ export class LinkField extends MapComponent<IMapProps, IMapState> {
 
 	public render() {
 		const { hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_state,
-			map_form_f_hidden_t, titleWidth, selectedId, id,
+		const { map_form_f_title,
+			map_form_f_default,
+			map_form_f_state,
+			map_form_f_hidden_t,
+			titleWidth, selectedId,
+			id,
 			map_form_f_cols,
 			currUnit,
-			doChildDbClickToEdit
+			doChildDbClickToEdit,
+			pageMode
 		} = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
@@ -110,7 +115,7 @@ export class LinkField extends MapComponent<IMapProps, IMapState> {
 				onDragLeave={this.handleLeave}
 				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+				<MaskLayer id={id}  pageMode={pageMode} onDoubleClick={doChildDbClickToEdit} />
 				<div className="field-tb">
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 						<label

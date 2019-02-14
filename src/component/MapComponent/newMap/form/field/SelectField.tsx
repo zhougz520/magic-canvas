@@ -2,12 +2,11 @@ import * as React from 'react';
 import { MapComponent } from '../../../index';
 import { IFieldProps } from './IFieldProps';
 import { IFieldState } from './IFieldState';
-
-import { Input, Popover, Menu, Icon } from 'antd';
+import { Select as AntSelector } from 'antd';
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-import { getStateClass, getFieldCommonPropertyList } from './common/util';
+import { getStateClass, fieldTypeList } from './common/util';
 import { OrderedSet, List } from 'immutable';
-import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
+import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
@@ -15,7 +14,7 @@ export interface IMapProps extends IFieldProps {
 }
 
 export interface IMapState extends IFieldState {
-	selectType: boolean;
+	optionValue: string;
 }
 
 export class SelectField extends MapComponent<IMapProps, IMapState> {
@@ -47,7 +46,7 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 			currX: 0,
 			resizing: false,
 			hover: {},
-			selectType: false
+			optionValue: ''
 		};
 	}
 	public getItemStyle = (draggableStyle: any, isDragging: any) => ({
@@ -62,9 +61,29 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 	 * 获取组件属性列表
 	 */
 	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
+		const {
+			map_form_f_title,
+			map_form_f_list,
+			map_form_f_state,
+			map_form_f_cols,
+			map_form_f_disabled,
+			map_form_f_hidden_t,
+			map_form_f_type,
+			map_form_f_default
+		} = this.props;
 		let propertyList: List<IProperty> = List();
 		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
-		propertyList = getFieldCommonPropertyList(this.props);
+		propertyList = propertyList.push(
+			{ pTitle: '显示标题', pKey: 'map_form_f_hidden_t', pValue: map_form_f_hidden_t, pType: PropertiesEnum.SWITCH },
+			{ pTitle: '标题', pKey: 'map_form_f_title', pValue: map_form_f_title, pType: PropertiesEnum.INPUT_TEXT },
+			{ pTitle: '默认选项', pKey: 'map_form_f_list', pValue: map_form_f_list, pType: PropertiesEnum.INPUT_LIST },
+			{ pTitle: '默认值', pKey: 'map_form_f_default', pValue: map_form_f_default, pType: PropertiesEnum.INPUT_TEXT },
+			{ pTitle: '只读', pKey: 'map_form_f_disabled', pValue: map_form_f_disabled, pType: PropertiesEnum.SWITCH },
+			{ pTitle: '字段状态', pKey: 'map_form_f_state', pValue: map_form_f_state, pType: PropertiesEnum.SELECT, pList: [{ key: '0', value: '非必填' }, { key: '1', value: '必填' }] },
+			{ pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER },
+			{ pTitle: '数据类型', pKey: 'map_form_f_type', pValue: map_form_f_type, pType: PropertiesEnum.SELECT, pList: fieldTypeList }
+
+		);
 		// 组件属性整理
 		propertyGroup = propertyGroup.add(
 			{ groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }
@@ -73,7 +92,6 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 
 		return propertyGroup;
 	}
-
 	/**
 	 * 获取组件文本
 	 */
@@ -92,18 +110,9 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 	}
 
 	public render() {
-		const { selectType, hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId, doChildDbClickToEdit } = this.props;
+		const { hover, hidden, optionValue } = this.state;
+		const { map_form_f_title, map_form_f_default, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, map_form_f_disabled, id, selectedId, doChildDbClickToEdit, pageMode } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
-		// 获取下拉选项
-		const arrOption = map_form_f_default === undefined ? [''] : map_form_f_default.split(/\r?\n/);
-		const content = arrOption.map((option, index) => {
-			return <Menu.Item key={index} >{option}</Menu.Item>;
-		});
-		let borderClass = '';
-		if (map_form_f_disabled) {
-			borderClass = ' read-only';
-		}
 
 		return (
 			<div
@@ -120,7 +129,7 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 				<div
 					className="field-tb"
 				>
-					<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+					<MaskLayer id={id}  pageMode={pageMode} onDoubleClick={doChildDbClickToEdit} />
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 						<label
 							ref={(ref) => this.editCom = ref}
@@ -140,18 +149,17 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
 									</td>
 									<td>
-										<Popover placement="bottomRight" title={null} content={content} trigger="click" overlayStyle={{ width: 200 }} overlayClassName="select-field-card" visible={selectType}>
-											<div className="select-field">
-												<Input
-													readOnly
-													className={`select-field-text ${map_form_f_disabled ? borderClass : ''}`}
-													value={map_form_f_default}
-												/>
-												<span onClick={this.onSelectClick} className="select-field-btn">
-													<Icon style={{ color: '#BFBFBF' }} type={selectType ? 'caret-up' : 'caret-down'} />
-												</span>
-											</div>
-										</Popover>
+										<AntSelector
+											style={{
+												width: '100%',
+												height: '100%'
+											}}
+											disabled={map_form_f_disabled}
+											value={optionValue ? optionValue : map_form_f_default}
+											onChange={this.changeValue}
+										>
+											{this.optionElem()}
+										</AntSelector>
 									</td>
 								</tr>
 							</tbody>
@@ -162,15 +170,27 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 		);
 	}
 
-	private onSelectClick = () => {
-		let { selectType } = this.state;
-		if (selectType) {
-			selectType = false;
-		} else {
-			selectType = true;
-		}
-		this.setState({
-			selectType
-		});
+	private optionElem = () => {
+        const optionList: any[] = this.props.map_form_f_list;
+        const res: any[] = [];
+        optionList.map(
+            (option: any, index: number) => {
+                res.push(
+                    <AntSelector.Option
+                        key={index}
+                    >
+                        {option}
+                    </AntSelector.Option>
+                );
+            }
+        );
+
+        return res;
 	}
+
+	private changeValue = (value: any) => {
+		this.setState({
+			optionValue: value
+		});
+    }
 }

@@ -95,7 +95,8 @@ export class InputNumberField extends MapComponent<IMapProps, IMapState> {
 			map_form_f_hidden_t, titleWidth, selectedId, id,
 			map_form_f_cols,
 			currUnit,
-			doChildDbClickToEdit
+			doChildDbClickToEdit,
+			pageMode
 		} = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 		let borderClass = '';
@@ -115,7 +116,7 @@ export class InputNumberField extends MapComponent<IMapProps, IMapState> {
 				onDragLeave={this.handleLeave}
 				onDragEnd={this.handleLeave}
 			>
-				<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+				<MaskLayer id={id}  pageMode={pageMode} onDoubleClick={doChildDbClickToEdit} />
 				<div className="field-tb">
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 						<label

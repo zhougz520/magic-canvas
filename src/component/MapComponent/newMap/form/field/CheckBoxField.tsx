@@ -39,7 +39,6 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 
 	constructor(props: any, context?: any) {
 		super(props, context);
-
 		this.state = {
 			hidden: false,
 			currX: 0,
@@ -107,7 +106,7 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	public render() {
 		// const { value } = this.state;
 		const { hover, hidden } = this.state;
-		const { map_form_f_title, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_disabled } = this.props;
+		const { map_form_f_title, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_disabled, pageMode } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
 
 		return (
@@ -125,7 +124,7 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 				<div
 					className="field-tb"
 				>
-					<MaskLayer id={id} onDoubleClick={doChildDbClickToEdit} />
+					<MaskLayer id={id} pageMode={pageMode} onDoubleClick={doChildDbClickToEdit} />
 					<div className={`field-title ${map_form_f_hidden_t ? '' : ' bar-hide'}`} style={{ width: titleWidth }}>
 						<label
 							ref={(ref) => this.editCom = ref}

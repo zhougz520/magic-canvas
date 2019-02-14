@@ -136,7 +136,7 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
                         width: '100%',
                         height: '100%',
                         display: 'flex',
-                        justifyContent: 'center',
+                        justifyContent: 'left',
                         alignItems: 'center',
                         backgroundColor: this.getCustomState().getBackgroundColor(),
                         borderColor: this.getCustomState().getBorderColor(),

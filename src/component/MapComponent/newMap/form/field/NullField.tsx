@@ -72,7 +72,7 @@ export class NullField extends MapComponent<IMapProps, IMapState> {
 	}
 	public render() {
 		const { hover } = this.state;
-		const { map_form_f_default, map_form_f_cols, currUnit, id, selectedId } = this.props;
+		const { map_form_f_default, map_form_f_cols, currUnit, id, selectedId, pageMode } = this.props;
 
 		return (
 			<div
@@ -89,7 +89,7 @@ export class NullField extends MapComponent<IMapProps, IMapState> {
 				<div
 					className="field-tb"
 				>
-					<MaskLayer id={id} />
+					<MaskLayer id={id}  pageMode={pageMode} />
 					<div className="field-content">
 						<table style={{ width: '100%' }}>
 							<tbody>
