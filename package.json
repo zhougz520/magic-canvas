@@ -1,6 +1,6 @@
 {
   "name": "xprst-com",
-  "version": "0.0.50",
+  "version": "0.0.52",
   "description": "component base for xpresentation",
   "main": "./dist/index.js",
   "types": "./@types/index.d.ts",
