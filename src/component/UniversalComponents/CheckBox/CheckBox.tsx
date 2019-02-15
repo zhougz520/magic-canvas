@@ -16,11 +16,10 @@ import {
 import { MaskLayer } from '../../BaseComponent';
 
 import { CheckBoxState, ICheckBoxState } from './CheckBoxState';
-import { PropertiesEnum, IPropertyGroup, IProperty } from '../model/types';
+import { PropertiesEnum, IPropertyGroup, IProperty, IFilterCondition } from '../model/types';
 // import { BoxType } from '../../util';
 
 import { Map, OrderedSet, List } from 'immutable';
-
 // tslint:disable:jsx-no-multiline-js
 export default class CheckBox extends BaseUniversalComponent<IBaseUniversalComponentProps, IBaseUniversalComponentState> {
     private _padding: number = 30;
@@ -84,10 +83,13 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
     public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
+        const filterCondition: IFilterCondition[] = [
+            { pFilterValue: false, pFilterFun: 'isShow', pFilterKey: [{groupKey: 'exterior', pKey: 'backgroundColor'}, {groupKey: 'field'}]}
+        ];
 
         // 外观
         propertyList = propertyList.push(
-            { pTitle: '是否选中', pKey: 'isCheck', pValue: this.getCustomState().getIsCheck(), pType: PropertiesEnum.SWITCH, pFilterValue: false, pFilterFun: 'isShow', pFilterKey: [{groupKey: 'exterior', pKey: 'backgroundColor'}, {groupKey: 'field'}]},
+            { pTitle: '是否选中', pKey: 'isCheck', pValue: this.getCustomState().getIsCheck(), pType: PropertiesEnum.SWITCH, pFilterCondition: filterCondition},
             { pTitle: '是否禁用', pKey: 'disabled', pValue: this.getCustomState().getDisabled(), pType: PropertiesEnum.SWITCH },
             { pTitle: '背景颜色', pKey: 'backgroundColor', pValue: this.getCustomState().getBackgroundColor(), pType: PropertiesEnum.COLOR_PICKER }
             // { pTitle: '边框颜色', pKey: 'borderColor', pValue: this.getCustomState().getBorderColor(), pType: PropertiesEnum.COLOR_PICKER },

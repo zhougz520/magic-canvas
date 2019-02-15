@@ -9,7 +9,7 @@ import { OrderedSet, List } from 'immutable';
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 import * as DragStyle from '../DragStyle';
 import { GlobalUtil } from '../../../util';
-
+import { IFilterCondition } from '../../../UniversalComponents/model/types';
 // tslint:disable-next-line:no-empty-interface
 export interface IAppGridTableTitleProps extends IBaseProps {
     map_gh_txt?: string;        // 列名称
@@ -61,7 +61,9 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
         const { map_gh_txt, map_gh_width, map_gh_seq, map_gh_req, map_gh_align, map_gh_dataType, map_gh_selectOption } = this.props;
         let propertyList: List<IProperty> = List();
         let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
-
+        const filterCondition: IFilterCondition[] = [
+            { pFilterValue: 'select', pFilterFun: 'isShow', pFilterKey: [{groupKey: 'mapProps', pKey: 'map_gh_selectOption'}]}
+        ];
         // 列表属性
         propertyList = propertyList.push(
             { pTitle: '列名称', pKey: 'map_gh_txt', pValue: map_gh_txt, pType: PropertiesEnum.INPUT_TEXT },
@@ -70,8 +72,8 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
             { pTitle: '必填', pKey: 'map_gh_req', pValue: map_gh_req, pType: PropertiesEnum.SWITCH },
             { pTitle: '对齐方式', pKey: 'map_gh_align', pValue: map_gh_align, pType: PropertiesEnum.SELECT, pList: [{ key: 'left', value: '左对齐' }, { key: 'center', value: '居中' }, { key: 'right', value: '右对齐' }] },
             // tslint:disable-next-line:max-line-length
-            { pTitle: '数据类型', pKey: 'map_gh_dataType', pValue: map_gh_dataType, pType: PropertiesEnum.SELECT, pList: [{ key: 'txt', value: '文本' }, { key: 'input', value: '普通输入' }, { key: 'number', value: '数字输入' }, { key: 'date', value: '日期选择' }, { key: 'select', value: '下拉框' }, { key: 'radio', value: '复选' }, { key: 'link', value: '超链接' }, { key: 'lookup', value: '弹出选择' }], pFilterValue: 'select', pFilterFun: 'isShow', pFilterKey: [{groupKey: 'mapProps', pKey: 'map_gh_selectOption'}] },
-            { pTitle: '选项', pKey: 'map_gh_selectOption', pValue: map_gh_selectOption, pType: PropertiesEnum.INPUT_LIST }
+            { pTitle: '数据类型', pKey: 'map_gh_dataType', pValue: map_gh_dataType, pType: PropertiesEnum.SELECT, pList: [{ key: 'txt', value: '文本' }, { key: 'input', value: '普通输入' }, { key: 'number', value: '数字输入' }, { key: 'date', value: '日期选择' }, { key: 'select', value: '下拉框' }, { key: 'radio', value: '复选' }, { key: 'link', value: '超链接' }, { key: 'lookup', value: '弹出选择' }], pFilterCondition: filterCondition },
+            { pTitle: '选项', pKey: 'map_gh_selectOption', pValue: map_gh_selectOption, pType: PropertiesEnum.INPUT_LIST, pRequire: false }
         );
         propertyGroup = propertyGroup.add(
             { groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }

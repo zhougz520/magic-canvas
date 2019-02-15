@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PropertiesEnum, CommandMap, IPropertyGroup, IProperty } from '../../../../../src';
 import { List, OrderedSet, fromJS } from 'immutable';
-
 import { SketchPicker } from 'react-color';
 import { Input, Switch, Slider, Collapse, Popover, Select } from 'antd';
 import { IpList, IFilterList } from '../../../../../src/component/UniversalComponents/model/types';
@@ -56,12 +55,20 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
             (propGroup: IPropertyGroup) => {
                 propGroup.propertyList.map(
                     (property: IProperty) => {
-                        if (String(property.pFilterValue) && property.pFilterValue !== property.pValue && property.pFilterKey) {
-                            const e: any = {
-                                pFilterKey: property.pFilterKey,
-                                pFilterValue: property.pFilterValue
-                            };
-                            this.isShow(e, property.pValue, propertyGroup);
+                        if (property.pFilterCondition && property.pFilterCondition.length > 0) {
+                            property.pFilterCondition.forEach( (vif: any) => {
+                                if (property.pValue === vif.pFilterValue) {
+                                    switch (vif.pFilterFun) {
+                                        case 'isShow':
+                                            const e: any = {
+                                                pFilterKey: vif.pFilterKey,
+                                                pFilterValue: vif.pFilterValue
+                                            };
+                                            this.isShow(e, property.pValue, propertyGroup);
+                                            break;
+                                    }
+                                }
+                            });
                         }
                     }
                 );
@@ -120,7 +127,8 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                         groupLineNum = 'column2';
                         break;
                 }
-                if (!propGroup.groupRequire) {
+                const groupRequire: boolean = (!propGroup.hasOwnProperty('groupRequire') || (propGroup.hasOwnProperty('groupRequire') && propGroup.groupRequire === true)) ? true : false;
+                if (groupRequire) {
                     group.push(
                         <Collapse.Panel header={propGroup.groupTitle} key={propGroup.groupKey} className={groupLineNum}>
                             {this.buildPropertyList(propGroup.propertyList, propGroup.groupKey)}
@@ -160,10 +168,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
      */
     private buildPropertyElement = (property: IProperty, groupKey: string): JSX.Element | null => {
         let element: JSX.Element | null = null;
-
+        const pRequire: boolean = (!property.hasOwnProperty('pRequire') || (property.hasOwnProperty('pRequire') && property.pRequire === true)) ? true : false;
         switch (property.pType) {
             case PropertiesEnum.INPUT_TEXT:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Input
@@ -176,10 +184,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             onChange={this.changePropertyValue}
                         />
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.INPUT_TEXTAREA:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-cross" key={property.pKey}>
                         {property.pTitle}
                         <TextArea
@@ -191,10 +199,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             onChange={this.changePropertyValue}
                         />
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.INPUT_NUMBER:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Input
@@ -207,10 +215,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             onChange={this.changePropertyValue}
                         />
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.INPUT_LIST:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-cross" key={property.pKey}>
                         {property.pTitle}
                         <TextArea
@@ -222,10 +230,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             onChange={(e) => this.changePropertyValue(property, e.target.value.split(/[\r\n]/), `${groupKey}.${property.pKey}`)}
                         />
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.SWITCH:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-1 group-end" key={property.pKey}>
                         {property.pTitle}
                         <Switch
@@ -234,10 +242,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             onChange={(value) => this.handleSwitch(value, `${groupKey}.${property.pKey}`, property)}
                         />
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.COLOR_PICKER:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Popover placement="left" content={this.buildColorPicker(property.pValue, `${groupKey}.${property.pKey}`, property)} trigger="hover">
@@ -251,10 +259,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             </div>
                         </Popover>
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.SLIDER:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Slider
@@ -265,10 +273,10 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             onAfterChange={(value) => this.handleSlider(value, `${groupKey}.${property.pKey}`)}
                         />
                     </div>
-                );
+                ) : null;
                 break;
             case PropertiesEnum.SELECT:
-                element = property.pRequire ? null : (
+                element = pRequire ? (
                     <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
                         <Select
@@ -284,7 +292,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                             }
                         </Select>
                     </div>
-                );
+                ) : null;
                 break;
         }
 
@@ -308,16 +316,19 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     /**
      * 属性值修改重新渲染
      */
-    private changePropertyValue = (e: any, value: any = e.target.value, id: any = e.target.id) => {
+    private changePropertyValue = (e: any, value: any = e.target.value, id: any = e.target.id, type?: string) => {
         const oldPropsGroup: OrderedSet<IPropertyGroup> = this.state.propsGroup;
         const pValue = value;
         const pKey = id.split('.')[1];
         const groupKey = id.split('.')[0];
-        if (e.pFilterFun) {
-            switch (e.pFilterFun) {
-                case 'isShow':
-                    this.isShow(e, pValue);
-                    break;
+        const pFilterCondition: any[] = e.pFilterCondition;
+        // 执行过滤程序
+        if (pFilterCondition && pFilterCondition.length > 0) {
+            for (let a = 0; a < pFilterCondition.length; a++) {
+                if (pFilterCondition[a].pFilterFun === 'isShow') {
+                    this.isShow(pFilterCondition[a], pValue);
+                }
+                if (type && type === 'select' && pFilterCondition[a].pFilterValue === pValue) break;
             }
         }
 
@@ -404,7 +415,7 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
     private handleSelect = (pValue: any, pId: any, e: any) => {
         const pKey = pId.split('.')[1];
 
-        this.changePropertyValue(e, pValue, pId);
+        this.changePropertyValue(e, pValue, pId, 'select');
         this.fireCommand(CommandMap.COM_SETPROPS, { pKey, pValue });
     }
 
@@ -415,7 +426,19 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
         const propsGroupList: OrderedSet<IPropertyGroup> = pGroup ? pGroup : this.state.propsGroup;
         const pFilterKey: IFilterList[] = e.pFilterKey;
         const pFilterValue: any = e.pFilterValue;
-        const value: boolean = pValue === pFilterValue ? false : true;
+        const value: boolean = pValue === pFilterValue ? true : false;
+        // 将所有显示置为隐藏
+        propsGroupList.forEach((cs: any) => {
+            if (cs.hasOwnProperty('groupRequire')) {
+                cs.groupRequire = false;
+            }
+            cs.propertyList.forEach((item: any) => {
+                if (item.hasOwnProperty('pRequire')) {
+                    item.pRequire = false;
+                }
+            });
+        });
+        // 将过滤的组件设为显示
         pFilterKey.forEach((cs: any) => {
             propsGroupList.toList().update(
                 (propsGroup: List<IPropertyGroup>) => {

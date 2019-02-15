@@ -5,9 +5,9 @@ import { IFieldState } from './IFieldState';
 
 import { Radio } from 'antd';
 import { MaskLayer } from '../../../../BaseComponent/mask/MaskLayer';
-import { getStateClass } from './common/util';
+import { getStateClass, getFieldCommonPropertyList } from './common/util';
 import { OrderedSet, List } from 'immutable';
-import { IPropertyGroup, IProperty, PropertiesEnum } from '../../../../UniversalComponents';
+import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
@@ -60,26 +60,9 @@ export class RadioField extends MapComponent<IMapProps, IMapState> {
 	 * 获取组件属性列表
 	 */
 	public getPropertiesToProperty = (): OrderedSet<IPropertyGroup> => {
-		const {
-			map_form_f_title,
-			map_form_f_list,
-			map_form_f_default,
-			map_form_f_state,
-			map_form_f_cols,
-			map_form_f_disabled,
-			map_form_f_hidden_t
-		} = this.props;
 		let propertyList: List<IProperty> = List();
 		let propertyGroup: OrderedSet<IPropertyGroup> = OrderedSet();
-		propertyList = propertyList.push(
-			{ pTitle: '显示标题', pKey: 'map_form_f_hidden_t', pValue: map_form_f_hidden_t, pType: PropertiesEnum.SWITCH },
-			{ pTitle: '标题', pKey: 'map_form_f_title', pValue: map_form_f_title, pType: PropertiesEnum.INPUT_TEXT },
-			{ pTitle: '默认选项', pKey: 'map_form_f_list', pValue: map_form_f_list, pType: PropertiesEnum.INPUT_LIST },
-			{ pTitle: '默认值', pKey: 'map_form_f_default', pValue: map_form_f_default, pType: PropertiesEnum.INPUT_TEXT },
-			{ pTitle: '只读', pKey: 'map_form_f_disabled', pValue: map_form_f_disabled, pType: PropertiesEnum.SWITCH },
-			{ pTitle: '字段状态', pKey: 'map_form_f_state', pValue: map_form_f_state, pType: PropertiesEnum.SELECT, pList: [{ key: '0', value: '非必填' }, { key: '1', value: '必填' }] },
-			{ pTitle: '横跨列数', pKey: 'map_form_f_cols', pValue: map_form_f_cols, pType: PropertiesEnum.INPUT_NUMBER }
-		);
+		propertyList = getFieldCommonPropertyList(this.props);
 		// 组件属性整理
 		propertyGroup = propertyGroup.add(
 			{ groupTitle: '组件属性', groupKey: 'mapProps', isActive: true, colNum: 1, propertyList }

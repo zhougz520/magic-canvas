@@ -21,6 +21,12 @@ export interface IFilterList {
     pKey?: string;
 }
 
+export interface IFilterCondition {
+    pFilterKey?: IFilterList[];
+    pFilterValue?: any;
+    pFilterFun?: string;
+}
+
 /**
  * 属性类型
  */
@@ -30,9 +36,7 @@ export interface IProperty {
     pValue: any;
     pType: PropertiesEnum;
     pList?: IpList[];
-    pFilterFun?: string;
-    pFilterKey?: IFilterList[];
-    pFilterValue?: any;
+    pFilterCondition?: IFilterCondition[];
     pRequire?: boolean;
 }
 
