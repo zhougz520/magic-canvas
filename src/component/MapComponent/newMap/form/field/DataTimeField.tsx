@@ -144,7 +144,9 @@ export class DataTimeField extends MapComponent<IMapProps, IMapState> {
 											disabled={map_form_f_disabled}
 											placeholder=""
 											format={'YYYY-MM-DD'}
-											value={(dateValue ? moment(dateValue, 'YYYY-MM-DD') : (isDate ? moment(map_form_f_default, 'YYYY-MM-DD') : undefined ))}
+											value={
+												(dateValue !== '' ? (dateValue === null ? undefined : moment(dateValue, 'YYYY-MM-DD'))
+												: (isDate ? moment(map_form_f_default, 'YYYY-MM-DD') : undefined ))}
 											onChange={this.changeValue}
 										/>
 									</td>
