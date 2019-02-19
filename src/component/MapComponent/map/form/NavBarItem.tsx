@@ -94,7 +94,6 @@ export class NavBarItem extends MapComponent<IMapProps, any> {
 
     public render() {
         const { map_form_sn_name, id, selectedId, map_form_sn_icon, index, selectOn } = this.props;
-        // console.log('NavBarItem-index', index);
         const initDrag = (provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
             <div
                 ref={provided.innerRef}

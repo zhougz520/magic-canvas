@@ -63,7 +63,7 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
         // 列表属性
         propertyList = propertyList.push(
             { pTitle: '列名称', pKey: 'map_gh_txt', pValue: map_gh_txt, pType: PropertiesEnum.INPUT_TEXT },
-            { pTitle: '列宽', pKey: 'map_gh_width', pValue: map_gh_width, pType: PropertiesEnum.INPUT_NUMBER },
+            { pTitle: '最小列宽', pKey: 'map_gh_width', pValue: map_gh_width, pType: PropertiesEnum.INPUT_NUMBER },
             { pTitle: '允许排序', pKey: 'map_gh_seq', pValue: map_gh_seq, pType: PropertiesEnum.SWITCH },
             { pTitle: '必填', pKey: 'map_gh_req', pValue: map_gh_req, pType: PropertiesEnum.SWITCH },
             { pTitle: '对齐方式', pKey: 'map_gh_align', pValue: map_gh_align, pType: PropertiesEnum.SELECT, pList: [{ key: 'left', value: '左对齐' }, { key: 'center', value: '居中' }, { key: 'right', value: '右对齐' }] },

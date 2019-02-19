@@ -26,6 +26,7 @@ export type ComponentsType = Array<{
 }>;
 
 export const ComponentsMap = {
+    Universal_BusinessContext: { t: 'UniversalComponents/BusinessContext/BusinessContext', p: { name: '业务背景', w: 400, h: 120 } },
     Universal_CheckBox: { t: 'UniversalComponents/CheckBox/CheckBox', p: { name: '多选', w: 110, h: 24 } },
     Universal_Radio: { t: 'UniversalComponents/Radio/Radio', p: { name: '单选', w: 110, h: 24 } },
     Universal_Button: { t: 'UniversalComponents/Button/Button', p: { name: '按钮', w: 82, h: 32 } },

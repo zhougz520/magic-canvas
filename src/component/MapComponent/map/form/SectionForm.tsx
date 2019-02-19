@@ -29,7 +29,6 @@ export class SectionForm extends MapComponent<IMapProps, any> {
     }
     render() {
         const { hover } = this.state;
-        // console.log('refs', this.props.refs);
         const {
             updateProps,
             p,

@@ -171,7 +171,6 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
     }
 
     private changeValue = (e: any) => {
-        console.log('eee', e);
         if (e.target) {
             this.setPropertiesFromProperty('isCheck', e.target.checked);
         }

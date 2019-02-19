@@ -8,6 +8,7 @@ import { getStateClass, getFieldCommonPropertyList } from './common/util';
 import { OrderedSet, List } from 'immutable';
 import { IPropertyGroup, IProperty } from '../../../../UniversalComponents';
 import * as DragStyle from '../../DragStyle';
+import { Checkbox } from 'antd';
 
 /* tslint:disable:jsx-no-multiline-js jsx-no-lambda no-string-literal jsx-no-string-ref indent no-empty-interface */
 export interface IMapProps extends IFieldProps {
@@ -86,7 +87,6 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 	}
 
 	public render() {
-		// const { value } = this.state;
 		const { hover, hidden } = this.state;
 		const { map_form_f_title, map_form_f_list, map_form_f_cols, currUnit, map_form_f_state, map_form_f_hidden_t, titleWidth, id, selectedId, doChildDbClickToEdit, map_form_f_disabled, pageMode } = this.props;
 		const stateClass = getStateClass(map_form_f_state);
@@ -126,16 +126,15 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 										<div className={`${stateClass}`} style={{ display: `${map_form_f_state === '1' ? 'block' : 'none'}` }}>*</div>
 									</td>
 									<td>
-										{
-											map_form_f_list.map((chkBox, index) => {
-												return (
-													<div key={index} style={{ float: 'left', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-														<input style={{ width: '16px', height: '16px' }} type="checkbox" disabled={map_form_f_disabled} onClick={this.onChange} />
-														<span style={{ marginRight: '15px', marginLeft: '5px' }}>{chkBox}</span>
-													</div>
-												);
-											})
-										}
+										<Checkbox.Group
+											disabled={map_form_f_disabled}
+										>
+											{
+												map_form_f_list.map((chkBox: any, index: number) => {
+													return <Checkbox key={index} value={chkBox}>{chkBox}</Checkbox>;
+												})
+											}
+										</Checkbox.Group>
 									</td>
 								</tr>
 							</tbody>
@@ -144,9 +143,5 @@ export class CheckBoxField extends MapComponent<IMapProps, IMapState> {
 				</div>
 			</div>
 		);
-	}
-
-	private onChange = (e: any) => {
-		e.target.checked;
 	}
 }

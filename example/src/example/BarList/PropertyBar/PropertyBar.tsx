@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PropertiesEnum, CommandMap, IPropertyGroup, IProperty } from '../../../../../src';
 import { List, OrderedSet, fromJS } from 'immutable';
 import { SketchPicker } from 'react-color';
-import { Input, Switch, Slider, Collapse, Popover, Select } from 'antd';
+import { Input, Switch, Slider, Collapse, Popover, Select, InputNumber } from 'antd';
 import { IpList, IFilterList } from '../../../../../src/component/UniversalComponents/model/types';
 const { TextArea } = Input;
 
@@ -205,14 +205,14 @@ export class PropertyBar extends React.PureComponent<IPropertyProps, IPropertySt
                 element = pRequire ? (
                     <div className="props-col-1" key={property.pKey}>
                         {property.pTitle}
-                        <Input
-                            type="number"
+                        <InputNumber
                             size="small"
                             value={property.pValue}
                             id={`${groupKey}.${property.pKey}`}
                             onBlur={(e) => this.handleInputText(e, 'blur')}
-                            onPressEnter={(e) => this.handleInputText(e, 'enter')}
-                            onChange={this.changePropertyValue}
+                            min={property.pMin ? property.pMin : -10000}
+                            max={property.pMax ? property.pMax : 10000}
+                            onChange={(value) => typeof(value) === 'number' ? this.changePropertyValue(property, value, `${groupKey}.${property.pKey}`) : {}}
                         />
                     </div>
                 ) : null;

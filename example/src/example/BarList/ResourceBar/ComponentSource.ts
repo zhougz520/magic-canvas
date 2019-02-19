@@ -10,6 +10,7 @@ const {
     Universal_Image,
     Universal_RichText,
     Universal_Table,
+    Universal_BusinessContext,
     Map_AppGrid,
     Map_AppForm,
     NewMap_AppGrid,
@@ -33,7 +34,9 @@ const basePage: IBasePage[] = [
         category: '常用需求组件',
         categoryKey: 'common',
         expanded: false,
-        components: []
+        components: [
+            Universal_BusinessContext
+        ]
     },
     {
         category: '基础组件',

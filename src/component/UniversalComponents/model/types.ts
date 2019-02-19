@@ -38,6 +38,8 @@ export interface IProperty {
     pList?: IpList[];
     pFilterCondition?: IFilterCondition[];
     pRequire?: boolean;
+    pMin?: number;
+    pMax?: number;
 }
 
 /**

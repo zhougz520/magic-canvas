@@ -80,7 +80,6 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
      * 获取组件文本
      */
     public getRichChildNode = (): any => {
-        console.log('map_mi_txt', this.props.map_mi_txt);
 
         return this.props.map_mi_txt;
     }
