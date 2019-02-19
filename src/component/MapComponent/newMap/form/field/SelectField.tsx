@@ -158,7 +158,7 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
             (option: any, index: number) => {
                 res.push(
                     <AntSelector.Option
-                        key={index}
+                        key={index.toString(36) + index}
                     >
                         {option}
                     </AntSelector.Option>
