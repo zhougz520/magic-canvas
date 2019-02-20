@@ -48,7 +48,7 @@ export default class BusinessContext extends BaseUniversalComponent<IBaseUnivers
         const comPosition: IPosition = this.getPosition();
         const comSize: ISize = this.getSize();
         const position: IPosition = {
-            top: comPosition.top + 36,
+            top: comPosition.top + 28,
             left: comPosition.left + 8
         };
         const size: ISize = {
@@ -95,12 +95,12 @@ export default class BusinessContext extends BaseUniversalComponent<IBaseUnivers
                 pValue: this.getCustomState().getTextValue(),
                 pType: PropertiesEnum.INPUT_TEXTAREA
             },
-            {
-                pTitle: '段落对齐',
-                pKey: 'txt_val',
-                pValue: this.getCustomState().getTxtVal(),
-                pType: PropertiesEnum.SELECT,
-                pList: [{ key: 'top', value: '上端对齐' }, { key: 'middle', value: '居中对齐' }, { key: 'bottom', value: '下端对齐' }] },
+            // {
+            //     pTitle: '段落对齐',
+            //     pKey: 'txt_val',
+            //     pValue: this.getCustomState().getTxtVal(),
+            //     pType: PropertiesEnum.SELECT,
+            //     pList: [{ key: 'top', value: '上端对齐' }, { key: 'middle', value: '居中对齐' }, { key: 'bottom', value: '下端对齐' }] },
             {
                 pTitle: '行高',
                 pKey: 'txt_lh',
@@ -122,13 +122,11 @@ export default class BusinessContext extends BaseUniversalComponent<IBaseUnivers
         let properties = Map();
         properties = properties.set(pKey, pValue);
         const newBusinessContextState: BusinessContextState = BusinessContextState.set(this.getCustomState(), properties);
-
         this.setCustomState(newBusinessContextState, true, callback);
     }
 
     render() {
         const { hidden } = this.state;
-        const txtVal = this.getCustomState().getTxtVal();
         const txtLineHeight = this.getCustomState().getTxtLineHeight();
         const fontSize = this.getCustomState().getFontSize();
         let lineHeightStyle: number = fontSize;
@@ -159,30 +157,21 @@ export default class BusinessContext extends BaseUniversalComponent<IBaseUnivers
             >
                 <div className="businessBg">业务背景</div>
                 <MaskLayer id={this.getCid()} pageMode={this.props.pageMode} isCanSelected={this.isCanSelected()} />
-                <div
+                <Input.TextArea
                     style={{
                         flex: '1',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: txtVal === 'middle' ? 'center' : ( txtVal === 'bottom' ? 'flex-end' : 'flex-start')
+                        color: this.getCustomState().getFontColor(),
+                        textAlign: this.getCustomState().getTextAlign(),
+                        fontStyle: this.getCustomState().getFontStyle(),
+                        textDecoration: this.getCustomState().getTextDecoration(),
+                        fontSize: this.getCustomState().getFontSize(),
+                        fontWeight: this.getCustomState().getFontWeight(),
+                        lineHeight: lineHeightStyle + 'px'
                     }}
-                >
-                    <Input.TextArea
-                        style={{
-                            color: this.getCustomState().getFontColor(),
-                            textAlign: this.getCustomState().getTextAlign(),
-                            fontStyle: this.getCustomState().getFontStyle(),
-                            textDecoration: this.getCustomState().getTextDecoration(),
-                            fontSize: this.getCustomState().getFontSize(),
-                            fontWeight: this.getCustomState().getFontWeight(),
-                            lineHeight: lineHeightStyle + 'px'
-                        }}
-                        // autosize
-                        value={hidden ? '' : this.getCustomState().getTextValue()}
-                        // tslint:disable-next-line:jsx-no-lambda no-empty
-                        onChange={() => { }}
-                    />
-                </div>
+                    value={hidden ? '' : this.getCustomState().getTextValue()}
+                    // tslint:disable-next-line:jsx-no-lambda no-empty
+                    onChange={() => { }}
+                />
             </div>
         );
     }
