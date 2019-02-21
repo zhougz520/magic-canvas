@@ -528,21 +528,86 @@ export class ComponentsUtil {
      * 更新选中组件的层级
      * @param adjustment 调整层级数量
      */
-    public updateSelectedComponentsZIndex(adjustment: number, adjustmentComments: number): void {
+    public updateSelectedComponentsZIndex(type: string): void {
+        const sortComponent: any[] = [];
+        const componentList: OrderedSet<IComponentList> = this._canvas.state.componentList;
+
+        // 根据所有组件的zIndex进行排序
+        componentList.map(
+            (component: IComponentList) => {
+                const com = this._canvas.getComponent(component.cid);
+                if (com) {
+                    sortComponent.push({cid: component.cid, zIndex: com.getHierarchy()});
+                }
+            }
+        );
+        sortComponent.sort((obj1, obj2) => {
+            const value1 = obj1.zIndex;
+            const value2 = obj2.zIndex;
+
+            return value1 - value2;
+        });
+
+        const sortComponentIndex: number[] = [];
+        let sortComponentId: string[] = [];
+        sortComponent.map(
+            (item: any) => {
+                sortComponentId.push(item.cid);
+                sortComponentIndex.push(item.zIndex);
+            }
+        );
+
+        // 获取选中组件的层级顺序
+        const sortSelectComponent: any[] = [];
         const selectedComponents: Map<string, IComponent> = this._canvas._canvasGlobalParam.getSelectedComponents();
         selectedComponents.map(
             (com: IComponent) => {
-                const oldZIndex: number = com.getHierarchy();
-                let newZIndex: number = 0;
+                sortSelectComponent.push(com.getCid());
+            }
+        );
+        const noSelectedId: string[] = sortComponentId.filter((item) => {
+            return !sortSelectComponent.includes(item);
+        });
+        const selectedId: string[] = sortComponentId.filter((item) => {
+            return sortSelectComponent.includes(item);
+        });
 
-                const comType: ComponentType | null = com.getComType();
-                if (comType === 'Comments') {
-                    newZIndex = oldZIndex + adjustmentComments;
-                } else {
-                    newZIndex = oldZIndex + adjustment;
+        // 重新set组件Zindex值
+        switch (type) {
+            case 'upperCom':
+                selectedId.reverse().map(
+                    (item: any) => {
+                        const selectOption = sortComponentId.indexOf(item);
+                        if (selectOption === sortComponentId.length - 1) return;
+                        sortComponentId.splice(selectOption, 1);
+                        sortComponentId.splice(selectOption + 1, 0, item);
+                    }
+                );
+                break;
+            case 'lowerCom':
+                selectedId.map(
+                    (item: any) => {
+                        const selectOption = sortComponentId.indexOf(item);
+                        if (selectOption > 0) {
+                            sortComponentId.splice(selectOption, 1);
+                            sortComponentId.splice(selectOption - 1, 0, item);
+                        }
+                    }
+                );
+                break;
+            case 'frontCom':
+                sortComponentId = noSelectedId.concat(selectedId);
+                break;
+            case 'backCom':
+                sortComponentId = selectedId.concat(noSelectedId);
+                break;
+        }
+        componentList.map(
+            (component: IComponentList) => {
+                const com = this._canvas.getComponent(component.cid);
+                if (com) {
+                    com.setHierarchy(sortComponentIndex[sortComponentId.indexOf(component.cid)]);
                 }
-
-                com.setHierarchy(newZIndex);
             }
         );
     }

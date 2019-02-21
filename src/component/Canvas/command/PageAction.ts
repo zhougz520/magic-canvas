@@ -228,32 +228,22 @@ export class PageAction {
 
     // 上移一层
     upperCom = () => {
-        this._canvas._componentsUtil.updateSelectedComponentsZIndex(1, 1);
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex('upperCom');
     }
 
     // 下移一层
     lowerCom = () => {
-        this._canvas._componentsUtil.updateSelectedComponentsZIndex(-1, -1);
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex('lowerCom');
     }
 
     // 置于顶层
     frontCom = () => {
-        const selectedComponentsZIndexRange = this._canvas._componentsUtil.getSelectedComponentsZIndexRange();
-        const selectedComponentZIndexMin: number = selectedComponentsZIndexRange.minZIndex;
-        const maxZIndex: number = this._canvas._maxZIndex + 1;
-        const selectedCommentsZIndexMin: number = selectedComponentsZIndexRange.minCommentsZIndex;
-        const maxCommentsZIndex: number = this._canvas._maxCommentsZIndex + 1;
-        this._canvas._componentsUtil.updateSelectedComponentsZIndex(maxZIndex - selectedComponentZIndexMin, maxCommentsZIndex - selectedCommentsZIndexMin);
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex('frontCom');
     }
 
     // 置于底层
     backCom = () => {
-        const selectedComponentsZIndexRange = this._canvas._componentsUtil.getSelectedComponentsZIndexRange();
-        const selectedComponentZIndexMax: number = selectedComponentsZIndexRange.maxZIndex;
-        const minZIndex: number = this._canvas._minZIndex - 1;
-        const selectedCommentsZIndexMax: number = selectedComponentsZIndexRange.maxCommentsZIndex;
-        const minCommentsZIndex: number = this._canvas._minCommentsZIndex - 1;
-        this._canvas._componentsUtil.updateSelectedComponentsZIndex(minZIndex - selectedComponentZIndexMax, minCommentsZIndex - selectedCommentsZIndexMax);
+        this._canvas._componentsUtil.updateSelectedComponentsZIndex('backCom');
     }
 
     // 左对齐
