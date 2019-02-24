@@ -64,7 +64,11 @@ export class AppGridTitle extends MapComponent<IAppGridTitleProps, IAppGridTitle
         const obj: any = {};
         obj['map_gt_txt'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_gt_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {

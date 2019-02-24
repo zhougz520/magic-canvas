@@ -97,7 +97,11 @@ export class AppFindAdvancedItem extends MapComponent<IAppFindAdvancedItemProps,
         const obj: any = {};
         obj['map_fa_txt'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_fa_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {

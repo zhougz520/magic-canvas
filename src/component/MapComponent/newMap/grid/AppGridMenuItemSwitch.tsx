@@ -80,7 +80,11 @@ export class AppGridMenuItemSwitch extends MapComponent<IAppGridMenuItemSwitchPr
         const obj: any = {};
         obj['map_gmis_txt'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_gmis_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {

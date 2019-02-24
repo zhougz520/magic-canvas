@@ -80,7 +80,11 @@ export class AppGridMenuItemButton extends MapComponent<IAppGridMenuItemButtonPr
         const obj: any = {};
         obj['map_gmib_txt'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_gmib_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {

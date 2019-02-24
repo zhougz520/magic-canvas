@@ -76,9 +76,13 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
      */
     public buildRichChildNode = (value: any): any => {
         const obj: any = {};
-        obj['map_gvi_txt'] = value;
+        obj['map_gvi_txt'] = value || '视图标签';
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_gvi_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {
@@ -106,7 +110,7 @@ export class AppGridViewItem extends MapComponent<IAppGridViewItemProps, IAppGri
                                         margin: `${gridStyle === 'advanced' ? '0px 0px' : '7px 20px'}`
                                     }}
                                 >
-                                    {map_gvi_txt ? map_gvi_txt : '视图'}
+                                    {map_gvi_txt}
                                 </label>
                             </div >
                         )

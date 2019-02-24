@@ -197,7 +197,11 @@ export class AppFormClass extends MapComponent<IMapProps, any> {
         const obj: any = {};
         obj['map_form_title'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_form_title',
+            groupKey: 'mapProps'
+        };
     }
 
     /*重载添加组件*/

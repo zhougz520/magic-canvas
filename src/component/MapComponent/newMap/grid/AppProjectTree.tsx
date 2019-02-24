@@ -69,7 +69,11 @@ export class AppProjectTree extends MapComponent<IAppProjectTreeProps, IAppProje
         const obj: any = {};
         obj['map_pt_txt'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_pt_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {

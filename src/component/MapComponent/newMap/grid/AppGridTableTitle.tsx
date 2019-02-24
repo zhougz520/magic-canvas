@@ -95,9 +95,13 @@ export class AppGridTableTitle extends MapComponent<IAppGridTableTitleProps, IAp
      */
     public buildRichChildNode = (value: any): any => {
         const obj: any = {};
-        obj['map_gh_txt'] = value;
+        obj['map_gh_txt'] = value || '列名称';
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_gh_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     /**

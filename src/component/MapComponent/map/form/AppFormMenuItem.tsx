@@ -88,7 +88,6 @@ export class AppFormMenuItem extends MapComponent<IMapProps, any> {
      * 构建要设置的文本属性对象
      */
     public buildRichChildNode = (value: any): any => {
-        console.log('value', value);
         const obj: any = {};
         obj.map_mi_txt = value;
 

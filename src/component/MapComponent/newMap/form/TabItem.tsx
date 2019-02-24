@@ -67,7 +67,11 @@ export class TabItemClass extends MapComponent<IMapProps, any> {
         const obj: any = {};
         obj['map_form_st_name'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_form_st_name',
+            groupKey: 'mapProps'
+        };
     }
 
     public render() {

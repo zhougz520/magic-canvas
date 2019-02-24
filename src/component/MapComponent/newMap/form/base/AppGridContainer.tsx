@@ -103,7 +103,11 @@ export default class AppGridContainer extends MapComponent<IAppGridContainerProp
         const obj: any = {};
         obj.title = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'title',
+            groupKey: 'mapProps'
+        };
     }
 
     /**

@@ -87,7 +87,11 @@ export class SelectField extends MapComponent<IMapProps, IMapState> {
 		const obj: any = {};
 		obj['map_form_f_title'] = value;
 
-		return obj;
+		return {
+            editObj: obj,
+            pKey: 'map_form_f_title',
+            groupKey: 'mapProps'
+        };
 	}
 
 	public render() {

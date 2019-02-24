@@ -151,7 +151,11 @@ export class SectionClass extends MapComponent<IMapProps, any> {
         const obj: any = {};
         obj['map_form_ss_name'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_form_ss_name',
+            groupKey: 'mapProps'
+        };
     }
 
     /*重载添加组件*/

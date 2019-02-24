@@ -173,8 +173,14 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             // 选中子组件
             const childCom: IComponent | null = this.getChildComponent(selectedId);
             if (childCom) {
-                const obj: any = childCom.buildRichChildNode(param.value);
-                this.updateProps(selectedId, obj);
+                const buildNode: any = childCom.buildRichChildNode(param.value);
+                // 更新组件base
+                this.updateProps(selectedId, buildNode.editObj);
+                // 重置控制属性面板
+                param.groupKey = buildNode.groupKey;
+                param.pKey = buildNode.pKey;
+                param.value = buildNode.editObj[buildNode.pKey];
+                this.setPropsGroup(param);
             }
         } else {
             const config = {
@@ -464,7 +470,7 @@ export default class AppFormContainer extends BaseComponent<IAppFormContainerPro
             selectedId: id
         });
         // 调用container的选中
-        this.fireSelectChange(e);
+        if (e) this.fireSelectChange(e);
     }
 
     /**

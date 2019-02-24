@@ -80,7 +80,11 @@ export class AppGridMenuItemDropdown extends MapComponent<IAppGridMenuItemDropdo
         const obj: any = {};
         obj['map_gmid_txt'] = value;
 
-        return obj;
+        return {
+            editObj: obj,
+            pKey: 'map_gmid_txt',
+            groupKey: 'mapProps'
+        };
     }
 
     render() {
