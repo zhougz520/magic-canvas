@@ -13,10 +13,9 @@ import { EditType, IRichEditOption, CallBackType, ICommentsList, ComponentType, 
 import { BoxType, IAnchor, countAnchorPoint, findAnchorPoint } from '../util';
 import { OperationType, IComponentList, InitType } from '../Canvas';
 import { IReactData, IBaseData } from '../Draw';
-import { IPropertyGroup, IToolButtonGroup, emptyButtonGroup } from '../UniversalComponents';
+import { IPropertyGroup, IToolButtonGroup, emptyButtonGroup, IProperty } from '../UniversalComponents';
 import { IContextMenuItems } from '../Stage';
 import { List, OrderedSet } from 'immutable';
-
 /**
  * 基类
  * 所有基础组件继承于该类
@@ -232,6 +231,37 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
             this.callBackForRender('Custom', isSetUndo);
             callback && callback();
         });
+    }
+
+    /**
+     * 重新渲染控制面板属性
+     * @param setPropsGroup 新的newPropsGroup
+     */
+    public setPropsGroup = (PropsGroup: any): void => {
+        const oldPropsGroup = this.getPropertiesToProperty();
+        const groupKey = PropsGroup.groupKey;
+        const pKey = PropsGroup.pKey;
+        const pValue = PropsGroup.value;
+        const canvas = PropsGroup.canvas;
+        const newPropsGroup: OrderedSet<IPropertyGroup> = oldPropsGroup.toList().update(
+            (propsGroup: List<IPropertyGroup>) => {
+                propsGroup.find(
+                    (propGroup: IPropertyGroup) => propGroup.groupKey === groupKey
+                ).propertyList.update(
+                    (list: List<IProperty>) => {
+                        list.find(
+                            (p: IProperty) => p.pKey === pKey
+                        ).pValue = pValue;
+
+                        return list;
+                    }
+                );
+
+                return propsGroup;
+            }
+        ).toOrderedSet();
+
+        canvas.props.onPropertyProperties && canvas.props.onPropertyProperties(newPropsGroup);
     }
 
     /**

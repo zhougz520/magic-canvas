@@ -44,6 +44,11 @@ export interface IComponent {
     setRichChildNode: (richChildNode: any) => void;
 
     /**
+     * 设置控制面板属性
+     */
+    setPropsGroup: (PropsGroup: any) => void;
+
+    /**
      * 获取、设置customState
      */
     getCustomState: () => any;

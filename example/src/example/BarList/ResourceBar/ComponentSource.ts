@@ -41,7 +41,7 @@ const basePage: IBasePage[] = [
     {
         category: '基础组件',
         categoryKey: 'basic',
-        expanded: false,
+        expanded: true,
         components: [
             Universal_Button,
             Universal_CheckBox,

@@ -69,8 +69,11 @@ export default class Button extends BaseUniversalComponent<IBaseUniversalCompone
             ...param.font
         };
         const newButtonState: ButtonState = ButtonState.set(this.getCustomState(), Map(config));
-
         this.setCustomState(newButtonState);
+
+        param.groupKey = 'field';
+        param.pKey = 'textValue';
+        this.setPropsGroup(param);
     }
 
     /**

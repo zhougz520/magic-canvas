@@ -76,6 +76,10 @@ export default class Radio extends BaseUniversalComponent<IBaseUniversalComponen
         const newRadioState: RadioState = RadioState.set(this.getCustomState(), Map(config));
 
         this.setCustomState(newRadioState);
+
+        param.groupKey = 'field';
+        param.pKey = 'textValue';
+        this.setPropsGroup(param);
     }
 
     /**

@@ -71,6 +71,10 @@ export default class Input extends BaseUniversalComponent<IBaseUniversalComponen
         const newInputState: InputState = InputState.set(this.getCustomState(), Map(config));
 
         this.setCustomState(newInputState);
+
+        param.groupKey = 'field';
+        param.pKey = 'textValue';
+        this.setPropsGroup(param);
     }
 
     /**

@@ -75,6 +75,10 @@ export default class CheckBox extends BaseUniversalComponent<IBaseUniversalCompo
         const newButtonState: CheckBoxState = CheckBoxState.set(this.getCustomState(), Map(config));
 
         this.setCustomState(newButtonState);
+
+        param.groupKey = 'field';
+        param.pKey = 'textValue';
+        this.setPropsGroup(param);
     }
 
     /**

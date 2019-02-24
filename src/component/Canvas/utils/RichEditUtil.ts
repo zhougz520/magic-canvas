@@ -86,7 +86,8 @@ export class RichEditUtil {
                     this._canvas.getEditor().setEditState(this._canvas.getEditor().getDefaultEditState());
                     currentSelectedComponent.setRichChildNode({
                         value: editValue,
-                        font: editFont
+                        font: editFont,
+                        canvas: this._canvas
                     });
                     currentSelectedComponent.hiddenEditorDom(false);
                     this._dbClickComponentCid = null;

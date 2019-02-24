@@ -73,6 +73,10 @@ export default class Hyperlink extends BaseUniversalComponent<IBaseUniversalComp
         const newButtonState: HyperlinkState = HyperlinkState.set(this.getCustomState(), Map(config));
 
         this.setCustomState(newButtonState);
+
+        param.groupKey = 'field';
+        param.pKey = 'textValue';
+        this.setPropsGroup(param);
     }
 
     /**
