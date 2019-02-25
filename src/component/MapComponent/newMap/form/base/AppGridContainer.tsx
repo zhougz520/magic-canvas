@@ -235,7 +235,8 @@ export default class AppGridContainer extends MapComponent<IAppGridContainerProp
             showAppGridPage,
             id,
             gridStyle,
-            selectedId
+            selectedId,
+            doChildDbClickToEdit
         } = this.props;
         this.initCom();
 
@@ -252,11 +253,12 @@ export default class AppGridContainer extends MapComponent<IAppGridContainerProp
                 // onDragOver={this.onDrageOver}
                 onDragLeave={this.handleLeave}
                 onDragEnd={this.handleLeave}
-                ref={(ref) => this.com = ref}
+                ref={(ref) => this.editCom = ref}
             >
                 {/* 列表组件标题 */}
                 <div
                     className="map-title"
+                    onDoubleClick={doChildDbClickToEdit}
                 >
                     {hidden ? '' : title}
                 </div>
