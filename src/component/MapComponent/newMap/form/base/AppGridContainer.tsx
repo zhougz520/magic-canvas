@@ -97,6 +97,15 @@ export default class AppGridContainer extends MapComponent<IAppGridContainerProp
     /************************************* begin 富文本 ****************************************/
 
     /**
+     * 获取组件文本
+     */
+    public getRichChildNode = (): any => {
+        const { title } = this.props;
+
+        return title;
+    }
+
+    /**
      * 构建要设置的文本属性对象
      */
     public buildRichChildNode = (value: any): any => {
