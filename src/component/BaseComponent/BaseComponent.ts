@@ -245,22 +245,25 @@ export class BaseComponent<P extends IBaseProps, S extends IBaseState>
         const canvas = PropsGroup.canvas;
         const newPropsGroup: OrderedSet<IPropertyGroup> = oldPropsGroup.toList().update(
             (propsGroup: List<IPropertyGroup>) => {
-                propsGroup.find(
-                    (propGroup: IPropertyGroup) => propGroup.groupKey === groupKey
-                ).propertyList.update(
-                    (list: List<IProperty>) => {
-                        list.find(
-                            (p: IProperty) => p.pKey === pKey
-                        ).pValue = pValue;
+                if (propsGroup.find((propGroup: IPropertyGroup) => propGroup.groupKey === groupKey)) {
+                    propsGroup.find(
+                        (propGroup: IPropertyGroup) => propGroup.groupKey === groupKey
+                    ).propertyList.update(
+                        (list: List<IProperty>) => {
+                            if (list.find((p: IProperty) => p.pKey === pKey)) {
+                                list.find(
+                                    (p: IProperty) => p.pKey === pKey
+                                ).pValue = pValue;
+                            }
 
-                        return list;
-                    }
-                );
+                            return list;
+                        }
+                    );
+                }
 
                 return propsGroup;
             }
         ).toOrderedSet();
-
         canvas.props.onPropertyProperties && canvas.props.onPropertyProperties(newPropsGroup);
     }
 
